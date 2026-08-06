@@ -9,10 +9,31 @@ export async function DashboardCuration({ profile }: { profile: any }) {
   const pillarKeyword = `${localRegion} ${profile.industry}`
 
   // 서버 측에서 바로 데이터 패칭 (Server Component)
-  let clusters = await getCurationClusters(pillarKeyword)
+  const result = await getCurationClusters(pillarKeyword)
   
+  if (result.error) {
+    return (
+      <Card className="border-red-200 bg-red-50/50 shadow-sm">
+        <CardHeader>
+          <CardTitle className="text-red-700 flex items-center gap-2">
+            ⚠️ 키워드 분석 실패
+          </CardTitle>
+          <CardDescription className="text-red-600 font-medium">
+            다음 오류로 인해 AI가 키워드를 생성하지 못했습니다. (Vercel 환경 변수를 확인해 주세요)
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="bg-white p-4 rounded-md border border-red-100 text-sm font-mono text-red-800 break-words">
+            {result.error}
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  let clusters = result.clusters;
   if (!clusters || clusters.length === 0) {
-    return null; // 실패 시 렌더링 안 함
+    return null; // 데이터가 없을 경우 숨김
   }
 
   // 상위 3개 노출

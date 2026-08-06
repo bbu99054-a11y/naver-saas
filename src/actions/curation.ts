@@ -18,9 +18,9 @@ export async function getCurationClusters(pillarKeyword: string, model: string =
   try {
     let aiModel;
     if (model === 'gemini-3.6-flash') {
-      aiModel = google('gemini-1.5-flash');
+      aiModel = google('gemini-3.6-flash');
     } else {
-      aiModel = openai('gpt-4o-mini');
+      aiModel = openai('gpt-5.6-luna');
     }
 
     // 1. AI에게 클러스터 키워드 5~8개 추출 요청
@@ -37,7 +37,7 @@ export async function getCurationClusters(pillarKeyword: string, model: string =
     });
 
     if (!object || !object.clusters || object.clusters.length === 0) {
-      return [];
+      return { clusters: [], error: null };
     }
 
     // 2. 추출된 키워드 배열을 네이버 API로 검색량 조회
@@ -72,9 +72,9 @@ export async function getCurationClusters(pillarKeyword: string, model: string =
       }
     });
 
-    return finalClusters;
-  } catch (error) {
+    return { clusters: finalClusters, error: null };
+  } catch (error: any) {
     console.error('getCurationClusters error:', error);
-    return [];
+    return { clusters: [], error: error.message || error.toString() };
   }
 }

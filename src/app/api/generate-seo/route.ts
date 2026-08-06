@@ -130,11 +130,11 @@ ${profileFooterPrompt}
 
     let aiModel;
     if (model === 'gpt-5.6-luna') {
-      aiModel = openai('gpt-4o-mini');
+      aiModel = openai('gpt-5.6-luna'); // 가성비 GPT 모델
     } else if (model === 'gemini-3.6-flash') {
-      aiModel = google('gemini-1.5-flash');
+      aiModel = google('gemini-3.6-flash'); // 가장 빠른 모델
     } else {
-      aiModel = anthropic('claude-3-5-sonnet-latest');
+      aiModel = anthropic('claude-5-sonnet-latest'); // 기본 최고 품질 모델 (가상의 Claude 5)
     }
 
     const result = streamText({
@@ -184,6 +184,7 @@ ${profileFooterPrompt}
 
   } catch (error: any) {
     console.error('Generation API error:', error);
-    return NextResponse.json({ error: '서버 에러가 발생했습니다.' }, { status: 500 })
+    const errorMessage = error.message || error.toString() || '알 수 없는 서버 에러가 발생했습니다.';
+    return NextResponse.json({ error: errorMessage }, { status: 500 })
   }
 }

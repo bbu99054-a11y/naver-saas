@@ -42,7 +42,7 @@ export async function POST(req: Request) {
     `;
 
     const result = streamText({
-      model: anthropic('claude-3-5-sonnet-latest'),
+      model: anthropic('claude-5-sonnet-latest'),
       system: systemPrompt,
       prompt: `타겟 키워드: ${targetKeyword}\n\n추천할 상품 데이터:\n${productsString}`,
       async onFinish({ text }) {
@@ -84,6 +84,7 @@ export async function POST(req: Request) {
 
   } catch (error: any) {
     console.error('Generation API error:', error);
-    return NextResponse.json({ error: '서버 에러가 발생했습니다.' }, { status: 500 })
+    const errorMessage = error.message || error.toString() || '알 수 없는 서버 에러가 발생했습니다.';
+    return NextResponse.json({ error: errorMessage }, { status: 500 })
   }
 }
