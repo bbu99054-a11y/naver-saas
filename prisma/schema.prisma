@@ -1,0 +1,83 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+}
+
+model User {
+  id                String    @id // Supabase Auth user id
+  email             String    @unique
+  name              String?
+  plan_type         String    @default("free")
+  credits           Int       @default(5000)
+  subscription_tier String    @default("FREE")
+  created_at        DateTime  @default(now())
+
+  projects Project[]
+  api_key  ApiKey?
+  articles Article[]
+  profile  Profile?
+
+  @@map("users")
+}
+
+model Profile {
+  id               String   @id @default(uuid())
+  user_id          String   @unique
+  store_name       String?
+  industry         String?
+  address          String?
+  phone            String?
+  reservation_link String?
+  tone             String?
+  created_at       DateTime @default(now())
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@map("profiles")
+}
+
+model Project {
+  id           String    @id @default(uuid())
+  user_id      String
+  project_name String
+  created_at   DateTime  @default(now())
+
+  user     User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  articles Article[]
+
+  @@map("projects")
+}
+
+model Article {
+  id               String    @id @default(uuid())
+  user_id          String
+  project_id       String
+  title            String
+  target_keyword   String
+  content_markdown String?   @db.Text
+  content_html     String?   @db.Text
+  coupang_links    Json?
+  status           String    @default("DRAFT")
+  created_at       DateTime  @default(now())
+
+  user    User    @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  project Project @relation(fields: [project_id], references: [id], onDelete: Cascade)
+
+  @@map("articles")
+}
+
+model ApiKey {
+  id                 String   @id @default(uuid())
+  user_id            String   @unique
+  coupang_access_key String?
+  coupang_secret_key String?
+  wp_api_key         String?
+  created_at         DateTime @default(now())
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@map("api_keys")
+}
