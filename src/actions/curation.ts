@@ -18,9 +18,9 @@ export async function getCurationClusters(pillarKeyword: string, model: string =
   try {
     let aiModel;
     if (model === 'gemini-3.6-flash') {
-      aiModel = google('gemini-3.6-flash');
+      aiModel = google('gemini-1.5-flash');
     } else {
-      aiModel = openai('gpt-5.6-luna');
+      aiModel = openai('gpt-4o-mini');
     }
 
     // 1. AI에게 클러스터 키워드 5~8개 추출 요청

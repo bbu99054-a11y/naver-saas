@@ -130,14 +130,11 @@ ${profileFooterPrompt}
 
     let aiModel;
     if (model === 'gpt-5.6-luna') {
-      aiModel = openai('gpt-5.6-luna'); // 가성비 GPT 모델
+      aiModel = openai('gpt-4o-mini');
     } else if (model === 'gemini-3.6-flash') {
-      aiModel = google('gemini-3.6-flash'); // 가장 빠른 모델
+      aiModel = google('gemini-1.5-flash');
     } else {
-      aiModel = anthropic('claude-5-sonnet-latest'); // 기본 최고 품질 모델 (가상의 Claude 5)
-      // Note: If claude-5-sonnet-latest isn't supported yet in the SDK, we fallback to claude-3-5-sonnet-latest in production
-      // But for this simulation, we'll try to request it. If error occurs, we can fix it.
-      // We will actually use claude-3-5-sonnet-20240620 as a fallback but let's assume the provider accepts it.
+      aiModel = anthropic('claude-3-5-sonnet-latest');
     }
 
     const result = streamText({
