@@ -1,16 +1,40 @@
 import { redirect } from 'next/navigation'
 import { getProfile } from '@/actions/profile'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { MapPin, Store, PenTool } from 'lucide-react'
+import { MapPin, Store, PenTool, TrendingUp, Zap } from 'lucide-react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { DashboardCuration } from './DashboardCuration'
+import { createClient } from '@/lib/supabase/server'
+import prisma from '@/lib/prisma'
+
 export default async function DashboardPage() {
   const profile = await getProfile()
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
 
-  if (!profile) {
+  if (!profile || !user) {
     redirect('/onboarding')
   }
+
+  // 이번 달 1일 계산
+  const now = new Date()
+  const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1)
+
+  // DB에서 유저 정보와 이번 달 발행한 아티클 개수 조회
+  const [dbUser, monthlyArticleCount] = await Promise.all([
+    prisma.user.findUnique({ where: { id: user.id } }),
+    prisma.article.count({
+      where: {
+        user_id: user.id,
+        created_at: {
+          gte: firstDayOfMonth
+        }
+      }
+    })
+  ])
+
+  const credits = dbUser?.credits || 0
 
   return (
     <div className="space-y-8">
@@ -23,35 +47,38 @@ export default async function DashboardPage() {
         </p>
       </div>
 
-      {/* 로컬 키워드 수동 큐레이션 (Phase 2 개선) */}
+      {/* 로컬 키워드 수동 큐레이션 */}
       <DashboardCuration profile={profile} />
 
-      {/* 기존 대시보드 요약 (간소화) */}
+      {/* 대시보드 요약 (동적 데이터 연동) */}
       <div className="grid gap-4 md:grid-cols-3">
-        <Card>
+        <Card className="border-indigo-100 shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">잔여 AI 크레딧</CardTitle>
+            <CardTitle className="text-sm font-medium text-slate-700">잔여 AI 크레딧</CardTitle>
+            <Zap className="w-4 h-4 text-indigo-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-indigo-600">4,982</div>
-            <p className="text-xs text-muted-foreground mt-1">이번 달 충분히 사용 가능합니다.</p>
+            <div className="text-3xl font-bold text-indigo-600">{credits.toLocaleString()}</div>
+            <p className="text-xs text-slate-500 mt-1">포스팅 생성 가능 횟수입니다.</p>
           </CardContent>
         </Card>
         
-        <Card>
+        <Card className="border-slate-200 shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">이번 달 발행한 글</CardTitle>
+            <CardTitle className="text-sm font-medium text-slate-700">이번 달 작성한 글</CardTitle>
+            <TrendingUp className="w-4 h-4 text-emerald-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">8 건</div>
-            <p className="text-xs text-muted-foreground mt-1">꾸준한 포스팅이 지수 상승의 핵심입니다.</p>
+            <div className="text-3xl font-bold text-slate-900">{monthlyArticleCount} 건</div>
+            <p className="text-xs text-slate-500 mt-1">꾸준한 포스팅이 상위 노출의 핵심입니다.</p>
           </CardContent>
         </Card>
 
-        <Card className="bg-slate-900 text-white flex flex-col justify-center items-center text-center p-6">
-          <h3 className="font-bold mb-2">원하는 글이 있으신가요?</h3>
-          <Link href="/dashboard/write">
-            <Button variant="secondary" className="w-full">
+        <Card className="bg-indigo-900 text-white flex flex-col justify-center items-center text-center p-6 shadow-md relative overflow-hidden">
+          <div className="absolute top-[-20%] right-[-10%] w-32 h-32 bg-indigo-500/30 blur-2xl rounded-full"></div>
+          <h3 className="font-bold mb-3 z-10 text-lg">원하는 주제가 있으신가요?</h3>
+          <Link href="/dashboard/write" className="w-full z-10">
+            <Button className="w-full bg-white text-indigo-900 hover:bg-slate-100 font-bold">
               <PenTool className="w-4 h-4 mr-2" /> 직접 키워드 입력해서 쓰기
             </Button>
           </Link>
