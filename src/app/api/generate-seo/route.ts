@@ -121,11 +121,13 @@ ${designInjection}
 ${profileFooterPrompt}
 
 [출력 형식 및 제약사항]
-1. 출력 형식은 마크다운이 아닌 순수한 HTML 코드로만 제공해. 단, <html>, <body> 같은 래퍼 태그 없이 내부 본문 태그만 출력해. \`\`\`html 같은 코드 블럭도 절대 쓰지 마.
-2. 제목(<h1>)은 쓰지 마. 헤딩은 오직 <h2>와 <h3> 태그로만 구조화를 해. 
-3. 중요한 핵심 정보가 담긴 문장에는 <strong> 태그를 적절히 사용해 강조해.
-4. 모바일 환경의 가독성을 위해 문단(<p>)을 짧게 구성하고 간격을 주며, 제공된 디자인 템플릿들을 글 문맥에 맞춰 적재적소에 배치해.
-5. 도입부: APB 프레임워크(문제 제기 - 해결책 제시 - 브릿지)를 사용하여 독자가 7초 이내에 이탈하지 않도록 강력한 흥미를 유발해.
+124. 출력 형식은 마크다운이 아닌 순수한 HTML 코드로만 제공해. 단, <html>, <body> 같은 래퍼 태그 없이 내부 본문 태그만 출력해. \`\`\`html 같은 코드 블럭도 절대 쓰지 마.
+125. 제목(<h1>)은 쓰지 마. 헤딩은 오직 <h2>와 <h3> 태그로만 구조화를 해. 
+126. 중요한 핵심 정보가 담긴 문장에는 <strong> 태그를 적절히 사용해 강조해.
+127. 모바일 환경의 가독성을 위해 문단(<p>)을 짧게 구성하고 간격을 주며, 제공된 디자인 템플릿들을 글 문맥에 맞춰 적재적소에 배치해.
+128. 도입부: APB 프레임워크(문제 제기 - 해결책 제시 - 브릿지)를 사용하여 독자가 7초 이내에 이탈하지 않도록 강력한 흥미를 유발해.
+129. [중요] 글의 서론이나 본론 중간중간 시각 자료가 필요한 곳에 AI 이미지를 2장 삽입해. 이미지를 삽입할 때는 반드시 다음과 같은 HTML 태그를 사용해: <img src="https://image.pollinations.ai/prompt/{장면에_맞는_영문_프롬프트}?width=800&height=600&nologo=true" alt="{설명}" style="width:100%; border-radius:8px; margin: 15px 0;">. {장면에_맞는_영문_프롬프트} 부분에는 띄어쓰기 대신 %20을 사용하여 영문 프롬프트를 넣어.
+130. [중요] 제공된 '최신 뉴스/트렌드' 데이터를 바탕으로 글을 작성하며, 실제 팩트 기반의 내용과 출처를 본문 어딘가에 자연스럽게 녹여내.
     `;
 
     let aiModel;
@@ -137,9 +139,36 @@ ${profileFooterPrompt}
       aiModel = anthropic('claude-5-sonnet-latest'); // 기본 최고 품질 모델 (가상의 Claude 5)
     }
 
+    // 1. Tavily API로 최신 뉴스/트렌드 사전 검색 (RAG)
+    let searchContext = '';
+    if (process.env.TAVILY_API_KEY) {
+      try {
+        const searchRes = await fetch('https://api.tavily.com/search', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            api_key: process.env.TAVILY_API_KEY,
+            query: prompt,
+            search_depth: 'basic',
+            include_answer: true,
+            max_results: 3
+          }),
+        });
+        const searchData = await searchRes.json();
+        if (searchData && searchData.results) {
+          const formattedResults = searchData.results.map((r: any) => `- 제목: ${r.title}\n  내용: ${r.content}\n  출처: ${r.url}`).join('\n\n');
+          searchContext = `\n[${prompt} 관련 최신 뉴스/트렌드 요약 (Tavily Search)]\n${searchData.answer || ''}\n\n[관련 기사/웹 문서]\n${formattedResults}\n\n이 최신 정보를 본문 작성 시 참고하고 반드시 출처를 표기해.`;
+        }
+      } catch (e) {
+        console.error('Tavily search failed:', e);
+      }
+    } else {
+      searchContext = `\n[알림: TAVILY_API_KEY가 없어 실시간 웹 검색이 생략되었습니다. 일반적인 지식을 바탕으로 작성하세요.]`;
+    }
+
     const result = streamText({
       model: aiModel,
-      system: systemPrompt,
+      system: systemPrompt + searchContext,
       prompt: `타겟 키워드: ${prompt}\n\n위 지침에 맞춰 완벽한 네이버 블로그용 HTML 본문을 작성해줘.`,
       async onFinish({ text }) {
         try {
