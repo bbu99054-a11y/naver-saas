@@ -105,7 +105,7 @@ export default function WritePage() {
             <div className="space-y-2">
               <label className="text-sm font-medium text-slate-700">타겟 키워드</label>
               <Input 
-                placeholder="예: 강남역 카페 추천" 
+                placeholder="예: 강남 세무사 증여세 상담" 
                 value={keyword}
                 onChange={(e) => setKeyword(e.target.value)}
                 disabled={isLoading}
@@ -144,14 +144,14 @@ export default function WritePage() {
             <div className="space-y-2 bg-indigo-50/50 p-4 rounded-lg border border-indigo-100">
               <label className="text-sm font-bold text-indigo-900 flex items-center gap-1">
                 <Sparkles className="w-4 h-4 text-indigo-500" />
-                오늘의 기억에 남는 경험 1줄 (필수)
+                오늘의 핵심 상담 사례 / 판례 포인트 1줄 (필수)
               </label>
               <p className="text-xs text-indigo-700 mb-2">
-                네이버 알고리즘(D.I.A.+)은 사장님만의 진짜 경험담을 아주 좋아합니다. 기계적인 글을 피하기 위해 오늘 있었던 일을 한 줄만 자랑해 주세요!
+                기계적인 글을 피하기 위해 전문가님께서 오늘 겪으신 특이 케이스나 중요하게 다룬 이슈를 한 줄만 적어주세요.
               </p>
               <textarea 
                 className="flex min-h-[80px] w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm ring-offset-white placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 disabled:cursor-not-allowed disabled:opacity-50"
-                placeholder="예: 오늘 단체 손님이 오셔서 미나리 삼겹살을 극찬하고 가셨음. 봄 미나리가 아주 신선함." 
+                placeholder="예: 오늘 다주택자 양도소득세 절세 상담을 진행했는데, 일시적 2주택 비과세 특례 요건을 놓칠 뻔한 사례가 있었음." 
                 value={experience}
                 onChange={(e) => setExperience(e.target.value)}
                 disabled={isLoading}

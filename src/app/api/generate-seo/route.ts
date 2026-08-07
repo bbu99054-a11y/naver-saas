@@ -84,9 +84,9 @@ ${profile.about_us}
     }
 
     let experienceInjection = `
-[D.I.A.+ 독창성 확보를 위한 1줄 경험 데이터]
+[D.I.A.+ 독창성 확보를 위한 실제 사례/판례 데이터]
 작성자의 실제 에피소드: "${experience}"
-이 에피소드를 글의 서론이나 본론 적절한 곳에 아주 자연스럽게 녹여내어, 기계가 쓴 글이 아니라 '사장님이 직접 쓴 생생한 경험담'처럼 보이게 만들어. 
+이 내용을 글의 서론이나 본론 적절한 곳에 아주 자연스럽게 녹여내어, 기계가 쓴 글이 아니라 '전문가가 직접 다룬 실제 사례와 인사이트'처럼 보이게 만들어. 
 `;
 
     const { scrapeNaverSerpContext } = await import('@/lib/scraper');

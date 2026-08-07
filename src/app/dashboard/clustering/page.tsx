@@ -93,7 +93,7 @@ export default function ClusteringPage() {
             <div className="space-y-2 flex-1">
               <label className="text-sm font-medium text-slate-700">메인 주제 (필러 키워드)</label>
               <Input 
-                placeholder="예: 다이어트 식단, 블로그스팟, 워드프레스, 강남역 맛집" 
+                placeholder="예: 상속세, 이혼 소송, 근로기준법, 강남 피부과" 
                 value={pillarKeyword}
                 onChange={(e) => setPillarKeyword(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleGenerate()}

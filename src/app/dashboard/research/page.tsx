@@ -85,7 +85,7 @@ export default function ResearchPage() {
         <CardContent>
           <form onSubmit={handleSearch} className="flex gap-2">
             <Input 
-              placeholder="예: 강남역 카페, 다이어트 식단" 
+              placeholder="예: 강남 세무사, 이혼 변호사, 상속세 절세" 
               value={keyword}
               onChange={(e) => setKeyword(e.target.value)}
               className="max-w-md"
