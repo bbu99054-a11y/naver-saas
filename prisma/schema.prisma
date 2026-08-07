@@ -32,6 +32,7 @@ model Profile {
   phone            String?
   reservation_link String?
   tone             String?
+  about_us         String?  @db.Text
   created_at       DateTime @default(now())
 
   user User @relation(fields: [user_id], references: [id], onDelete: Cascade)

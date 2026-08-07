@@ -11,6 +11,7 @@ export async function saveProfile(data: {
   phone: string;
   reservation_link: string;
   tone: string;
+  about_us?: string;
 }) {
   try {
     const supabase = await createClient()
@@ -29,6 +30,7 @@ export async function saveProfile(data: {
         phone: data.phone,
         reservation_link: data.reservation_link,
         tone: data.tone,
+        about_us: data.about_us,
       },
       create: {
         user_id: user.id,
@@ -38,6 +40,7 @@ export async function saveProfile(data: {
         phone: data.phone,
         reservation_link: data.reservation_link,
         tone: data.tone,
+        about_us: data.about_us,
       }
     })
 

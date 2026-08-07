@@ -17,8 +17,8 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: '인증되지 않은 사용자입니다.' }, { status: 401 })
     }
 
-    // 크레딧, 유저 검증 및 프로필 조회를 병렬(Promise.all)로 처리하여 지연 시간 단축
-    const [dbUser, profile] = await Promise.all([
+    // 크레딧, 유저 검증, 프로필 및 내부링크용 과거 기사 조회를 병렬(Promise.all)로 처리하여 지연 시간 단축
+    const [dbUser, profile, pastArticles] = await Promise.all([
       prisma.user.upsert({
         where: { id: user.id },
         update: {},
@@ -31,6 +31,13 @@ export async function POST(req: Request) {
       }),
       prisma.profile.findUnique({
         where: { user_id: user.id }
+      }),
+      // 내부 링크 자동 생성을 위해 과거 작성된 원고 2개 랜덤/최신 조회
+      prisma.article.findMany({
+        where: { user_id: user.id, status: 'DRAFT' },
+        orderBy: { created_at: 'desc' },
+        take: 2,
+        select: { id: true, title: true, target_keyword: true }
       })
     ])
 
@@ -51,15 +58,29 @@ export async function POST(req: Request) {
     }
 
     let profileFooterPrompt = '';
+    let ragInjection = '';
+
     if (profile) {
       profileFooterPrompt = `
-[매장 CTA 푸터 정보]
-글의 가장 마지막 부분에는 항상 아래 매장 정보를 깔끔한 안내 박스 형태로 덧붙여줘.
-- 매장명: ${profile.store_name}
-- 주소: ${profile.address}
-- 전화번호: ${profile.phone}
-- 예약/지도: ${profile.reservation_link}
+[매장/사무소 CTA 푸터 정보]
+글의 가장 마지막 부분에는 항상 아래 사무소 정보를 깔끔한 안내 박스 형태로 덧붙여줘.
+- 이름/상호: ${profile.store_name || ''}
+- 전문 분야: ${profile.industry || ''}
+- 주소: ${profile.address || ''}
+- 전화번호: ${profile.phone || ''}
+- 예약/지도: ${profile.reservation_link || ''}
 `;
+
+      if (profile.about_us) {
+        ragInjection = `
+[🌟 최우선 반영 RAG 지식베이스 (전문가 톤앤매너 유지)]
+아래는 작성자(전문가)의 실제 프로필, 철학, 승소 사례, 전문 지식입니다. 
+이 내용을 글 중간중간에 아주 자연스럽게 녹여내어, 기계가 쓴 글이 아니라 '전문가가 직접 자신의 노하우를 풀어낸 글'처럼 완벽하게 구성해.
+---
+${profile.about_us}
+---
+`;
+      }
     }
 
     let experienceInjection = `
@@ -107,16 +128,30 @@ ${activeTemplates.join('\n\n')}
 `;
     }
 
+    // 내부 링크(Internal Linking) 주입 (SEO 2026 트렌드)
+    let internalLinkInjection = '';
+    if (pastArticles && pastArticles.length > 0) {
+      const links = pastArticles.map((a: any) => `- [${a.title}](https://blog.naver.com)`).join('\n'); // 임시 네이버 링크 구조
+      internalLinkInjection = `
+[SEO 주제 권위(Topical Authority)를 위한 자동 내부 링크]
+본문 내용과 문맥이 이어지는 적절한 곳(중간 혹은 끝 부분)에 아래 과거에 작성된 칼럼을 "함께 읽으면 좋은 글" 또는 자연스러운 하이퍼링크 형태로 1~2개 소개시켜줘. (단, 실제 HTML <a> 태그를 써서 링크를 걸어줘)
+${links}
+`;
+    }
+
     const systemPrompt = `
-너는 대한민국 상위 1% 네이버 블로그 SEO 전문가이자 프로 카피라이터야. 네이버의 C-Rank와 DIA 알고리즘을 완벽히 이해하고 이에 최적화된 글을 작성해야 해.
-글은 반드시 사용자의 검색 의도를 파악한 '정보성' 혹은 '직접 경험한 듯한 후기성'의 자연스러운 톤앤매너(${tone || '친근하고 전문적인 블로거 톤'})로 작성되어야 해. 
-어색한 키워드 반복(Keyword Stuffing)을 피하고, 문맥에 맞는 잠재 의미(LSI) 키워드들을 자연스럽게 녹여내.
+너는 대한민국 상위 1% 네이버 블로그 SEO 전문가이자 프로 카피라이터야. 네이버의 C-Rank와 DIA 알고리즘을 완벽히 이해하고 전문직(변호사, 세무사, 의사 등)에 최적화된 글을 작성해야 해.
+글은 반드시 사용자의 검색 의도를 파악한 '정보성' 혹은 '직접 경험한 듯한 후기성'의 자연스러운 톤앤매너(${tone || '신뢰감을 주는 전문가 톤'})로 작성되어야 해. 
+
+${ragInjection}
 
 ${experienceInjection}
 
 ${contextInjection}
 
 ${designInjection}
+
+${internalLinkInjection}
 
 ${profileFooterPrompt}
 
