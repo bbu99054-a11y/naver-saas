@@ -15,6 +15,7 @@
     "@ai-sdk/openai": "^4.0.30",
     "@ai-sdk/react": "^4.0.54",
     "@base-ui/react": "^1.7.0",
+    "@portone/browser-sdk": "^0.1.9",
     "@prisma/adapter-pg": "^7.9.1",
     "@prisma/client": "^7.9.1",
     "@supabase/ssr": "^0.12.4",
