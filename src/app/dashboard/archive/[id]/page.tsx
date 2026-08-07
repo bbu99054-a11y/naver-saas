@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { ArrowLeft, Clock } from 'lucide-react'
 import { CopyToNaverBtn } from '@/components/CopyToNaverBtn'
+import { MultiPublishBtn } from '@/components/MultiPublishBtn'
 
 export default async function ArchiveDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const supabase = await createClient()
@@ -86,8 +87,9 @@ export default async function ArchiveDetailPage({ params }: { params: Promise<{ 
             </p>
           </div>
 
-          <div className="mt-auto">
+          <div className="mt-auto space-y-4">
             <CopyToNaverBtn content={htmlContent} />
+            <MultiPublishBtn articleId={article.id} />
           </div>
         </CardContent>
       </Card>

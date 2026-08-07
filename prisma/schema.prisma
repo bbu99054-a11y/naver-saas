@@ -72,10 +72,19 @@ model Article {
 model ApiKey {
   id                 String   @id @default(uuid())
   user_id            String   @unique
-  coupang_access_key String?
-  coupang_secret_key String?
-  wp_api_key         String?
-  created_at         DateTime @default(now())
+  coupang_access_key   String?
+  coupang_secret_key   String?
+  
+  // WordPress
+  wp_url               String?
+  wp_username          String?
+  wp_api_key           String?
+  
+  // Tistory
+  tistory_access_token String?
+  tistory_blog_name    String?
+
+  created_at           DateTime @default(now())
 
   user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
 

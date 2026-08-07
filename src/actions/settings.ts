@@ -15,15 +15,28 @@ export async function saveApiKeys(formData: FormData) {
 
   const coupangAccessKey = formData.get('coupangAccessKey') as string
   const coupangSecretKey = formData.get('coupangSecretKey') as string
+  
+  const wpUrl = formData.get('wpUrl') as string
+  const wpUsername = formData.get('wpUsername') as string
   const wpApiKey = formData.get('wpApiKey') as string
+
+  const tistoryAccessToken = formData.get('tistoryAccessToken') as string
+  const tistoryBlogName = formData.get('tistoryBlogName') as string
 
   try {
     const dataToSave: any = { user_id: user.id }
     
     // 빈 값이 아니면 암호화하여 저장할 준비
+    // 빈 값이 아니면 저장할 준비
     if (coupangAccessKey?.trim()) dataToSave.coupang_access_key = encrypt(coupangAccessKey.trim())
     if (coupangSecretKey?.trim()) dataToSave.coupang_secret_key = encrypt(coupangSecretKey.trim())
+    
+    if (wpUrl?.trim()) dataToSave.wp_url = wpUrl.trim()
+    if (wpUsername?.trim()) dataToSave.wp_username = wpUsername.trim()
     if (wpApiKey?.trim()) dataToSave.wp_api_key = encrypt(wpApiKey.trim())
+
+    if (tistoryAccessToken?.trim()) dataToSave.tistory_access_token = encrypt(tistoryAccessToken.trim())
+    if (tistoryBlogName?.trim()) dataToSave.tistory_blog_name = tistoryBlogName.trim()
 
     // 아무것도 입력하지 않았으면 리턴
     if (Object.keys(dataToSave).length === 1) {
