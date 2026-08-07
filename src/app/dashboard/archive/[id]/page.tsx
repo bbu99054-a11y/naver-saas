@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button'
 import { ArrowLeft, Clock } from 'lucide-react'
 import { CopyToNaverBtn } from '@/components/CopyToNaverBtn'
 
-export default async function ArchiveDetailPage({ params }: { params: { id: string } }) {
+export default async function ArchiveDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
@@ -15,8 +15,10 @@ export default async function ArchiveDetailPage({ params }: { params: { id: stri
     redirect('/login')
   }
 
+  const { id } = await params
+  
   const article = await prisma.article.findUnique({
-    where: { id: params.id, user_id: user.id }
+    where: { id, user_id: user.id }
   })
 
   if (!article) {
