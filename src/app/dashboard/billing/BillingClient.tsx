@@ -36,30 +36,44 @@ export default function BillingClient({ userId, email, planType, credits }: Bill
       const paymentId = `order_${Date.now()}_${Math.floor(Math.random() * 1000)}`
       
       // 2. 포트원 결제창 호출 (테스트 환경에서는 실제 결제 없이 샌드박스로 동작)
-      // V2 SDK 기준 requestPayment 호출
-      const response = await PortOne.requestPayment({
-        storeId: process.env.NEXT_PUBLIC_PORTONE_STORE_ID || 'store-472093d9-601e-45de-9852-c6ef6e6c4349', // 임시 테스트 스토어 ID
-        channelKey: process.env.NEXT_PUBLIC_PORTONE_CHANNEL_KEY || 'channel-key-test',
-        paymentId,
-        orderName: `LocalSEO AI - ${plan.toUpperCase()} 요금제`,
-        totalAmount: amount,
-        currency: 'KRW',
-        payMethod: 'CARD',
-        customer: {
-          customerId: userId,
-          email: email,
-        }
-      })
-
-      if (response?.code !== undefined) {
-        // 결제 실패 또는 취소
-        toast({
-          title: '결제 취소',
-          description: response.message || '결제가 취소되었거나 실패했습니다.',
-          variant: 'destructive'
+      let paymentIdToVerify = paymentId;
+      
+      const channelKey = process.env.NEXT_PUBLIC_PORTONE_CHANNEL_KEY
+      
+      if (channelKey) {
+        // V2 SDK 기준 requestPayment 호출
+        const response = await PortOne.requestPayment({
+          storeId: process.env.NEXT_PUBLIC_PORTONE_STORE_ID || '', 
+          channelKey: channelKey,
+          paymentId,
+          orderName: `LocalSEO AI - ${plan.toUpperCase()} 요금제`,
+          totalAmount: amount,
+          currency: 'KRW',
+          payMethod: 'CARD',
+          customer: {
+            customerId: userId,
+            email: email,
+          }
         })
-        setLoading(false)
-        return
+
+        if (response?.code !== undefined) {
+          // 결제 실패 또는 취소
+          toast({
+            title: '결제 취소',
+            description: response.message || '결제가 취소되었거나 실패했습니다.',
+            variant: 'destructive'
+          })
+          setLoading(false)
+          return
+        }
+        paymentIdToVerify = response?.paymentId || paymentId;
+      } else {
+        // API 키가 없는 데모 환경일 경우 가상 결제 진행
+        await new Promise(resolve => setTimeout(resolve, 1500))
+        toast({
+          title: '테스트 모드',
+          description: 'PortOne 연동 키가 없어 가상 결제로 진행됩니다.'
+        })
       }
 
       // 3. 결제 성공 시 서버 검증 및 DB 업데이트 요청
@@ -67,7 +81,7 @@ export default function BillingClient({ userId, email, planType, credits }: Bill
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          paymentId: response?.paymentId || paymentId,
+          paymentId: paymentIdToVerify,
           plan: plan
         })
       })
