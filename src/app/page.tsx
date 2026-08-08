@@ -52,7 +52,7 @@ export default function LandingPage() {
           variants={containerVariants}
         >
           <motion.div variants={itemVariants} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-100 text-indigo-800 font-medium text-sm mb-6 border border-indigo-200">
-            <Scale className="w-4 h-4" /> 변호사, 세무사, 노무사 등 고소득 전문직 특화
+            <Scale className="w-4 h-4" /> 변호사, 세무사, 노무사 등 전문직 특화
           </motion.div>
           
           <motion.h1 variants={itemVariants} className="text-5xl md:text-7xl font-extrabold tracking-tight mb-8 leading-[1.1]">
