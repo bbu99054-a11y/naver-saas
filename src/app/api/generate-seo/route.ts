@@ -139,10 +139,19 @@ ${activeTemplates.join('\n\n')}
     // 내부 링크(Internal Linking) 주입 (SEO 2026 트렌드)
     let internalLinkInjection = '';
     if (pastArticles && pastArticles.length > 0) {
-      const links = pastArticles.map((a: any) => `- [${a.title}](https://blog.naver.com)`).join('\n'); // 임시 네이버 링크 구조
+      const links = pastArticles.map((a: any) => {
+        const cleanTitle = a.title.replace(' (SEO 최적화)', '');
+        return `- <a href="https://blog.naver.com">${cleanTitle}</a>`;
+      }).join('\n');
+      
       internalLinkInjection = `
 <internal_links>
-본문 내용과 문맥이 이어지는 적절한 곳에 아래 과거에 작성된 칼럼을 "함께 읽으면 좋은 글" 또는 자연스러운 하이퍼링크 형태로 소개시켜줘. (실제 HTML <a> 태그 써서 링크 걸어줘)
+[중요 지시사항: 내부 링크 삽입]
+아래 제공된 과거 글 링크들을 본문 내에서 서로 '완전히 다른 문단'에 하나씩 분산시켜서 자연스럽게 문맥에 녹여 삽입해.
+절대 두 링크를 연달아 배치하거나 목록 형태로 나열하지 마.
+또한, "내부 링크 삽입 시", "(SEO 최적화)" 같은 시스템 지시어나 부연 설명을 본문에 절대 텍스트로 출력하지 마. 오직 자연스러운 문맥 속에 링크만 스며들게 해.
+
+삽입할 링크 목록:
 ${links}
 </internal_links>
 `;
