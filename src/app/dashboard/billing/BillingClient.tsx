@@ -24,95 +24,15 @@ interface BillingClientProps {
 }
 
 export default function BillingClient({ userId, email, planType, credits }: BillingClientProps) {
-  const [loading, setLoading] = useState(false)
   const router = useRouter()
-  const { toast } = useToast()
 
-  const handlePayment = async (plan: 'pro' | 'agency', amount: number) => {
-    setLoading(true)
-    
-    try {
-      // 1. 주문번호 생성 (실무에서는 백엔드에서 채번)
-      const paymentId = `order_${Date.now()}_${Math.floor(Math.random() * 1000)}`
-      
-      // 2. 포트원 결제창 호출 (테스트 환경에서는 실제 결제 없이 샌드박스로 동작)
-      let paymentIdToVerify = paymentId;
-      
-      const channelKey = process.env.NEXT_PUBLIC_PORTONE_CHANNEL_KEY
-      
-      if (channelKey) {
-        // V2 SDK 기준 requestPayment 호출
-        const response = await PortOne.requestPayment({
-          storeId: process.env.NEXT_PUBLIC_PORTONE_STORE_ID || '', 
-          channelKey: channelKey,
-          paymentId,
-          orderName: `LocalSEO AI - ${plan.toUpperCase()} 요금제`,
-          totalAmount: amount,
-          currency: 'KRW',
-          payMethod: 'CARD',
-          customer: {
-            customerId: userId,
-            email: email,
-          }
-        })
-
-        if (response?.code !== undefined) {
-          // 결제 실패 또는 취소
-          toast({
-            title: '결제 취소',
-            description: response.message || '결제가 취소되었거나 실패했습니다.',
-            variant: 'destructive'
-          })
-          setLoading(false)
-          return
-        }
-        paymentIdToVerify = response?.paymentId || paymentId;
-      } else {
-        // API 키가 없는 데모 환경일 경우 가상 결제 진행
-        await new Promise(resolve => setTimeout(resolve, 1500))
-        toast({
-          title: '테스트 모드',
-          description: 'PortOne 연동 키가 없어 가상 결제로 진행됩니다.'
-        })
-      }
-
-      // 3. 결제 성공 시 서버 검증 및 DB 업데이트 요청
-      const res = await fetch('/api/payment', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          paymentId: paymentIdToVerify,
-          plan: plan
-        })
-      })
-
-      const data = await res.json()
-
-      if (res.ok) {
-        toast({
-          title: '결제 성공! 🎉',
-          description: `${plan.toUpperCase()} 요금제로 업그레이드 되었습니다.`
-        })
-        router.refresh()
-      } else {
-        throw new Error(data.error || '결제 검증 실패')
-      }
-      
-    } catch (error: any) {
-      console.error('Payment error:', error)
-      toast({
-        title: '오류 발생',
-        description: error.message || '결제 처리 중 문제가 발생했습니다.',
-        variant: 'destructive'
-      })
-    } finally {
-      setLoading(false)
-    }
+  const handlePayment = (plan: 'basic' | 'pro', amount: number) => {
+    router.push(`/dashboard/billing/checkout?plan=${plan}&amount=${amount}`)
   }
 
   const getPlanName = () => {
-    if (planType === 'pro') return 'Pro (월 100회)'
-    if (planType === 'agency') return 'Agency (무제한)'
+    if (planType === 'pro') return 'Pro (월 149,000원)'
+    if (planType === 'basic') return 'Basic (월 49,000원)'
     return 'Free (기본 제공)'
   }
 
@@ -142,11 +62,11 @@ export default function BillingClient({ userId, email, planType, credits }: Bill
             <div className="w-full bg-slate-100 rounded-full h-3">
               <div 
                 className="bg-indigo-500 h-3 rounded-full transition-all duration-500" 
-                style={{ width: `${Math.min((credits / 100) * 100, 100)}%` }}
+                style={{ width: `${Math.min((credits / (planType === 'pro' ? 30 : 10)) * 100, 100)}%` }}
               ></div>
             </div>
             <p className="text-xs text-slate-400 mt-2 text-right">
-              {planType === 'free' ? '무료 제공량 초과 시 결제가 필요합니다.' : '크레딧은 매월 1일 초기화됩니다.'}
+              {planType === 'free' ? '무료 제공량 초과 시 결제가 필요합니다.' : '크레딧 충전은 실시간 반영됩니다.'}
             </p>
           </div>
         </CardContent>
@@ -157,45 +77,46 @@ export default function BillingClient({ userId, email, planType, credits }: Bill
         <CardHeader className="bg-indigo-50 border-b border-indigo-100">
           <CardTitle className="text-xl flex items-center gap-2 text-indigo-900">
             <CreditCard className="w-5 h-5 text-indigo-600" />
-            요금제 업그레이드
+            크레딧 충전하기
           </CardTitle>
-          <CardDescription className="text-indigo-700/70">더 많은 기능과 크레딧이 필요하신가요?</CardDescription>
+          <CardDescription className="text-indigo-700/70">가장 스마트한 상위노출, 지금 시작하세요.</CardDescription>
         </CardHeader>
         <CardContent className="p-6 flex-1 space-y-4">
-          <div className="p-4 border border-indigo-100 rounded-xl bg-white hover:border-indigo-300 transition-colors">
-            <div className="flex justify-between items-center mb-2">
-              <h4 className="font-bold text-lg text-slate-900">Pro 요금제</h4>
-              <span className="font-extrabold text-indigo-600">₩49,000<span className="text-sm font-normal text-slate-500">/월</span></span>
-            </div>
-            <ul className="space-y-1 mb-4">
-              <li className="flex items-center gap-2 text-sm text-slate-600"><CheckCircle2 className="w-4 h-4 text-indigo-500" /> 월 100회 포스팅 (매일 3개)</li>
-              <li className="flex items-center gap-2 text-sm text-slate-600"><CheckCircle2 className="w-4 h-4 text-indigo-500" /> 최고급 모델 (Claude 5) 무제한</li>
-            </ul>
-            <Button 
-              onClick={() => handlePayment('pro', 49000)} 
-              disabled={loading || planType === 'pro'}
-              className="w-full bg-indigo-600 hover:bg-indigo-700 text-white"
-            >
-              {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : planType === 'pro' ? '현재 이용 중' : 'Pro 결제하기 (테스트)'}
-            </Button>
-          </div>
-
           <div className="p-4 border border-slate-200 rounded-xl bg-white hover:border-slate-300 transition-colors">
             <div className="flex justify-between items-center mb-2">
-              <h4 className="font-bold text-lg text-slate-900">Agency 요금제</h4>
-              <span className="font-extrabold text-slate-700">₩99,000<span className="text-sm font-normal text-slate-500">/월</span></span>
+              <h4 className="font-bold text-lg text-slate-900">Basic 플랜</h4>
+              <span className="font-extrabold text-slate-700">₩49,000</span>
             </div>
             <ul className="space-y-1 mb-4">
-              <li className="flex items-center gap-2 text-sm text-slate-600"><CheckCircle2 className="w-4 h-4 text-slate-400" /> 무제한 AI 포스팅 생성</li>
-              <li className="flex items-center gap-2 text-sm text-slate-600"><CheckCircle2 className="w-4 h-4 text-slate-400" /> 모든 기능 무제한 및 API 연동</li>
+              <li className="flex items-center gap-2 text-sm text-slate-600"><CheckCircle2 className="w-4 h-4 text-slate-400" /> 10 크레딧 충전</li>
+              <li className="flex items-center gap-2 text-sm text-slate-600"><CheckCircle2 className="w-4 h-4 text-slate-400" /> 주 2회 포스팅 생명력 유지</li>
             </ul>
             <Button 
               variant="outline"
-              onClick={() => handlePayment('agency', 99000)} 
-              disabled={loading || planType === 'agency'}
-              className="w-full"
+              onClick={() => handlePayment('basic', 49000)} 
+              className="w-full font-bold"
             >
-              {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : planType === 'agency' ? '현재 이용 중' : 'Agency 결제하기 (테스트)'}
+              Basic 충전하기
+            </Button>
+          </div>
+
+          <div className="relative p-4 border-2 border-indigo-500 rounded-xl bg-white shadow-md">
+            <div className="absolute -top-3 right-4 bg-indigo-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm">
+              가장 인기 ⭐️
+            </div>
+            <div className="flex justify-between items-center mb-2">
+              <h4 className="font-bold text-lg text-slate-900">Pro 플랜</h4>
+              <span className="font-extrabold text-indigo-600">₩149,000</span>
+            </div>
+            <ul className="space-y-1 mb-4">
+              <li className="flex items-center gap-2 text-sm text-slate-600"><CheckCircle2 className="w-4 h-4 text-indigo-500" /> 30 크레딧 충전 (3배)</li>
+              <li className="flex items-center gap-2 text-sm text-slate-600"><CheckCircle2 className="w-4 h-4 text-indigo-500" /> 매일 포스팅으로 C-Rank 노출</li>
+            </ul>
+            <Button 
+              onClick={() => handlePayment('pro', 149000)} 
+              className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold shadow-lg shadow-indigo-200"
+            >
+              Pro 충전하기
             </Button>
           </div>
         </CardContent>

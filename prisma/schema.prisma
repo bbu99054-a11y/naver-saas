@@ -15,10 +15,11 @@ model User {
   subscription_tier String    @default("FREE")
   created_at        DateTime  @default(now())
 
-  projects Project[]
-  api_key  ApiKey?
-  articles Article[]
-  profile  Profile?
+  projects         Project[]
+  api_key          ApiKey?
+  articles         Article[]
+  profile          Profile?
+  payment_history  PaymentHistory[]
 
   @@map("users")
 }
@@ -90,4 +91,21 @@ model ApiKey {
   user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@map("api_keys")
+}
+
+model PaymentHistory {
+  id           String   @id @default(uuid())
+  user_id      String
+  order_id     String   @unique
+  payment_key  String?
+  amount       Int
+  status       String   @default("PENDING") // PENDING, DONE, CANCELED, ABORTED
+  plan_type    String
+  receipt_url  String?
+  created_at   DateTime @default(now())
+  completed_at DateTime?
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@map("payment_history")
 }
