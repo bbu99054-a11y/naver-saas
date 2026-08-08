@@ -42,6 +42,15 @@ export default function LoginPage() {
     })
   }
 
+  const handleKakaoLogin = async () => {
+    await supabase.auth.signInWithOAuth({
+      provider: 'kakao',
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`,
+      },
+    })
+  }
+
   return (
     <div className="min-h-screen w-full flex bg-white selection:bg-indigo-200">
       {/* 좌측: 브랜딩 및 마케팅 영역 (데스크탑에서만 표시) */}
@@ -51,7 +60,7 @@ export default function LoginPage() {
         
         <div className="relative z-10 flex items-center gap-2 text-2xl font-black tracking-tighter">
           <span className="bg-indigo-600 text-white p-1 rounded-md"><Sparkles size={24} /></span>
-          LocalSEO AI
+          PostSync
         </div>
 
         <div className="relative z-10 space-y-6 max-w-lg mt-20">
@@ -71,7 +80,7 @@ export default function LoginPage() {
             <div className="w-10 h-10 rounded-full border-2 border-slate-900 bg-emerald-200" />
             <div className="w-10 h-10 rounded-full border-2 border-slate-900 flex items-center justify-center bg-slate-800 text-xs font-bold">+2k</div>
           </div>
-          <p className="mt-4 text-sm text-slate-400 font-medium">수많은 사장님들이 이미 AI를 통해 매출을 올리고 있습니다.</p>
+          <p className="mt-4 text-sm text-slate-400 font-medium">수많은 전문가들이 이미 AI를 통해 매출을 올리고 있습니다.</p>
         </div>
       </div>
 
@@ -83,7 +92,7 @@ export default function LoginPage() {
             <p className="text-slate-500">계정에 로그인하여 AI 포스팅을 시작하세요.</p>
           </div>
 
-          <div className="grid gap-4">
+          <div className="grid gap-3">
             <Button 
               variant="outline" 
               className="h-12 border-slate-200 text-slate-700 hover:bg-slate-50 font-semibold"
@@ -96,6 +105,16 @@ export default function LoginPage() {
                 <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
               </svg>
               Google 계정으로 계속하기
+            </Button>
+
+            <Button 
+              className="h-12 bg-[#FEE500] hover:bg-[#FADA0A] text-[#000000] font-semibold border-none shadow-none"
+              onClick={handleKakaoLogin}
+            >
+              <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 3c-5.52 0-10 3.58-10 8 0 2.85 1.83 5.36 4.62 6.8-.2.74-.75 2.76-.78 2.89-.04.16.05.24.16.24.13 0 3.1-2.02 3.63-2.39.75.1 1.54.16 2.37.16 5.52 0 10-3.58 10-8s-4.48-8-10-8z"/>
+              </svg>
+              카카오 계정으로 계속하기
             </Button>
             
             <div className="relative my-4">
