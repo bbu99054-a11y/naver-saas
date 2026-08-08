@@ -51,8 +51,16 @@ export default async function DashboardLayout({ children }: { children: ReactNod
             })}
           </nav>
         </div>
-        <div className="p-4 border-t border-slate-200">
-          <form action={handleLogout}>
+        <div className="p-4 border-t border-slate-200 space-y-1">
+          <a href="#" className="flex items-center px-4 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 rounded-md">
+            <span className="mr-3">📖</span>
+            사용 가이드
+          </a>
+          <a href="#" className="flex items-center px-4 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 rounded-md">
+            <span className="mr-3">🔔</span>
+            공지사항
+          </a>
+          <form action={handleLogout} className="pt-2 mt-2 border-t border-slate-100">
             <Button variant="ghost" className="w-full justify-start text-slate-600 hover:text-slate-900" type="submit">
               <LogOut className="mr-3 h-5 w-5" />
               로그아웃

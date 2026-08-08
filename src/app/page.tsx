@@ -126,7 +126,18 @@ export default function LandingPage() {
               <div className="mx-auto text-xs text-slate-400 font-mono">dashboard / seo-write</div>
             </div>
             <div className="p-8">
-              <div className="flex gap-4 mb-6">
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mt-8">
+                <div className="flex items-center gap-2 text-sm font-medium text-slate-600 bg-white px-4 py-2 rounded-full border border-slate-200 shadow-sm">
+                  <CheckCircle2 className="w-4 h-4 text-[#03C75A]" /> 광고법 위반 제로 (Compliance)
+                </div>
+                <div className="flex items-center gap-2 text-sm font-medium text-slate-600 bg-white px-4 py-2 rounded-full border border-slate-200 shadow-sm">
+                  <CheckCircle2 className="w-4 h-4 text-[#03C75A]" /> 실무 판례/행정해석 강제 RAG
+                </div>
+                <div className="flex items-center gap-2 text-sm font-medium text-slate-600 bg-white px-4 py-2 rounded-full border border-slate-200 shadow-sm">
+                  <CheckCircle2 className="w-4 h-4 text-[#03C75A]" /> 저작권 걱정 없는 고품질 실사 이미지
+                </div>
+              </div>
+              <div className="flex gap-4 mb-6 mt-8">
                 <div className="flex-1 bg-slate-800 p-4 rounded-lg border border-slate-700 animate-pulse">
                   <div className="h-4 bg-slate-700 rounded w-1/4 mb-4"></div>
                   <div className="h-3 bg-slate-700 rounded w-3/4 mb-2"></div>
@@ -181,12 +192,67 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* Pricing Section */}
+      <section className="py-24 bg-white relative">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">전문직 맞춤형 요금제</h2>
+            <p className="text-slate-600 text-lg">가장 합리적인 비용으로 최고의 마케팅 직원을 고용하세요.</p>
+          </div>
+          
+          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            {/* Basic Plan */}
+            <div className="bg-white p-8 rounded-3xl border border-slate-200 flex flex-col hover:shadow-lg transition-shadow">
+              <h3 className="text-2xl font-bold mb-2">Basic</h3>
+              <p className="text-slate-500 mb-6">1인 사무소 및 개업 초기 전문가</p>
+              <div className="mb-6"><span className="text-4xl font-extrabold">₩49,000</span><span className="text-slate-500"> / 월</span></div>
+              <ul className="space-y-4 mb-8 flex-1">
+                <li className="flex items-center gap-3"><CheckCircle2 className="w-5 h-5 text-indigo-500" /> 월 10건 원고 생성</li>
+                <li className="flex items-center gap-3"><CheckCircle2 className="w-5 h-5 text-indigo-500" /> 기본 RAG (일반 웹 검색)</li>
+                <li className="flex items-center gap-3"><CheckCircle2 className="w-5 h-5 text-indigo-500" /> 기본 HTML 템플릿</li>
+              </ul>
+              <Button className="w-full bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold" variant="outline">시작하기</Button>
+            </div>
+
+            {/* Pro Plan */}
+            <div className="bg-indigo-900 text-white p-8 rounded-3xl border border-indigo-700 shadow-2xl flex flex-col relative transform md:-translate-y-4">
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-gradient-to-r from-blue-400 to-indigo-400 text-white px-4 py-1 rounded-full text-sm font-bold shadow-lg">가장 인기</div>
+              <h3 className="text-2xl font-bold mb-2">Pro <span className="text-yellow-400 text-lg">⭐️</span></h3>
+              <p className="text-indigo-200 mb-6">매일 발행하여 상위 노출을 노리는 분</p>
+              <div className="mb-6"><span className="text-4xl font-extrabold">₩149,000</span><span className="text-indigo-200"> / 월</span></div>
+              <ul className="space-y-4 mb-8 flex-1">
+                <li className="flex items-center gap-3"><CheckCircle2 className="w-5 h-5 text-yellow-400" /> 월 30건 원고 생성</li>
+                <li className="flex items-center gap-3"><CheckCircle2 className="w-5 h-5 text-yellow-400" /> 광고법 위반 필터링 (Compliance)</li>
+                <li className="flex items-center gap-3"><CheckCircle2 className="w-5 h-5 text-yellow-400" /> 과거 글 내부 링크 자동 주입</li>
+                <li className="flex items-center gap-3"><CheckCircle2 className="w-5 h-5 text-yellow-400" /> 1인칭 경험/사례 프롬프트 </li>
+                <li className="flex items-center gap-3"><CheckCircle2 className="w-5 h-5 text-yellow-400" /> 네이버 블로그 원클릭 자동 발행</li>
+              </ul>
+              <Button className="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-bold border-none shadow-lg">10크레딧 무료 체험하기</Button>
+            </div>
+
+            {/* Premium Plan */}
+            <div className="bg-white p-8 rounded-3xl border border-slate-200 flex flex-col hover:shadow-lg transition-shadow">
+              <h3 className="text-2xl font-bold mb-2">Premium</h3>
+              <p className="text-slate-500 mb-6">다채널 운영 대형 법인</p>
+              <div className="mb-6"><span className="text-4xl font-extrabold">₩290,000</span><span className="text-slate-500"> / 월</span></div>
+              <ul className="space-y-4 mb-8 flex-1">
+                <li className="flex items-center gap-3"><CheckCircle2 className="w-5 h-5 text-indigo-500" /> 월 100건 원고 생성 (다계정)</li>
+                <li className="flex items-center gap-3"><CheckCircle2 className="w-5 h-5 text-indigo-500" /> 전용 커스텀 페르소나 3개 학습</li>
+                <li className="flex items-center gap-3"><CheckCircle2 className="w-5 h-5 text-indigo-500" /> 스톡 이미지 API 최우선 매칭</li>
+                <li className="flex items-center gap-3"><CheckCircle2 className="w-5 h-5 text-indigo-500" /> 채널톡 핫라인 (우선 지원)</li>
+              </ul>
+              <Button className="w-full bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold" variant="outline">문의하기</Button>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Social Proof & CTA */}
       <section className="py-24 bg-indigo-900 text-white text-center">
         <div className="max-w-4xl mx-auto px-6">
           <Zap className="w-12 h-12 mx-auto text-yellow-400 mb-6" />
           <h2 className="text-4xl font-bold mb-6">전문가의 시간은 비쌉니다. 마케팅은 AI에게 맡기세요.</h2>
-          <p className="text-xl text-indigo-200 mb-10">오늘 가입 시 5,000 크레딧을 즉시 지급하여 무료로 모든 기능을 체험하실 수 있습니다.</p>
+          <p className="text-xl text-indigo-200 mb-10">오늘 가입 시 10 크레딧을 즉시 지급하여 무료로 모든 기능을 체험하실 수 있습니다.</p>
           <Link href="/login">
             <Button size="lg" className="h-14 px-10 text-lg rounded-full bg-white text-indigo-900 hover:bg-slate-100 shadow-xl transition-transform hover:scale-105 font-bold">
               지금 무료로 시작하기
@@ -197,7 +263,11 @@ export default function LandingPage() {
 
       {/* Footer */}
       <footer className="bg-slate-900 text-slate-400 py-12 text-center text-sm">
-        <div className="max-w-7xl mx-auto px-6">
+        <div className="max-w-7xl mx-auto px-6 flex flex-col items-center">
+          <div className="flex gap-6 mb-6">
+            <Link href="/terms" className="hover:text-white transition-colors">이용약관</Link>
+            <Link href="/privacy" className="hover:text-white transition-colors font-bold">개인정보 처리방침</Link>
+          </div>
           <p>© 2026 ExpertSEO AI SaaS. All rights reserved.</p>
           <p className="mt-2">Empowering Professionals with Advanced AI Marketing Automation.</p>
         </div>
