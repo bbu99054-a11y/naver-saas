@@ -58,23 +58,28 @@ export async function POST(req: Request) {
 
     if (profile) {
       profileFooterPrompt = `
-[매장/사무소 CTA 푸터 정보]
+<footer_cta>
 글의 가장 마지막 부분에는 항상 아래 사무소 정보를 깔끔한 안내 박스 형태로 덧붙여줘.
 - 이름/상호: ${profile.store_name || ''}
 - 전문 분야: ${profile.industry || ''}
 - 주소: ${profile.address || ''}
 - 전화번호: ${profile.phone || ''}
 - 예약/지도: ${profile.reservation_link || ''}
+
+[필수 면책 조항] 푸터 바로 위에 다음 문구를 작고 흐린 글씨로 반드시 삽입해: 
+"본 포스팅은 일반적인 정보 제공을 목적으로 하며, 구체적인 사안에 따라 법적 판단이 달라질 수 있으므로 반드시 정식 상담을 받아보시기 바랍니다."
+</footer_cta>
 `;
 
       if (profile.about_us) {
         ragInjection = `
-[🌟 최우선 반영 RAG 지식베이스 (전문가 톤앤매너 유지)]
+<expert_persona>
 아래는 작성자(전문가)의 실제 프로필, 철학, 승소 사례, 전문 지식입니다. 
 이 내용을 글 중간중간에 아주 자연스럽게 녹여내어, 기계가 쓴 글이 아니라 '전문가가 직접 자신의 노하우를 풀어낸 글'처럼 완벽하게 구성해.
 ---
 ${profile.about_us}
 ---
+</expert_persona>
 `;
       }
     }
@@ -82,9 +87,10 @@ ${profile.about_us}
     let experienceInjection = '';
     if (experience && experience.trim() !== '') {
       experienceInjection = `
-[D.I.A.+ 독창성 확보를 위한 실제 사례/판례 데이터]
+<real_case_experience>
 작성자의 실제 에피소드: "${experience}"
 이 내용을 글의 서론이나 본론 적절한 곳에 아주 자연스럽게 녹여내어, 기계가 쓴 글이 아니라 '전문가가 직접 다룬 실제 사례와 인사이트'처럼 보이게 만들어. 
+</real_case_experience>
 `;
     }
 
@@ -102,11 +108,13 @@ ${profile.about_us}
 
     if (serpData) {
       contextInjection = `
+<serp_context>
 [실시간 네이버 상위 5개 블로그 분석 데이터 (이 규칙을 반드시 따를 것)]
 - 권장 글자 수: 약 ${serpData.averageTextLength}자 내외로 작성해.
-- 권장 이미지 수: 약 ${serpData.averageImageCount}장의 이미지가 필요해. 글 중간중간에 <div style="background:#f1f5f9; padding:20px; text-align:center; color:#64748b; margin:10px 0; border-radius:8px;">[이미지 삽입 권장: OOO 사진]</div> 와 같은 형태의 HTML 플레이스홀더를 정확히 ${serpData.averageImageCount}번 삽입해줘.
-- 이미지 맥락 추천: 상위 블로거들은 주로 이런 사진을 넣었어 -> ${serpData.imageContexts.join(', ')}. 플레이스홀더 텍스트(OOO 사진) 작성 시 이 맥락을 적극 반영해.
+- 권장 이미지 수: 약 ${serpData.averageImageCount}장의 이미지가 필요해.
+- 이미지 맥락 추천: 상위 블로거들은 주로 이런 사진을 넣었어 -> ${serpData.imageContexts.join(', ')}.
 - 자주 쓰이는 목차(H2): ${serpData.commonHeaders.join(', ')}. 이 구조를 자연스럽게 H2 태그로 반영해.
+</serp_context>
 `;
 
       const activeTemplates = [];
@@ -118,12 +126,13 @@ ${profile.about_us}
       if (serpData.recommendedComponents.useDivider) activeTemplates.push(getDividerTemplate(mainColor));
 
       designInjection = `
-[다이내믹 디자인 시스템 템플릿]
+<design_templates>
 이번 포스팅의 메인 컬러 테마는 ${mainColor} 입니다.
 아래 제공된 HTML 템플릿 코드들을 반드시 활용하여 시각적으로 아름답고 전문적인 글을 구성해 주세요.
 템플릿 형태를 절대 임의로 변형하지 말고, 안의 텍스트(괄호 처리된 부분)만 글 문맥에 맞게 수정해서 그대로 삽입해.
 
 ${activeTemplates.join('\n\n')}
+</design_templates>
 `;
     }
 
@@ -132,9 +141,10 @@ ${activeTemplates.join('\n\n')}
     if (pastArticles && pastArticles.length > 0) {
       const links = pastArticles.map((a: any) => `- [${a.title}](https://blog.naver.com)`).join('\n'); // 임시 네이버 링크 구조
       internalLinkInjection = `
-[SEO 주제 권위(Topical Authority)를 위한 자동 내부 링크]
-본문 내용과 문맥이 이어지는 적절한 곳(중간 혹은 끝 부분)에 아래 과거에 작성된 칼럼을 "함께 읽으면 좋은 글" 또는 자연스러운 하이퍼링크 형태로 1~2개 소개시켜줘. (단, 실제 HTML <a> 태그를 써서 링크를 걸어줘)
+<internal_links>
+본문 내용과 문맥이 이어지는 적절한 곳에 아래 과거에 작성된 칼럼을 "함께 읽으면 좋은 글" 또는 자연스러운 하이퍼링크 형태로 소개시켜줘. (실제 HTML <a> 태그 써서 링크 걸어줘)
 ${links}
+</internal_links>
 `;
     }
 
@@ -142,29 +152,29 @@ ${links}
 너는 대한민국 상위 1% 네이버 블로그 SEO 전문가이자 프로 카피라이터야. 네이버의 C-Rank와 DIA 알고리즘을 완벽히 이해하고 전문직(변호사, 세무사, 의사 등)에 최적화된 글을 작성해야 해.
 글은 반드시 사용자의 검색 의도를 파악한 '정보성' 혹은 '직접 경험한 듯한 후기성'의 자연스러운 톤앤매너(${tone || '신뢰감을 주는 전문가 톤'})로 작성되어야 해. 
 
+<compliance>
+[전문직 광고법 준수 - 절대 금지어 목록]
+- "무조건 승소", "100% 절세", "국내 최고", "단연코 1위", "반드시 해결"과 같은 과장/보장성 단어는 대한변호사협회 및 세무사회 광고 규정 위반이므로 절대 사용하지 마.
+- 기계적인 상투어("안녕하세요", "오늘은 ~에 대해 알아보겠습니다", "결론부터 말씀드리자면") 절대 사용 금지.
+</compliance>
+
 ${ragInjection}
-
 ${experienceInjection}
-
 ${contextInjection}
-
 ${designInjection}
-
 ${internalLinkInjection}
-
 ${profileFooterPrompt}
 
-[출력 형식 및 제약사항]
-124. 출력 형식은 마크다운이 아닌 순수한 HTML 코드로만 제공해. 단, <html>, <body> 같은 래퍼 태그 없이 내부 본문 태그만 출력해. \`\`\`html 같은 코드 블럭도 절대 쓰지 마.
-125. 시각적으로 '딱딱한 워드 문서'가 아닌 '트렌디한 네이버 블로그'처럼 보이게 화려하게 꾸며줘.
-   - 전체 문단(<p>)에 기본적으로 \`text-align: center; line-height: 2.0; font-size: 16px; margin-bottom: 24px;\` 인라인 스타일을 적용해.
-   - 헤딩(<h2>, <h3>)은 중앙 정렬하고 눈에 띄는 이모지를 제목 앞에 반드시 넣어줘.
-   - 핵심 내용에는 시선을 사로잡는 형광펜 효과(\`<span style="background-color: #fffbeb; padding: 2px 6px; font-weight: bold; color: #1e40af; border-radius: 4px;">...</span>\`)를 적극적으로 사용해.
-126. 문단 사이사이에 적절한 이모지(💡, 🔥, ✨, 📌 등)를 적극적으로 활용하여 가독성을 높여.
-127. 제공된 디자인 템플릿들(InfoBox 등)을 글 문맥에 맞춰 적재적소에 3회 이상 배치해.
-128. 도입부: APB 프레임워크(문제 제기 - 해결책 제시 - 브릿지)를 사용하여 독자가 7초 이내에 이탈하지 않도록 강력한 흥미를 유발해.
-129. [중요] 글의 서론이나 본론 중간중간 시각 자료가 필요한 곳에 AI 이미지를 2장 삽입해. 이미지를 삽입할 때는 반드시 다음과 같은 HTML 태그를 사용해: <img src="https://image.pollinations.ai/prompt/{장면에_맞는_영문_프롬프트}?width=800&height=600&nologo=true" alt="{설명}" style="width:100%; max-width: 600px; display: block; margin: 30px auto; border-radius:12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">. 
-130. [중요] 제공된 '최신 뉴스/트렌드' 데이터를 바탕으로 글을 작성하며, 실제 팩트 기반의 내용과 출처를 본문 어딘가에 자연스럽게 녹여내.
+<html_constraints>
+1. 마크다운 안됨: 순수한 HTML 코드로만 제공. <html>, <body>, \`\`\`html 같은 코드 블럭 절대 금지.
+2. 네이버 에디터 호환성: display: flex, display: grid, position: absolute 같이 네이버 스마트에디터에서 깨지는 CSS 속성은 절대 사용 금지. 오직 기본 margin, padding, text-align, color, background-color 등 호환되는 안전한 인라인 CSS만 사용해.
+3. 제목 금지: <h1> 쓰지 마. 오직 <h2>와 <h3> 태그만 사용. 
+4. 트렌디한 블로그 디자인: 전체 문단(<p>)에 \`text-align: center; line-height: 2.0; font-size: 16px; margin-bottom: 24px;\` 기본 적용. 헤딩(<h2>, <h3>) 앞에 눈에 띄는 이모지 필수.
+5. 형광펜 강조: 핵심 내용에는 형광펜 효과(\`<span style="background-color: #fffbeb; padding: 2px 6px; font-weight: bold; color: #1e40af; border-radius: 4px;">...</span>\`)를 적극 사용.
+6. 이모지 적극 사용: 💡, 🔥, ✨, 📌 등을 적절히 배치해 가독성을 높임.
+7. APB 프레임워크: 도입부는 문제 제기 - 해결책 제시 - 브릿지로 구성해 7초 이내 이탈 방지.
+8. 시각 자료: 서론이나 본론 중간 시각 자료가 필요한 곳에 AI 이미지 2장 필수 삽입. 태그 형식: <img src="https://image.pollinations.ai/prompt/{장면에_맞는_영문_프롬프트}?width=800&height=600&nologo=true" alt="{설명}" style="width:100%; max-width: 600px; display: block; margin: 30px auto; border-radius:12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">.
+</html_constraints>
     `;
 
     let aiModel;
@@ -205,6 +215,7 @@ ${profileFooterPrompt}
 
     const result = streamText({
       model: aiModel,
+      temperature: 0.75, // 동일 키워드라도 유니크한 문장 구조를 만들기 위해 약간 높임
       system: systemPrompt + searchContext,
       prompt: `타겟 키워드: ${prompt}\n\n위 지침에 맞춰 완벽한 네이버 블로그용 HTML 본문을 작성해줘.`,
       async onFinish({ text }) {
