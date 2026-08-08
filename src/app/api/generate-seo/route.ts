@@ -199,7 +199,25 @@ ${profileFooterPrompt}
     let searchContext = '';
     if (process.env.TAVILY_API_KEY) {
       try {
-        const searchRes = await fetch('https://api.tavily.com/search', {
+        // 직군별 공공/국가 도메인 맵핑 로직
+        let includeDomains: string[] = [];
+        const industry = profile?.industry || '';
+        
+        if (industry.includes('변호사') || industry.includes('법률')) {
+          includeDomains = ['law.go.kr', 'scourt.go.kr', 'ccourt.go.kr', 'ftc.go.kr', 'likms.assembly.go.kr', 'kipris.or.kr', 'kipo.go.kr'];
+        } else if (industry.includes('세무사') || industry.includes('회계사')) {
+          includeDomains = ['txsi.hometax.go.kr', 'nts.go.kr', 'tt.go.kr', 'moef.go.kr', 'law.go.kr'];
+        } else if (industry.includes('노무사')) {
+          includeDomains = ['moel.go.kr', 'nlrc.go.kr', 'comwel.or.kr', 'law.go.kr'];
+        } else if (industry.includes('행정사')) {
+          includeDomains = ['acrc.go.kr', 'hikorea.go.kr', 'moleg.go.kr', 'mfds.go.kr', 'law.go.kr'];
+        } else {
+          // 애매하거나 기타 직종일 경우 법률의 기본인 국가법령정보센터만 할당 (Default Fallback)
+          includeDomains = ['law.go.kr'];
+        }
+
+        // 1차 검색 (도메인 강제)
+        let searchRes = await fetch('https://api.tavily.com/search', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -207,13 +225,32 @@ ${profileFooterPrompt}
             query: prompt,
             search_depth: 'basic',
             include_answer: true,
-            max_results: 3
+            max_results: 3,
+            include_domains: includeDomains
           }),
         });
-        const searchData = await searchRes.json();
-        if (searchData && searchData.results) {
+        
+        let searchData = await searchRes.json();
+
+        // 2차 검색 (Fallback: 만약 결과가 0건이면 도메인 제한 풀고 재검색)
+        if (!searchData.results || searchData.results.length === 0) {
+          searchRes = await fetch('https://api.tavily.com/search', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              api_key: process.env.TAVILY_API_KEY,
+              query: prompt,
+              search_depth: 'basic',
+              include_answer: true,
+              max_results: 3
+            }),
+          });
+          searchData = await searchRes.json();
+        }
+
+        if (searchData && searchData.results && searchData.results.length > 0) {
           const formattedResults = searchData.results.map((r: any) => `- 제목: ${r.title}\n  내용: ${r.content}\n  출처: ${r.url}`).join('\n\n');
-          searchContext = `\n[${prompt} 관련 최신 뉴스/트렌드 요약 (Tavily Search)]\n${searchData.answer || ''}\n\n[관련 기사/웹 문서]\n${formattedResults}\n\n이 최신 정보를 본문 작성 시 참고하고 반드시 출처를 표기해.`;
+          searchContext = `\n[${prompt} 관련 공식/최신 정보 요약 (Tavily Search)]\n${searchData.answer || ''}\n\n[관련 기사/웹 문서]\n${formattedResults}\n\n이 공식 데이터를 본문 작성 시 참고하고 환각 없이 출처 기반으로 작성해.`;
         }
       } catch (e) {
         console.error('Tavily search failed:', e);
