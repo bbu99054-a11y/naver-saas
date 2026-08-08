@@ -7,11 +7,11 @@ import { SidebarItem } from '@/components/SidebarItem'
 
 const sidebarLinks = [
   { href: '/dashboard', label: '대시보드 메인', icon: LayoutDashboard },
+  { href: '/dashboard/settings/profile', label: '내 정보 관리 (RAG)', icon: UserCircle },
   { href: '/dashboard/research', label: '키워드 발굴 (네이버)', icon: Search },
-  { href: '/dashboard/clustering', label: '토피컬 클러스터 기획', icon: Network },
+  { href: '/dashboard/clustering', label: '블로그 연재 기획', icon: Network },
   { href: '/dashboard/write', label: 'SEO 블로그 쓰기', icon: PenTool },
   { href: '/dashboard/archive', label: '나의 원고 저장소', icon: FileText },
-  { href: '/dashboard/settings/profile', label: '내 정보 관리 (RAG)', icon: UserCircle },
   { href: '/dashboard/settings', label: 'API 설정', icon: Settings },
   { href: '/dashboard/billing', label: '요금제 및 결제', icon: CreditCard },
 ]

@@ -63,7 +63,7 @@ export default function ClusteringPage() {
       }
 
       setClusters(data.clusters)
-      toast({ title: '기획 완료', description: '토피컬 클러스터 맵이 완성되었습니다.' })
+      toast({ title: '기획 완료', description: '연재 주제 기획이 완성되었습니다.' })
     } catch (error: any) {
       toast({ title: '에러 발생', description: error.message, variant: 'destructive' })
     } finally {
@@ -81,9 +81,9 @@ export default function ClusteringPage() {
         <div>
           <h1 className="text-2xl font-bold text-slate-800 flex items-center gap-2">
             <Network className="w-6 h-6 text-indigo-500" />
-            토피컬 클러스터링 기획기
+            블로그 연재 기획기
           </h1>
-          <p className="text-slate-500 mt-1">메인 주제(Pillar)를 입력하면 블로그 지수를 높일 세부 주제(Cluster)들을 발굴합니다.</p>
+          <p className="text-slate-500 mt-1">메인 주제(Pillar)를 입력하면 블로그 지수를 높일 세부 연재 주제(Cluster)들을 발굴합니다.</p>
         </div>
       </div>
 
@@ -123,7 +123,7 @@ export default function ClusteringPage() {
               {isLoading ? (
                 <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> 기획 중...</>
               ) : (
-                <><Search className="w-4 h-4 mr-2" /> 클러스터 발굴</>
+                <><Search className="w-4 h-4 mr-2" /> 연재 주제 발굴</>
               )}
             </Button>
           </div>
