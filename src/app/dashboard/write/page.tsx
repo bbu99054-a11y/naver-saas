@@ -11,6 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Loader2, Sparkles, PenTool } from 'lucide-react'
 import { CopyToNaverBtn } from '@/components/CopyToNaverBtn'
 import { AutoPublishBtn } from '@/components/AutoPublishBtn'
+import { MultiPublishBtn } from '@/components/MultiPublishBtn'
 
 // Mock useToast fallback
 const useToast = () => {
@@ -213,6 +214,7 @@ export default function WritePage() {
         {/* 하단 복사 버튼 영역 */}
         <div className="p-4 bg-white border-t border-slate-200 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] z-10 flex flex-col gap-3">
            <AutoPublishBtn title={`${keyword} (SEO 최적화)`} content={parsedHtml} />
+           <MultiPublishBtn title={`${keyword} (SEO 최적화)`} content={parsedHtml} />
            <CopyToNaverBtn content={parsedHtml} />
         </div>
       </Card>

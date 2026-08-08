@@ -13,20 +13,24 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json()
-    const { articleId } = body
+    const { articleId, title, content } = body
 
-    if (!articleId) {
-      return NextResponse.json({ error: '아티클 ID가 필요합니다.' }, { status: 400 })
-    }
+    let pubTitle = title;
+    let pubContent = content;
 
-    // 1. 아티클과 API 키 조회
-    const [article, apiKeyRecord] = await Promise.all([
-      prisma.article.findUnique({ where: { id: articleId, user_id: user.id } }),
-      prisma.apiKey.findUnique({ where: { user_id: user.id } })
+    // 1. API 키 및 아티클 조회
+    const [apiKeyRecord, article] = await Promise.all([
+      prisma.apiKey.findUnique({ where: { user_id: user.id } }),
+      articleId ? prisma.article.findUnique({ where: { id: articleId, user_id: user.id } }) : null
     ])
 
-    if (!article) {
-      return NextResponse.json({ error: '아티클을 찾을 수 없습니다.' }, { status: 404 })
+    if (article) {
+      pubTitle = article.title;
+      pubContent = article.content_html;
+    }
+
+    if (!pubTitle || !pubContent) {
+      return NextResponse.json({ error: '제목과 내용이 필요합니다.' }, { status: 400 })
     }
 
     if (!apiKeyRecord?.wp_url || !apiKeyRecord?.wp_username || !apiKeyRecord?.wp_api_key) {
@@ -48,8 +52,8 @@ export async function POST(req: Request) {
         'Authorization': `Basic ${authString}`
       },
       body: JSON.stringify({
-        title: article.title,
-        content: article.content_html,
+        title: pubTitle,
+        content: pubContent,
         status: 'publish', // 바로 발행. 'draft'로 하려면 'draft'
       })
     })

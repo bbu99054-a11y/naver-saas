@@ -15,10 +15,12 @@ const useToast = () => {
 }
 
 interface MultiPublishBtnProps {
-  articleId: string;
+  articleId?: string;
+  title?: string;
+  content?: string;
 }
 
-export function MultiPublishBtn({ articleId }: MultiPublishBtnProps) {
+export function MultiPublishBtn({ articleId, title, content }: MultiPublishBtnProps) {
   const [wpLoading, setWpLoading] = useState(false)
   const [tsLoading, setTsLoading] = useState(false)
   const { toast } = useToast()
@@ -31,7 +33,7 @@ export function MultiPublishBtn({ articleId }: MultiPublishBtnProps) {
       const response = await fetch(`/api/publish/${platform}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ articleId })
+        body: JSON.stringify({ articleId, title, content })
       })
 
       const data = await response.json()

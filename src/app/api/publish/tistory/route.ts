@@ -13,20 +13,24 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json()
-    const { articleId } = body
+    const { articleId, title, content } = body
 
-    if (!articleId) {
-      return NextResponse.json({ error: '아티클 ID가 필요합니다.' }, { status: 400 })
-    }
+    let pubTitle = title;
+    let pubContent = content;
 
-    // 1. 아티클과 API 키 조회
-    const [article, apiKeyRecord] = await Promise.all([
-      prisma.article.findUnique({ where: { id: articleId, user_id: user.id } }),
-      prisma.apiKey.findUnique({ where: { user_id: user.id } })
+    // 1. API 키 및 아티클 조회
+    const [apiKeyRecord, article] = await Promise.all([
+      prisma.apiKey.findUnique({ where: { user_id: user.id } }),
+      articleId ? prisma.article.findUnique({ where: { id: articleId, user_id: user.id } }) : null
     ])
 
-    if (!article) {
-      return NextResponse.json({ error: '아티클을 찾을 수 없습니다.' }, { status: 404 })
+    if (article) {
+      pubTitle = article.title;
+      pubContent = article.content_html;
+    }
+
+    if (!pubTitle || !pubContent) {
+      return NextResponse.json({ error: '제목과 내용이 필요합니다.' }, { status: 400 })
     }
 
     if (!apiKeyRecord?.tistory_access_token || !apiKeyRecord?.tistory_blog_name) {
@@ -43,8 +47,8 @@ export async function POST(req: Request) {
     formData.append('access_token', accessToken)
     formData.append('output', 'json')
     formData.append('blogName', blogName)
-    formData.append('title', article.title)
-    formData.append('content', article.content_html || '')
+    formData.append('title', pubTitle)
+    formData.append('content', pubContent || '')
     formData.append('visibility', '3') // 0: 비공개, 1: 보호, 3: 발행
 
     const response = await fetch('https://www.tistory.com/apis/post/write', {
