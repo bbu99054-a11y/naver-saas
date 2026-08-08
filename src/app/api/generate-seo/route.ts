@@ -53,10 +53,6 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: '타겟 키워드가 필요합니다.' }, { status: 400 })
     }
 
-    if (!experience) {
-      return NextResponse.json({ error: '1줄 경험담을 입력해주세요.' }, { status: 400 })
-    }
-
     let profileFooterPrompt = '';
     let ragInjection = '';
 
@@ -83,11 +79,14 @@ ${profile.about_us}
       }
     }
 
-    let experienceInjection = `
+    let experienceInjection = '';
+    if (experience && experience.trim() !== '') {
+      experienceInjection = `
 [D.I.A.+ 독창성 확보를 위한 실제 사례/판례 데이터]
 작성자의 실제 에피소드: "${experience}"
 이 내용을 글의 서론이나 본론 적절한 곳에 아주 자연스럽게 녹여내어, 기계가 쓴 글이 아니라 '전문가가 직접 다룬 실제 사례와 인사이트'처럼 보이게 만들어. 
 `;
+    }
 
     const { scrapeNaverSerpContext } = await import('@/lib/scraper');
     const { 

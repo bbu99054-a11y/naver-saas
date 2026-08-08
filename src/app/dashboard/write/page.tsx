@@ -144,7 +144,7 @@ export default function WritePage() {
             <div className="space-y-2 bg-indigo-50/50 p-4 rounded-lg border border-indigo-100">
               <label className="text-sm font-bold text-indigo-900 flex items-center gap-1">
                 <Sparkles className="w-4 h-4 text-indigo-500" />
-                오늘의 핵심 상담 사례 / 판례 포인트 1줄 (필수)
+                오늘의 핵심 상담 사례 / 판례 포인트 1줄 (선택)
               </label>
               <p className="text-xs text-indigo-700 mb-2">
                 기계적인 글을 피하기 위해 전문가님께서 오늘 겪으신 특이 케이스나 중요하게 다룬 이슈를 한 줄만 적어주세요.
