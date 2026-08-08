@@ -6,7 +6,7 @@ export default function TermsPage() {
         <p className="text-sm text-slate-500 mb-8">마지막 업데이트: 2026년 8월</p>
         
         <h2 className="text-xl font-bold mt-6 mb-3">제 1 조 (목적)</h2>
-        <p>본 약관은 ExpertSEO(이하 "회사")가 제공하는 AI 블로그 자동화 서비스(이하 "서비스")의 이용과 관련하여 회사와 회원 간의 권리, 의무 및 책임사항, 기타 필요한 사항을 규정함을 목적으로 합니다.</p>
+        <p>본 약관은 PostSync(이하 "회사")가 제공하는 AI 블로그 자동화 서비스(이하 "서비스")의 이용과 관련하여 회사와 회원 간의 권리, 의무 및 책임사항, 기타 필요한 사항을 규정함을 목적으로 합니다.</p>
         
         <h2 className="text-xl font-bold mt-6 mb-3">제 2 조 (용어의 정의)</h2>
         <p>1. "서비스"란 회사가 제공하는 AI 기반 글쓰기, 검색증강생성(RAG), 그리고 관련 부가 기능을 의미합니다.</p>

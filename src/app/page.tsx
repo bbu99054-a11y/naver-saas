@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-import { ArrowRight, Sparkles, Zap, Search, LayoutTemplate, Copy, Scale, FileText, Send } from 'lucide-react'
+import { ArrowRight, Sparkles, Zap, Search, LayoutTemplate, Copy, Scale, FileText, Send, CheckCircle2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 
@@ -28,7 +28,7 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           <div className="text-xl font-black tracking-tighter flex items-center gap-2">
             <span className="bg-indigo-600 text-white p-1 rounded-md"><Sparkles size={18} /></span>
-            ExpertSEO AI
+            PostSync
           </div>
           <nav className="flex items-center gap-4">
             <Link href="/login" className="text-sm font-semibold text-slate-600 hover:text-indigo-600 transition-colors">로그인</Link>
@@ -65,10 +65,22 @@ export default function LandingPage() {
             최우선으로 학습하여 진짜 전문가가 직접 쓴 듯한 압도적인 퀄리티의 글을 3초 만에 작성합니다.
           </motion.p>
           
+          <motion.div variants={itemVariants} className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
+            <div className="flex items-center gap-2 text-sm font-bold text-slate-700 bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full border border-indigo-100 shadow-sm">
+              <CheckCircle2 className="w-4 h-4 text-emerald-500" /> 광고법 위반 제로
+            </div>
+            <div className="flex items-center gap-2 text-sm font-bold text-slate-700 bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full border border-indigo-100 shadow-sm">
+              <CheckCircle2 className="w-4 h-4 text-emerald-500" /> 실무 판례 강제 RAG
+            </div>
+            <div className="flex items-center gap-2 text-sm font-bold text-slate-700 bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full border border-indigo-100 shadow-sm">
+              <CheckCircle2 className="w-4 h-4 text-emerald-500" /> 실사 이미지 최우선 매칭
+            </div>
+          </motion.div>
+          
           <motion.div variants={itemVariants} className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link href="/login">
               <Button size="lg" className="h-14 px-8 text-lg rounded-full bg-indigo-600 hover:bg-indigo-700 text-white shadow-xl shadow-indigo-200 transition-all hover:scale-105">
-                전문직 전용 AI 체험하기 <ArrowRight className="ml-2 w-5 h-5" />
+                PostSync 무료 체험하기 <ArrowRight className="ml-2 w-5 h-5" />
               </Button>
             </Link>
           </motion.div>
@@ -80,7 +92,7 @@ export default function LandingPage() {
         <div className="max-w-6xl mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">단 한 번의 클릭으로 끝나는 <span className="text-indigo-600">마케팅 자동화</span></h2>
-            <p className="text-slate-600 text-lg">로그인부터 동시 발행까지, ExpertSEO AI가 어떻게 작동하는지 확인해보세요.</p>
+            <p className="text-slate-600 text-lg">로그인부터 동시 발행까지, PostSync가 어떻게 작동하는지 확인해보세요.</p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8 mb-12">
@@ -268,7 +280,7 @@ export default function LandingPage() {
             <Link href="/terms" className="hover:text-white transition-colors">이용약관</Link>
             <Link href="/privacy" className="hover:text-white transition-colors font-bold">개인정보 처리방침</Link>
           </div>
-          <p>© 2026 ExpertSEO AI SaaS. All rights reserved.</p>
+          <p>© 2026 PostSync SaaS. All rights reserved.</p>
           <p className="mt-2">Empowering Professionals with Advanced AI Marketing Automation.</p>
         </div>
       </footer>

@@ -15,11 +15,11 @@ const geistMono = Geist_Mono({
 import ChannelTalk from "@/components/ChannelTalk";
 
 export const metadata: Metadata = {
-  title: "ExpertSEO - 전문직 전용 AI 블로그 자동화",
+  title: "PostSync - 전문직 전용 AI 블로그 자동화",
   description: "변호사, 세무사, 노무사 등 YMYL 전문직을 위한 광고법 준수 및 네이버 C-Rank 최적화 AI 포스팅 솔루션입니다.",
   keywords: ["AI 블로그", "전문직 마케팅", "변호사 마케팅", "세무사 블로그", "자동 포스팅"],
   openGraph: {
-    title: "ExpertSEO - 전문직 전용 AI 블로그 자동화",
+    title: "PostSync - 전문직 전용 AI 블로그 자동화",
     description: "전문직을 위한 완벽한 AI 블로그 엔진. 광고법 위반 제로, 환각 제로.",
     type: "website",
     locale: "ko_KR",
