@@ -182,7 +182,7 @@ ${profileFooterPrompt}
 5. 형광펜 강조: 핵심 내용에는 형광펜 효과(\`<span style="background-color: #fffbeb; padding: 2px 6px; font-weight: bold; color: #1e40af; border-radius: 4px;">...</span>\`)를 적극 사용.
 6. 이모지 적극 사용: 💡, 🔥, ✨, 📌 등을 적절히 배치해 가독성을 높임.
 7. APB 프레임워크: 도입부는 문제 제기 - 해결책 제시 - 브릿지로 구성해 7초 이내 이탈 방지.
-8. 시각 자료: 서론이나 본론 중간 시각 자료가 필요한 곳에 AI 이미지 2장 필수 삽입. 태그 형식: <img src="https://image.pollinations.ai/prompt/{장면에_맞는_영문_프롬프트}?width=800&height=600&nologo=true" alt="{설명}" style="width:100%; max-width: 600px; display: block; margin: 30px auto; border-radius:12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">.
+8. 시각 자료: 서론이나 본론 중간, 시각 자료가 필요한 곳에 고품질 실사 이미지 2장을 필수 삽입해. 태그 형식: <img src="https://naver-saas.vercel.app/api/unsplash?query={문맥에_맞는_영문_명사_1개}" alt="{설명}" style="width:100%; max-width: 600px; display: block; margin: 30px auto; border-radius:12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">. {문맥에_맞는_영문_명사_1개} 부분에는 'lawyer', 'tax', 'office', 'contract' 등 상황에 맞는 단일 영문 명사 1개만 넣어.
 </html_constraints>
     `;
 
