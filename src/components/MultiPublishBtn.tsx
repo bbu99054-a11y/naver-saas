@@ -63,31 +63,25 @@ export function MultiPublishBtn({ articleId, title, content }: MultiPublishBtnPr
   }
 
   return (
-    <div className="flex flex-col gap-3 mt-4 pt-4 border-t border-slate-100">
-      <p className="text-sm font-bold text-slate-700 mb-1">🔗 타 플랫폼 원클릭 동시 발행</p>
-      
+    <div className="flex gap-2">
       <Button 
         onClick={() => handlePublish('wordpress')}
         disabled={wpLoading}
-        className="w-full bg-blue-600 hover:bg-blue-700 text-white flex justify-between items-center h-12"
+        title="워드프레스에 발행"
+        className="bg-blue-600 hover:bg-blue-700 text-white px-3 flex-1 h-11 shadow-sm"
       >
-        <span className="flex items-center gap-2">
-          {wpLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Globe className="w-5 h-5" />}
-          워드프레스에 원클릭 발행
-        </span>
-        <ExternalLink className="w-4 h-4 opacity-50" />
+        {wpLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Globe className="w-5 h-5" />}
+        <span className="hidden xl:inline ml-2">워드프레스</span>
       </Button>
 
       <Button 
         onClick={() => handlePublish('tistory')}
         disabled={tsLoading}
-        className="w-full bg-orange-500 hover:bg-orange-600 text-white flex justify-between items-center h-12"
+        title="티스토리에 발행"
+        className="bg-orange-500 hover:bg-orange-600 text-white px-3 flex-1 h-11 shadow-sm"
       >
-        <span className="flex items-center gap-2">
-          {tsLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <FileText className="w-5 h-5" />}
-          티스토리에 원클릭 발행
-        </span>
-        <ExternalLink className="w-4 h-4 opacity-50" />
+        {tsLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <FileText className="w-5 h-5" />}
+        <span className="hidden xl:inline ml-2">티스토리</span>
       </Button>
     </div>
   )

@@ -16,9 +16,10 @@ const useToast = () => {
 
 interface CopyToNaverBtnProps {
   content: string;
+  className?: string;
 }
 
-export function CopyToNaverBtn({ content }: CopyToNaverBtnProps) {
+export function CopyToNaverBtn({ content, className = '' }: CopyToNaverBtnProps) {
   const [isCopied, setIsCopied] = useState(false)
   const [showIdModal, setShowIdModal] = useState(false)
   const [naverIdInput, setNaverIdInput] = useState('')
@@ -118,12 +119,12 @@ export function CopyToNaverBtn({ content }: CopyToNaverBtnProps) {
     <>
       <Button 
         onClick={handleCopyClick}
-        className={`w-full font-semibold shadow-md transition-all ${isCopied ? 'bg-green-600 hover:bg-green-700 text-white' : 'bg-[#03C75A] hover:bg-[#02b350] text-white'}`}
+        className={`font-semibold shadow-md transition-all ${isCopied ? 'bg-green-600 hover:bg-green-700 text-white' : 'bg-[#03C75A] hover:bg-[#02b350] text-white'} ${className}`}
       >
         {isCopied ? (
-          <><CheckCircle2 className="w-4 h-4 mr-2" /> 클립보드 저장 완료!</>
+          <><CheckCircle2 className="w-4 h-4 mr-2" /> <span className="hidden xl:inline">복사 완료!</span></>
         ) : (
-          <><Copy className="w-4 h-4 mr-2" /> 네이버 블로그 완벽 호환 복사</>
+          <><Copy className="w-4 h-4 mr-2" /> <span className="hidden xl:inline">블로그 복사</span></>
         )}
       </Button>
 

@@ -27,9 +27,10 @@ export default function WritePage() {
   const initialKeyword = searchParams.get('keyword') || ''
 
   const [keyword, setKeyword] = useState(initialKeyword)
-  const [tone, setTone] = useState('친근하고 유머러스한 이웃 느낌')
-  const [model, setModel] = useState('claude-5-sonnet-latest')
+  const [tone, setTone] = useState('친근하고 전문적인 블로거 톤 (20~30대 타겟)')
+  const [model, setModel] = useState('gemini-3.6-flash')
   const [experience, setExperience] = useState('')
+  const [postTitle, setPostTitle] = useState('')
   const { toast } = useToast()
 
   const { completion, complete, isLoading, error } = useCompletion({
@@ -77,6 +78,8 @@ export default function WritePage() {
       title: '생성 시작',
       description: 'AI가 C-Rank 및 DIA 알고리즘에 맞춰 글을 작성합니다. (약 30~60초 소요)',
     })
+
+    setPostTitle(`${keyword.trim()} (SEO 최적화)`)
 
     complete(keyword, {
       body: {
@@ -213,9 +216,20 @@ export default function WritePage() {
         
         {/* 하단 복사 버튼 영역 */}
         <div className="p-4 bg-white border-t border-slate-200 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] z-10 flex flex-col gap-3">
-           <AutoPublishBtn title={`${keyword} (SEO 최적화)`} content={parsedHtml} />
-           <MultiPublishBtn title={`${keyword} (SEO 최적화)`} content={parsedHtml} />
-           <CopyToNaverBtn content={parsedHtml} />
+           <div className="flex items-center gap-2">
+             <label className="text-sm font-bold text-slate-700 whitespace-nowrap">제목</label>
+             <Input 
+               value={postTitle}
+               onChange={(e) => setPostTitle(e.target.value)}
+               placeholder="생성된 글의 제목이 여기에 표시됩니다."
+               className="font-bold text-slate-800 focus-visible:ring-indigo-500 h-10"
+             />
+           </div>
+           <div className="flex flex-col xl:flex-row gap-2 items-stretch">
+             <CopyToNaverBtn content={parsedHtml} className="flex-1 h-11" />
+             <AutoPublishBtn title={postTitle} content={parsedHtml} className="flex-1 h-11" />
+             <MultiPublishBtn title={postTitle} content={parsedHtml} />
+           </div>
         </div>
       </Card>
 

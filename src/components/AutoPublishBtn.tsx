@@ -13,10 +13,10 @@ const useToast = () => {
   }
 }
 
-export function AutoPublishBtn({ title, content }: { title: string, content: string }) {
+export function AutoPublishBtn({ title, content, className = '' }: { title: string, content: string, className?: string }) {
   const [isInstalled, setIsInstalled] = useState(false)
   const [naverId, setNaverId] = useState("")
-  const [isEditingId, setIsEditingId] = useState(false)
+  const [showIdModal, setShowIdModal] = useState(false)
   const { toast } = useToast()
 
   useEffect(() => {
@@ -38,17 +38,7 @@ export function AutoPublishBtn({ title, content }: { title: string, content: str
     return () => clearInterval(interval);
   }, [])
 
-  const handleSaveId = () => {
-    if (!naverId.trim()) return;
-    localStorage.setItem("seo_naver_id", naverId.trim())
-    setIsEditingId(false)
-    toast({
-      title: "저장 완료",
-      description: "네이버 아이디가 로컬에 저장되었습니다."
-    })
-  }
-
-  const handlePublish = () => {
+  const handlePublishClick = () => {
     if (!content) {
       toast({ title: "발행 불가", description: "먼저 AI 원고를 생성해주세요." })
       return
@@ -58,11 +48,23 @@ export function AutoPublishBtn({ title, content }: { title: string, content: str
       return
     }
     if (!naverId.trim()) {
-      setIsEditingId(true)
-      toast({ title: "아이디 입력 필요", description: "발행할 네이버 아이디를 먼저 입력해주세요." })
+      setShowIdModal(true)
       return
     }
+    executePublish(naverId)
+  }
 
+  const handleSaveIdAndPublish = () => {
+    if (!naverId.trim()) {
+      toast({ title: "알림", description: "네이버 아이디를 입력해 주세요." })
+      return
+    }
+    localStorage.setItem("seo_naver_id", naverId.trim())
+    setShowIdModal(false)
+    executePublish(naverId.trim())
+  }
+
+  const executePublish = (idToUse: string) => {
     toast({
       title: "🚀 발행 명령 전송 완료",
       description: "새 탭에서 네이버 블로그가 열리며 자동 발행이 시작됩니다."
@@ -70,45 +72,59 @@ export function AutoPublishBtn({ title, content }: { title: string, content: str
 
     window.postMessage({
       type: "FROM_SAAS_PUBLISH",
-      payload: { title, content, naverId: naverId.trim() }
+      payload: { title, content, naverId: idToUse }
     }, "*")
   }
 
   return (
-    <div className="flex flex-col w-full gap-2">
-      {!naverId || isEditingId ? (
-        <div className="flex items-center gap-2 mb-2 p-3 bg-slate-50 border border-slate-200 rounded-md">
-          <Input 
-            placeholder="본인의 네이버 아이디 입력" 
-            value={naverId}
-            onChange={(e) => setNaverId(e.target.value)}
-            className="h-9"
-          />
-          <Button onClick={handleSaveId} size="sm" className="whitespace-nowrap">저장</Button>
-        </div>
-      ) : (
-        <div className="text-xs text-slate-500 text-right w-full flex justify-end items-center mb-1 gap-1">
-          연동된 계정: <span className="font-bold text-indigo-600">{naverId}</span>
-          <button onClick={() => setIsEditingId(true)} className="text-slate-400 hover:text-slate-700 ml-1">
-            <Settings className="w-3 h-3" />
-          </button>
-        </div>
-      )}
-
+    <>
       <Button 
-        onClick={handlePublish}
-        className={`w-full font-bold shadow-lg h-12 text-md transition-all ${
+        onClick={handlePublishClick}
+        className={`font-bold shadow-md transition-all ${
           isInstalled 
             ? "bg-indigo-600 hover:bg-indigo-700 text-white" 
             : "bg-slate-300 text-slate-500 hover:bg-slate-300 cursor-not-allowed"
-        }`}
+        } ${className}`}
       >
         <Rocket className="w-5 h-5 mr-2" />
-        네이버 블로그 즉시 발행 (RPA)
+        <span className="hidden xl:inline">네이버 </span>자동 발행
         {!isInstalled && (
           <AlertCircle className="w-4 h-4 ml-2 text-rose-500" />
         )}
       </Button>
-    </div>
+
+      {/* Naver ID Modal */}
+      {showIdModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm px-4">
+          <div className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden animate-in fade-in zoom-in duration-200">
+            <div className="p-6">
+              <h3 className="text-xl font-bold text-slate-900 mb-2">네이버 아이디 연동</h3>
+              <p className="text-sm text-slate-500 mb-6">
+                발행하실 네이버 아이디를 입력해주세요.
+              </p>
+              
+              <div className="space-y-4">
+                <Input 
+                  placeholder="본인의 네이버 아이디 입력" 
+                  value={naverId}
+                  onChange={(e) => setNaverId(e.target.value)}
+                  className="h-12 border-slate-300 focus:ring-indigo-500"
+                  autoFocus
+                />
+                
+                <div className="flex gap-2 pt-2">
+                  <Button variant="outline" className="flex-1 h-12 text-slate-600" onClick={() => setShowIdModal(false)}>
+                    취소
+                  </Button>
+                  <Button className="flex-1 h-12 bg-indigo-600 hover:bg-indigo-700 text-white font-bold" onClick={handleSaveIdAndPublish}>
+                    저장 및 발행
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   )
 }
