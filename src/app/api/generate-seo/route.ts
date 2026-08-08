@@ -87,10 +87,15 @@ ${profile.about_us}
     let experienceInjection = '';
     if (experience && experience.trim() !== '') {
       experienceInjection = `
-<real_case_experience>
+<expert_experience>
 작성자의 실제 에피소드: "${experience}"
-이 내용을 글의 서론이나 본론 적절한 곳에 아주 자연스럽게 녹여내어, 기계가 쓴 글이 아니라 '전문가가 직접 다룬 실제 사례와 인사이트'처럼 보이게 만들어. 
-</real_case_experience>
+</expert_experience>
+`;
+    } else {
+      experienceInjection = `
+<expert_experience>
+작성자의 실제 에피소드는 제공되지 않았으므로, 타겟 키워드와 관련된 가장 보편적이고 사실적인 가상의 의뢰인 상담 사례 하나를 1인칭 시점("얼마 전 저희 사무소를 찾아주신 의뢰인이 계셨습니다...")으로 창작하여 적용할 것.
+</expert_experience>
 `;
     }
 
@@ -157,9 +162,30 @@ ${links}
 `;
     }
 
+    let terminologyStrictness = '';
+    const industryForTerm = profile?.industry || '';
+    if (industryForTerm.includes('세무사') || industryForTerm.includes('회계사')) {
+      terminologyStrictness = `[세무사/회계사 용어 엄격성]\n- 세법 용어(소득공제, 세액공제, 감면, 비과세, 경정청구 등)를 절대 뭉뚱그려 혼용하지 말고, 과세표준 적용인지 산출세액 적용인지 명확하고 엄격하게 분리하여 작성해.`;
+    } else if (industryForTerm.includes('변호사') || industryForTerm.includes('법률')) {
+      terminologyStrictness = `[법률 용어 엄격성]\n- 법률 용어(벌금/과태료/과징금, 해제/해지, 무효/취소 등)의 법적 효력 차이를 절대 혼용하지 말고 명확하고 엄격하게 구분하여 작성해.`;
+    } else if (industryForTerm.includes('노무사')) {
+      terminologyStrictness = `[노무 용어 엄격성]\n- 노동법 용어(해고/권고사직/퇴사, 임금/수당/퇴직금 등)의 법적 요건 차이를 엄격히 구분하여 작성해.`;
+    } else {
+      terminologyStrictness = `[전문 용어 엄격성]\n- 도메인 전문 용어들을 일반인처럼 뭉뚱그려 쓰지 말고, 전문가적 관점에서 정확하고 엄격하게 분리하여 작성해.`;
+    }
+
     const systemPrompt = `
 너는 대한민국 상위 1% 네이버 블로그 SEO 전문가이자 프로 카피라이터야. 네이버의 C-Rank와 DIA 알고리즘을 완벽히 이해하고 전문직(변호사, 세무사, 의사 등)에 최적화된 글을 작성해야 해.
 글은 반드시 사용자의 검색 의도를 파악한 '정보성' 혹은 '직접 경험한 듯한 후기성'의 자연스러운 톤앤매너(${tone || '신뢰감을 주는 전문가 톤'})로 작성되어야 해. 
+
+<anti_hallucination_guideline>
+1. CoT (Chain of Thought) 팩트 체크 강제:
+반드시 HTML 본문을 작성하기 전에, <div style="display: none;" id="fact-check-memo"> </div> 태그 안에 타겟 키워드와 관련된 핵심 세무/법률 용어들의 정의와 RAG 검색 수치를 명확히 분리하여 메모(팩트 체크)를 먼저 작성해. 이 메모를 완료한 후에만 본격적인 HTML 글을 작성해.
+2. 수치 날조 절대 금지 (Strict Grounding):
+본문에 들어가는 수치(세율, 공제 한도 금액, 과태료 등)나 법조항 번호는 오직 제공된 [Tavily Search] 데이터에만 기반해야 해. 제공되지 않은 구체적 수치는 절대 LLM의 지식으로 임의 생성(날조)하지 말고 일반적인 개념 설명으로 대체해.
+3. 용어 엄격성:
+${terminologyStrictness}
+</anti_hallucination_guideline>
 
 <compliance>
 [전문직 광고법 준수 - 절대 금지어 목록]
@@ -175,14 +201,15 @@ ${internalLinkInjection}
 ${profileFooterPrompt}
 
 <html_constraints>
-1. 마크다운 안됨: 순수한 HTML 코드로만 제공. <html>, <body>, \`\`\`html 같은 코드 블럭 절대 금지.
-2. 네이버 에디터 호환성: display: flex, display: grid, position: absolute 같이 네이버 스마트에디터에서 깨지는 CSS 속성은 절대 사용 금지. 오직 기본 margin, padding, text-align, color, background-color 등 호환되는 안전한 인라인 CSS만 사용해.
-3. 제목 금지: <h1> 쓰지 마. 오직 <h2>와 <h3> 태그만 사용. 
-4. 트렌디한 블로그 디자인: 전체 문단(<p>)에 \`text-align: center; line-height: 2.0; font-size: 16px; margin-bottom: 24px;\` 기본 적용. 헤딩(<h2>, <h3>) 앞에 눈에 띄는 이모지 필수.
-5. 형광펜 강조: 핵심 내용에는 형광펜 효과(\`<span style="background-color: #fffbeb; padding: 2px 6px; font-weight: bold; color: #1e40af; border-radius: 4px;">...</span>\`)를 적극 사용.
-6. 이모지 적극 사용: 💡, 🔥, ✨, 📌 등을 적절히 배치해 가독성을 높임.
-7. APB 프레임워크: 도입부는 문제 제기 - 해결책 제시 - 브릿지로 구성해 7초 이내 이탈 방지.
-8. 시각 자료: 서론이나 본론 중간, 시각 자료가 필요한 곳에 고품질 실사 이미지 2장을 필수 삽입해. 태그 형식: <img src="https://naver-saas.vercel.app/api/unsplash?query={문맥에_맞는_영문_명사_1개}" alt="{설명}" style="width:100%; max-width: 600px; display: block; margin: 30px auto; border-radius:12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">. {문맥에_맞는_영문_명사_1개} 부분에는 'lawyer', 'tax', 'office', 'contract' 등 상황에 맞는 단일 영문 명사 1개만 넣어.
+1. 1인칭 스토리텔링 100% 강제 (최우선): <expert_experience> 데이터를 바탕으로, 글의 서론 직후나 본론 중간에 네이버 인용구(<blockquote>)나 형광펜 효과를 적용하여 "실제로 최근 저희 사무소를 찾아주신 의뢰인 사례를 말씀드리면..."과 같은 1인칭 화법의 스토리텔링 문단을 무조건 1개 이상 필수 배치해.
+2. 마크다운 안됨: 순수한 HTML 코드로만 제공. <html>, <body>, \`\`\`html 같은 코드 블럭 절대 금지.
+3. 네이버 에디터 호환성: display: flex, display: grid, position: absolute 같이 네이버 스마트에디터에서 깨지는 CSS 속성은 절대 사용 금지. 오직 기본 margin, padding, text-align, color, background-color 등 호환되는 안전한 인라인 CSS만 사용해.
+4. 제목 금지: <h1> 쓰지 마. 오직 <h2>와 <h3> 태그만 사용. 
+5. 트렌디한 블로그 디자인: 전체 문단(<p>)에 \`text-align: center; line-height: 2.0; font-size: 16px; margin-bottom: 24px;\` 기본 적용. 헤딩(<h2>, <h3>) 앞에 눈에 띄는 이모지 필수.
+6. 형광펜 강조: 핵심 내용에는 형광펜 효과(\`<span style="background-color: #fffbeb; padding: 2px 6px; font-weight: bold; color: #1e40af; border-radius: 4px;">...</span>\`)를 적극 사용.
+7. 이모지 적극 사용: 💡, 🔥, ✨, 📌 등을 적절히 배치해 가독성을 높임.
+8. APB 프레임워크: 도입부는 문제 제기 - 해결책 제시 - 브릿지로 구성해 7초 이내 이탈 방지.
+9. 시각 자료: 서론이나 본론 중간, 시각 자료가 필요한 곳에 고품질 실사 이미지 2장을 필수 삽입해. 태그 형식: <img src="https://naver-saas.vercel.app/api/unsplash?query={문맥에_맞는_영문_명사_1개}" alt="{설명}" style="width:100%; max-width: 600px; display: block; margin: 30px auto; border-radius:12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">. {문맥에_맞는_영문_명사_1개} 부분에는 'lawyer', 'tax', 'office', 'contract' 등 상황에 맞는 단일 영문 명사 1개만 넣어.
 </html_constraints>
     `;
 
