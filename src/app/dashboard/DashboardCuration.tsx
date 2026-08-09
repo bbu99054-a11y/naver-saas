@@ -26,8 +26,8 @@ export function DashboardCuration({ profile }: { profile: any }) {
       if (result.error) {
         setError(result.error)
       } else {
-        // 상위 3개 노출
-        setClusters(result.clusters.slice(0, 3))
+        // 상위 10개 노출
+        setClusters(result.clusters.slice(0, 10))
       }
     } catch (err: any) {
       setError(err.message || "알 수 없는 에러가 발생했습니다.")
@@ -65,7 +65,7 @@ export function DashboardCuration({ profile }: { profile: any }) {
       <CardHeader className="bg-indigo-50/30 pb-4">
         <CardTitle className="text-xl flex items-center gap-2 text-indigo-900">
           <Sparkles className="w-5 h-5 text-indigo-500" />
-          오늘의 추천 로컬 키워드 Top 3
+          오늘의 추천 로컬 키워드 Top 10
         </CardTitle>
         <CardDescription className="text-indigo-700">
           사장님의 매장({profile.address}) 주변에서 검색량이 발생하는 유효 키워드입니다. 바로 글을 작성해 보세요!
@@ -76,7 +76,7 @@ export function DashboardCuration({ profile }: { profile: any }) {
           <div className="flex flex-col items-center justify-center py-8 text-center bg-slate-50 rounded-xl border border-dashed border-slate-200">
             <h3 className="text-lg font-bold text-slate-700 mb-2">어떤 키워드로 글을 쓸지 고민되시나요?</h3>
             <p className="text-sm text-slate-500 mb-6 max-w-md">
-              AI가 사장님의 업종과 지역 데이터를 분석하여, 지금 당장 쓰기 좋고 네이버 검색량이 있는 블루오션 키워드 3개를 발굴해 드립니다.
+              AI가 사장님의 업종과 지역 데이터를 분석하여, 지금 당장 쓰기 좋고 상위노출 가능성이 높은 블루오션 키워드 10개를 발굴해 드립니다.
             </p>
             <Button 
               onClick={handleGenerate} 
@@ -94,18 +94,26 @@ export function DashboardCuration({ profile }: { profile: any }) {
         ) : clusters.length === 0 ? (
           <div className="text-center py-8 text-slate-500">추천할 만한 키워드를 찾지 못했습니다.</div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {clusters.map((cluster: any, idx: number) => {
-              const vol = cluster.monthlyPcQcCnt + cluster.monthlyMobileQcCnt
+              const scoreColor = cluster.score >= 80 ? 'text-blue-700 bg-blue-50 border-blue-100' : 'text-emerald-700 bg-emerald-50 border-emerald-100'
+              const compColor = cluster.competitionLevel === '낮음' ? 'text-green-700 bg-green-50 border-green-100' : cluster.competitionLevel === '보통' ? 'text-orange-700 bg-orange-50 border-orange-100' : 'text-red-700 bg-red-50 border-red-100'
+
               return (
-                <div key={idx} className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow flex flex-col h-full animate-in fade-in zoom-in duration-300" style={{ animationDelay: `${idx * 100}ms` }}>
+                <div key={idx} className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow flex flex-col h-full animate-in fade-in zoom-in duration-300" style={{ animationDelay: `${(idx % 5) * 100}ms` }}>
                   <div className="mb-4">
-                    <h4 className="font-bold text-lg text-slate-800 leading-tight mb-2">
+                    <h4 className="font-bold text-lg text-slate-800 leading-tight mb-3">
                       {cluster.keyword}
                     </h4>
-                    <div className="inline-flex items-center gap-1 bg-green-50 text-green-700 text-xs px-2 py-1 rounded-md font-medium border border-green-100">
-                      <TrendingUp className="w-3 h-3" />
-                      월 검색량: {vol > 0 ? vol.toLocaleString() : '10미만'}
+                    <div className="flex flex-wrap gap-2">
+                      <div className={\`inline-flex items-center gap-1 text-xs px-2 py-1 rounded-md font-medium border \${scoreColor}\`}>
+                        <Sparkles className="w-3 h-3" />
+                        AI 추천 점수: {cluster.score}점
+                      </div>
+                      <div className={\`inline-flex items-center gap-1 text-xs px-2 py-1 rounded-md font-medium border \${compColor}\`}>
+                        <TrendingUp className="w-3 h-3" />
+                        경쟁 강도: {cluster.competitionLevel}
+                      </div>
                     </div>
                   </div>
                   
