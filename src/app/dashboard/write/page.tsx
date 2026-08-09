@@ -12,6 +12,7 @@ import { Loader2, Sparkles, PenTool } from 'lucide-react'
 import { CopyToNaverBtn } from '@/components/CopyToNaverBtn'
 import { AutoPublishBtn } from '@/components/AutoPublishBtn'
 import { MultiPublishBtn } from '@/components/MultiPublishBtn'
+import { checkKeywordDuplicate } from '@/actions/articles'
 
 // Mock useToast fallback
 const useToast = () => {
@@ -50,27 +51,47 @@ export default function WritePage() {
     }
   })
 
+  // 실시간 스트리밍 중 제목 파싱
+  useEffect(() => {
+    const titleMatch = completion.match(/<post_title>([\s\S]*?)<\/post_title>/i);
+    if (titleMatch && titleMatch[1]) {
+      setPostTitle(titleMatch[1].trim());
+    }
+  }, [completion]);
+
   // Parse markdown completion to HTML
   const parsedHtml = useMemo(() => {
     if (!completion) return '';
     
-    // 스트리밍 중이 아닐 때 완벽히 닫힌 코드블록 추출
+    // 1. JSON 스트리밍에서 에러 발생 시 처리
+    if (completion.includes('"error"')) {
+      return `<div style="color:red; padding:20px;">생성 중 오류가 발생했습니다. 크레딧 부족이거나 서버 일시적 장애일 수 있습니다.</div>`
+    }
+
+    let content = completion;
     const match = completion.match(/```(?:html)?\n([\s\S]*?)```/i);
     if (match) {
-      return match[1].trim();
+      content = match[1].trim();
+    } else {
+      content = completion
+        .replace(/^[\s\S]*?```(?:html)?\n?/i, '')
+        .replace(/\n?```$/i, '')
+        .trim();
     }
-    
-    // 스트리밍 중이거나 코드블록이 없을 때 앞뒤 백틱 제거
-    return completion
-      .replace(/^[\s\S]*?```(?:html)?\n?/i, '') // 시작 백틱과 그 앞의 잡담 제거
-      .replace(/\n?```$/i, '')
-      .trim();
+
+    return content.replace(/<post_title>[\s\S]*?<\/post_title>/i, '').trim();
   }, [completion]);
 
-  const handleGenerate = () => {
+  const handleGenerate = async () => {
     if (!keyword.trim()) {
       toast({ title: '알림', description: '타겟 키워드를 입력해 주세요.' })
       return
+    }
+
+    const isDuplicate = await checkKeywordDuplicate(keyword.trim())
+    if (isDuplicate) {
+      const proceed = window.confirm('⚠️ 중복 키워드 경고\n\n최근 30일 내에 동일한 키워드로 작성된 글이 있습니다.\n네이버 로직상 유사문서(저품질)로 분류될 위험이 높습니다.\n\n정말 이 키워드로 계속 작성하시겠습니까?')
+      if (!proceed) return;
     }
 
     toast({
@@ -78,7 +99,7 @@ export default function WritePage() {
       description: 'AI가 C-Rank 및 DIA 알고리즘에 맞춰 글을 작성합니다. (약 30~60초 소요)',
     })
 
-    setPostTitle(`${keyword.trim()} (SEO 최적화)`)
+    setPostTitle(`${keyword.trim()} (AI 제목 생성 중...)`)
 
     complete(keyword, {
       body: {
@@ -211,8 +232,18 @@ export default function WritePage() {
                value={postTitle}
                onChange={(e) => setPostTitle(e.target.value)}
                placeholder="생성된 글의 제목이 여기에 표시됩니다."
-               className="font-bold text-slate-800 focus-visible:ring-indigo-500 h-10"
+               className="font-bold text-slate-800 focus-visible:ring-indigo-500 h-10 flex-1"
              />
+             <Button 
+               variant="outline" 
+               className="h-10 shrink-0 border-indigo-200 text-indigo-700 hover:bg-indigo-50"
+               onClick={() => {
+                 navigator.clipboard.writeText(postTitle)
+                 toast({ title: '복사 완료', description: '제목이 클립보드에 복사되었습니다.' })
+               }}
+             >
+               제목 복사
+             </Button>
            </div>
            <div className="flex flex-col xl:flex-row gap-2 items-stretch">
              <CopyToNaverBtn content={parsedHtml} className="flex-1 h-11" />

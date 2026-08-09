@@ -202,10 +202,11 @@ ${internalLinkInjection}
 ${profileFooterPrompt}
 
 <html_constraints>
+0. 응답의 가장 첫 줄에 반드시 <post_title>네이버 검색 유저의 클릭을 유도하는 매혹적인 1인칭 후킹 제목</post_title> 을 작성해.
 1. 1인칭 스토리텔링 100% 강제 (최우선): <expert_experience> 데이터를 바탕으로, 글의 서론 직후나 본론 중간에 네이버 인용구(<blockquote>)나 형광펜 효과를 적용하여 "실제로 최근 저희 사무소를 찾아주신 의뢰인 사례를 말씀드리면..."과 같은 1인칭 화법의 스토리텔링 문단을 무조건 1개 이상 필수 배치해.
 2. 마크다운 안됨: 순수한 HTML 코드로만 제공. <html>, <body>, \`\`\`html 같은 코드 블럭 절대 금지.
 3. 네이버 에디터 호환성: display: flex, display: grid, position: absolute 같이 네이버 스마트에디터에서 깨지는 CSS 속성은 절대 사용 금지. 오직 기본 margin, padding, text-align, color, background-color 등 호환되는 안전한 인라인 CSS만 사용해.
-4. 제목 금지: <h1> 쓰지 마. 오직 <h2>와 <h3> 태그만 사용. 
+4. 제목 금지: <post_title> 태그 외에 본문 안에는 <h1> 쓰지 마. 오직 <h2>와 <h3> 태그만 사용. 
 5. 트렌디한 블로그 디자인: 전체 문단(<p>)에 \`text-align: center; line-height: 2.0; font-size: 16px; margin-bottom: 24px;\` 기본 적용. 헤딩(<h2>, <h3>) 앞에 눈에 띄는 이모지 필수.
 6. 형광펜 강조: 핵심 내용에는 형광펜 효과(\`<span style="background-color: #fffbeb; padding: 2px 6px; font-weight: bold; color: #1e40af; border-radius: 4px;">...</span>\`)를 적극 사용.
 7. 이모지 적극 사용: 💡, 🔥, ✨, 📌 등을 적절히 배치해 가독성을 높임.
@@ -313,13 +314,17 @@ ${profileFooterPrompt}
             });
           }
 
+          const titleMatch = text.match(/<post_title>([\s\S]*?)<\/post_title>/i);
+          const generatedTitle = titleMatch && titleMatch[1] ? titleMatch[1].trim() : `${prompt} (SEO 최적화)`;
+          const cleanHtml = text.replace(/<post_title>[\s\S]*?<\/post_title>/i, '').trim();
+
           await prisma.article.create({
             data: {
               user_id: user.id,
               project_id: project.id,
-              title: `${prompt} (SEO 최적화)`,
+              title: generatedTitle,
               target_keyword: prompt,
-              content_html: text,
+              content_html: cleanHtml,
               status: 'DRAFT',
             }
           });
