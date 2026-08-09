@@ -106,11 +106,11 @@ export function DashboardCuration({ profile }: { profile: any }) {
                       {cluster.keyword}
                     </h4>
                     <div className="flex flex-wrap gap-2">
-                      <div className={\`inline-flex items-center gap-1 text-xs px-2 py-1 rounded-md font-medium border \${scoreColor}\`}>
+                      <div className={`inline-flex items-center gap-1 text-xs px-2 py-1 rounded-md font-medium border ${scoreColor}`}>
                         <Sparkles className="w-3 h-3" />
                         AI 추천 점수: {cluster.score}점
                       </div>
-                      <div className={\`inline-flex items-center gap-1 text-xs px-2 py-1 rounded-md font-medium border \${compColor}\`}>
+                      <div className={`inline-flex items-center gap-1 text-xs px-2 py-1 rounded-md font-medium border ${compColor}`}>
                         <TrendingUp className="w-3 h-3" />
                         경쟁 강도: {cluster.competitionLevel}
                       </div>

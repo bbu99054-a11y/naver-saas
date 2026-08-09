@@ -4,7 +4,6 @@ import { openai } from '@ai-sdk/openai'
 import { google } from '@ai-sdk/google'
 import { z } from 'zod'
 import { createClient } from '@/lib/supabase/server'
-import { fetchNaverKeywords } from '@/lib/naverApi'
 
 export const maxDuration = 60
 
@@ -12,7 +11,9 @@ const clusterSchema = z.object({
   clusters: z.array(z.object({
     keyword: z.string().describe('세부 클러스터 키워드 (예: 블로그스팟 애드센스 승인)'),
     intent: z.string().describe('사용자의 검색 의도 (예: 정보 탐색, 문제 해결)'),
-    reason: z.string().describe('이 키워드가 필러 문서의 SEO 지수에 도움이 되는 이유')
+    reason: z.string().describe('이 키워드가 필러 문서의 SEO 지수에 도움이 되는 이유'),
+    competitionLevel: z.enum(['낮음', '보통', '높음']).describe('예상 경쟁 강도'),
+    score: z.number().min(1).max(100).describe('AI 추천 점수 (1~100)')
   }))
 })
 
@@ -36,18 +37,23 @@ export async function POST(req: Request) {
     if (model === 'gemini-3.6-flash') {
       aiModel = google('gemini-3.6-flash');
     } else {
-      // Default to OpenAI for structured output reliability
       aiModel = openai('gpt-5.6-luna');
     }
 
-    // 1. AI에게 클러스터 키워드 5~8개 추출 요청
     const { object } = await generateObject({
       model: aiModel,
       schema: clusterSchema,
       prompt: `
 당신은 네이버 블로그 SEO 전문가입니다. 
-다음 필러(Pillar) 키워드를 바탕으로, 블로그의 전문성 지수(Topical Authority)를 극대화할 수 있는 세부 클러스터(Cluster) 키워드 6개를 제안해 주세요.
-검색량이 있을 법한 현실적이고 구체적인 롱테일 키워드여야 합니다.
+다음 필러(Pillar) 키워드를 바탕으로, 블로그의 전문성 지수(Topical Authority)를 극대화할 수 있는 세부 클러스터(Cluster) 키워드 10개를 제안해 주세요.
+
+[중요 제약사항]
+1. 너무 긴 문장형 키워드는 절대 피하세요. (예: '강남 법인 설립 인허가 대행 행정사 추천' -> 금지)
+2. 실제 일반인들이 네이버 검색창에 타이핑할 법한 2~3어절의 짧고 명확한 명사 조합으로 작성하세요. (예: '강남 행정사', '법인설립 대행', '삼성역 비자연장')
+3. 글자수는 띄어쓰기 포함 최대 15자를 넘지 않도록 하세요.
+4. 검색량이 0인 유령 키워드가 나오지 않도록 대중적인 단어를 포함하세요.
+5. competitionLevel은 해당 키워드로 상위노출하기 얼마나 어려운지를 추정하여 '낮음', '보통', '높음' 중 하나로 설정하세요.
+6. score는 이 키워드로 글을 썼을 때의 예상 트래픽과 전환율을 종합하여 1~100 사이의 점수로 매겨주세요.
 
 필러 키워드: ${pillarKeyword}
       `,
@@ -57,43 +63,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: '키워드 클러스터를 생성하지 못했습니다.' }, { status: 500 })
     }
 
-    // 2. 추출된 키워드 배열을 네이버 API로 검색량 조회
-    const aiKeywords = object.clusters.map(c => c.keyword);
-    
-    // 네이버 API는 한 번에 5개까지만 지원할 수 있지만, 
-    // 실제로는 hintKeywords에 콤마로 구분해서 여러 개를 넣을 수 있습니다. 
-    let naverData: any[] = [];
-    try {
-      const chunk1 = aiKeywords.slice(0, 5);
-      const res1 = await fetchNaverKeywords(chunk1);
-      naverData = [...res1];
-      
-      if (aiKeywords.length > 5) {
-        const chunk2 = aiKeywords.slice(5, 10);
-        const res2 = await fetchNaverKeywords(chunk2);
-        naverData = [...naverData, ...res2];
-      }
-    } catch (e) {
-      console.error('Naver API failed during clustering:', e);
-      // 네이버 API가 실패해도 AI 결과물은 반환하도록 함
-    }
-
-    // 3. AI 결과와 네이버 검색량 데이터 병합
-    const finalClusters = object.clusters.map(cluster => {
-      // 띄어쓰기를 없앤 상태로 비교해야 매칭 확률이 높음
-      const cleanTarget = cluster.keyword.replace(/\s+/g, '').toLowerCase();
-      const matchedStat = naverData.find((n: any) => n.relKeyword.toLowerCase() === cleanTarget);
-
-      return {
-        ...cluster,
-        monthlyPcQcCnt: matchedStat ? (matchedStat.monthlyPcQcCnt === '< 10' ? 0 : Number(matchedStat.monthlyPcQcCnt)) : 0,
-        monthlyMobileQcCnt: matchedStat ? (matchedStat.monthlyMobileQcCnt === '< 10' ? 0 : Number(matchedStat.monthlyMobileQcCnt)) : 0,
-        monthlyAvePcClkCnt: matchedStat ? Number(matchedStat.monthlyAvePcClkCnt || 0) : 0,
-        monthlyAveMobileClkCnt: matchedStat ? Number(matchedStat.monthlyAveMobileClkCnt || 0) : 0,
-      }
-    });
-
-    return NextResponse.json({ success: true, clusters: finalClusters });
+    return NextResponse.json({ success: true, clusters: object.clusters });
 
   } catch (error: any) {
     console.error('Clustering Generation API error:', error);

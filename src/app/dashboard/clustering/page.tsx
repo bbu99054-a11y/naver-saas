@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter }
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Loader2, Network, Search, PenTool, TrendingUp, Target, BarChart2 } from 'lucide-react'
+import { Loader2, Network, Search, PenTool, TrendingUp, Target, BarChart2, Sparkles } from 'lucide-react'
 
 // Mock useToast fallback
 const useToast = () => {
@@ -21,10 +21,8 @@ interface Cluster {
   keyword: string;
   intent: string;
   reason: string;
-  monthlyPcQcCnt: number;
-  monthlyMobileQcCnt: number;
-  monthlyAvePcClkCnt: number;
-  monthlyAveMobileClkCnt: number;
+  competitionLevel: string;
+  score: number;
 }
 
 export default function ClusteringPage() {
@@ -150,8 +148,6 @@ export default function ClusteringPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {clusters.map((cluster, idx) => {
-              const totalVol = cluster.monthlyPcQcCnt + cluster.monthlyMobileQcCnt;
-              
               return (
                 <Card key={idx} className="flex flex-col h-full hover:shadow-md transition-shadow border-slate-200">
                   <CardHeader className="pb-3 border-b border-slate-100 bg-slate-50/50">
@@ -185,16 +181,30 @@ export default function ClusteringPage() {
                       </div>
                     </div>
 
-                    <div className="bg-white border border-slate-200 rounded-md p-3 flex justify-between items-center shadow-sm">
-                      <div className="flex items-center gap-2">
-                        <div className="bg-green-100 p-1.5 rounded-md">
-                          <BarChart2 className="w-4 h-4 text-green-700" />
+                    <div className="flex gap-2">
+                      <div className="bg-white border border-slate-200 rounded-md p-3 flex-1 flex justify-between items-center shadow-sm">
+                        <div className="flex items-center gap-2">
+                          <div className="bg-blue-100 p-1.5 rounded-md">
+                            <Sparkles className="w-4 h-4 text-blue-700" />
+                          </div>
+                          <span className="text-xs font-medium text-slate-600">추천 점수</span>
                         </div>
-                        <span className="text-xs font-medium text-slate-600">월간 검색량</span>
+                        <span className="font-bold text-slate-800">
+                          {cluster.score} <span className="text-xs font-normal text-slate-500">점</span>
+                        </span>
                       </div>
-                      <span className="font-bold text-slate-800">
-                        {totalVol > 0 ? totalVol.toLocaleString() : '-'} <span className="text-xs font-normal text-slate-500">건</span>
-                      </span>
+                      
+                      <div className="bg-white border border-slate-200 rounded-md p-3 flex-1 flex justify-between items-center shadow-sm">
+                        <div className="flex items-center gap-2">
+                          <div className="bg-green-100 p-1.5 rounded-md">
+                            <BarChart2 className="w-4 h-4 text-green-700" />
+                          </div>
+                          <span className="text-xs font-medium text-slate-600">경쟁 강도</span>
+                        </div>
+                        <span className="font-bold text-slate-800">
+                          {cluster.competitionLevel}
+                        </span>
+                      </div>
                     </div>
                   </CardContent>
                   <CardFooter className="pt-0 pb-4 px-4">
