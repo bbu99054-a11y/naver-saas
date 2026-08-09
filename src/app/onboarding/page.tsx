@@ -9,11 +9,11 @@ import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Store, MapPin, Phone, Link as LinkIcon, Loader2 } from 'lucide-react'
 
-// Mock useToast fallback
 const useToast = () => {
   return {
     toast: (props: { title: string, description: string, variant?: string }) => {
       console.log('Toast:', props);
+      alert(`${props.title}\n${props.description}`);
     }
   }
 }
