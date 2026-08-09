@@ -33,11 +33,11 @@ export async function POST(req: Request) {
       prisma.profile.findUnique({
         where: { user_id: user.id }
       }),
-      // 내부 링크 자동 생성을 위해 과거 작성된 원고 2개 랜덤/최신 조회
+      // 내부 링크 자동 생성을 위해 과거 작성된 원고 5개 최근순 조회 (문맥 필터링용)
       prisma.article.findMany({
         where: { user_id: user.id, status: 'DRAFT' },
         orderBy: { created_at: 'desc' },
-        take: 2,
+        take: 5,
         select: { id: true, title: true, target_keyword: true }
       })
     ])
@@ -152,12 +152,12 @@ ${activeTemplates.join('\n\n')}
       
       internalLinkInjection = `
 <internal_links>
-[중요 지시사항: 내부 링크 삽입]
-아래 제공된 과거 글 링크들을 본문 내에서 서로 '완전히 다른 문단'에 하나씩 분산시켜서 자연스럽게 문맥에 녹여 삽입해.
-절대 두 링크를 연달아 배치하거나 목록 형태로 나열하지 마.
-또한, "내부 링크 삽입 시", "(SEO 최적화)" 같은 시스템 지시어나 부연 설명을 본문에 절대 텍스트로 출력하지 마. 오직 자연스러운 문맥 속에 링크만 스며들게 해.
+[중요 지시사항: 조건부 내부 링크 삽입]
+아래 제공된 과거 글 목록을 확인하고, **현재 작성 중인 타겟 키워드와 문맥상 자연스럽게 이어질 수 있는 글이 있다면 최대 1~2개만 선택**하여 본문에 삽입해.
+만약 과거 글 내용이 현재 주제와 전혀 무관하다면(예: 비자 관련 글에 음주운전 링크 삽입 등) **절대로 억지로 삽입하지 말고 완전히 무시해**.
+링크를 삽입할 때는 서로 완전히 다른 문단에 분산시키고, "내부 링크 삽입 시" 등의 부연 설명 없이 자연스러운 문맥 속에 스며들게 해.
 
-삽입할 링크 목록:
+선택 가능한 과거 링크 후보 목록:
 ${links}
 </internal_links>
 `;
