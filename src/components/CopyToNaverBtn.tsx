@@ -34,12 +34,16 @@ export function CopyToNaverBtn({ content, className = '' }: CopyToNaverBtnProps)
   }, [])
 
   const executeCopy = async (idToUse?: string) => {
-    if (!content) return
+    // 사용자가 직접 편집한 DOM을 가져옴 (editor-preview)
+    const editorDom = document.getElementById('editor-preview')
+    const finalContent = editorDom ? editorDom.innerHTML : content
+
+    if (!finalContent) return
 
     try {
       // 가장 완벽한 네이버 에디터 호환성을 위한 contentEditable 트릭 복사
       const el = document.createElement('div')
-      el.innerHTML = content
+      el.innerHTML = finalContent
       el.style.position = 'fixed'
       el.style.left = '-9999px'
       el.style.top = '0'

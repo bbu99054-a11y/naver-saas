@@ -157,7 +157,7 @@ export default function LoginPage() {
           </div>
 
           <p className="text-center text-sm text-slate-500 mt-8">
-            계속 진행함으로써 귀하는 당사의 <Link href="#" className="underline underline-offset-4 hover:text-slate-900">서비스 약관</Link> 및 <Link href="#" className="underline underline-offset-4 hover:text-slate-900">개인정보 처리방침</Link>에 동의하게 됩니다.
+            계속 진행함으로써 귀하는 당사의 <Link href="/terms" className="underline underline-offset-4 hover:text-slate-900">서비스 약관</Link> 및 <Link href="/privacy" className="underline underline-offset-4 hover:text-slate-900">개인정보 처리방침</Link>에 동의하게 됩니다.
           </p>
         </div>
       </div>

@@ -208,7 +208,10 @@ export default function WritePage() {
             </div>
           ) : (
             <div 
-              className="p-8 max-w-3xl mx-auto bg-white min-h-full prose prose-slate prose-headings:text-slate-800 prose-h2:border-b-2 prose-h2:border-slate-100 prose-h2:pb-2 prose-h3:text-slate-700 prose-p:text-slate-600"
+              id="editor-preview"
+              contentEditable={true}
+              suppressContentEditableWarning={true}
+              className="p-8 max-w-3xl mx-auto bg-white min-h-full prose prose-slate prose-headings:text-slate-800 prose-h2:border-b-2 prose-h2:border-slate-100 prose-h2:pb-2 prose-h3:text-slate-700 prose-p:text-slate-600 outline-none focus:ring-2 focus:ring-indigo-500 rounded-lg transition-shadow"
               dangerouslySetInnerHTML={{ __html: parsedHtml }}
             />
           )}

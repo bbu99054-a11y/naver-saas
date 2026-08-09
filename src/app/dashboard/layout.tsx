@@ -52,7 +52,8 @@ export default async function DashboardLayout({ children }: { children: ReactNod
           </nav>
         </div>
         <div className="p-4 border-t border-slate-200 space-y-1">
-          <a href="#" className="flex items-center px-4 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 rounded-md">
+          {/* TODO: 대표님의 실제 노션 가이드 링크로 교체하세요 */}
+          <a href="https://notion.so" target="_blank" rel="noopener noreferrer" className="flex items-center px-4 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 rounded-md">
             <span className="mr-3">📖</span>
             사용 가이드
           </a>

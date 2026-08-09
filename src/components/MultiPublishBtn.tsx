@@ -30,10 +30,13 @@ export function MultiPublishBtn({ articleId, title, content }: MultiPublishBtnPr
     else setTsLoading(true)
 
     try {
+      const editorDom = document.getElementById('editor-preview')
+      const finalContent = editorDom ? editorDom.innerHTML : content
+
       const response = await fetch(`/api/publish/${platform}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ articleId, title, content })
+        body: JSON.stringify({ articleId, title, content: finalContent })
       })
 
       const data = await response.json()
