@@ -156,14 +156,15 @@ export default function OnboardingPage() {
             </div>
           )}
 
-          <Button 
+          <button 
+            type="button"
             onClick={handleSubmit} 
             disabled={isLoading}
-            className="w-full h-14 text-lg mt-8 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow-lg hover:shadow-xl transition-all"
+            className={`w-full h-14 text-lg mt-8 text-white rounded-xl shadow-lg transition-all flex items-center justify-center font-bold ${isLoading ? 'bg-indigo-400 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700 hover:shadow-xl'}`}
           >
             {isLoading ? <Loader2 className="w-6 h-6 animate-spin mr-2" /> : null}
             맞춤형 RAG 설정 완료하기 🚀
-          </Button>
+          </button>
         </CardContent>
       </Card>
     </div>
