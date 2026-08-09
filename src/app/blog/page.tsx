@@ -20,6 +20,7 @@ export default function BlogIndexPage() {
             PostSync
           </Link>
           <nav className="flex items-center gap-4">
+            <Link href="/seo-check" className="text-sm font-bold text-red-500">무료 진단</Link>
             <Link href="/blog" className="text-sm font-bold text-indigo-600">블로그</Link>
             <Link href="/login" className="text-sm font-semibold text-slate-600 hover:text-indigo-600 transition-colors">로그인</Link>
             <Link href="/login">
