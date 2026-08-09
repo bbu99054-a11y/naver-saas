@@ -21,28 +21,38 @@ export async function saveProfile(data: {
       return { success: false, error: 'Unauthorized' }
     }
 
-    const profile = await prisma.profile.upsert({
-      where: { user_id: user.id },
-      update: {
-        store_name: data.store_name,
-        industry: data.industry,
-        address: data.address,
-        phone: data.phone,
-        reservation_link: data.reservation_link,
-        tone: data.tone,
-        about_us: data.about_us,
-      },
-      create: {
-        user_id: user.id,
-        store_name: data.store_name,
-        industry: data.industry,
-        address: data.address,
-        phone: data.phone,
-        reservation_link: data.reservation_link,
-        tone: data.tone,
-        about_us: data.about_us,
-      }
+    const existingProfile = await prisma.profile.findUnique({
+      where: { user_id: user.id }
     })
+
+    let profile;
+    if (existingProfile) {
+      profile = await prisma.profile.update({
+        where: { user_id: user.id },
+        data: {
+          store_name: data.store_name,
+          industry: data.industry,
+          address: data.address,
+          phone: data.phone,
+          reservation_link: data.reservation_link,
+          tone: data.tone,
+          about_us: data.about_us,
+        }
+      })
+    } else {
+      profile = await prisma.profile.create({
+        data: {
+          user_id: user.id,
+          store_name: data.store_name,
+          industry: data.industry,
+          address: data.address,
+          phone: data.phone,
+          reservation_link: data.reservation_link,
+          tone: data.tone,
+          about_us: data.about_us,
+        }
+      })
+    }
 
     revalidatePath('/dashboard')
     return { success: true, profile }
