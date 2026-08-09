@@ -41,7 +41,7 @@ export default function ChannelTalk() {
 
     const windowAny = window as any;
     windowAny.ChannelIO('boot', {
-      pluginKey: 'YOUR_PLUGIN_KEY_HERE', // TODO: 대표님께서 발급받은 채널톡 플러그인 키를 여기에 넣으세요
+      pluginKey: '7a0bf250-fe54-437c-ab43-cf37863de7f2', // 대표님 채널톡 키 적용 완료
     });
 
     return () => {
