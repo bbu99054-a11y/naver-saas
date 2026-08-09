@@ -27,8 +27,10 @@ export default function ChannelTalk() {
         s.async = true;
         s.src = 'https://cdn.channel.io/plugin/ch-plugin-web.js';
         var x = document.getElementsByTagName('script')[0];
-        if (x.parentNode) {
+        if (x && x.parentNode) {
           x.parentNode.insertBefore(s, x);
+        } else {
+          document.head.appendChild(s);
         }
       }
       if (document.readyState === 'complete') {
