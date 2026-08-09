@@ -114,12 +114,7 @@ export default function WritePage() {
               />
             </div>
             
-            <div className="bg-gradient-to-r from-indigo-50 to-purple-50 p-3 rounded-lg border border-indigo-100/50 flex items-center justify-between">
-              <div>
-                <span className="text-xs font-bold text-indigo-800 bg-indigo-100 px-2 py-0.5 rounded-full mr-2">요금제 자동 배정</span>
-                <span className="text-sm text-slate-700 font-medium">최고 품질의 <strong className="text-indigo-700">Claude 5</strong> 모델을 사용하시려면 업그레이드 하세요!</span>
-              </div>
-            </div>
+
 
             <div className="space-y-2">
               <label className="text-sm font-medium text-slate-700">톤앤매너 (문체)</label>

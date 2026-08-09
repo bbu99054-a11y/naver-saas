@@ -99,10 +99,7 @@ export default function ClusteringPage() {
               />
             </div>
             
-            <div className="hidden md:flex items-center px-4 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-lg border border-indigo-100/50">
-              <span className="text-xs font-bold text-indigo-800 bg-indigo-100 px-2 py-0.5 rounded-full mr-2">요금제 자동 배정</span>
-              <span className="text-sm text-slate-700 font-medium">Pro 업그레이드 시 <strong className="text-indigo-700">Claude 5</strong> 배정</span>
-            </div>
+
 
             <Button 
               onClick={handleGenerate} 
