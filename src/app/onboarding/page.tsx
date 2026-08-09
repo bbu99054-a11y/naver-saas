@@ -22,6 +22,7 @@ export default function OnboardingPage() {
   const router = useRouter()
   const { toast } = useToast()
   const [isLoading, setIsLoading] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
   const [formData, setFormData] = useState({
     store_name: '',
     industry: '',
@@ -36,8 +37,10 @@ export default function OnboardingPage() {
   }
 
   const handleSubmit = async () => {
+    setErrorMessage('') // Reset error message
+
     if (!formData.store_name || !formData.industry || !formData.address) {
-      toast({ title: '알림', description: '매장명, 업종, 주소는 필수입니다.', variant: 'destructive' })
+      setErrorMessage('매장명, 업종, 사무소 상세 주소는 필수 입력 항목입니다.')
       return
     }
     
@@ -45,13 +48,13 @@ export default function OnboardingPage() {
     try {
       const res = await saveProfile(formData)
       if (res.success) {
-        toast({ title: '환영합니다!', description: '맞춤형 블로그 세팅이 완료되었습니다.' })
+        alert('맞춤형 블로그 세팅이 완료되었습니다!')
         router.push('/dashboard')
       } else {
         throw new Error(res.error)
       }
     } catch (error: any) {
-      toast({ title: '에러', description: error.message, variant: 'destructive' })
+      setErrorMessage(error.message || '저장 중 오류가 발생했습니다.')
     } finally {
       setIsLoading(false)
     }
@@ -146,6 +149,12 @@ export default function OnboardingPage() {
               </Select>
             </div>
           </div>
+
+          {errorMessage && (
+            <div className="mt-6 p-4 bg-red-50 border border-red-200 text-red-600 rounded-lg text-sm text-center">
+              {errorMessage}
+            </div>
+          )}
 
           <Button 
             onClick={handleSubmit} 
