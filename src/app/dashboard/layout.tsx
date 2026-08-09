@@ -32,11 +32,11 @@ export default async function DashboardLayout({ children }: { children: ReactNod
   }
 
   return (
-    <div className="flex min-h-screen flex-col md:flex-row bg-slate-50">
+    <div className="flex h-screen flex-col md:flex-row bg-slate-50 overflow-hidden">
       {/* Sidebar */}
-      <aside className="w-full md:w-64 bg-white border-r border-slate-200 flex-shrink-0 flex flex-col justify-between">
+      <aside className="w-full md:w-64 bg-white border-r border-slate-200 flex-shrink-0 flex flex-col justify-between overflow-y-auto">
         <div>
-          <div className="h-16 flex items-center px-6 border-b border-slate-200">
+          <div className="h-16 flex items-center px-6 border-b border-slate-200 sticky top-0 bg-white z-10">
             <h1 className="text-xl font-bold text-slate-800">PostSync</h1>
           </div>
           <nav className="p-4 space-y-1">
@@ -51,9 +51,9 @@ export default async function DashboardLayout({ children }: { children: ReactNod
             })}
           </nav>
         </div>
-        <div className="p-4 border-t border-slate-200 space-y-1">
+        <div className="p-4 border-t border-slate-200 space-y-1 bg-white mt-auto">
           {/* TODO: 대표님의 실제 노션 가이드 링크로 교체하세요 */}
-          <a href="https://notion.so" target="_blank" rel="noopener noreferrer" className="flex items-center px-4 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 rounded-md">
+          <a href="https://notion.so" className="flex items-center px-4 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 rounded-md">
             <span className="mr-3">📖</span>
             사용 가이드
           </a>
