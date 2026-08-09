@@ -21,7 +21,7 @@ const useToast = () => {
 export default function OnboardingPage() {
   const router = useRouter()
   const { toast } = useToast()
-  const [isPending, startTransition] = useTransition()
+  const [isLoading, setIsLoading] = useState(false)
   const [formData, setFormData] = useState({
     store_name: '',
     industry: '',
@@ -35,25 +35,26 @@ export default function OnboardingPage() {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!formData.store_name || !formData.industry || !formData.address) {
       toast({ title: '알림', description: '매장명, 업종, 주소는 필수입니다.', variant: 'destructive' })
       return
     }
     
-    startTransition(async () => {
-      try {
-        const res = await saveProfile(formData)
-        if (res.success) {
-          toast({ title: '환영합니다!', description: '맞춤형 블로그 세팅이 완료되었습니다.' })
-          router.push('/dashboard')
-        } else {
-          throw new Error(res.error)
-        }
-      } catch (error: any) {
-        toast({ title: '에러', description: error.message, variant: 'destructive' })
+    setIsLoading(true)
+    try {
+      const res = await saveProfile(formData)
+      if (res.success) {
+        toast({ title: '환영합니다!', description: '맞춤형 블로그 세팅이 완료되었습니다.' })
+        router.push('/dashboard')
+      } else {
+        throw new Error(res.error)
       }
-    })
+    } catch (error: any) {
+      toast({ title: '에러', description: error.message, variant: 'destructive' })
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -148,10 +149,10 @@ export default function OnboardingPage() {
 
           <Button 
             onClick={handleSubmit} 
-            disabled={isPending}
+            disabled={isLoading}
             className="w-full h-14 text-lg mt-8 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow-lg hover:shadow-xl transition-all"
           >
-            {isPending ? <Loader2 className="w-6 h-6 animate-spin mr-2" /> : null}
+            {isLoading ? <Loader2 className="w-6 h-6 animate-spin mr-2" /> : null}
             맞춤형 RAG 설정 완료하기 🚀
           </Button>
         </CardContent>
