@@ -2,7 +2,8 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { loadPaymentWidget, PaymentWidgetInstance } from '@tosspayments/payment-widget-sdk'
-import { useSearchParams, useRouter, Suspense } from 'next/navigation'
+import { useSearchParams, useRouter } from 'next/navigation'
+import { Suspense } from 'react'
 import { Button } from '@/components/ui/button'
 import { Loader2, ArrowLeft } from 'lucide-react'
 
