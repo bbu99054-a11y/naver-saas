@@ -28,7 +28,6 @@ export default function WritePage() {
 
   const [keyword, setKeyword] = useState(initialKeyword)
   const [tone, setTone] = useState('친근하고 전문적인 블로거 톤 (20~30대 타겟)')
-  const [model, setModel] = useState('gemini-3.6-flash')
   const [experience, setExperience] = useState('')
   const [postTitle, setPostTitle] = useState('')
   const { toast } = useToast()
@@ -84,7 +83,6 @@ export default function WritePage() {
     complete(keyword, {
       body: {
         tone,
-        model,
         experience
       }
     })
@@ -116,18 +114,11 @@ export default function WritePage() {
               />
             </div>
             
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-slate-700">AI 모델 (Multi-LLM)</label>
-              <Select value={model} onValueChange={(val) => setModel(val || '')} disabled={isLoading}>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="AI 모델 선택" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="claude-5-sonnet-latest">Claude 5 Sonnet (최고 품질/추천)</SelectItem>
-                  <SelectItem value="gemini-3.6-flash">Gemini 3.6 Flash (초고속/대량생산)</SelectItem>
-                  <SelectItem value="gpt-5.6-luna">GPT-5.6 Luna (가성비)</SelectItem>
-                </SelectContent>
-              </Select>
+            <div className="bg-gradient-to-r from-indigo-50 to-purple-50 p-3 rounded-lg border border-indigo-100/50 flex items-center justify-between">
+              <div>
+                <span className="text-xs font-bold text-indigo-800 bg-indigo-100 px-2 py-0.5 rounded-full mr-2">요금제 자동 배정</span>
+                <span className="text-sm text-slate-700 font-medium">최고 품질의 <strong className="text-indigo-700">Claude 5</strong> 모델을 사용하시려면 업그레이드 하세요!</span>
+              </div>
             </div>
 
             <div className="space-y-2">

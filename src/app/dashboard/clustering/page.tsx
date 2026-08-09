@@ -27,7 +27,6 @@ interface Cluster {
 
 export default function ClusteringPage() {
   const [pillarKeyword, setPillarKeyword] = useState('')
-  const [model, setModel] = useState('gpt-5.6-luna')
   const [isLoading, setIsLoading] = useState(false)
   const [clusters, setClusters] = useState<Cluster[]>([])
   const { toast } = useToast()
@@ -51,7 +50,7 @@ export default function ClusteringPage() {
       const res = await fetch('/api/generate-clusters', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ pillarKeyword, model })
+        body: JSON.stringify({ pillarKeyword }),
       })
 
       const data = await res.json()
@@ -100,17 +99,9 @@ export default function ClusteringPage() {
               />
             </div>
             
-            <div className="space-y-2 w-full md:w-48">
-              <label className="text-sm font-medium text-slate-700">AI 모델</label>
-              <Select value={model} onValueChange={(val) => setModel(val || '')} disabled={isLoading}>
-                <SelectTrigger className="h-11">
-                  <SelectValue placeholder="AI 모델 선택" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="gpt-5.6-luna">GPT-5.6 Luna (추천)</SelectItem>
-                  <SelectItem value="gemini-3.6-flash">Gemini 3.6 Flash</SelectItem>
-                </SelectContent>
-              </Select>
+            <div className="hidden md:flex items-center px-4 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-lg border border-indigo-100/50">
+              <span className="text-xs font-bold text-indigo-800 bg-indigo-100 px-2 py-0.5 rounded-full mr-2">요금제 자동 배정</span>
+              <span className="text-sm text-slate-700 font-medium">Pro 업그레이드 시 <strong className="text-indigo-700">Claude 5</strong> 배정</span>
             </div>
 
             <Button 

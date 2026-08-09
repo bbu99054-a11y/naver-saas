@@ -48,7 +48,7 @@ export async function POST(req: Request) {
 
     const body = await req.json()
     // prompt는 useCompletion에서 자동으로 전달되는 텍스트 (여기서는 타겟 키워드와 톤 등)
-    const { prompt, tone, model, experience } = body
+    const { prompt, tone, experience } = body
 
     if (!prompt) {
       return NextResponse.json({ error: '타겟 키워드가 필요합니다.' }, { status: 400 })
@@ -215,12 +215,10 @@ ${profileFooterPrompt}
     `;
 
     let aiModel;
-    if (model === 'gpt-5.6-luna') {
-      aiModel = openai('gpt-5.6-luna'); // 가성비 GPT 모델
-    } else if (model === 'gemini-3.6-flash') {
-      aiModel = google('gemini-3.6-flash'); // 가장 빠른 모델
+    if (dbUser.plan_type === 'pro' || dbUser.plan_type === 'premium') {
+      aiModel = anthropic('claude-5-sonnet-latest'); // 유료 요금제 (최고 품질)
     } else {
-      aiModel = anthropic('claude-5-sonnet-latest'); // 기본 최고 품질 모델 (가상의 Claude 5)
+      aiModel = google('gemini-3.6-flash'); // 무료 요금제 (가성비 초고속)
     }
 
     // 1. Tavily API로 최신 뉴스/트렌드 사전 검색 (RAG)

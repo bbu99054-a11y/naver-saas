@@ -2,8 +2,10 @@ import { NextResponse } from 'next/server'
 import { generateObject } from 'ai'
 import { openai } from '@ai-sdk/openai'
 import { google } from '@ai-sdk/google'
+import { anthropic } from '@ai-sdk/anthropic'
 import { z } from 'zod'
 import { createClient } from '@/lib/supabase/server'
+import prisma from '@/lib/prisma'
 
 export const maxDuration = 60
 
@@ -27,17 +29,20 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json()
-    const { pillarKeyword, model = 'gpt-5.6-luna' } = body
+    const { pillarKeyword } = body
 
     if (!pillarKeyword) {
       return NextResponse.json({ error: '필러 키워드가 필요합니다.' }, { status: 400 })
     }
 
+    const dbUser = await prisma.user.findUnique({ where: { id: user.id } });
+    const planType = dbUser?.plan_type || 'free';
+
     let aiModel;
-    if (model === 'gemini-3.6-flash') {
-      aiModel = google('gemini-3.6-flash');
+    if (planType === 'pro' || planType === 'premium') {
+      aiModel = anthropic('claude-5-sonnet-latest');
     } else {
-      aiModel = openai('gpt-5.6-luna');
+      aiModel = google('gemini-3.6-flash');
     }
 
     const { object } = await generateObject({
