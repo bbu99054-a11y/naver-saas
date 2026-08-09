@@ -17,18 +17,19 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: '인증되지 않은 사용자입니다.' }, { status: 401 })
     }
 
-    // 크레딧, 유저 검증, 프로필 및 내부링크용 과거 기사 조회를 병렬(Promise.all)로 처리하여 지연 시간 단축
-    const [dbUser, profile, pastArticles] = await Promise.all([
-      prisma.user.upsert({
-        where: { id: user.id },
-        update: {},
-        create: {
+    let dbUser = await prisma.user.findUnique({ where: { id: user.id } });
+    if (!dbUser) {
+      dbUser = await prisma.user.create({
+        data: {
           id: user.id,
           email: user.email || '',
           credits: 5000,
           plan_type: 'free'
         }
-      }),
+      });
+    }
+
+    const [profile, pastArticles] = await Promise.all([
       prisma.profile.findUnique({
         where: { user_id: user.id }
       }),

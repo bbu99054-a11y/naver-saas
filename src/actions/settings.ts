@@ -43,11 +43,18 @@ export async function saveApiKeys(formData: FormData) {
       return { success: false, error: '저장할 키를 입력해 주세요.' }
     }
 
-    await prisma.apiKey.upsert({
-      where: { user_id: user.id },
-      update: dataToSave,
-      create: dataToSave
-    })
+    let existingKey = await prisma.apiKey.findUnique({ where: { user_id: user.id } });
+    
+    if (existingKey) {
+      await prisma.apiKey.update({
+        where: { user_id: user.id },
+        data: dataToSave
+      });
+    } else {
+      await prisma.apiKey.create({
+        data: dataToSave
+      });
+    }
 
     // 설정 페이지의 서버 컴포넌트를 강제 새로고침하여 바뀐 상태(저장됨 뱃지)를 보여주도록 함
     revalidatePath('/dashboard/settings')
