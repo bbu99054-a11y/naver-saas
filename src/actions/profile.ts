@@ -21,19 +21,22 @@ export async function saveProfile(data: {
       return { success: false, error: 'Unauthorized' }
     }
 
-    // Ensure the user exists in public.users (Required for OAuth signups like Kakao)
     const email = user.email || `${user.id}@oauth.user`
     const name = user.user_metadata?.name || user.user_metadata?.full_name || '신규 사용자'
     
-    await prisma.user.upsert({
-      where: { id: user.id },
-      update: {}, // Do nothing if exists
-      create: {
-        id: user.id,
-        email: email,
-        name: name,
-      }
+    const existingUser = await prisma.user.findUnique({
+      where: { id: user.id }
     })
+
+    if (!existingUser) {
+      await prisma.user.create({
+        data: {
+          id: user.id,
+          email: email,
+          name: name,
+        }
+      })
+    }
 
     const existingProfile = await prisma.profile.findUnique({
       where: { user_id: user.id }
