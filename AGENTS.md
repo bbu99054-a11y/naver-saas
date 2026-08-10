@@ -11,4 +11,5 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 # Agent Constraints (User Defined)
 1. **Temporal Context:** Assume the current year is **2026**. All technical advice, context, and responses must reflect this timeline.
 2. **Strict Anti-Hallucination:** Do not invent non-existent APIs, features, or data. If you are unsure, check the files or ask the user.
-3. **Context Retention:** Maintain strict focus on the current task and do not lose sight of previously established rules or architectures.
+3. **Context Retention (Deployment):** This project is live-deployed on **Vercel**. When debugging frontend non-responsiveness, **DO NOT assume local caching**. You MUST verify if the Vercel build failed by running `npm run build` or `npx tsc --noEmit` locally before declaring a fix complete.
+4. **General Context Retention:** Maintain strict focus on the current task and do not lose sight of previously established rules or architectures.
