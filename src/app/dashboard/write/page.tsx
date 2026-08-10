@@ -8,11 +8,11 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Loader2, Sparkles, PenTool } from 'lucide-react'
+import { Loader2, Sparkles, PenTool, Smartphone, Monitor } from 'lucide-react'
 import { CopyToNaverBtn } from '@/components/CopyToNaverBtn'
 import { AutoPublishBtn } from '@/components/AutoPublishBtn'
 import { MultiPublishBtn } from '@/components/MultiPublishBtn'
-import { checkKeywordDuplicate } from '@/actions/articles'
+import { checkKeywordDuplicate, getLatestArticleCitations } from '@/actions/articles'
 
 // Mock useToast fallback
 const useToast = () => {
@@ -24,6 +24,7 @@ const useToast = () => {
 }
 
 export default function WritePage() {
+  console.log("HELLO WORLD FROM WRITE PAGE");
   const searchParams = useSearchParams()
   const initialKeyword = searchParams.get('keyword') || ''
 
@@ -31,6 +32,8 @@ export default function WritePage() {
   const [tone, setTone] = useState('친근하고 전문적인 블로거 톤 (20~30대 타겟)')
   const [experience, setExperience] = useState('')
   const [postTitle, setPostTitle] = useState('')
+  const [citations, setCitations] = useState<any[] | null>(null)
+  const [isMobileView, setIsMobileView] = useState(false)
   const { toast } = useToast()
 
   const { completion, complete, isLoading, error } = useCompletion({
@@ -43,11 +46,18 @@ export default function WritePage() {
         variant: 'destructive'
       })
     },
-    onFinish: () => {
+    onFinish: async () => {
       toast({
         title: '작성 완료',
         description: 'SEO 최적화 블로그 글이 생성되었습니다.',
       })
+      // DB 저장이 완료될 시간을 약간 대기 후 출처(Citations) 불러오기
+      setTimeout(async () => {
+        const refs = await getLatestArticleCitations(keyword.trim())
+        if (refs && Array.isArray(refs)) {
+          setCitations(refs)
+        }
+      }, 1500)
     }
   })
 
@@ -109,8 +119,14 @@ export default function WritePage() {
     })
   }
 
+  const showCitations = (citations && citations.length > 0) || isLoading
+
+  const gridColsClass = showCitations 
+    ? "grid gap-6 lg:grid-cols-[350px_1fr_300px] h-[calc(100vh-8rem)]"
+    : "grid gap-6 lg:grid-cols-[400px_1fr] h-[calc(100vh-8rem)]"
+
   return (
-    <div className="grid gap-6 lg:grid-cols-[400px_1fr] h-[calc(100vh-8rem)]">
+    <div className={gridColsClass}>
       
       {/* 좌측 패널: 설정 */}
       <Card className="flex flex-col h-full border-slate-200 shadow-sm">
@@ -200,17 +216,41 @@ export default function WritePage() {
       {/* 우측 패널: 렌더링 뷰어 */}
       <Card className="flex flex-col h-full border-slate-200 shadow-sm overflow-hidden bg-[#f9f9f9]">
         <CardHeader className="bg-white border-b py-3 px-4 flex-row items-center justify-between shadow-sm z-10">
-          <CardTitle className="text-sm font-medium text-slate-700 flex items-center">
-            <span className="w-2 h-2 rounded-full bg-[#03C75A] mr-2"></span>
-            스마트에디터 미리보기
-          </CardTitle>
-          {isLoading && <span className="text-xs text-indigo-500 font-medium animate-pulse">스트리밍 중...</span>}
+          <div className="flex items-center gap-3">
+            <CardTitle className="text-sm font-medium text-slate-700 flex items-center">
+              <span className="w-2 h-2 rounded-full bg-[#03C75A] mr-2"></span>
+              스마트에디터 미리보기
+            </CardTitle>
+            {isLoading && <span className="text-xs text-indigo-500 font-medium animate-pulse">스트리밍 중...</span>}
+          </div>
+          
+          {/* 모바일 뷰 토글 버튼 */}
+          <div className="flex items-center bg-slate-100 rounded-md p-1 border border-slate-200">
+            <button
+              onClick={() => setIsMobileView(false)}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-sm text-xs font-medium transition-colors ${
+                !isMobileView ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-700'
+              }`}
+            >
+              <Monitor className="w-3.5 h-3.5" />
+              PC 뷰
+            </button>
+            <button
+              onClick={() => setIsMobileView(true)}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-sm text-xs font-medium transition-colors ${
+                isMobileView ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-700'
+              }`}
+            >
+              <Smartphone className="w-3.5 h-3.5" />
+              모바일 뷰
+            </button>
+          </div>
         </CardHeader>
         
         {/* HTML 렌더링 영역 */}
-        <CardContent className="p-0 flex-1 overflow-auto">
+        <CardContent className="p-0 flex-1 overflow-auto bg-[#f9f9f9] flex justify-center">
           {!parsedHtml && !isLoading ? (
-            <div className="flex items-center justify-center h-full text-slate-400">
+            <div className="flex items-center justify-center h-full text-slate-400 w-full">
               좌측 패널에서 생성하기 버튼을 눌러주세요.
             </div>
           ) : (
@@ -218,7 +258,11 @@ export default function WritePage() {
               id="editor-preview"
               contentEditable={true}
               suppressContentEditableWarning={true}
-              className="p-8 max-w-3xl mx-auto bg-white min-h-full prose prose-slate prose-headings:text-slate-800 prose-h2:border-b-2 prose-h2:border-slate-100 prose-h2:pb-2 prose-h3:text-slate-700 prose-p:text-slate-600 outline-none focus:ring-2 focus:ring-indigo-500 rounded-lg transition-shadow"
+              className={`p-8 bg-white min-h-full prose prose-slate prose-headings:text-slate-800 prose-h2:border-b-2 prose-h2:border-slate-100 prose-h2:pb-2 prose-h3:text-slate-700 prose-p:text-slate-600 outline-none focus:ring-2 focus:ring-indigo-500 transition-all duration-300 ${
+                isMobileView 
+                  ? 'w-[390px] shadow-[0_0_15px_rgba(0,0,0,0.1)] border-x border-slate-200' 
+                  : 'w-full max-w-3xl rounded-lg'
+              }`}
               dangerouslySetInnerHTML={{ __html: parsedHtml }}
             />
           )}
@@ -252,6 +296,45 @@ export default function WritePage() {
            </div>
         </div>
       </Card>
+
+      {/* 우측 팩트체크 패널 (Citations) */}
+      {showCitations && (
+        <Card className="flex flex-col h-full border-slate-200 shadow-sm overflow-hidden bg-slate-50">
+          <CardHeader className="bg-white border-b py-3 px-4 shadow-sm z-10">
+            <CardTitle className="text-sm font-medium text-slate-800 flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-amber-500" />
+              AI 팩트체크 패널
+            </CardTitle>
+            <CardDescription className="text-xs mt-1">
+              본문에 인용된 출처 [1], [2] 와 원문을 대조하여 사실관계를 검증하세요.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="p-4 flex-1 overflow-auto flex flex-col gap-4">
+            {isLoading && (!citations || citations.length === 0) ? (
+              <div className="flex flex-col items-center justify-center h-full text-slate-400 gap-3">
+                <Loader2 className="w-6 h-6 animate-spin text-indigo-400" />
+                <span className="text-xs text-center leading-relaxed">에이전트가 국가법령정보센터 등<br/>신뢰할 수 있는 출처를 실시간으로<br/>수집하고 검증하고 있습니다...</span>
+              </div>
+            ) : citations?.map((c, idx) => (
+              <div key={idx} className="bg-white p-3 rounded-md border border-slate-200 shadow-sm text-sm">
+                <div className="font-bold text-slate-800 mb-1 flex items-start gap-1">
+                  <span className="text-indigo-600">[{idx + 1}]</span> 
+                  <span className="line-clamp-2">{c.title}</span>
+                </div>
+                <p className="text-slate-600 text-xs line-clamp-4 mb-2">{c.content}</p>
+                <a 
+                  href={c.url} 
+                  target="_blank" 
+                  rel="noreferrer"
+                  className="text-xs text-blue-600 hover:underline break-all"
+                >
+                  원문 보기 &rarr;
+                </a>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+      )}
 
     </div>
   )

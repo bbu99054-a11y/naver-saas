@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import prisma from '@/lib/prisma'
-import { streamText } from 'ai'
+import { streamText, generateText, generateObject } from 'ai'
+import { z } from 'zod'
 import { anthropic } from '@ai-sdk/anthropic'
 import { openai } from '@ai-sdk/openai'
 import { google } from '@ai-sdk/google'
@@ -125,9 +126,9 @@ ${profile.about_us}
 
       const activeTemplates = [];
       activeTemplates.push(getInfoBoxTemplate(mainColor)); // 기본 정보 박스는 항상 포함
-      activeTemplates.push(getStepByStepTemplate(mainColor)); // 단계별 가이드 포함
+      activeTemplates.push(getStepByStepTemplate(mainColor)); // 스마트블록 구조화를 위해 리스트 항상 포함 강제
+      activeTemplates.push(getTableTemplate(mainColor)); // 스마트블록 노출을 위해 표(Table) 항상 포함 강제
 
-      if (serpData.recommendedComponents.useTable) activeTemplates.push(getTableTemplate(mainColor));
       if (serpData.recommendedComponents.useQuote) activeTemplates.push(getQuoteTemplate(mainColor));
       if (serpData.recommendedComponents.useDivider) activeTemplates.push(getDividerTemplate(mainColor));
 
@@ -176,14 +177,15 @@ ${links}
     }
 
     const systemPrompt = `
-너는 대한민국 상위 1% 네이버 블로그 SEO 전문가이자 프로 카피라이터야. 네이버의 C-Rank와 DIA 알고리즘을 완벽히 이해하고 전문직(변호사, 세무사, 의사 등)에 최적화된 글을 작성해야 해.
-글은 반드시 사용자의 검색 의도를 파악한 '정보성' 혹은 '직접 경험한 듯한 후기성'의 자연스러운 톤앤매너(${tone || '신뢰감을 주는 전문가 톤'})로 작성되어야 해. 
+너는 최소 15년 경력의 전문 디지털 마케터이자 SEO 최적화 전문가야.
+글은 반드시 사용자의 검색 의도를 파악하여 작성하되, 감정적인 호소나 과장된 스토리텔링을 배제하고 객관적이고 차분한 전문가적 톤앤매너로 작성되어야 해. 
+절대 한자(Hanja)를 혼용하지 말고 100% 자연스러운 한글로만 작성해 (예: '방치'를 '放置'로 쓰는 식의 기계적인 환각 절대 금지).
 
 <anti_hallucination_guideline>
 1. CoT (Chain of Thought) 팩트 체크 강제:
 반드시 HTML 본문을 작성하기 전에, <div style="display: none;" id="fact-check-memo"> </div> 태그 안에 타겟 키워드와 관련된 핵심 세무/법률 용어들의 정의와 RAG 검색 수치를 명확히 분리하여 메모(팩트 체크)를 먼저 작성해. 이 메모를 완료한 후에만 본격적인 HTML 글을 작성해.
-2. 수치 날조 절대 금지 (Strict Grounding):
-본문에 들어가는 수치(세율, 공제 한도 금액, 과태료 등)나 법조항 번호는 오직 제공된 [Tavily Search] 데이터에만 기반해야 해. 제공되지 않은 구체적 수치는 절대 LLM의 지식으로 임의 생성(날조)하지 말고 일반적인 개념 설명으로 대체해.
+2. 절대적 사실 기반 생성 (환각 방지):
+본문에 들어가는 수치(세율, 공제 한도 금액, 과태료 등)나 법조항, 판례 번호 등은 오직 제공된 [Tavily Search] 데이터에만 기반해야 해. 정보가 부족할 경우 절대 임의로 창작하지 말고, "해당 사안은 구체적인 사실관계에 따라 법리 적용이 달라질 수 있습니다"라는 면책 조항으로 대체해.
 3. 용어 엄격성:
 ${terminologyStrictness}
 </anti_hallucination_guideline>
@@ -203,15 +205,16 @@ ${profileFooterPrompt}
 
 <html_constraints>
 0. 응답의 가장 첫 줄에 반드시 <post_title>네이버 검색 유저의 클릭을 유도하는 매혹적인 1인칭 후킹 제목</post_title> 을 작성해.
-1. 1인칭 스토리텔링 100% 강제 (최우선): <expert_experience> 데이터를 바탕으로, 글의 서론 직후나 본론 중간에 네이버 인용구(<blockquote>)나 형광펜 효과를 적용하여 "실제로 최근 저희 사무소를 찾아주신 의뢰인 사례를 말씀드리면..."과 같은 1인칭 화법의 스토리텔링 문단을 무조건 1개 이상 필수 배치해.
+1. 가상 페르소나 시나리오 활용 (허위 사례 금지): 독자의 몰입을 유도하기 위해 "예를 들어, 40대 제조업을 운영하는 A대표님이 2억원의 가지급금이 있다면..."과 같은 구체적인 가상 페르소나를 설정하여 스토리텔링해. 단, 이를 "실제 상담 사례"라고 거짓으로 포장하면 허위 광고가 되므로 반드시 가상의 예시임을 알 수 있게 작성해.
 2. 마크다운 안됨: 순수한 HTML 코드로만 제공. <html>, <body>, \`\`\`html 같은 코드 블럭 절대 금지.
 3. 네이버 에디터 호환성: display: flex, display: grid, position: absolute 같이 네이버 스마트에디터에서 깨지는 CSS 속성은 절대 사용 금지. 오직 기본 margin, padding, text-align, color, background-color 등 호환되는 안전한 인라인 CSS만 사용해.
 4. 제목 금지: <post_title> 태그 외에 본문 안에는 <h1> 쓰지 마. 오직 <h2>와 <h3> 태그만 사용. 
-5. 트렌디한 블로그 디자인: 전체 문단(<p>)에 \`text-align: center; line-height: 2.0; font-size: 16px; margin-bottom: 24px;\` 기본 적용. 헤딩(<h2>, <h3>) 앞에 눈에 띄는 이모지 필수.
+5. 트렌디한 블로그 디자인: 전체 문단(<p>)에 \`text-align: left; word-break: keep-all; line-height: 2.0; font-size: 16px; margin-bottom: 24px;\` 기본 적용. 헤딩(<h2>, <h3>) 앞에 눈에 띄는 이모지 필수.
 6. 형광펜 강조: 핵심 내용에는 형광펜 효과(\`<span style="background-color: #fffbeb; padding: 2px 6px; font-weight: bold; color: #1e40af; border-radius: 4px;">...</span>\`)를 적극 사용.
 7. 이모지 적극 사용: 💡, 🔥, ✨, 📌 등을 적절히 배치해 가독성을 높임.
 8. APB 프레임워크: 도입부는 문제 제기 - 해결책 제시 - 브릿지로 구성해 7초 이내 이탈 방지.
 9. 시각 자료: 서론이나 본론 중간, 시각 자료가 필요한 곳에 고품질 실사 이미지 2장을 필수 삽입해. 태그 형식: <img src="https://naver-saas.vercel.app/api/unsplash?query={문맥에_맞는_영문_명사_1개}" alt="{설명}" style="width:100%; max-width: 600px; display: block; margin: 30px auto; border-radius:12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">. {문맥에_맞는_영문_명사_1개} 부분에는 'lawyer', 'tax', 'office', 'contract' 등 상황에 맞는 단일 영문 명사 1개만 넣어.
+10. 스마트블록 SEO 최적화 강제: 본론(Body) 작성 시, 단순 텍스트 나열을 피하고 반드시 <design_templates>에 제공된 표(Table) 템플릿과 단계별 가이드(Step-by-step) 리스트 템플릿을 무조건 사용하여 전문 지식을 구조화해.
 </html_constraints>
     `;
 
@@ -222,11 +225,58 @@ ${profileFooterPrompt}
       aiModel = google('gemini-3.6-flash'); // 무료 요금제 (가성비 초고속)
     }
 
-    // 1. Tavily API로 최신 뉴스/트렌드 사전 검색 (RAG)
-    let searchContext = '';
+    // Phase 0: 경쟁사 상위 5개 블로그 탐색 (SERP Search)
+    let serpCompetitorContext = '';
     if (process.env.TAVILY_API_KEY) {
       try {
-        // 직군별 공공/국가 도메인 맵핑 로직
+        const serpRes = await fetch('https://api.tavily.com/search', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            api_key: process.env.TAVILY_API_KEY,
+            query: prompt,
+            search_depth: 'basic',
+            include_domains: ['blog.naver.com'],
+            max_results: 5
+          }),
+        });
+        const serpData = await serpRes.json();
+        if (serpData && serpData.results && serpData.results.length > 0) {
+          const serpResults = serpData.results.map((r: any, i: number) => `[경쟁사 ${i + 1}] 제목: ${r.title}\n내용 요약: ${r.content}`).join('\n\n');
+          serpCompetitorContext = `\n[현재 네이버 상위 노출 5개 경쟁사 블로그 구조 및 내용]\n${serpResults}\n`;
+        }
+      } catch (e) {
+        console.error('SERP Search failed:', e);
+      }
+    }
+
+    // Phase 1: Planner Agent (구조 기획 및 파생 검색어 도출)
+    let searchQueries = [prompt];
+    let outline = '';
+    
+    try {
+      const plannerResult = await generateObject({
+        model: aiModel,
+        schema: z.object({
+          searchQueries: z.array(z.string()).describe('Tavily RAG 검색 품질을 높일 구체적이고 전문적인 파생 검색어 2개 (예: 타겟 키워드와 연관된 특정 법령명이나 판례 키워드)'),
+          outline: z.string().describe('상위 노출 블로그들을 분석하여 역설계한 압도적이고 독창적인 서론-본론-결론 뼈대(Skeleton-of-Thought)')
+        }),
+        prompt: `너는 네이버 상위 1% 마케팅 기획자야. 타겟 키워드: "${prompt}"
+${serpCompetitorContext}
+위 상위 노출된 경쟁사 글 5개의 흐름을 분석해서, 장점은 취하고 단점은 보완하는 압도적인 [서론-본론-결론] 뼈대(Outline)를 새로 창조해. 절대 뻔한 템플릿을 쓰지 말고, 키워드 검색자의 의도에 완벽히 들어맞는 독창적이고 논리적인 목차를 짜야 해. 
+그리고 이 목차를 채우기 위해 외부 RAG 시스템에서 팩트를 긁어올 최적의 파생 검색어 2개도 함께 뽑아줘.`
+      });
+      searchQueries = plannerResult.object.searchQueries;
+      outline = plannerResult.object.outline;
+    } catch (e) {
+      console.error('Planner Agent failed:', e);
+    }
+
+    // 1.5. Tavily API로 다중 파생 검색어 RAG (검색)
+    let searchContext = '';
+    let tavilyCitations: any = null;
+    if (process.env.TAVILY_API_KEY) {
+      try {
         let includeDomains: string[] = [];
         const industry = profile?.industry || '';
         
@@ -239,45 +289,52 @@ ${profileFooterPrompt}
         } else if (industry.includes('행정사')) {
           includeDomains = ['acrc.go.kr', 'hikorea.go.kr', 'moleg.go.kr', 'mfds.go.kr', 'law.go.kr'];
         } else {
-          // 애매하거나 기타 직종일 경우 법률의 기본인 국가법령정보센터만 할당 (Default Fallback)
           includeDomains = ['law.go.kr'];
         }
 
-        // 1차 검색 (도메인 강제)
-        let searchRes = await fetch('https://api.tavily.com/search', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            api_key: process.env.TAVILY_API_KEY,
-            query: prompt,
-            search_depth: 'basic',
-            include_answer: true,
-            max_results: 3,
-            include_domains: includeDomains
-          }),
-        });
-        
-        let searchData = await searchRes.json();
-
-        // 2차 검색 (Fallback: 만약 결과가 0건이면 도메인 제한 풀고 재검색)
-        if (!searchData.results || searchData.results.length === 0) {
-          searchRes = await fetch('https://api.tavily.com/search', {
+        // Planner가 추출한 다중 검색어 병렬 검색
+        const searchPromises = searchQueries.map(query => 
+          fetch('https://api.tavily.com/search', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               api_key: process.env.TAVILY_API_KEY,
-              query: prompt,
+              query: query,
               search_depth: 'basic',
               include_answer: true,
-              max_results: 3
+              max_results: 2, // 쿼리당 2개씩 가져옴
+              include_domains: includeDomains
             }),
-          });
-          searchData = await searchRes.json();
-        }
+          }).then(res => res.json())
+        );
+        
+        const searchResults = await Promise.all(searchPromises);
+        let combinedResults: any[] = [];
+        let combinedAnswers = '';
+        
+        searchResults.forEach(data => {
+          if (data && data.results) {
+            combinedResults = combinedResults.concat(data.results);
+            if (data.answer) combinedAnswers += data.answer + '\\n';
+          }
+        });
 
-        if (searchData && searchData.results && searchData.results.length > 0) {
-          const formattedResults = searchData.results.map((r: any) => `- 제목: ${r.title}\n  내용: ${r.content}\n  출처: ${r.url}`).join('\n\n');
-          searchContext = `\n[${prompt} 관련 공식/최신 정보 요약 (Tavily Search)]\n${searchData.answer || ''}\n\n[관련 기사/웹 문서]\n${formattedResults}\n\n이 공식 데이터를 본문 작성 시 참고하고 환각 없이 출처 기반으로 작성해.`;
+        // URL 기준으로 중복 결과 제거
+        const uniqueResults = Array.from(new Map(combinedResults.map(item => [item.url, item])).values());
+
+        if (uniqueResults.length > 0) {
+          tavilyCitations = uniqueResults;
+          const formattedResults = uniqueResults.map((r: any, i: number) => `[${i + 1}] 제목: ${r.title}\n    내용: ${r.content}\n    출처: ${r.url}`).join('\\n\\n');
+          searchContext = `\n[${prompt} 관련 공식/최신 정보 요약 (Tavily Search)]\n${combinedAnswers}\n\n[관련 기사/웹 문서]\n${formattedResults}
+          
+[출처 인용 강제화 (Citation Enforcer)]
+위 공식 데이터를 본문 작성 시 반드시 참고해. 
+또한 사실 관계, 판례, 세법, 수치 등을 언급하는 문장 끝에는 반드시 [1], [2] 와 같이 출처 번호를 기재해.
+글의 맨 마지막에는 다음 형식으로 참조한 문서들의 링크를 모아 <참고자료> 리스트를 무조건 삽입해.
+---
+<참고자료>
+[1] <a href="URL">제목</a>
+[2] <a href="URL">제목</a>`;
         }
       } catch (e) {
         console.error('Tavily search failed:', e);
@@ -286,11 +343,70 @@ ${profileFooterPrompt}
       searchContext = `\n[알림: TAVILY_API_KEY가 없어 실시간 웹 검색이 생략되었습니다. 일반적인 지식을 바탕으로 작성하세요.]`;
     }
 
+    // [컴플라이언스 룰셋 정의]
+    let complianceRule = `
+[공통 컴플라이언스 룰]
+- "최고", "유일", "1위", "국내 제일", "100% 승소", "무조건 해결" 등 최상급/배타적 표현 및 결과 보장형 표현 절대 금지.
+- 허위/과장 광고 금지. 주관적인 "치료 후기"나 "Before/After" 등 의뢰인 유인 문구 금지. 철저히 사실과 원리 중심으로 서술할 것.
+- [허위 상담 사례 방어] 원고 내에 존재하지 않는 가상의 고객 상담 사례를 "실제 사례"나 "얼마 전 저희 사무소를 찾아주신" 등으로 거짓 포장한 부분이 있다면, 이를 "자주 묻는 예상 시나리오" 또는 "가상 페르소나 예시" 형태로 제목과 내용을 안전하게 수정해.
+- [저품질 스팸 필터링] 타겟 키워드 밀도 검사: 전체 원고에서 타겟 키워드('${prompt}')가 5번을 초과하여 등장하는지 반드시 직접 카운트해. 5번을 넘는다면, 초과된 키워드들을 문맥상 자연스러운 유의어(LSI 키워드)로 강제 치환해 (예: 이혼 변호사 -> 가사법 전문가 등).
+- 초안을 꼼꼼히 검토하여 위반 사항이 있다면 객관적인 정보 전달형 문장으로 스스로 재작성(Self-Correction)해.
+- 위반 사항이 없다면 초안의 형태와 HTML 태그를 그대로 유지하여 출력해.
+`;
+
+    if (industryForTerm.includes('변호사') || industryForTerm.includes('법률')) {
+      complianceRule += `
+[변호사/법률 특화 컴플라이언스]
+- "무료 법률상담", "기각 시 전액 환불", "업계 최저 수임료" 등 수임 질서 저해 문구 스캔 및 삭제.
+- "전관 출신", "법원/검찰 네트워크" 등 전관예우 암시 문구 스캔 및 삭제.
+`;
+    } else if (industryForTerm.includes('세무사') || industryForTerm.includes('회계사')) {
+      complianceRule += `
+[세무사/회계사 특화 컴플라이언스]
+- "평균 환급금 OO만 원", "환급률 1위", "최대 절세율 보장" 등 구체적인 수치를 통한 결과 예측/보장 문구 삭제. 절세가 이루어지는 '법적 원리'와 '세법 요건' 설명으로 대체.
+- "업계 최저 수임료", "무료 세무 상담", 타 세무사와의 수임료 비교 문구 스캔 및 삭제.
+- 세무공무원과의 연고 선전("전직 국세청 간부 출신 네트워크" 등) 스캔 및 삭제.
+`;
+    } else if (industryForTerm.includes('의료') || industryForTerm.includes('의사') || industryForTerm.includes('병원')) {
+      complianceRule += `
+[의료/병의원 특화 컴플라이언스]
+- 주관적인 "치료 후기"나 "Before/After" 비교 사진/문구 절대 금지. 의학적 원리, 부작용, 주의사항 중심의 정보 전달 포맷으로 재작성.
+- "여름방학 50% 할인", "페이백", "지인 동반 무료" 등 환자 유인 및 영리 목적의 이벤트 마케팅 문구 스캔 및 삭제.
+`;
+    } else if (industryForTerm.includes('행정사') || industryForTerm.includes('노무사')) {
+      complianceRule += `
+[행정사/노무사 특화 컴플라이언스]
+- 타인의 소송이나 권리관계 분쟁에 개입하는 행위를 암시하는 문구(예: "법적 분쟁을 대리하여 해결해 드립니다") 스캔 및 삭제. 업무 범위를 행정청 제출 서류 작성 및 인허가 대리로 명확히 한정할 것.
+`;
+    }
+
+    const outlineContext = outline ? `\n\n[Planner Agent가 설계한 글의 개요(Skeleton)]\n${outline}\n\n위 개요의 기승전결 구조를 반드시 준수하여 초안을 작성할 것.` : '';
+
+    // Phase 2: Generator Agent (초안 작성 - 비동기 대기)
+    const draftResult = await generateText({
+      model: aiModel,
+      temperature: 0.75,
+      system: systemPrompt + searchContext + outlineContext,
+      prompt: `타겟 키워드: ${prompt}\n\n위 지침과 개요에 맞춰 완벽한 네이버 블로그용 HTML 본문을 작성해줘.`,
+    });
+    
+    const draftText = draftResult.text;
+
+    // Phase 2: Evaluator Agent (규정 검수 및 자가 수정 - 스트리밍)
+    const evaluatorSystemPrompt = `
+너는 15년 경력의 전문직 컴플라이언스(광고법) 최고 책임자 겸 최종 검수 에이전트(Evaluator)야.
+아래 주어진 [컴플라이언스 룰]을 바탕으로 제공된 원고 초안을 스캔하고, 위반 사항이 발견되면 스스로 재작성(Self-Correction)하여 안전하고 객관적인 원고로 변환해.
+위반 사항이 없다면 HTML 태그나 디자인을 전혀 훼손하지 말고 초안 그대로 출력해. 
+추가적인 인사말이나 설명 없이 오직 최종 완성된 HTML 결과물만 출력해야 해.
+
+${complianceRule}
+`;
+
     const result = streamText({
       model: aiModel,
-      temperature: 0.75, // 동일 키워드라도 유니크한 문장 구조를 만들기 위해 약간 높임
-      system: systemPrompt + searchContext,
-      prompt: `타겟 키워드: ${prompt}\n\n위 지침에 맞춰 완벽한 네이버 블로그용 HTML 본문을 작성해줘.`,
+      temperature: 0.2, // 검수자는 창의성보다 정확성과 규정 준수가 중요하므로 온도 하향
+      system: evaluatorSystemPrompt,
+      prompt: `[원고 초안]\n${draftText}\n\n위 초안을 검수하고 최종 HTML 원고를 출력해줘.`,
       async onFinish({ text }) {
         try {
           // 1. 크레딧 차감
@@ -325,6 +441,7 @@ ${profileFooterPrompt}
               title: generatedTitle,
               target_keyword: prompt,
               content_html: cleanHtml,
+              citations: tavilyCitations,
               status: 'DRAFT',
             }
           });

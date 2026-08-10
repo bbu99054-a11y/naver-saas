@@ -7,7 +7,7 @@ export default function ChannelTalk() {
     (function () {
       var w = window as any;
       if (w.ChannelIO) {
-        return w.console.error('ChannelIO script included twice.');
+        return; // Next.js Strict Mode에서 useEffect 2번 실행 시 에러 오버레이 방지
       }
       var ch: any = function () {
         ch.c(arguments);

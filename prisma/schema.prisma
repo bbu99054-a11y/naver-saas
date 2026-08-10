@@ -62,6 +62,7 @@ model Article {
   content_markdown String?   @db.Text
   content_html     String?   @db.Text
   coupang_links    Json?
+  citations        Json?
   status           String    @default("DRAFT")
   created_at       DateTime  @default(now())
 
