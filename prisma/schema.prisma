@@ -61,9 +61,12 @@ model Article {
   target_keyword   String
   content_markdown String?   @db.Text
   content_html     String?   @db.Text
+  generator_draft  String?   @db.Text
   coupang_links    Json?
   citations        Json?
   status           String    @default("DRAFT")
+  job_id           String?
+  error_message    String?   @db.Text
   created_at       DateTime  @default(now())
 
   user    User    @relation(fields: [user_id], references: [id], onDelete: Cascade)

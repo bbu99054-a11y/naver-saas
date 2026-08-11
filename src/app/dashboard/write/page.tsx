@@ -1,8 +1,7 @@
 'use client'
 
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, useRef } from 'react'
 import { useSearchParams } from 'next/navigation'
-import { useCompletion } from '@ai-sdk/react'
 import { marked } from 'marked'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -17,14 +16,13 @@ import { checkKeywordDuplicate, getLatestArticleCitations } from '@/actions/arti
 // Mock useToast fallback
 const useToast = () => {
   return {
-    toast: (props: { title: string, description: string, variant?: string }) => {
+    toast: (props: any) => {
       console.log('Toast:', props);
     }
   }
 }
 
 export default function WritePage() {
-  console.log("HELLO WORLD FROM WRITE PAGE");
   const searchParams = useSearchParams()
   const initialKeyword = searchParams.get('keyword') || ''
 
@@ -36,61 +34,63 @@ export default function WritePage() {
   const [isMobileView, setIsMobileView] = useState(false)
   const { toast } = useToast()
 
-  const { completion, complete, isLoading, error } = useCompletion({
-    api: '/api/generate-seo',
-    streamProtocol: 'text',
-    onError: (err) => {
-      toast({
-        title: '생성 에러',
-        description: err.message || '글 생성 중 오류가 발생했습니다 (크레딧 부족 등).',
-        variant: 'destructive'
-      })
-    },
-    onFinish: async () => {
-      toast({
-        title: '작성 완료',
-        description: 'SEO 최적화 블로그 글이 생성되었습니다.',
-      })
-      // DB 저장이 완료될 시간을 약간 대기 후 출처(Citations) 불러오기
-      setTimeout(async () => {
-        const refs = await getLatestArticleCitations(keyword.trim())
-        if (refs && Array.isArray(refs)) {
-          setCitations(refs)
-        }
-      }, 1500)
-    }
-  })
+  // --- 비동기 폴링 큐 상태 ---
+  const [jobId, setJobId] = useState(null)
+  const [status, setStatus] = useState('') // SEARCHING, GENERATING, EVALUATING, COMPLETED, ERROR
+  const [isLoading, setIsLoading] = useState(false)
+  const [parsedHtml, setParsedHtml] = useState('')
 
-  // 실시간 스트리밍 중 제목 파싱
+  // 폴링 로직 (Exponential Backoff)
   useEffect(() => {
-    const titleMatch = completion.match(/<post_title>([\s\S]*?)<\/post_title>/i);
-    if (titleMatch && titleMatch[1]) {
-      setPostTitle(titleMatch[1].trim());
-    }
-  }, [completion]);
-
-  // Parse markdown completion to HTML
-  const parsedHtml = useMemo(() => {
-    if (!completion) return '';
+    let timeoutId: any;
+    let attempts = 0;
     
-    // 1. JSON 스트리밍에서 에러 발생 시 처리
-    if (completion.includes('"error"')) {
-      return `<div style="color:red; padding:20px;">생성 중 오류가 발생했습니다. 크레딧 부족이거나 서버 일시적 장애일 수 있습니다.</div>`
+    const poll = async () => {
+      if (!jobId || status === 'COMPLETED' || status === 'ERROR') return;
+      
+      try {
+        const res = await fetch(`/api/status?jobId=${jobId}`);
+        const data = await res.json();
+        
+        if (data.status) {
+          setStatus(data.status);
+          
+          if (data.status === 'COMPLETED') {
+            setParsedHtml(data.content_html || '');
+            setIsLoading(false);
+            
+            const titleMatch = data.content_html?.match(/<post_title>([\s\S]*?)<\/post_title>/i);
+            if (titleMatch && titleMatch[1]) {
+              setPostTitle(titleMatch[1].trim());
+            }
+            
+            toast({ title: '작성 완료', description: 'SEO 최적화 블로그 글이 생성되었습니다.' });
+            return;
+          } else if (data.status === 'ERROR') {
+            setIsLoading(false);
+            toast({ title: '에러', description: data.error_message || '작업 실패', variant: 'destructive' });
+            return;
+          }
+        }
+      } catch (err: any) {
+        console.error('Polling error:', err);
+      }
+      
+      attempts++;
+      let nextInterval = 3000;
+      if (attempts > 3) nextInterval = 5000;
+      if (attempts > 6) nextInterval = 10000;
+      if (attempts > 12) nextInterval = 15000;
+      
+      timeoutId = setTimeout(poll, nextInterval);
+    };
+    
+    if (jobId && isLoading && status !== 'COMPLETED' && status !== 'ERROR') {
+      timeoutId = setTimeout(poll, 3000);
     }
-
-    let content = completion;
-    const match = completion.match(/```(?:html)?\n([\s\S]*?)```/i);
-    if (match) {
-      content = match[1].trim();
-    } else {
-      content = completion
-        .replace(/^[\s\S]*?```(?:html)?\n?/i, '')
-        .replace(/\n?```$/i, '')
-        .trim();
-    }
-
-    return content.replace(/<post_title>[\s\S]*?<\/post_title>/i, '').trim();
-  }, [completion]);
+    
+    return () => clearTimeout(timeoutId);
+  }, [jobId, isLoading, status]);
 
   const handleGenerate = async () => {
     if (!keyword.trim()) {
@@ -110,13 +110,31 @@ export default function WritePage() {
     })
 
     setPostTitle(`${keyword.trim()} (AI 제목 생성 중...)`)
+    setStatus('SEARCHING');
+    setIsLoading(true);
+    setParsedHtml('');
+    setCitations(null);
+    setJobId(null);
 
-    complete(keyword, {
-      body: {
-        tone,
-        experience
-      }
-    })
+    try {
+      const res = await fetch('/api/generate-seo', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt: keyword, tone, experience })
+      });
+      const data = await res.json();
+      
+      if (!res.ok) throw new Error(data.error || '생성 실패');
+      
+      setJobId(data.jobId);
+      if (data.citations) setCitations(data.citations);
+      setStatus('GENERATING');
+      
+    } catch(err: any) {
+      toast({ title: '에러', description: err.message, variant: 'destructive' });
+      setIsLoading(false);
+      setStatus('');
+    }
   }
 
   const showCitations = (citations && citations.length > 0) || isLoading
@@ -124,6 +142,14 @@ export default function WritePage() {
   const gridColsClass = showCitations 
     ? "grid gap-6 lg:grid-cols-[350px_1fr_300px] h-[calc(100vh-8rem)]"
     : "grid gap-6 lg:grid-cols-[400px_1fr] h-[calc(100vh-8rem)]"
+
+  let buttonContent = <><Sparkles className="w-4 h-4 mr-2" /> AI 블로그 생성하기</>;
+  if (isLoading) {
+    if (status === 'SEARCHING') buttonContent = <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> 자료 조사 중...</>;
+    else if (status === 'GENERATING') buttonContent = <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> AI 초안 작성 중...</>;
+    else if (status === 'EVALUATING') buttonContent = <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> 광고법 위반 검수 중...</>;
+    else buttonContent = <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> 생성 중...</>;
+  }
 
   return (
     <div className={gridColsClass}>
@@ -151,8 +177,6 @@ export default function WritePage() {
               />
             </div>
             
-
-
             <div className="space-y-2">
               <label className="text-sm font-medium text-slate-700">톤앤매너 (문체)</label>
               <Select value={tone} onValueChange={(val) => setTone(val || '')} disabled={isLoading}>
@@ -191,15 +215,7 @@ export default function WritePage() {
             disabled={isLoading || !keyword}
             className="w-full bg-indigo-600 hover:bg-indigo-700 text-white shadow-md transition-all mt-4"
           >
-            {isLoading ? (
-              !completion ? (
-                <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> 상위 블로그 분석 중...</>
-              ) : (
-                <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> AI 원고 작성 중...</>
-              )
-            ) : (
-              <><Sparkles className="w-4 h-4 mr-2" /> AI 블로그 생성하기</>
-            )}
+            {buttonContent}
           </Button>
 
           <div className="bg-indigo-50 text-indigo-800 p-4 rounded-lg text-sm leading-relaxed mt-auto border border-indigo-100">
@@ -221,10 +237,9 @@ export default function WritePage() {
               <span className="w-2 h-2 rounded-full bg-[#03C75A] mr-2"></span>
               스마트에디터 미리보기
             </CardTitle>
-            {isLoading && <span className="text-xs text-indigo-500 font-medium animate-pulse">스트리밍 중...</span>}
+            {isLoading && <span className="text-xs text-indigo-500 font-medium animate-pulse">작업 중...</span>}
           </div>
           
-          {/* 모바일 뷰 토글 버튼 */}
           <div className="flex items-center bg-slate-100 rounded-md p-1 border border-slate-200">
             <button
               onClick={() => setIsMobileView(false)}
@@ -247,7 +262,6 @@ export default function WritePage() {
           </div>
         </CardHeader>
         
-        {/* HTML 렌더링 영역 */}
         <CardContent className="p-0 flex-1 overflow-auto bg-[#f9f9f9] flex justify-center">
           {!parsedHtml && !isLoading ? (
             <div className="flex items-center justify-center h-full text-slate-400 w-full">
@@ -263,12 +277,11 @@ export default function WritePage() {
                   ? 'w-[390px] shadow-[0_0_15px_rgba(0,0,0,0.1)] border-x border-slate-200' 
                   : 'w-full max-w-3xl rounded-lg'
               }`}
-              dangerouslySetInnerHTML={{ __html: parsedHtml }}
+              dangerouslySetInnerHTML={{ __html: parsedHtml || '<div style="color: #64748b;">작업 진행 중... 잠시만 기다려주세요.</div>' }}
             />
           )}
         </CardContent>
         
-        {/* 하단 복사 버튼 영역 */}
         <div className="p-4 bg-white border-t border-slate-200 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] z-10 flex flex-col gap-3">
            <div className="flex items-center gap-2">
              <label className="text-sm font-bold text-slate-700 whitespace-nowrap">제목</label>
@@ -315,7 +328,7 @@ export default function WritePage() {
                 <Loader2 className="w-6 h-6 animate-spin text-indigo-400" />
                 <span className="text-xs text-center leading-relaxed">에이전트가 국가법령정보센터 등<br/>신뢰할 수 있는 출처를 실시간으로<br/>수집하고 검증하고 있습니다...</span>
               </div>
-            ) : citations?.map((c, idx) => (
+            ) : citations?.map((c: any, idx: number) => (
               <div key={idx} className="bg-white p-3 rounded-md border border-slate-200 shadow-sm text-sm">
                 <div className="font-bold text-slate-800 mb-1 flex items-start gap-1">
                   <span className="text-indigo-600">[{idx + 1}]</span> 
