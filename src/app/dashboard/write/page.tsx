@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Loader2, Sparkles, PenTool, Smartphone, Monitor } from 'lucide-react'
+import { Loader2, Sparkles, PenTool, Smartphone, Monitor, CheckCircle2, ChevronRight, ChevronLeft } from 'lucide-react'
 import { CopyToNaverBtn } from '@/components/CopyToNaverBtn'
 import { AutoPublishBtn } from '@/components/AutoPublishBtn'
 import { MultiPublishBtn } from '@/components/MultiPublishBtn'
@@ -32,11 +32,12 @@ export default function WritePage() {
   const [postTitle, setPostTitle] = useState('')
   const [citations, setCitations] = useState<any[] | null>(null)
   const [isMobileView, setIsMobileView] = useState(false)
+  const [isPanelOpen, setIsPanelOpen] = useState(true)
   const { toast } = useToast()
 
   // --- 비동기 폴링 큐 상태 ---
   const [jobId, setJobId] = useState(null)
-  const [status, setStatus] = useState('') // SEARCHING, GENERATING, EVALUATING, COMPLETED, ERROR
+  const [status, setStatus] = useState('') // SEARCHING, PLANNING, GENERATING, EVALUATING, COMPLETED, ERROR
   const [isLoading, setIsLoading] = useState(false)
   const [parsedHtml, setParsedHtml] = useState('')
 
@@ -139,9 +140,61 @@ export default function WritePage() {
 
   const showCitations = (citations && citations.length > 0) || isLoading
 
-  const gridColsClass = showCitations 
-    ? "grid gap-6 lg:grid-cols-[350px_1fr_300px] h-[calc(100vh-8rem)]"
-    : "grid gap-6 lg:grid-cols-[400px_1fr] h-[calc(100vh-8rem)]"
+  // Status Stepper Data
+  const steps = [
+    { id: 'SEARCHING', label: '자료 수집' },
+    { id: 'PLANNING', label: '기획안 작성' },
+    { id: 'GENERATING', label: '초안 작성' },
+    { id: 'EVALUATING', label: '최종 검수' }
+  ];
+
+  const getStepIndex = (st: string) => {
+    if (st === 'SEARCHING') return 0;
+    if (st === 'PLANNING') return 1;
+    if (st === 'GENERATING') return 2;
+    if (st === 'EVALUATING') return 3;
+    if (st === 'COMPLETED') return 4;
+    return -1;
+  };
+  const currentIndex = getStepIndex(status);
+
+  // Stepper UI
+  const renderStepper = () => {
+    if (currentIndex === -1) return null;
+    return (
+      <div className="flex items-center w-full max-w-2xl mx-auto mb-4 bg-slate-50/50 p-3 rounded-lg border border-slate-100 shadow-sm">
+        {steps.map((step, idx) => {
+          const isCompleted = currentIndex > idx;
+          const isActive = currentIndex === idx;
+          const isLast = idx === steps.length - 1;
+          
+          return (
+            <div key={step.id} className="flex items-center flex-1">
+              <div className="flex flex-col items-center flex-1">
+                <div className={`flex items-center justify-center w-8 h-8 rounded-full mb-1 transition-colors ${
+                  isCompleted ? 'bg-indigo-100 text-indigo-600' :
+                  isActive ? 'bg-indigo-600 text-white shadow-sm ring-2 ring-indigo-200 ring-offset-2' :
+                  'bg-slate-100 text-slate-400'
+                }`}>
+                  {isCompleted ? <CheckCircle2 className="w-5 h-5" /> :
+                   isActive ? <Loader2 className="w-4 h-4 animate-spin" /> :
+                   <span className="text-xs font-semibold">{idx + 1}</span>}
+                </div>
+                <span className={`text-[10px] font-medium ${isActive || isCompleted ? 'text-slate-800' : 'text-slate-400'}`}>
+                  {step.label}
+                </span>
+              </div>
+              {!isLast && (
+                <div className="w-full h-[2px] -mt-4 bg-slate-100 flex-1 relative">
+                  <div className={`absolute top-0 left-0 h-full bg-indigo-500 transition-all duration-500 ${isCompleted ? 'w-full' : 'w-0'}`} />
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
 
   let buttonContent = <><Sparkles className="w-4 h-4 mr-2" /> AI 블로그 생성하기</>;
   if (isLoading) {
@@ -153,10 +206,10 @@ export default function WritePage() {
   }
 
   return (
-    <div className={gridColsClass}>
+    <div className="flex h-[calc(100vh-8rem)] gap-6 overflow-hidden">
       
       {/* 좌측 패널: 설정 */}
-      <Card className="flex flex-col h-full border-slate-200 shadow-sm">
+      <Card className="w-[350px] shrink-0 flex flex-col h-full border-slate-200 shadow-sm">
         <CardHeader className="bg-slate-50/50 border-b">
           <CardTitle className="flex items-center gap-2">
             <PenTool className="w-5 h-5 text-indigo-500" />
@@ -231,7 +284,7 @@ export default function WritePage() {
       </Card>
 
       {/* 우측 패널: 렌더링 뷰어 */}
-      <Card className="flex flex-col h-full border-slate-200 shadow-sm overflow-hidden bg-[#f9f9f9]">
+      <Card className="flex-1 flex flex-col h-full border-slate-200 shadow-sm overflow-hidden bg-[#f9f9f9]">
         <CardHeader className="bg-white border-b py-3 px-4 flex-row items-center justify-between shadow-sm z-10">
           <div className="flex items-center gap-3">
             <CardTitle className="text-sm font-medium text-slate-700 flex items-center">
@@ -241,31 +294,48 @@ export default function WritePage() {
             {isLoading && <span className="text-xs text-indigo-500 font-medium animate-pulse">작업 중...</span>}
           </div>
           
-          <div className="flex items-center bg-slate-100 rounded-md p-1 border border-slate-200">
-            <button
-              onClick={() => setIsMobileView(false)}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-sm text-xs font-medium transition-colors ${
-                !isMobileView ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-700'
-              }`}
-            >
-              <Monitor className="w-3.5 h-3.5" />
-              PC 뷰
-            </button>
-            <button
-              onClick={() => setIsMobileView(true)}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-sm text-xs font-medium transition-colors ${
-                isMobileView ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-700'
-              }`}
-            >
-              <Smartphone className="w-3.5 h-3.5" />
-              모바일 뷰
-            </button>
+          <div className="flex items-center gap-2">
+            <div className="flex items-center bg-slate-100 rounded-md p-1 border border-slate-200">
+              <button
+                onClick={() => setIsMobileView(false)}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-sm text-xs font-medium transition-colors ${
+                  !isMobileView ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-700'
+                }`}
+              >
+                <Monitor className="w-3.5 h-3.5" />
+                PC 뷰
+              </button>
+              <button
+                onClick={() => setIsMobileView(true)}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-sm text-xs font-medium transition-colors ${
+                  isMobileView ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-700'
+                }`}
+              >
+                <Smartphone className="w-3.5 h-3.5" />
+                모바일 뷰
+              </button>
+            </div>
+            
+            {showCitations && (
+              <button
+                onClick={() => setIsPanelOpen(!isPanelOpen)}
+                className="flex items-center justify-center w-8 h-8 rounded-md bg-white border border-slate-200 text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 transition-colors shadow-sm"
+                title="팩트체크 패널 토글"
+              >
+                {isPanelOpen ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
+              </button>
+            )}
           </div>
         </CardHeader>
         
-        <CardContent className="p-0 flex-1 overflow-auto bg-[#f9f9f9] flex justify-center">
+        <CardContent className="p-0 flex-1 overflow-auto bg-[#f9f9f9] flex flex-col items-center relative">
+          
+          <div className="w-full pt-4 px-4 sticky top-0 bg-gradient-to-b from-[#f9f9f9] via-[#f9f9f9] to-transparent z-10 pb-4">
+            {renderStepper()}
+          </div>
+          
           {!parsedHtml && !isLoading ? (
-            <div className="flex items-center justify-center h-full text-slate-400 w-full">
+            <div className="flex items-center justify-center h-full text-slate-400 w-full flex-1">
               좌측 패널에서 생성하기 버튼을 눌러주세요.
             </div>
           ) : (
@@ -278,7 +348,7 @@ export default function WritePage() {
                   ? 'w-[390px] shadow-[0_0_15px_rgba(0,0,0,0.1)] border-x border-slate-200' 
                   : 'w-full max-w-3xl rounded-lg'
               }`}
-              dangerouslySetInnerHTML={{ __html: parsedHtml || '<div style="color: #64748b;">작업 진행 중... 잠시만 기다려주세요.</div>' }}
+              dangerouslySetInnerHTML={{ __html: parsedHtml || '<div style="color: #64748b; margin-top: 2rem;">작업 진행 중... 잠시만 기다려주세요.</div>' }}
             />
           )}
         </CardContent>
@@ -312,8 +382,12 @@ export default function WritePage() {
       </Card>
 
       {/* 우측 팩트체크 패널 (Citations) */}
-      {showCitations && (
-        <Card className="flex flex-col h-full border-slate-200 shadow-sm overflow-hidden bg-slate-50">
+      <div 
+        className={`shrink-0 transition-all duration-300 ease-in-out origin-right ${
+          showCitations && isPanelOpen ? 'w-[350px] opacity-100' : 'w-0 opacity-0 overflow-hidden'
+        }`}
+      >
+        <Card className="flex flex-col h-full border-slate-200 shadow-sm overflow-hidden bg-slate-50 w-[350px]">
           <CardHeader className="bg-white border-b py-3 px-4 shadow-sm z-10">
             <CardTitle className="text-sm font-medium text-slate-800 flex items-center gap-2">
               <Sparkles className="w-4 h-4 text-amber-500" />
@@ -348,7 +422,7 @@ export default function WritePage() {
             ))}
           </CardContent>
         </Card>
-      )}
+      </div>
 
     </div>
   )
