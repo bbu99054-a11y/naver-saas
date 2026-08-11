@@ -23,7 +23,7 @@ async function handler(req: Request) {
     if (dbUser?.plan_type === 'pro' || dbUser?.plan_type === 'premium') {
       aiModel = anthropic('claude-5-sonnet-latest'); 
     } else {
-      aiModel = google('gemini-1.5-flash'); 
+      aiModel = google('gemini-2.5-flash'); 
     }
 
     const systemPrompt = `너는 네이버 블로그 SEO 마케팅 전문가야.
