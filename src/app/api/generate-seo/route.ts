@@ -83,7 +83,7 @@ export async function POST(req: Request) {
 
     if (process.env.QSTASH_TOKEN) {
       const qstashClient = new Client({ token: process.env.QSTASH_TOKEN });
-      const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+      const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || (process.env.VERCEL_PROJECT_PRODUCTION_URL ? 'https://' + process.env.VERCEL_PROJECT_PRODUCTION_URL : (process.env.VERCEL_URL ? 'https://' + process.env.VERCEL_URL : 'http://localhost:3000'));
       await qstashClient.publishJSON({
         url: `${baseUrl}/api/worker/planner`,
         body: { jobId, prompt, tone, experience, citations: tavilyCitations, userId: user.id },
