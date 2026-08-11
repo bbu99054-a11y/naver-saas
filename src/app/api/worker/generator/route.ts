@@ -70,7 +70,11 @@ async function handler(req: Request) {
 
     if (process.env.QSTASH_TOKEN) {
       const qstashClient = new Client({ token: process.env.QSTASH_TOKEN });
-      const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || (process.env.VERCEL_PROJECT_PRODUCTION_URL ? 'https://' + process.env.VERCEL_PROJECT_PRODUCTION_URL : (process.env.VERCEL_URL ? 'https://' + process.env.VERCEL_URL : 'http://localhost:3000'));
+      const host = req.headers.get('host');
+      const fallbackHost = process.env.NEXT_PUBLIC_SITE_URL || process.env.VERCEL_PROJECT_PRODUCTION_URL || process.env.VERCEL_URL || 'localhost:3000';
+      const finalHost = host || fallbackHost;
+      const protocol = finalHost.includes('localhost') ? 'http' : 'https';
+      const baseUrl = finalHost.startsWith('http') ? finalHost : `${protocol}://${finalHost}`;
       await qstashClient.publishJSON({
         url: `${baseUrl}/api/worker/evaluator`,
         body: { jobId, draftText, prompt, userId },
