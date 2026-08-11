@@ -5,7 +5,7 @@ import { Client } from '@upstash/qstash'
 import { kv } from '@vercel/kv'
 import crypto from 'crypto'
 
-export const maxDuration = 60; // For Planner + Tavily
+export const maxDuration = 60; // For Tavily only
 
 export async function POST(req: Request) {
   try {
@@ -53,7 +53,6 @@ export async function POST(req: Request) {
       await kv.set(`job:${jobId}`, { status: 'SEARCHING' }, { ex: 3600 });
     }
 
-    
     let tavilyCitations: any = null;
     if (process.env.TAVILY_API_KEY) {
       try {
@@ -69,30 +68,29 @@ export async function POST(req: Request) {
       } catch (e: any) { console.error('Tavily Error:', e) }
     }
 
-    // Update DB
+    // Update DB to PLANNING state
     await prisma.article.updateMany({
       where: { job_id: jobId },
       data: {
-        status: 'GENERATING',
+        status: 'PLANNING',
         citations: tavilyCitations || []
       }
     });
 
     if (process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN) {
-      await kv.set(`job:${jobId}`, { status: 'GENERATING' }, { ex: 3600 });
+      await kv.set(`job:${jobId}`, { status: 'PLANNING' }, { ex: 3600 });
     }
 
     if (process.env.QSTASH_TOKEN) {
       const qstashClient = new Client({ token: process.env.QSTASH_TOKEN });
       const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
       await qstashClient.publishJSON({
-        url: `${baseUrl}/api/worker/generator`,
+        url: `${baseUrl}/api/worker/planner`,
         body: { jobId, prompt, tone, experience, citations: tavilyCitations, userId: user.id },
       });
     } else if (process.env.NODE_ENV === 'development') {
-        // Fallback for local development without QStash token
         const baseUrl = 'http://localhost:3000';
-        fetch(`${baseUrl}/api/worker/generator`, {
+        fetch(`${baseUrl}/api/worker/planner`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ jobId, prompt, tone, experience, citations: tavilyCitations, userId: user.id })

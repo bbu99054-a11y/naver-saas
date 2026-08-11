@@ -146,6 +146,7 @@ export default function WritePage() {
   let buttonContent = <><Sparkles className="w-4 h-4 mr-2" /> AI 블로그 생성하기</>;
   if (isLoading) {
     if (status === 'SEARCHING') buttonContent = <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> 자료 조사 중...</>;
+    else if (status === 'PLANNING') buttonContent = <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> AI 기획안 작성 중...</>;
     else if (status === 'GENERATING') buttonContent = <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> AI 초안 작성 중...</>;
     else if (status === 'EVALUATING') buttonContent = <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> 광고법 위반 검수 중...</>;
     else buttonContent = <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> 생성 중...</>;

@@ -2,8 +2,7 @@ import { verifySignatureAppRouter } from '@upstash/qstash/nextjs';
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { kv } from '@vercel/kv';
-import { generateText, generateObject } from 'ai';
-import { z } from 'zod';
+import { generateText } from 'ai';
 import { google } from '@ai-sdk/google';
 import { anthropic } from '@ai-sdk/anthropic';
 import { Client } from '@upstash/qstash';
@@ -11,12 +10,13 @@ import { Client } from '@upstash/qstash';
 export const maxDuration = 60;
 
 async function handler(req: Request) {
+  const startTime = Date.now();
+  console.log('[Generator Worker] Start:', new Date().toISOString());
+
   let body;
   try {
     body = await req.json();
-    const { jobId, prompt, tone, experience, citations, userId } = body;
-    let outline = '';
-
+    const { jobId, prompt, tone, experience, outline, citations, userId } = body;
 
     const dbUser = await prisma.user.findUnique({ where: { id: userId } });
     let aiModel;
@@ -26,47 +26,13 @@ async function handler(req: Request) {
       aiModel = google('gemini-1.5-flash'); 
     }
 
-    const [profile, pastArticles] = await Promise.all([
-      prisma.profile.findUnique({ where: { user_id: userId } }),
-      prisma.article.findMany({
-        where: { user_id: userId, status: 'COMPLETED' },
-        orderBy: { created_at: 'desc' },
-        take: 5,
-        select: { id: true, title: true, target_keyword: true }
-      })
-    ]);
-
-    const systemPrompt = `너는 마케팅 전문가야.`; 
-    // We don't want to break if there are literal dollars, but actually since this is written to file directly, we can just insert it normally. Wait, template strings in JS have variables. Let's just insert it. Wait, the template string syntax is fine in normal file writing.
+    const systemPrompt = `너는 네이버 블로그 SEO 마케팅 전문가야.
+독자의 공감을 이끌어내는 글을 작성하며, 다음 원칙을 반드시 준수해.
+1. 톤앤매너: ${tone}
+2. 경험담: ${experience ? '오늘의 팩트체크 경험담: ' + experience : '자연스러운 관련 경험담을 하나 지어내서 포함'}
+3. 가독성을 위해 적절한 이모지와 <b> 강조를 사용해.
+4. 반드시 완벽한 HTML로 출력할 것.`;
     
-    
-    let serpCompetitorContext = '';
-    if (process.env.TAVILY_API_KEY) {
-      try {
-        const serpRes = await fetch('https://api.tavily.com/search', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ api_key: process.env.TAVILY_API_KEY, query: prompt, search_depth: 'basic', include_domains: ['blog.naver.com'], max_results: 3 }),
-        });
-        const serpData = await serpRes.json();
-        if (serpData?.results?.length > 0) {
-          const serpResults = serpData.results.map((r: any, i: number) => `[경쟁사 ${i + 1}] 제목: ${r.title}\n내용 요약: ${r.content}`).join('\n\n');
-          serpCompetitorContext = `\n[현재 네이버 상위 노출 3개 경쟁사 블로그 구조 및 내용]\n${serpResults}\n`;
-        }
-      } catch (e: any) { console.error('SERP Error:', e) }
-    }
-
-    try {
-      const plannerResult = await generateObject({
-        model: aiModel,
-        schema: z.object({
-          outline: z.string()
-        }),
-        prompt: `너는 네이버 상위 1% 마케팅 기획자야. 타겟 키워드: "${prompt}"\n${serpCompetitorContext}\n위 상위 노출된 경쟁사 글의 흐름을 분석해서 독창적인 [서론-본론-결론] 뼈대(Outline)를 새로 창조해.`
-      });
-      outline = plannerResult.object.outline;
-    } catch (e: any) { console.error('Planner Error:', e) }
-
     let searchContext = '';
     if (citations && citations.length > 0) {
        searchContext = citations.map((c: any, i: number) => `[출처 ${i + 1}] 제목: ${c.title}\n내용 요약: ${c.content}`).join('\n\n');
@@ -75,14 +41,20 @@ async function handler(req: Request) {
 
     const outlineContext = outline ? `\n\n[Planner Agent가 설계한 글의 개요(Skeleton)]\n${outline}\n\n위 개요의 기승전결 구조를 반드시 준수하여 초안을 작성할 것.` : '';
 
+    console.log(`[Generator Worker] Before generateText Time: ${(Date.now() - startTime) / 1000}s`);
+
     const draftResult = await generateText({
       model: aiModel,
       temperature: 0.75,
+      // @ts-ignore
+      maxTokens: 8192,
       system: systemPrompt + searchContext + outlineContext,
       prompt: `타겟 키워드: ${prompt}\n\n위 지침과 개요에 맞춰 완벽한 네이버 블로그용 HTML 본문을 작성해줘.`,
     });
     
     const draftText = draftResult.text;
+
+    console.log(`[Generator Worker] After generateText Time: ${(Date.now() - startTime) / 1000}s`);
 
     await prisma.article.updateMany({
       where: { job_id: jobId },
@@ -105,9 +77,11 @@ async function handler(req: Request) {
       });
     }
 
+    console.log(`[Generator Worker] End Time: ${(Date.now() - startTime) / 1000}s`);
     return NextResponse.json({ success: true });
   } catch (error: any) {
-    console.error('Generator Worker Error:', error);
+    console.error('[Generator Worker] Error:', error);
+    console.log(`[Generator Worker] Error Time: ${(Date.now() - startTime) / 1000}s`);
     if (body?.jobId) {
       await prisma.article.updateMany({
         where: { job_id: body.jobId },
@@ -117,7 +91,7 @@ async function handler(req: Request) {
         await kv.set(`job:${body.jobId}`, { status: 'ERROR', error_message: error.message });
       }
     }
-    return NextResponse.json({ error: error.message }, { status: 200 }); // Prevent infinite retry
+    return NextResponse.json({ error: error.message }, { status: 200 }); 
   }
 }
 
