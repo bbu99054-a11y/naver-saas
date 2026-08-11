@@ -1,9 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
 import prisma from '@/lib/prisma'
-import { generateObject } from 'ai'
-import { z } from 'zod'
-import { google } from '@ai-sdk/google'
-import { anthropic } from '@ai-sdk/anthropic'
 import { NextResponse } from 'next/server'
 import { Client } from '@upstash/qstash'
 import { kv } from '@vercel/kv'
@@ -57,61 +53,19 @@ export async function POST(req: Request) {
       await kv.set(`job:${jobId}`, { status: 'SEARCHING' }, { ex: 3600 });
     }
 
-    let aiModel = dbUser.plan_type === 'pro' || dbUser.plan_type === 'premium' 
-      ? anthropic('claude-5-sonnet-latest') 
-      : google('gemini-1.5-flash');
-
-    let serpCompetitorContext = '';
+    
+    let tavilyCitations: any = null;
     if (process.env.TAVILY_API_KEY) {
       try {
-        const serpRes = await fetch('https://api.tavily.com/search', {
+        const searchRes = await fetch('https://api.tavily.com/search', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ api_key: process.env.TAVILY_API_KEY, query: prompt, search_depth: 'basic', include_domains: ['blog.naver.com'], max_results: 5 }),
+          body: JSON.stringify({ api_key: process.env.TAVILY_API_KEY, query: prompt, search_depth: 'basic', max_results: 5 })
         });
-        const serpData = await serpRes.json();
-        if (serpData?.results?.length > 0) {
-          const serpResults = serpData.results.map((r: any, i: number) => `[경쟁사 ${i + 1}] 제목: ${r.title}\n내용 요약: ${r.content}`).join('\n\n');
-          serpCompetitorContext = `\n[현재 네이버 상위 노출 5개 경쟁사 블로그 구조 및 내용]\n${serpResults}\n`;
+        const searchData = await searchRes.json();
+        if (searchData?.results) {
+          tavilyCitations = searchData.results;
         }
-      } catch (e: any) { console.error('SERP Error:', e) }
-    }
-
-    let searchQueries = [prompt];
-    let outline = '';
-    try {
-      const plannerResult = await generateObject({
-        model: aiModel,
-        schema: z.object({
-          searchQueries: z.array(z.string()),
-          outline: z.string()
-        }),
-        prompt: `너는 네이버 상위 1% 마케팅 기획자야. 타겟 키워드: "${prompt}"\n${serpCompetitorContext}\n위 상위 노출된 경쟁사 글 5개의 흐름을 분석해서 독창적인 [서론-본론-결론] 뼈대(Outline)를 새로 창조해. 외부 RAG 검색을 위한 파생 검색어 2개도 함께 뽑아줘.`
-      });
-      searchQueries = plannerResult.object.searchQueries;
-      outline = plannerResult.object.outline;
-    } catch (e: any) { console.error('Planner Error:', e) }
-
-    let tavilyCitations = null;
-    if (process.env.TAVILY_API_KEY) {
-      try {
-        const searchPromises = searchQueries.map(q => 
-          fetch('https://api.tavily.com/search', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ api_key: process.env.TAVILY_API_KEY, query: q, search_depth: 'basic', max_results: 3 })
-          }).then(res => res.json())
-        );
-        const results = await Promise.all(searchPromises);
-        let allCitations: any[] = [];
-        results.forEach(res => { if (res?.results) allCitations.push(...res.results); });
-        
-        const uniqueUrls = new Set();
-        tavilyCitations = allCitations.filter(c => {
-          if (uniqueUrls.has(c.url)) return false;
-          uniqueUrls.add(c.url);
-          return true;
-        }).slice(0, 5);
       } catch (e: any) { console.error('Tavily Error:', e) }
     }
 
@@ -133,7 +87,7 @@ export async function POST(req: Request) {
       const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
       await qstashClient.publishJSON({
         url: `${baseUrl}/api/worker/generator`,
-        body: { jobId, prompt, tone, experience, outline, citations: tavilyCitations, userId: user.id },
+        body: { jobId, prompt, tone, experience, citations: tavilyCitations, userId: user.id },
       });
     } else if (process.env.NODE_ENV === 'development') {
         // Fallback for local development without QStash token
@@ -141,7 +95,7 @@ export async function POST(req: Request) {
         fetch(`${baseUrl}/api/worker/generator`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ jobId, prompt, tone, experience, outline, citations: tavilyCitations, userId: user.id })
+            body: JSON.stringify({ jobId, prompt, tone, experience, citations: tavilyCitations, userId: user.id })
         }).catch(console.error);
     }
 

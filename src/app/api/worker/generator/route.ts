@@ -2,7 +2,8 @@ import { verifySignatureAppRouter } from '@upstash/qstash/nextjs';
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { kv } from '@vercel/kv';
-import { generateText } from 'ai';
+import { generateText, generateObject } from 'ai';
+import { z } from 'zod';
 import { google } from '@ai-sdk/google';
 import { anthropic } from '@ai-sdk/anthropic';
 import { Client } from '@upstash/qstash';
@@ -13,7 +14,9 @@ async function handler(req: Request) {
   let body;
   try {
     body = await req.json();
-    const { jobId, prompt, tone, experience, outline, citations, userId } = body;
+    const { jobId, prompt, tone, experience, citations, userId } = body;
+    let outline = '';
+
 
     const dbUser = await prisma.user.findUnique({ where: { id: userId } });
     let aiModel;
@@ -36,6 +39,34 @@ async function handler(req: Request) {
     const systemPrompt = `너는 마케팅 전문가야.`; 
     // We don't want to break if there are literal dollars, but actually since this is written to file directly, we can just insert it normally. Wait, template strings in JS have variables. Let's just insert it. Wait, the template string syntax is fine in normal file writing.
     
+    
+    let serpCompetitorContext = '';
+    if (process.env.TAVILY_API_KEY) {
+      try {
+        const serpRes = await fetch('https://api.tavily.com/search', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ api_key: process.env.TAVILY_API_KEY, query: prompt, search_depth: 'basic', include_domains: ['blog.naver.com'], max_results: 3 }),
+        });
+        const serpData = await serpRes.json();
+        if (serpData?.results?.length > 0) {
+          const serpResults = serpData.results.map((r: any, i: number) => `[경쟁사 ${i + 1}] 제목: ${r.title}\n내용 요약: ${r.content}`).join('\n\n');
+          serpCompetitorContext = `\n[현재 네이버 상위 노출 3개 경쟁사 블로그 구조 및 내용]\n${serpResults}\n`;
+        }
+      } catch (e: any) { console.error('SERP Error:', e) }
+    }
+
+    try {
+      const plannerResult = await generateObject({
+        model: aiModel,
+        schema: z.object({
+          outline: z.string()
+        }),
+        prompt: `너는 네이버 상위 1% 마케팅 기획자야. 타겟 키워드: "${prompt}"\n${serpCompetitorContext}\n위 상위 노출된 경쟁사 글의 흐름을 분석해서 독창적인 [서론-본론-결론] 뼈대(Outline)를 새로 창조해.`
+      });
+      outline = plannerResult.object.outline;
+    } catch (e: any) { console.error('Planner Error:', e) }
+
     let searchContext = '';
     if (citations && citations.length > 0) {
        searchContext = citations.map((c: any, i: number) => `[출처 ${i + 1}] 제목: ${c.title}\n내용 요약: ${c.content}`).join('\n\n');
