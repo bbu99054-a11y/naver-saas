@@ -82,16 +82,25 @@ export async function POST(req: Request) {
     }
 
     if (process.env.QSTASH_TOKEN) {
-      const qstashClient = new Client({ token: process.env.QSTASH_TOKEN });
+      const qstashClient = new Client({ token: process.env.QSTASH_TOKEN, ...(process.env.QSTASH_URL && { baseUrl: process.env.QSTASH_URL }) });
       const host = req.headers.get('host');
       const fallbackHost = process.env.NEXT_PUBLIC_SITE_URL || process.env.VERCEL_PROJECT_PRODUCTION_URL || process.env.VERCEL_URL || 'localhost:3000';
       const finalHost = host || fallbackHost;
       const protocol = finalHost.includes('localhost') ? 'http' : 'https';
       const baseUrl = finalHost.startsWith('http') ? finalHost : `${protocol}://${finalHost}`;
-      await qstashClient.publishJSON({
-        url: `${baseUrl}/api/worker/planner`,
-        body: { jobId, prompt, tone, experience, citations: tavilyCitations, userId: user.id },
-      });
+            try {
+        await qstashClient.publishJSON({
+          url: `${baseUrl}/api/worker/planner`,
+          body: { jobId, prompt, tone, experience, citations: tavilyCitations, userId: user.id },
+        });
+      } catch (pubErr: any) {
+        console.error('QStash Publish Failed:', pubErr);
+        await prisma.article.updateMany({ where: { job_id: jobId }, data: { status: 'ERROR', error_message: 'QStash 큐 등록 실패' } });
+        if (process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN) {
+          await kv.set(`job:${jobId}`, { status: 'ERROR', error_message: 'QStash 큐 등록 실패' }, { ex: 3600 });
+        }
+        throw pubErr;
+      }
     }
 
     return NextResponse.json({ jobId, citations: tavilyCitations });

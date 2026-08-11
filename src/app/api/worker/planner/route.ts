@@ -69,7 +69,7 @@ async function handler(req: Request) {
     }
 
     if (process.env.QSTASH_TOKEN) {
-      const qstashClient = new Client({ token: process.env.QSTASH_TOKEN });
+      const qstashClient = new Client({ token: process.env.QSTASH_TOKEN, ...(process.env.QSTASH_URL && { baseUrl: process.env.QSTASH_URL }) });
       const host = req.headers.get('host');
       const fallbackHost = process.env.NEXT_PUBLIC_SITE_URL || process.env.VERCEL_PROJECT_PRODUCTION_URL || process.env.VERCEL_URL || 'localhost:3000';
       const finalHost = host || fallbackHost;
