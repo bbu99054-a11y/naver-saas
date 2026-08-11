@@ -116,6 +116,7 @@ export default function WritePage() {
     setParsedHtml('');
     setCitations(null);
     setJobId(null);
+    setIsPanelOpen(false);
 
     try {
       const res = await fetch('/api/generate-seo', {
@@ -129,7 +130,7 @@ export default function WritePage() {
       
       setJobId(data.jobId);
       if (data.citations) setCitations(data.citations);
-      setStatus('GENERATING');
+      setStatus('GENERATING'); // generate-seo now sets it to PLANNING, but we follow frontend flow
       
     } catch(err: any) {
       toast({ title: '에러', description: err.message, variant: 'destructive' });
@@ -285,46 +286,68 @@ export default function WritePage() {
 
       {/* 우측 패널: 렌더링 뷰어 */}
       <Card className="flex-1 flex flex-col h-full border-slate-200 shadow-sm overflow-hidden bg-[#f9f9f9]">
-        <CardHeader className="bg-white border-b py-3 px-4 flex-row items-center justify-between shadow-sm z-10">
-          <div className="flex items-center gap-3">
-            <CardTitle className="text-sm font-medium text-slate-700 flex items-center">
-              <span className="w-2 h-2 rounded-full bg-[#03C75A] mr-2"></span>
-              스마트에디터 미리보기
-            </CardTitle>
-            {isLoading && <span className="text-xs text-indigo-500 font-medium animate-pulse">작업 중...</span>}
-          </div>
-          
-          <div className="flex items-center gap-2">
-            <div className="flex items-center bg-slate-100 rounded-md p-1 border border-slate-200">
-              <button
-                onClick={() => setIsMobileView(false)}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-sm text-xs font-medium transition-colors ${
-                  !isMobileView ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-700'
-                }`}
-              >
-                <Monitor className="w-3.5 h-3.5" />
-                PC 뷰
-              </button>
-              <button
-                onClick={() => setIsMobileView(true)}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-sm text-xs font-medium transition-colors ${
-                  isMobileView ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-700'
-                }`}
-              >
-                <Smartphone className="w-3.5 h-3.5" />
-                모바일 뷰
-              </button>
+        <CardHeader className="bg-white border-b py-3 px-4 flex flex-col gap-3 shadow-sm z-10">
+          <div className="flex flex-row items-center justify-between w-full">
+            <div className="flex items-center gap-3">
+              <CardTitle className="text-sm font-medium text-slate-700 flex items-center">
+                <span className="w-2 h-2 rounded-full bg-[#03C75A] mr-2"></span>
+                스마트에디터 미리보기
+              </CardTitle>
+              {isLoading && <span className="text-xs text-indigo-500 font-medium animate-pulse">작업 중...</span>}
             </div>
             
-            {showCitations && (
-              <button
-                onClick={() => setIsPanelOpen(!isPanelOpen)}
-                className="flex items-center justify-center w-8 h-8 rounded-md bg-white border border-slate-200 text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 transition-colors shadow-sm"
-                title="팩트체크 패널 토글"
-              >
-                {isPanelOpen ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
-              </button>
-            )}
+            <div className="flex items-center gap-2">
+              <div className="flex items-center bg-slate-100 rounded-md p-1 border border-slate-200">
+                <button
+                  onClick={() => setIsMobileView(false)}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-sm text-xs font-medium transition-colors ${
+                    !isMobileView ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-700'
+                  }`}
+                >
+                  <Monitor className="w-3.5 h-3.5" />
+                  PC 뷰
+                </button>
+                <button
+                  onClick={() => setIsMobileView(true)}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-sm text-xs font-medium transition-colors ${
+                    isMobileView ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-700'
+                  }`}
+                >
+                  <Smartphone className="w-3.5 h-3.5" />
+                  모바일 뷰
+                </button>
+              </div>
+              
+              {showCitations && (
+                <button
+                  onClick={() => setIsPanelOpen(!isPanelOpen)}
+                  className="flex items-center justify-center w-8 h-8 rounded-md bg-white border border-slate-200 text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 transition-colors shadow-sm"
+                  title="팩트체크 패널 토글"
+                >
+                  {isPanelOpen ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
+                </button>
+              )}
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 w-full mt-1">
+             <Input 
+               value={postTitle}
+               onChange={(e) => setPostTitle(e.target.value)}
+               placeholder="생성된 글의 제목이 여기에 표시됩니다."
+               className="font-bold text-slate-800 focus-visible:ring-indigo-500 h-10 flex-1"
+             />
+             <Button 
+               variant="outline" 
+               className="h-10 shrink-0 border-indigo-200 text-indigo-700 hover:bg-indigo-50"
+               onClick={() => {
+                 navigator.clipboard.writeText(postTitle)
+                 toast({ title: '복사 완료', description: '제목이 클립보드에 복사되었습니다.' })
+               }}
+             >
+               제목 복사
+             </Button>
+             <CopyToNaverBtn content={parsedHtml} className="h-10 px-4" />
           </div>
         </CardHeader>
         
@@ -354,27 +377,7 @@ export default function WritePage() {
         </CardContent>
         
         <div className="p-4 bg-white border-t border-slate-200 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] z-10 flex flex-col gap-3">
-           <div className="flex items-center gap-2">
-             <label className="text-sm font-bold text-slate-700 whitespace-nowrap">제목</label>
-             <Input 
-               value={postTitle}
-               onChange={(e) => setPostTitle(e.target.value)}
-               placeholder="생성된 글의 제목이 여기에 표시됩니다."
-               className="font-bold text-slate-800 focus-visible:ring-indigo-500 h-10 flex-1"
-             />
-             <Button 
-               variant="outline" 
-               className="h-10 shrink-0 border-indigo-200 text-indigo-700 hover:bg-indigo-50"
-               onClick={() => {
-                 navigator.clipboard.writeText(postTitle)
-                 toast({ title: '복사 완료', description: '제목이 클립보드에 복사되었습니다.' })
-               }}
-             >
-               제목 복사
-             </Button>
-           </div>
            <div className="flex flex-col xl:flex-row gap-2 items-stretch">
-             <CopyToNaverBtn content={parsedHtml} className="flex-1 h-11" />
              <AutoPublishBtn title={postTitle} content={parsedHtml} className="flex-1 h-11" />
              <MultiPublishBtn title={postTitle} content={parsedHtml} />
            </div>
