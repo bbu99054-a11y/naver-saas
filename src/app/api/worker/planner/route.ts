@@ -24,7 +24,7 @@ async function handler(req: Request) {
     if (dbUser?.plan_type === 'pro' || dbUser?.plan_type === 'premium') {
       aiModel = anthropic('claude-5-sonnet-latest'); 
     } else {
-      aiModel = google('gemini-2.5-flash'); 
+      aiModel = google('gemini-3.6-flash'); 
     }
 
     let serpCompetitorContext = '';

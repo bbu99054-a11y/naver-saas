@@ -20,7 +20,7 @@ async function handler(req: Request) {
     const dbUser = await prisma.user.findUnique({ where: { id: userId } });
     let aiModel = dbUser?.plan_type === 'pro' || dbUser?.plan_type === 'premium' 
       ? anthropic('claude-5-sonnet-latest') 
-      : google('gemini-2.5-flash');
+      : google('gemini-3.6-flash');
 
     const evaluatorSystemPrompt = `너는 15년 경력의 전문직 컴플라이언스(광고법) 최고 책임자 겸 최종 검수 에이전트(Evaluator)야. 
 주어진 원고 초안을 스캔하고 위반 사항이 발견되면 스스로 재작성(Self-Correction)해. 
