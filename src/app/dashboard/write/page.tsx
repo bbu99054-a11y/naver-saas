@@ -62,13 +62,17 @@ export default function WritePage() {
             cleanHtml = cleanHtml.trim();
             if (cleanHtml.toLowerCase().startsWith('```html')) cleanHtml = cleanHtml.slice(7).trim();
             else if (cleanHtml.startsWith('```')) cleanHtml = cleanHtml.slice(3).trim();
-            if (cleanHtml.endsWith('```')) cleanHtml = cleanHtml.slice(0, -3).trim();
-            
-            try {
-              const htmlStr = await marked.parse(cleanHtml);
-              setParsedHtml(htmlStr as string);
-            } catch(e) {
+            // 순수 HTML 태그가 포함되어 있다면 marked 파싱을 건너뜁니다 (들여쓰기로 인한 코드블록화 방지)
+            const isHtml = /<h[1-6]>|<p>|<ul>|<li>|<strong>|<b>|<br>/i.test(cleanHtml);
+            if (isHtml) {
               setParsedHtml(cleanHtml);
+            } else {
+              try {
+                const htmlStr = await marked.parse(cleanHtml);
+                setParsedHtml(htmlStr as string);
+              } catch(e) {
+                setParsedHtml(cleanHtml);
+              }
             }
             setIsLoading(false);
             
@@ -340,7 +344,7 @@ export default function WritePage() {
                 title="팩트체크 패널 토글"
               >
                 {isPanelOpen ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
-                <span className="text-xs font-medium">{isPanelOpen ? '팩트체크 닫기' : '팩트체크 열기'}</span>
+                <span className="text-xs font-medium">팩트체크</span>
               </Button>
             </div>
           </div>
