@@ -11,7 +11,7 @@ model User {
   email             String    @unique
   name              String?
   plan_type         String    @default("free")
-  credits           Int       @default(10)
+  credits           Int       @default(3)
   subscription_tier String    @default("FREE")
   created_at        DateTime  @default(now())
 

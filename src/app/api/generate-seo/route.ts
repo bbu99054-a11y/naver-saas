@@ -19,7 +19,7 @@ export async function POST(req: Request) {
     let dbUser = await prisma.user.findUnique({ where: { id: user.id } });
     if (!dbUser) {
       dbUser = await prisma.user.create({
-        data: { id: user.id, email: user.email || '', credits: 5000, plan_type: 'free' }
+        data: { id: user.id, email: user.email || '', credits: 3, plan_type: 'free' }
       });
     }
 
