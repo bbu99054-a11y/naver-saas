@@ -37,7 +37,6 @@ async function handler(req: Request) {
 
     const result = await withRetry(() => withTimeout(generateObject({
       model: aiModel,
-      temperature: 0.2,
       schema: z.object({
         isViolating: z.boolean().describe('광고법 위반 사항이나 심각한 문맥 오류가 발견되면 true, 문제가 없으면 false'),
         correctedText: z.string().describe('isViolating이 true일 경우 수정한 HTML 원고 전체를 제공. false일 경우 빈 문자열("") 반환'),

@@ -49,7 +49,6 @@ async function handler(req: Request) {
 
     const draftResult = await withRetry(() => withTimeout(generateText({
       model: aiModel,
-      temperature: 0.75,
       // @ts-ignore
       maxTokens: 8192,
       system: systemPrompt + searchContext + outlineContext,
