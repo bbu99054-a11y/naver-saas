@@ -37,7 +37,7 @@ export default function WritePage() {
 
   // --- 비동기 폴링 큐 상태 ---
   const [jobId, setJobId] = useState(null)
-  const [status, setStatus] = useState('') // SEARCHING, PLANNING, GENERATING, EVALUATING, COMPLETED, ERROR
+  const [status, setStatus] = useState('') // SEARCHING, GENERATING, EVALUATING, COMPLETED, ERROR
   const [isLoading, setIsLoading] = useState(false)
   const [parsedHtml, setParsedHtml] = useState('')
 
@@ -57,21 +57,12 @@ export default function WritePage() {
           setStatus(data.status);
           
           if (data.status === 'COMPLETED') {
-            let cleanHtml = data.content_html || '';
-            // 확실한 마크다운 백틱 및 공백 제거
-            cleanHtml = cleanHtml.trim();
-            if (cleanHtml.toLowerCase().startsWith('```html')) cleanHtml = cleanHtml.slice(7).trim();
-            else if (cleanHtml.startsWith('```')) cleanHtml = cleanHtml.slice(3).trim();
-            if (cleanHtml.endsWith('```')) cleanHtml = cleanHtml.slice(0, -3).trim();
-            
-            setParsedHtml(cleanHtml);
+            setParsedHtml(data.content_html || '');
             setIsLoading(false);
             
-            // DB에서 생성된 title을 전달받은 경우 최우선 적용
-            if (data.title) {
-              setPostTitle(data.title.replace(' (SEO 최적화)', '').trim());
-            } else {
-              setPostTitle((prev) => prev.replace(' (AI 제목 생성 중...)', ''));
+            const titleMatch = data.content_html?.match(/<post_title>([\s\S]*?)<\/post_title>/i);
+            if (titleMatch && titleMatch[1]) {
+              setPostTitle(titleMatch[1].trim());
             }
             
             toast({ title: '작성 완료', description: 'SEO 최적화 블로그 글이 생성되었습니다.' });
@@ -125,7 +116,6 @@ export default function WritePage() {
     setParsedHtml('');
     setCitations(null);
     setJobId(null);
-    setIsPanelOpen(false);
 
     try {
       const res = await fetch('/api/generate-seo', {
@@ -139,7 +129,7 @@ export default function WritePage() {
       
       setJobId(data.jobId);
       if (data.citations) setCitations(data.citations);
-      setStatus('GENERATING'); // generate-seo now sets it to PLANNING, but we follow frontend flow
+      setStatus('GENERATING');
       
     } catch(err: any) {
       toast({ title: '에러', description: err.message, variant: 'destructive' });
@@ -148,7 +138,7 @@ export default function WritePage() {
     }
   }
 
-  const showCitations = (citations && citations.length > 0) || isLoading
+    const showCitations = (citations && citations.length > 0) || isLoading
 
   // Status Stepper Data
   const steps = [
@@ -172,7 +162,7 @@ export default function WritePage() {
   const renderStepper = () => {
     if (currentIndex === -1) return null;
     return (
-      <div className="flex items-center w-full max-w-2xl mx-auto mb-4 bg-slate-50/50 p-3 rounded-lg border border-slate-100 shadow-sm">
+      <div className="flex items-center w-full max-w-2xl mx-auto mb-4 bg-slate-50/50 p-3 rounded-lg border border-slate-100">
         {steps.map((step, idx) => {
           const isCompleted = currentIndex > idx;
           const isActive = currentIndex === idx;
@@ -295,109 +285,40 @@ export default function WritePage() {
 
       {/* 우측 패널: 렌더링 뷰어 */}
       <Card className="flex-1 flex flex-col h-full border-slate-200 shadow-sm overflow-hidden bg-[#f9f9f9]">
-        <CardHeader className="bg-white border-b py-3 px-4 flex flex-col gap-3 shadow-sm z-10">
-          <div className="flex flex-row items-center justify-between w-full">
-            <div className="flex items-center gap-3">
-              <CardTitle className="text-sm font-medium text-slate-700 flex items-center">
-                <span className="w-2 h-2 rounded-full bg-[#03C75A] mr-2"></span>
-                스마트에디터 미리보기
-              </CardTitle>
-              {isLoading && <span className="text-xs text-indigo-500 font-medium animate-pulse">작업 중...</span>}
-            </div>
-            
-            <div className="flex items-center gap-2">
-              <div className="flex items-center bg-slate-100 rounded-md p-1 border border-slate-200">
-                <button
-                  onClick={() => setIsMobileView(false)}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-sm text-xs font-medium transition-colors ${
-                    !isMobileView ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-700'
-                  }`}
-                >
-                  <Monitor className="w-3.5 h-3.5" />
-                  PC 뷰
-                </button>
-                <button
-                  onClick={() => setIsMobileView(true)}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-sm text-xs font-medium transition-colors ${
-                    isMobileView ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-700'
-                  }`}
-                >
-                  <Smartphone className="w-3.5 h-3.5" />
-                  모바일 뷰
-                </button>
-              </div>
-              
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setIsPanelOpen(!isPanelOpen)}
-                className="h-[30px] flex items-center gap-1 text-slate-600 border-slate-200 bg-white hover:bg-indigo-50 hover:text-indigo-600 transition-colors shadow-sm px-2.5"
-                title="팩트체크 패널 토글"
-              >
-                {isPanelOpen ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
-                <span className="text-xs font-medium">{isPanelOpen ? '팩트체크 닫기' : '팩트체크 열기'}</span>
-              </Button>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2 w-full mt-1">
-             <Input 
-               value={postTitle}
-               onChange={(e) => setPostTitle(e.target.value)}
-               placeholder="생성된 글의 제목이 여기에 표시됩니다."
-               className="font-bold text-slate-800 focus-visible:ring-indigo-500 h-10 flex-1"
-             />
-             <Button 
-               variant="outline" 
-               className="h-10 shrink-0 border-indigo-200 text-indigo-700 hover:bg-indigo-50"
-               onClick={() => {
-                 navigator.clipboard.writeText(postTitle)
-                 toast({ title: '복사 완료', description: '제목이 클립보드에 복사되었습니다.' })
-               }}
-             >
-               제목 복사
-             </Button>
-             <CopyToNaverBtn content={parsedHtml} className="h-10 px-4" />
-          </div>
-        </CardHeader>
-        
-        <CardContent className="p-0 flex-1 overflow-auto bg-[#f9f9f9] flex flex-col items-center relative">
-          
-          <div className="w-full pt-4 px-4 sticky top-0 bg-gradient-to-b from-[#f9f9f9] via-[#f9f9f9] to-transparent z-10 pb-4">
-            {renderStepper()}
+        <CardHeader className="bg-white border-b py-3 px-4 flex-row items-center justify-between shadow-sm z-10">
+          <div className="flex items-center gap-3">
+            <CardTitle className="text-sm font-medium text-slate-700 flex items-center">
+              <span className="w-2 h-2 rounded-full bg-[#03C75A] mr-2"></span>
+              스마트에디터 미리보기
+            </CardTitle>
+            {isLoading && <span className="text-xs text-indigo-500 font-medium animate-pulse">작업 중...</span>}
           </div>
           
-          {!parsedHtml && !isLoading ? (
-            <div className="flex items-center justify-center h-full text-slate-400 w-full flex-1">
-              좌측 패널에서 생성하기 버튼을 눌러주세요.
-            </div>
-          ) : (
-            <div 
-              id="editor-preview"
-              contentEditable={true}
-              suppressContentEditableWarning={true}
-              className={`p-8 bg-white min-h-full prose prose-slate prose-headings:text-slate-800 prose-h2:border-b-2 prose-h2:border-slate-100 prose-h2:pb-2 prose-h3:text-slate-700 prose-p:text-slate-600 outline-none focus:ring-2 focus:ring-indigo-500 transition-all duration-300 ${
-                isMobileView 
-                  ? 'w-[390px] shadow-[0_0_15px_rgba(0,0,0,0.1)] border-x border-slate-200' 
-                  : 'w-full max-w-3xl rounded-lg'
+          <div className="flex items-center gap-2">
+            <div className="flex items-center bg-slate-100 rounded-md p-1 border border-slate-200">
+            <button
+              onClick={() => setIsMobileView(false)}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-sm text-xs font-medium transition-colors ${
+                !isMobileView ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-700'
               }`}
-              dangerouslySetInnerHTML={{ __html: parsedHtml || '<div style="color: #64748b; margin-top: 2rem;">작업 진행 중... 잠시만 기다려주세요.</div>' }}
-            />
-          )}
-        </CardContent>
-        
-        <div className="p-4 bg-white border-t border-slate-200 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] z-10 flex flex-col gap-3">
-           <div className="flex flex-col xl:flex-row gap-2 items-stretch">
-             <AutoPublishBtn title={postTitle} content={parsedHtml} className="flex-1 h-11" />
-             <MultiPublishBtn title={postTitle} content={parsedHtml} />
-           </div>
-        </div>
-      </Card>
-
-      {/* 우측 팩트체크 패널 (Citations) */}
-      <div 
+            >
+              <Monitor className="w-3.5 h-3.5" />
+              PC 뷰
+            </button>
+            <button
+              onClick={() => setIsMobileView(true)}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-sm text-xs font-medium transition-colors ${
+                isMobileView ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-700'
+              }`}
+            >
+              <Smartphone className="w-3.5 h-3.5" />
+              모바일 뷰
+            </button>
+          </div>
+          
+          <div 
         className={`shrink-0 transition-all duration-300 ease-in-out origin-right ${
-          isPanelOpen ? 'w-[350px] opacity-100' : 'w-0 opacity-0 overflow-hidden'
+          showCitations && isPanelOpen ? 'w-[350px] opacity-100' : 'w-0 opacity-0 overflow-hidden'
         }`}
       >
         <Card className="flex flex-col h-full border-slate-200 shadow-sm overflow-hidden bg-slate-50 w-[350px]">

@@ -20,7 +20,7 @@ export async function GET(req: Request) {
       if (kvState) {
         if ((kvState as any).status === 'COMPLETED' || (kvState as any).status === 'ERROR') {
           const article = await prisma.article.findFirst({ where: { job_id: jobId } });
-          return NextResponse.json({ status: article?.status, content_html: article?.content_html, error_message: article?.error_message });
+          return NextResponse.json({ status: article?.status, content_html: article?.content_html, title: article?.title, error_message: article?.error_message });
         }
         return NextResponse.json(kvState);
       }
@@ -28,7 +28,7 @@ export async function GET(req: Request) {
 
     const article = await prisma.article.findFirst({
       where: { job_id: jobId },
-      select: { status: true, content_html: true, error_message: true }
+      select: { status: true, content_html: true, title: true, error_message: true }
     });
 
     if (!article) {

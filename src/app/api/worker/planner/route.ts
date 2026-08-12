@@ -4,6 +4,7 @@ import prisma from '@/lib/prisma';
 import { kv } from '@vercel/kv';
 import { generateObject } from 'ai';
 import { z } from 'zod';
+import { withTimeout, withRetry } from '@/lib/ai-utils';
 import { google } from '@ai-sdk/google';
 import { anthropic } from '@ai-sdk/anthropic';
 import { Client } from '@upstash/qstash';
@@ -47,15 +48,18 @@ async function handler(req: Request) {
 
     let outline = '';
     try {
-      const plannerResult = await generateObject({
+      const plannerResult = await withRetry(() => withTimeout(generateObject({
         model: aiModel,
         schema: z.object({
           outline: z.string()
         }),
         prompt: `너는 네이버 상위 1% 마케팅 기획자야. 타겟 키워드: "${prompt}"\n${serpCompetitorContext}\n위 상위 노출된 경쟁사 글의 흐름을 분석해서 독창적인 [서론-본론-결론] 뼈대(Outline)를 새로 창조해.`
-      });
+      }), 55000), 3, 1000);
       outline = plannerResult.object.outline;
-    } catch (e: any) { console.error('[Planner Worker] generateObject Error:', e) }
+    } catch (e: any) { 
+      console.error('[Planner Worker] generateObject Error:', e);
+      throw e;
+    }
     
     console.log(`[Planner Worker] After generateObject Time: ${(Date.now() - startTime) / 1000}s`);
 

@@ -27,15 +27,21 @@ export async function getCurationClusters(pillarKeyword: string, industry: strin
     // Phase 1: 최신 트렌드/뉴스 검색 (Tavily 연동)
     let trendContext = '최신 뉴스 데이터를 불러오지 못했습니다. 일반적인 마케팅 지식에 기반하여 생성해 주세요.';
     if (process.env.TAVILY_API_KEY) {
-      let trendQuery = `${pillarKeyword} 최신 뉴스 트렌드`;
+      const today = new Date().toLocaleDateString('ko-KR');
+      
+      let trendQuery = `${pillarKeyword} 최신 뉴스 트렌드 ${today}`;
       if (industry.includes('세무사') || industry.includes('회계사')) {
-        trendQuery = "세법 개정안 부동산 대책 최신 트렌드 뉴스";
+        const pool = ["세법 개정안", "부동산 양도세 취득세", "증여세 상속세 절세", "법인세 세무조사", "개인사업자 부가세 종소세"];
+        trendQuery = `${pool[Math.floor(Math.random() * pool.length)]} 최신 뉴스 ${today}`;
       } else if (industry.includes('변호사') || industry.includes('법률')) {
-        trendQuery = "대법원 판례 법령 개정 최신 뉴스";
+        const pool = ["대법원 최신 판례", "형사 소송 경찰 조사", "이혼 재산분할 위자료", "부동산 명도소송", "개인회생 파산"];
+        trendQuery = `${pool[Math.floor(Math.random() * pool.length)]} 법률 뉴스 ${today}`;
       } else if (industry.includes('의사') || industry.includes('병원')) {
-        trendQuery = "최신 의료 시술 건강 이슈 뉴스";
+        const pool = ["건강보험 급여 개정", "최신 의료 기술 시술", "계절성 유행 질환", "현대인 만성 질환 통증", "안티에이징 피부 시술"];
+        trendQuery = `${pool[Math.floor(Math.random() * pool.length)]} 건강 뉴스 ${today}`;
       } else if (industry.includes('노무사')) {
-        trendQuery = "노동법 개정 고용노동부 지침 최신 뉴스";
+        const pool = ["노동법 개정안", "부당해고 구제신청", "임금체불 퇴직금", "직장내 괴롭힘 산재", "근로감독관 고용노동부 지침"];
+        trendQuery = `${pool[Math.floor(Math.random() * pool.length)]} 최신 뉴스 ${today}`;
       }
 
       try {
@@ -63,6 +69,7 @@ export async function getCurationClusters(pillarKeyword: string, industry: strin
     const { object } = await generateObject({
       model: aiModel,
       schema: clusterSchema,
+      temperature: 0.85,
       prompt: `
 당신은 네이버 블로그 SEO 및 전문직 마케팅 전문가입니다. 
 다음 필러(Pillar) 키워드와 오늘 수집된 [최신 트렌드/뉴스 데이터]를 바탕으로, 실제 잠재 고객의 유입을 이끌어낼 수 있는 구체적인 롱테일 클러스터(Cluster) 키워드 정확히 10개를 제안해 주세요.
@@ -73,7 +80,8 @@ ${trendContext}
 [중요 제약사항]
 1. 단순한 명사 나열(예: '강남 행정사')을 피하고, 고객이 포털에 검색할 법한 **구체적인 문제 상황이나 트렌드가 반영된 진짜 롱테일 키워드**를 생성하세요.
 2. (환각 방지 강제) 절대 존재하지 않는 허위 정책이나 뉴스를 지어내어 키워드로 만들지 마세요. 반드시 위 [최신 트렌드/뉴스 데이터]에 있는 사실에만 기반하여 트렌드 키워드를 생성해야 합니다.
-3. 고객의 구매 여정(퍼널) 단계에 따라 정확한 비율로 10개를 나누어 생성하세요:
+3. 이전에 추천했던 뻔한 키워드는 절대 제외하고, 매번 완전히 새로운 시각의 Niche(니치)한 롱테일 키워드를 발굴하세요. 시의성(계절, 현재 경제상황, 트렌드)이 짙게 배어있을수록 좋습니다.
+4. 고객의 구매 여정(퍼널) 단계에 따라 정확한 비율로 10개를 나누어 생성하세요:
    - '정보 탐색 (Top)' (3개): 당장 수임할 건 아니지만 정보를 찾는 사람을 위한 키워드. **이 단계의 키워드에는 '세무사', '변호사', '비용', '상담', '추천' 같은 상업적 단어를 절대 넣지 말고 순수 정보 검색형으로 작성하세요.** (예: 가족간 계좌이체 증여세 면제 한도)
    - '비교/고민 (Middle)' (3개): 전문가를 찾기 시작한 사람을 위한 키워드 (예: 송파구 상속세 전문 세무사 고르는 3가지 기준)
    - '즉시 행동 (Bottom)' (4개): 당장 내일 방문/수임을 원하는 사람을 위한 키워드 (예: 잠실 엘스아파트 다주택자 양도세 신고 대행 비용)

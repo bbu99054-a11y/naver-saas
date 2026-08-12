@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { kv } from '@vercel/kv';
 import { generateText } from 'ai';
+import { withTimeout, withRetry } from '@/lib/ai-utils';
 import { google } from '@ai-sdk/google';
 import { anthropic } from '@ai-sdk/anthropic';
 import { Client } from '@upstash/qstash';
@@ -43,14 +44,14 @@ async function handler(req: Request) {
 
     console.log(`[Generator Worker] Before generateText Time: ${(Date.now() - startTime) / 1000}s`);
 
-    const draftResult = await generateText({
+    const draftResult = await withRetry(() => withTimeout(generateText({
       model: aiModel,
       temperature: 0.75,
       // @ts-ignore
       maxTokens: 8192,
       system: systemPrompt + searchContext + outlineContext,
       prompt: `타겟 키워드: ${prompt}\n\n위 지침과 개요에 맞춰 완벽한 네이버 블로그용 HTML 본문을 작성해줘.`,
-    });
+    }), 55000), 3, 1000);
     
     const draftText = draftResult.text;
 
