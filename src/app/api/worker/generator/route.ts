@@ -6,6 +6,7 @@ import { generateText } from 'ai';
 import { withTimeout, withRetry } from '@/lib/ai-utils';
 import { google } from '@ai-sdk/google';
 import { anthropic } from '@ai-sdk/anthropic';
+import { openai } from '@ai-sdk/openai';
 import { Client } from '@upstash/qstash';
 
 export const maxDuration = 60;
@@ -21,10 +22,12 @@ async function handler(req: Request) {
 
     const dbUser = await prisma.user.findUnique({ where: { id: userId } });
     let aiModel;
-    if (dbUser?.plan_type === 'pro' || dbUser?.plan_type === 'premium') {
-      aiModel = anthropic('claude-5-sonnet-latest'); 
+    if (dbUser?.plan_type === 'premium') {
+      aiModel = anthropic('claude-5-sonnet-latest');
+    } else if (dbUser?.plan_type === 'pro') {
+      aiModel = openai('gpt-5.6-luna');
     } else {
-      aiModel = google('gemini-3.6-flash'); 
+      aiModel = openai('gpt-5.6-luna');
     }
 
     const systemPrompt = `너는 네이버 블로그 SEO 마케팅 전문가야.
