@@ -40,7 +40,7 @@ async function handler(req: Request) {
       temperature: 0.2,
       schema: z.object({
         isViolating: z.boolean().describe('광고법 위반 사항이나 심각한 문맥 오류가 발견되면 true, 문제가 없으면 false'),
-        correctedText: z.string().optional().describe('isViolating이 true일 경우에만 위반 사항을 수정한 최종 HTML 원고 전체를 제공 (마크다운 없이 순수 HTML 태그만 사용)'),
+        correctedText: z.string().describe('isViolating이 true일 경우 수정한 HTML 원고 전체를 제공. false일 경우 빈 문자열("") 반환'),
         finalTitle: z.string().describe('원고 내용에 어울리는 SEO 최적화된 매력적인 블로그 제목 (단순 키워드 나열 지양)')
       }),
       system: evaluatorSystemPrompt,
