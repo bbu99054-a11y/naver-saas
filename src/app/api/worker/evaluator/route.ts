@@ -34,8 +34,8 @@ async function handler(req: Request) {
 위반 사항이 없다면 HTML 태그나 디자인을 전혀 훼손하지 말고 초안 그대로 출력해.
 
 [매우 중요]
-검수 보고서나 부가적인 설명(예: 어떤 부분을 수정했는지 등)은 절대 작성하지 마세요. 
-오직 검수 및 수정이 완료된 최종 HTML 코드만 마크다운 코드블록이나 부연 설명 없이 순수 텍스트로 출력하세요.`;
+1. 검수 보고서나 부가적인 설명은 절대 작성하지 마세요. 
+2. 마크다운(Markdown, 예: ## 제목)은 절대 사용하지 말고, <h2>, <p> 등 순수 HTML 태그만 유지하여 최종 결과물만 순수 텍스트로 출력하세요.`;
 
     console.log(`[Evaluator Worker] Before generateText Time: ${(Date.now() - startTime) / 1000}s`);
 

@@ -35,7 +35,7 @@ async function handler(req: Request) {
 1. 톤앤매너: ${tone}
 2. 경험담: ${experience ? '오늘의 팩트체크 경험담: ' + experience : '자연스러운 관련 경험담을 하나 지어내서 포함'}
 3. 가독성을 위해 적절한 이모지와 <b> 강조를 사용해.
-4. 반드시 완벽한 HTML로 출력할 것.`;
+4. [매우 중요] 마크다운(Markdown, 예: ## 제목, **강조**)은 절대 사용하지 말고, 반드시 <h2>, <p>, <strong> 등 순수 HTML 태그만 사용하여 완벽한 HTML 구조로 출력할 것.`;
     
     let searchContext = '';
     if (citations && citations.length > 0) {

@@ -64,7 +64,12 @@ export default function WritePage() {
             else if (cleanHtml.startsWith('```')) cleanHtml = cleanHtml.slice(3).trim();
             if (cleanHtml.endsWith('```')) cleanHtml = cleanHtml.slice(0, -3).trim();
             
-            setParsedHtml(cleanHtml);
+            try {
+              const htmlStr = await marked.parse(cleanHtml);
+              setParsedHtml(htmlStr as string);
+            } catch(e) {
+              setParsedHtml(cleanHtml);
+            }
             setIsLoading(false);
             
             // DB에서 생성된 title을 전달받은 경우 최우선 적용
@@ -387,8 +392,8 @@ export default function WritePage() {
         </CardContent>
         
         <div className="p-4 bg-white border-t border-slate-200 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] z-10 flex flex-col gap-3">
-           <div className="flex flex-col xl:flex-row gap-2 items-stretch">
-             <AutoPublishBtn title={postTitle} content={parsedHtml} className="flex-1 h-11" />
+           <div className="grid grid-cols-1 xl:grid-cols-2 gap-2 items-stretch">
+             <AutoPublishBtn title={postTitle} content={parsedHtml} className="w-full h-11" />
              <MultiPublishBtn title={postTitle} content={parsedHtml} />
            </div>
         </div>
@@ -416,7 +421,11 @@ export default function WritePage() {
                 <Loader2 className="w-6 h-6 animate-spin text-indigo-400" />
                 <span className="text-xs text-center leading-relaxed">에이전트가 국가법령정보센터 등<br/>신뢰할 수 있는 출처를 실시간으로<br/>수집하고 검증하고 있습니다...</span>
               </div>
-            ) : citations?.map((c: any, idx: number) => (
+            ) : (!citations || citations.length === 0) ? (
+              <div className="flex flex-col items-center justify-center h-full text-slate-400 gap-3">
+                <span className="text-xs text-center leading-relaxed">수집된 팩트체크(인용) 자료가 없습니다.<br/>키워드나 설정에 따라 검색 자료가<br/>존재하지 않을 수 있습니다.</span>
+              </div>
+            ) : citations.map((c: any, idx: number) => (
               <div key={idx} className="bg-white p-3 rounded-md border border-slate-200 shadow-sm text-sm">
                 <div className="font-bold text-slate-800 mb-1 flex items-start gap-1">
                   <span className="text-indigo-600">[{idx + 1}]</span> 
