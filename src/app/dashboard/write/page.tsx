@@ -175,7 +175,7 @@ export default function WritePage() {
 
   // Stepper UI
   const renderStepper = () => {
-    if (currentIndex === -1) return null;
+    if (currentIndex === -1 || currentIndex === 4) return null;
     return (
       <div className="flex items-center w-full max-w-2xl mx-auto mb-4 bg-slate-50/50 p-3 rounded-lg border border-slate-100 shadow-sm">
         {steps.map((step, idx) => {
