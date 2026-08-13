@@ -20,3 +20,4 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
    - ⚙️ Under the hood? (Explain data flow with analogies. Must comply with local Chrome extension architecture, no n8n/Make)
    - 🗺️ Zones Touched: (List the Zone IDs from DETAILED_ARCHITECTURE.md being modified)
    - ⚠️ Risks/Side effects: (Any chance of breaking existing features)
+7. **Writing Engine (Zone 3) Lockdown:** The highly optimized AI generation prompts and template logic in `src/app/api/worker/generator/route.ts` MUST NEVER BE MODIFIED by any agent. This logic is strictly tuned for professional blogs (Lawyers/Accountants) containing 130+ constraints, HTML template injections, and Profile RAG logic. Do not simplify, overwrite, or alter the `systemPrompt`, design templates, SERP context injection, or `profileFooterPrompt`. Treat this file as permanently frozen.
