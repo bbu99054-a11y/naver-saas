@@ -65,7 +65,7 @@ export default async function ArchiveDetailPage({ params }: { params: Promise<{ 
             </div>
           ) : (
             <div 
-              className="p-8 max-w-3xl mx-auto bg-white min-h-full prose prose-slate prose-headings:text-slate-800 prose-h2:border-b-2 prose-h2:border-slate-100 prose-h2:pb-2 prose-h3:text-slate-700 prose-p:text-slate-600"
+              className="p-8 max-w-3xl mx-auto bg-white min-h-full prose max-w-none prose-h2:border-b-2 prose-h2:border-slate-100 prose-h2:pb-2"
               dangerouslySetInnerHTML={{ __html: htmlContent }}
             />
           )}

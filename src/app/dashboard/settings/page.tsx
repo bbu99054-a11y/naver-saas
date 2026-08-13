@@ -18,7 +18,6 @@ export default async function SettingsPage() {
   })
 
   // DB에 암호화되어 저장된 키가 존재하는지 여부만 확인
-  const hasCoupangKeys = !!(apiKeyRecord?.coupang_access_key && apiKeyRecord?.coupang_secret_key)
   const hasWpKey = !!apiKeyRecord?.wp_api_key
   const hasTistoryKey = !!apiKeyRecord?.tistory_access_token
 
@@ -31,39 +30,6 @@ export default async function SettingsPage() {
           (보안을 위해 저장된 비밀번호 및 토큰은 암호화되어 보관되며, 화면에 다시 노출되지 않습니다.)
         </p>
       </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <KeyRound className="w-5 h-5 text-indigo-500" />
-            쿠팡 파트너스 API
-          </CardTitle>
-          <CardDescription>
-            쿠팡 파트너스 오픈 API 발급처에서 Access Key와 Secret Key를 발급받아 입력해 주세요.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          {hasCoupangKeys && (
-            <div className="mb-6 p-4 bg-green-50 text-green-700 rounded-lg flex items-center gap-2 text-sm font-medium border border-green-100">
-              <CheckCircle2 className="w-5 h-5 text-green-500" />
-              <span>쿠팡 파트너스 키가 안전하게 등록되어 있습니다.</span>
-            </div>
-          )}
-          <form action={async (formData) => { 'use server'; await saveApiKeys(formData); }} className="space-y-4">
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-slate-700">Access Key</label>
-              <Input name="coupangAccessKey" placeholder="쿠팡 Access Key 입력" />
-            </div>
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-slate-700">Secret Key</label>
-              <Input name="coupangSecretKey" type="password" placeholder="쿠팡 Secret Key 입력" />
-            </div>
-            <Button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-700 text-white">
-              {hasCoupangKeys ? '쿠팡 키 업데이트' : '쿠팡 키 저장하기'}
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
 
       <Card>
         <CardHeader>

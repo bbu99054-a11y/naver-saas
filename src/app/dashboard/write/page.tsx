@@ -385,7 +385,7 @@ export default function WritePage() {
               id="editor-preview"
               contentEditable={true}
               suppressContentEditableWarning={true}
-              className={`p-8 bg-white min-h-full prose prose-slate prose-headings:text-slate-800 prose-h2:border-b-2 prose-h2:border-slate-100 prose-h2:pb-2 prose-h3:text-slate-700 prose-p:text-slate-600 outline-none focus:ring-2 focus:ring-indigo-500 transition-all duration-300 ${
+              className={`p-8 bg-white min-h-full prose max-w-none prose-h2:border-b-2 prose-h2:border-slate-100 prose-h2:pb-2 outline-none focus:ring-2 focus:ring-indigo-500 transition-all duration-300 ${
                 isMobileView 
                   ? 'w-[390px] shadow-[0_0_15px_rgba(0,0,0,0.1)] border-x border-slate-200' 
                   : 'w-full max-w-3xl rounded-lg'

@@ -39,7 +39,7 @@ async function handler(req: Request) {
       model: aiModel,
       schema: z.object({
         isViolating: z.boolean().describe('광고법 위반 사항이나 심각한 문맥 오류가 발견되면 true, 문제가 없으면 false'),
-        correctedText: z.string().describe('isViolating이 true일 경우 수정한 HTML 원고 전체를 제공. false일 경우 빈 문자열("") 반환'),
+        correctedText: z.string().describe('isViolating이 true일 경우 수정한 HTML 원고 전체를 제공. 마크다운(Markdown, 예: ## 제목)은 절대 사용하지 말고, <h2>, <p>, <span>(인라인 스타일 포함) 등 순수 HTML 태그와 색상 스타일을 그대로 유지하여 최종 결과물(HTML)만 출력하세요.'),
         finalTitle: z.string().describe('원고 내용에 어울리는 SEO 최적화된 매력적인 블로그 제목 (단순 키워드 나열 지양)')
       }),
       system: evaluatorSystemPrompt,

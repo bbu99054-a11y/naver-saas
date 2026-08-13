@@ -62,7 +62,6 @@ model Article {
   content_markdown String?   @db.Text
   content_html     String?   @db.Text
   generator_draft  String?   @db.Text
-  coupang_links    Json?
   citations        Json?
   status           String    @default("DRAFT")
   job_id           String?
@@ -78,8 +77,6 @@ model Article {
 model ApiKey {
   id                 String   @id @default(uuid())
   user_id            String   @unique
-  coupang_access_key   String?
-  coupang_secret_key   String?
   
   // WordPress
   wp_url               String?

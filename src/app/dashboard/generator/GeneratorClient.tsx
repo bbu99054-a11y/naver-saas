@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useCompletion } from '@ai-sdk/react'
-import { searchCoupangProducts } from '@/actions/coupang'
+
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
@@ -23,7 +23,7 @@ const useToast = () => {
 
 export default function GeneratorClient() {
   const [keyword, setKeyword] = useState('')
-  const [isSearching, setIsSearching] = useState(false)
+
   const { toast } = useToast()
 
   const { completion, complete, isLoading, error } = useCompletion({
@@ -49,27 +49,6 @@ export default function GeneratorClient() {
       return
     }
 
-    setIsSearching(true)
-    
-    // 1. 쿠팡 상품 검색 API 호출 (Server Action)
-    const productRes = await searchCoupangProducts(keyword)
-    
-    setIsSearching(false)
-
-    if (!productRes.success || !productRes.data) {
-      toast({
-        title: '쿠팡 검색 실패',
-        description: productRes.error || '상품 정보를 불러오지 못했습니다.',
-        variant: 'destructive'
-      })
-      return
-    }
-
-    if (productRes.data.length === 0) {
-      toast({ title: '검색 결과 없음', description: '해당 키워드로 검색된 쿠팡 상품이 없습니다.' })
-      return
-    }
-
     toast({
       title: '생성 시작',
       description: 'AI가 콘텐츠를 작성하고 있습니다. 잠시만 기다려 주세요.',
@@ -78,8 +57,7 @@ export default function GeneratorClient() {
     // 2. AI 콘텐츠 생성 API 호출
     complete(keyword, {
       body: {
-        targetKeyword: keyword,
-        products: productRes.data
+        targetKeyword: keyword
       }
     })
   }
@@ -95,7 +73,7 @@ export default function GeneratorClient() {
             콘텐츠 생성기
           </CardTitle>
           <CardDescription>
-            키워드를 입력하면 쿠팡 파트너스 상품을 검색하고 SEO 최적화된 글을 작성합니다.
+            키워드를 입력하면 SEO 최적화된 글을 실시간으로 작성합니다.
           </CardDescription>
         </CardHeader>
         <CardContent className="p-6 flex-1 flex flex-col gap-6 overflow-auto">
@@ -107,7 +85,7 @@ export default function GeneratorClient() {
                 placeholder="예: 가성비 노트북 추천" 
                 value={keyword}
                 onChange={(e) => setKeyword(e.target.value)}
-                disabled={isLoading || isSearching}
+                disabled={isLoading}
                 className="flex-1"
               />
             </div>
@@ -115,12 +93,10 @@ export default function GeneratorClient() {
           
           <Button 
             onClick={handleGenerate} 
-            disabled={isLoading || isSearching || !keyword}
+            disabled={isLoading || !keyword}
             className="w-full bg-indigo-600 hover:bg-indigo-700 text-white shadow-md transition-all"
           >
-            {isSearching ? (
-              <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> 쿠팡 상품 검색 중...</>
-            ) : isLoading ? (
+            {isLoading ? (
               <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> AI 작성 중...</>
             ) : (
               <><Search className="w-4 h-4 mr-2" /> 자동 생성 시작</>
@@ -130,7 +106,7 @@ export default function GeneratorClient() {
           <div className="bg-blue-50 text-blue-800 p-4 rounded-lg text-sm leading-relaxed mt-auto">
             <p className="font-semibold mb-1">💡 작성 가이드</p>
             <ul className="list-disc pl-4 space-y-1">
-              <li>키워드를 기반으로 연관 상품 10개를 불러옵니다.</li>
+              <li>키워드를 기반으로 매력적인 포스팅을 작성합니다.</li>
               <li>Claude 3.5 모델이 APB 프레임워크와 마크다운 표를 포함한 블로그 글을 실시간 작성합니다.</li>
               <li>작성이 완료되면 초안으로 자동 저장됩니다.</li>
             </ul>
@@ -145,7 +121,7 @@ export default function GeneratorClient() {
           {isLoading && <span className="flex items-center text-xs text-indigo-500 font-medium"><span className="relative flex h-2 w-2 mr-2"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span><span className="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"></span></span>스트리밍 중...</span>}
         </CardHeader>
         <CardContent className="p-0 flex-1 overflow-auto bg-white">
-          <div className="prose prose-slate prose-sm md:prose-base max-w-none p-6 lg:p-10">
+          <div className="prose prose-sm md:prose-base max-w-none p-6 lg:p-10">
             {!completion && !isLoading ? (
               <div className="flex items-center justify-center h-full text-slate-400 min-h-[300px] border-2 border-dashed border-slate-100 rounded-xl m-6">
                 좌측 패널에서 키워드를 입력하고 생성 버튼을 눌러주세요.
