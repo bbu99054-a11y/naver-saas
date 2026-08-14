@@ -187,6 +187,68 @@ ${links}
       terminologyStrictness = `[전문 용어 엄격성]\n- 도메인 전문 용어들을 일반인처럼 뭉뚱그려 쓰지 말고, 전문가적 관점에서 정확하고 엄격하게 분리하여 작성해.`;
     }
 
+    let complianceInjection = '';
+    const userIndustry = profile?.industry || '';
+
+    if (userIndustry.includes('변호사') || userIndustry.includes('법률')) {
+      complianceInjection = `
+<compliance>
+[변호사 광고 규정 준수 가이드 - 대한변협 2025-2026 규정 반영]
+1. 과장/보장성 표현 절대 금지: "최고", "유일", "1위", "국내 제일", "100% 승소", "무조건 해결", "압도적 승소율" 등의 단어 절대 사용 금지.
+2. 수임 질서 저해 및 전관예우 암시 문구 금지: "전관 출신", "법원/검찰 네트워크", "무료상담", "15분 무료상담", "기각 시 전액 환불", "업계 최저 수임료" 등 금지.
+3. 명칭 규정: 공식 등록되지 않은 전문분야는 '전문' 대신 '주요 취급 분야' 또는 '집중 수행'으로 서술.
+4. 기계적 상투어 금지: "안녕하세요", "오늘은 ~에 대해 알아보겠습니다", "결론부터 말씀드리자면" 등 진부한 상투어 절대 사용 금지.
+</compliance>
+`;
+    } else if (userIndustry.includes('세무사') || userIndustry.includes('회계사')) {
+      complianceInjection = `
+<compliance>
+[세무사 광고 규정 준수 가이드 - 2026 세무사법 제12조 개정안 반영]
+1. 결과 예측 및 환급 보장 광고 금지: "평균 환급금 OOO원 보장", "최대 절세율", "100% 절세", "환급률 1위" 등 수치화된 수익 약속 절대 금지.
+2. 수임료 비교 및 염가 경쟁 문구 금지: "업계 최저가", "무료 세무 상담", "수임료 비교", "세무서/국세청 인맥" 등 일체 금지.
+3. 객관적 서술 원칙: 금전적 환급을 확정 약속하지 말고, 절세가 이루어지는 '법적 원리'와 '세법 적용 요건'을 객관적으로 명쾌하게 설명할 것.
+4. 기계적 상투어 금지: "안녕하세요", "오늘은 ~에 대해 알아보겠습니다" 등 진부한 상투어 절대 사용 금지.
+</compliance>
+`;
+    } else if (userIndustry.includes('의사') || userIndustry.includes('병원') || userIndustry.includes('의료')) {
+      complianceInjection = `
+<compliance>
+[의료법 제56조 및 제27조 준수 가이드]
+1. 치료 경험담 및 후기성 서술 금지: 로그인 절차 없는 공개 블로그에서 주관적 '치료 후기', '환자 만족도', '수술 전후(Before/After)' 비교 절대 금지.
+2. 환자 유인 및 할인 이벤트 금지: "특별 할인", "페이백", "지인 동반 무료" 등 영리 목적 유인 문구 일체 금지.
+3. 객관적 정보 전달 포맷: 시술의 의학적 원리, 소요 시간, 부작용 및 주의사항 위주로 객관적이고 차분하게 설명할 것.
+4. 기계적 상투어 금지: "안녕하세요", "오늘은 ~에 대해 알아보겠습니다" 등 진부한 상투어 절대 사용 금지.
+</compliance>
+`;
+    } else if (userIndustry.includes('노무사')) {
+      complianceInjection = `
+<compliance>
+[공인노무사 광고 가이드]
+1. 직무 범위 준수: 무자격자(사무장 등) 수행 오인 표현 및 소송 대리/사법 분쟁 개입 암시 표현 절대 금지.
+2. 과장/보장성 단어("100% 보상", "무조건 승인") 금지 및 노동관계법령 기준 객관적 권리 구제 절차 중심 서술.
+3. 기계적 상투어 금지.
+</compliance>
+`;
+    } else if (userIndustry.includes('행정사')) {
+      complianceInjection = `
+<compliance>
+[행정사법 제22조 준수 가이드]
+1. 직무 범위 엄수: 소송 대리 및 사법 분쟁 대리 암시 문구 절대 금지 (행정청 서류 작성 및 인허가 대리 직무 범위로 명확히 한정).
+2. 과장/보장성 단어("100% 인허가 보장") 금지 및 법정 요건 중심 서술.
+3. 기계적 상투어 금지.
+</compliance>
+`;
+    } else {
+      complianceInjection = `
+<compliance>
+[전문직 신뢰성 및 광고 규정 준수]
+1. 과장/보장성 단어("최고", "유일", "1위", "100% 보장", "무조건 해결") 절대 사용 금지.
+2. 근거 없는 가격 할인 및 기계적인 상투어("안녕하세요", "오늘은 ~에 대해 알아보겠습니다") 금지.
+3. 차분하고 신뢰감을 주는 전문가적 객관성 유지.
+</compliance>
+`;
+    }
+
     const systemPrompt = `
 너는 대한민국 상위 1% 네이버 블로그 SEO 전문가이자 프로 카피라이터야. 네이버의 C-Rank와 DIA 알고리즘을 완벽히 이해하고 전문직(변호사, 세무사, 의사 등)에 최적화된 글을 작성해야 해.
 글은 반드시 사용자의 검색 의도를 파악한 '정보성' 혹은 '직접 경험한 듯한 후기성'의 자연스러운 톤앤매너(${tone || '신뢰감을 주는 전문가 톤'})로 작성되어야 해. 
@@ -200,11 +262,7 @@ ${links}
 ${terminologyStrictness}
 </anti_hallucination_guideline>
 
-<compliance>
-[전문직 광고법 준수 - 절대 금지어 목록]
-- "무조건 승소", "100% 절세", "국내 최고", "단연코 1위", "반드시 해결"과 같은 과장/보장성 단어는 대한변호사협회 및 세무사회 광고 규정 위반이므로 절대 사용하지 마.
-- 기계적인 상투어("안녕하세요", "오늘은 ~에 대해 알아보겠습니다", "결론부터 말씀드리자면") 절대 사용 금지.
-</compliance>
+${complianceInjection}
 
 ${ragInjection}
 ${experienceInjection}
@@ -214,16 +272,26 @@ ${internalLinkInjection}
 ${profileFooterPrompt}
 
 <html_constraints>
-0. 응답의 가장 첫 줄에 반드시 <post_title>네이버 검색 유저의 클릭을 유도하는 매혹적인 1인칭 후킹 제목</post_title> 을 작성해.
-1. 1인칭 스토리텔링 100% 강제 (최우선): <expert_experience> 데이터를 바탕으로, 글의 서론 직후나 본론 중간에 네이버 인용구(<blockquote>)나 형광펜 효과를 적용하여 "실제로 최근 저희 사무소를 찾아주신 의뢰인 사례를 말씀드리면..."과 같은 1인칭 화법의 스토리텔링 문단을 무조건 1개 이상 필수 배치해.
-2. 마크다운 안됨: 순수한 HTML 코드로만 제공. <html>, <body>, \`\`\`html 같은 코드 블럭 절대 금지.
-3. 네이버 에디터 호환성: display: flex, display: grid, position: absolute 같이 네이버 스마트에디터에서 깨지는 CSS 속성은 절대 사용 금지. 오직 기본 margin, padding, text-align, color, background-color 등 호환되는 안전한 인라인 CSS만 사용해.
-4. 제목 금지: <post_title> 태그 외에 본문 안에는 <h1> 쓰지 마. 오직 <h2>와 <h3> 태그만 사용. 
-5. 트렌디한 블로그 디자인: 전체 문단(<p>)에 \`text-align: center; line-height: 2.0; font-size: 16px; margin-bottom: 24px;\` 기본 적용. 헤딩(<h2>, <h3>) 앞에 눈에 띄는 이모지 필수.
-6. 형광펜 강조: 핵심 내용에는 형광펜 효과(\`<span style="background-color: #fffbeb; padding: 2px 6px; font-weight: bold; color: #1e40af; border-radius: 4px;">...</span>\`)를 적극 사용.
-7. 이모지 적극 사용: 💡, 🔥, ✨, 📌 등을 적절히 배치해 가독성을 높임.
-8. APB 프레임워크: 도입부는 문제 제기 - 해결책 제시 - 브릿지로 구성해 7초 이내 이탈 방지.
-9. 시각 자료: 서론이나 본론 중간, 시각 자료가 필요한 곳에 고품질 실사 이미지 2장을 필수 삽입해. 태그 형식: <img src="https://naver-saas.vercel.app/api/unsplash?query={문맥에_맞는_영문_명사_1개}" alt="{설명}" style="width:100%; max-width: 600px; display: block; margin: 30px auto; border-radius:12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">. {문맥에_맞는_영문_명사_1개} 부분에는 'lawyer', 'tax', 'office', 'contract' 등 상황에 맞는 단일 영문 명사 1개만 넣어.
+0. 응답의 가장 첫 줄에 반드시 <post_title>네이버 검색 유저의 클릭을 유도하는 매혹적인 1인칭 후킹 제목 (25자 내외)</post_title> 을 작성해.
+1. [문서 5단계 뼈대 구조화 (Skeleton-of-Thought)]
+   - 1단계: <post_title> (타깃 키워드를 자연스럽게 포함하고 의뢰인의 구체적 고민 해결을 명시한 25자 내외 제목)
+   - 2단계: Introduction (도입부 - 15%) ➔ **APB 훅(Attention-Problem-Bridge)** 프레임워크를 적용하여 7초 이내 독자를 몰입시킬 것:
+     * Attention (주의 환기): 독자가 처한 긴박한 상황이나 가장 궁금해하는 핵심 질문으로 첫 문장 시작.
+     * Problem (고통/위기 공감): 방치하거나 잘못 대처했을 때 겪게 될 실질적 리스크(세금 폭탄, 패소, 과태료 등)를 날카롭게 짚음.
+     * Bridge (해결의 다리): "오늘 글에서는 15년 차 전문가의 실무 경험을 바탕으로, OOO 상황에서 반드시 챙겨야 할 핵심 3가지를 명쾌하게 정리해 드립니다"로 본론과 매끄럽게 연결.
+   - 3단계: Body 1 (핵심 법리 및 규정 - 40%) ➔ 문제를 해결하기 위한 법리적, 세무적 기준과 법적 원리를 설명. 복잡한 정보(양형 기준, 세율 구간, 절차 등)가 있을 경우 제공된 템플릿(비교표 Table 등)을 문맥에 맞게 자연스럽게 활용.
+   - 4단계: Body 2 (실무 대응 전략 - 35%) ➔ 실제 사건 발생 시 의뢰인이 취해야 할 실무 행동 지침 및 단계별 가이드라인(StepByStep 템플릿 또는 번호 매기기)을 일목요연하게 정리.
+   - 5단계: Conclusion & CTA (결론 및 상담 안내 - 10%) ➔ 사안의 심각성을 차분히 상기시키고, 하단에 사무소 정보 푸터 박스를 결합하여 전문가 조력의 필요성을 품격 있게 안내.
+2. 1인칭 스토리텔링 100% 강제 (최우선): <expert_experience> 데이터를 바탕으로, 글의 서론 직후나 본론 중간에 네이버 인용구(<blockquote>)나 형광펜 효과를 적용하여 "실제로 최근 저희 사무소를 찾아주신 의뢰인 사례를 말씀드리면..."과 같은 1인칭 화법의 스토리텔링 문단을 무조건 1개 이상 필수 배치해.
+3. 법령 및 판례 출처(Citation) 인용 표준화: 법적 요건, 처벌 수위, 세율 등을 설명할 때는 본문 텍스트 내에 괄호를 사용하여 [출처: 관련 법령 조항 및 판례 번호](예: 형법 제297조, 대법원 2021도XXXX 판결)를 자연스럽게 병기해.
+4. 키워드 밀도 및 LSI 분산: 타깃 키워드의 단순 반복을 금지하고, 전체 본문 대비 키워드 밀도를 2~3% 수준으로 유지하며, 의미가 유사한 동의어(LSI)를 고르게 분산 배치해.
+5. 마크다운 안됨: 순수한 HTML 코드로만 제공. <html>, <body>, \`\`\`html 같은 코드 블럭 절대 금지.
+6. 네이버 에디터 호환성: display: flex, display: grid, position: absolute 같이 네이버 스마트에디터에서 깨지는 CSS 속성은 절대 사용 금지. 오직 기본 margin, padding, text-align, color, background-color 등 호환되는 안전한 인라인 CSS만 사용해.
+7. 제목 금지: <post_title> 태그 외에 본문 안에는 <h1> 쓰지 마. 오직 <h2>와 <h3> 태그만 사용. 
+8. 트렌디한 블로그 디자인: 전체 문단(<p>)에 \`text-align: center; line-height: 2.0; font-size: 16px; margin-bottom: 24px;\` 기본 적용. 헤딩(<h2>, <h3>) 앞에 눈에 띄는 이모지 필수.
+9. 형광펜 강조: 핵심 내용에는 형광펜 효과(\`<span style="background-color: #fffbeb; padding: 2px 6px; font-weight: bold; color: #1e40af; border-radius: 4px;">...</span>\`)를 적극 사용.
+10. 이모지 적극 사용: 💡, 🔥, ✨, 📌 등을 적절히 배치해 가독성을 높임.
+11. 시각 자료: 서론이나 본론 중간, 시각 자료가 필요한 곳에 고품질 실사 이미지 2장을 필수 삽입해. 태그 형식: <img src="https://naver-saas.vercel.app/api/unsplash?query={문맥에_맞는_영문_명사_1개}" alt="{설명}" style="width:100%; max-width: 600px; display: block; margin: 30px auto; border-radius:12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">. {문맥에_맞는_영문_명사_1개} 부분에는 'lawyer', 'tax', 'office', 'contract' 등 상황에 맞는 단일 영문 명사 1개만 넣어.
 </html_constraints>
     `;
 

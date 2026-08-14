@@ -293,7 +293,7 @@ erDiagram
 
 ## ## [ZONE-6] 글쓰기 코어 엔진 (Writing Engine & Prompts)
 
-`/api/generate-seo/route.ts`에 집약된 C-Rank/DIA+ 알고리즘 대응 코어 엔진으로, 단순한 텍스트 생성이 아닌 **6대 동적 프롬프트 인젝션(Dynamic Multi-Prompt Injection)** 아키텍처를 채택하고 있습니다.
+`/api/generate-seo/route.ts`에 집약된 C-Rank/DIA+ 알고리즘 대응 코어 엔진으로, 단순한 텍스트 생성이 아닌 **6대 동적 프롬프트 인젝션(Dynamic Multi-Prompt Injection)**과 **5단계 문서 뼈대(Skeleton-of-Thought)** 아키텍처를 채택하고 있습니다.
 
 ### 1. 인젝션 모듈 구성표
 
@@ -307,17 +307,28 @@ graph LR
     R5[⑤ Internal Links: 최근 DRAFT 원고 링크 연계] --> Core
     R6[⑥ Footer CTA: 사무소 정보 & 필수 면책 조항] --> Core
     R7[⑦ Anti-Hallucination: CoT 팩트체크 메모 강제] --> Core
+    R8[⑧ Dynamic Compliance: 직군별 맞춤형 광고법 룰셋] --> Core
     Core --> LLM[Vercel AI SDK: streamText]
 ```
 
-### 2. 엔진 파라미터 및 모델 라우팅 정책
+### 2. 2026 표준 5단계 문서 뼈대 (Skeleton-of-Thought) 및 APB 훅
+
+1. **Title (제목 - 25자 내외):** 검색 유저의 구체적 고충 해결을 명시한 1인칭 후킹 제목.
+2. **Introduction (도입부 - 15%):** **APB 훅 (Attention - Problem - Bridge)**으로 7초 이탈을 방지하고 핵심 해결책 3줄 요약.
+3. **Body 1 (핵심 법리 및 규정 - 40%):** 법적/세무적 기준 설명 및 비교표(`Table`) 등 시각화 템플릿 자연 결합.
+4. **Body 2 (실무 대응 전략 - 35%):** 단계별 실무 행동 가이드라인(`StepByStep` / 번호 매기기) 일목요연 정리.
+5. **Conclusion & CTA (결론 및 상담 안내 - 10%):** 사안의 심각성 환기 + 사무소 정보/네이버 예약 지도 푸터 박스 결합.
+
+### 3. 엔진 파라미터 및 모델 라우팅 정책
 
 - **모델 라우팅 (Model Tiering):**
   - `pro` / `premium` 플랜 유저: `anthropic('claude-5-sonnet-latest')` (최고 수준의 자연스러운 한국어 문장력 및 전문성)
   - `free` / `starter` 플랜 유저: `google('gemini-3.6-flash')` (초고속 스트리밍 및 가성비)
 - **온도(Temperature):** `0.75` (동일한 키워드로 여러 번 생성하더라도 네이버의 '유사문서 공격'에 걸리지 않도록 문장 구조의 변동성 확보)
+- **동적 컴플라이언스 주입 (Dynamic Compliance):**
+  - 유저 DB의 `profile.industry` 값을 확인하여 변호사, 세무사, 의사, 노무사, 행정사 등 해당 직군에 일치하는 단 1개의 광고법 규정만 주입하여 프롬프트 과부하 방지.
 - **CoT 팩트 체크 원리 (`<fact-check-memo>`):**
-  - 본문 작성 전 `<div style="display: none;" id="fact-check-memo">` 태그 내에 핵심 용어 정의(예: 소득공제 vs 세액공제)와 Tavily 검색 수치를 먼저 추론하게 하여 환각(Hallucination)을 원천 차단.
+  - 본문 작성 전 `<div style="display: none;" id="fact-check-memo">` 태그 내에 핵심 용어 정의와 Tavily 검색 수치를 먼저 추론하게 하여 환각(Hallucination)을 원천 차단.
 
 ---
 
