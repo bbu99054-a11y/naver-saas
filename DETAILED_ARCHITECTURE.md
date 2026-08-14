@@ -46,7 +46,6 @@ naver_SaaS_Copy_For_USB/
 │   │   ├── api/                     # 백엔드 Route Handlers
 │   │   │   ├── generate-clusters/   # [ZONE-12] 키워드 클러스터링 JSON 생성 API
 │   │   │   ├── generate-seo/        # [ZONE-6] 전문직 특화 C-Rank SEO HTML 원고 스트리밍 코어 엔진
-│   │   │   ├── payment/             # [ZONE-9] 포트원(PortOne) 결제 크레딧 충전 API
 │   │   │   ├── payments/confirm/    # [ZONE-9] 토스페이먼츠(Toss Payments) 결제 최종 승인 및 영수증 처리
 │   │   │   ├── publish/tistory/     # [ZONE-11] 티스토리 블로그 OpenAPI 글쓰기
 │   │   │   ├── publish/wordpress/   # [ZONE-11] 워드프레스 REST API 원격 포스팅
@@ -57,7 +56,6 @@ naver_SaaS_Copy_For_USB/
 │   │   │   ├── archive/             # 과거 생성된 원고 목록 조회 및 재편집/복사
 │   │   │   ├── billing/             # 요금제 결제 및 결제 내역 확인
 │   │   │   ├── clustering/          # 토픽 클러스터링 키워드 발굴기 UI
-│   │   │   ├── generator/           # 쿠팡 제휴형 블로그 자동 생성기
 │   │   │   ├── guide/               # 사용자 네이버 블로그 운영 가이드
 │   │   │   ├── settings/            # 외부 API 연동 설정 및 프로필/페르소나 입력
 │   │   │   └── write/               # [ZONE-2] 핵심 전문직 SEO 원고 작성기 & 실시간 에디터

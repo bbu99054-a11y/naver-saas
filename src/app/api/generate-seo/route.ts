@@ -2,7 +2,6 @@ import { createClient } from '@/lib/supabase/server'
 import prisma from '@/lib/prisma'
 import { streamText } from 'ai'
 import { anthropic } from '@ai-sdk/anthropic'
-import { openai } from '@ai-sdk/openai'
 import { google } from '@ai-sdk/google'
 import { NextResponse } from 'next/server'
 
