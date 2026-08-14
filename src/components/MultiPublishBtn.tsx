@@ -18,9 +18,11 @@ interface MultiPublishBtnProps {
   articleId?: string;
   title?: string;
   content?: string;
+  className?: string;
+  buttonClassName?: string;
 }
 
-export function MultiPublishBtn({ articleId, title, content }: MultiPublishBtnProps) {
+export function MultiPublishBtn({ articleId, title, content, className = '', buttonClassName = 'h-11 text-sm' }: MultiPublishBtnProps) {
   const [wpLoading, setWpLoading] = useState(false)
   const [tsLoading, setTsLoading] = useState(false)
   const { toast } = useToast()
@@ -66,25 +68,25 @@ export function MultiPublishBtn({ articleId, title, content }: MultiPublishBtnPr
   }
 
   return (
-    <div className="flex gap-2">
+    <div className={`flex gap-1.5 ${className}`}>
       <Button 
         onClick={() => handlePublish('wordpress')}
         disabled={wpLoading}
         title="워드프레스에 발행"
-        className="bg-blue-600 hover:bg-blue-700 text-white px-3 flex-1 h-11 shadow-sm"
+        className={`bg-blue-600 hover:bg-blue-700 text-white px-2.5 flex-1 font-bold shadow-xs transition-all ${buttonClassName}`}
       >
-        {wpLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Globe className="w-5 h-5" />}
-        <span className="hidden xl:inline ml-2">워드프레스</span>
+        {wpLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Globe className="w-4 h-4" />}
+        <span className="hidden xl:inline ml-1.5">워드프레스</span>
       </Button>
 
       <Button 
         onClick={() => handlePublish('tistory')}
         disabled={tsLoading}
         title="티스토리에 발행"
-        className="bg-orange-500 hover:bg-orange-600 text-white px-3 flex-1 h-11 shadow-sm"
+        className={`bg-orange-500 hover:bg-orange-600 text-white px-2.5 flex-1 font-bold shadow-xs transition-all ${buttonClassName}`}
       >
-        {tsLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <FileText className="w-5 h-5" />}
-        <span className="hidden xl:inline ml-2">티스토리</span>
+        {tsLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <FileText className="w-4 h-4" />}
+        <span className="hidden xl:inline ml-1.5">티스토리</span>
       </Button>
     </div>
   )
