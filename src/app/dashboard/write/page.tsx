@@ -1,22 +1,23 @@
 'use client'
 
-import { useState, useEffect, useMemo, useRef } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useSearchParams } from 'next/navigation'
+import { useCompletion } from '@ai-sdk/react'
 import { marked } from 'marked'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Loader2, Sparkles, PenTool, Smartphone, Monitor, CheckCircle2, ChevronRight, ChevronLeft } from 'lucide-react'
+import { Loader2, Sparkles, PenTool } from 'lucide-react'
 import { CopyToNaverBtn } from '@/components/CopyToNaverBtn'
 import { AutoPublishBtn } from '@/components/AutoPublishBtn'
 import { MultiPublishBtn } from '@/components/MultiPublishBtn'
-import { checkKeywordDuplicate, getLatestArticleCitations } from '@/actions/articles'
+import { checkKeywordDuplicate } from '@/actions/articles'
 
 // Mock useToast fallback
 const useToast = () => {
   return {
-    toast: (props: any) => {
+    toast: (props: { title: string, description: string, variant?: string }) => {
       console.log('Toast:', props);
     }
   }
@@ -30,86 +31,56 @@ export default function WritePage() {
   const [tone, setTone] = useState('친근하고 전문적인 블로거 톤 (20~30대 타겟)')
   const [experience, setExperience] = useState('')
   const [postTitle, setPostTitle] = useState('')
-  const [citations, setCitations] = useState<any[] | null>(null)
-  const [isMobileView, setIsMobileView] = useState(false)
-  const [isPanelOpen, setIsPanelOpen] = useState(true)
   const { toast } = useToast()
 
-  // --- 비동기 폴링 큐 상태 ---
-  const [jobId, setJobId] = useState(null)
-  const [status, setStatus] = useState('') // SEARCHING, PLANNING, GENERATING, EVALUATING, COMPLETED, ERROR
-  const [isLoading, setIsLoading] = useState(false)
-  const [parsedHtml, setParsedHtml] = useState('')
-
-  // 폴링 로직 (Exponential Backoff)
-  useEffect(() => {
-    let timeoutId: any;
-    let attempts = 0;
-    
-    const poll = async () => {
-      if (!jobId || status === 'COMPLETED' || status === 'ERROR') return;
-      
-      try {
-        const res = await fetch(`/api/status?jobId=${jobId}`);
-        const data = await res.json();
-        
-        if (data.status) {
-          setStatus(data.status);
-          
-          if (data.status === 'COMPLETED') {
-            let cleanHtml = data.content_html || '';
-            // 확실한 마크다운 백틱 및 공백 제거
-            cleanHtml = cleanHtml.trim();
-            if (cleanHtml.toLowerCase().startsWith('```html')) cleanHtml = cleanHtml.slice(7).trim();
-            else if (cleanHtml.startsWith('```')) cleanHtml = cleanHtml.slice(3).trim();
-            // 순수 HTML 태그가 포함되어 있다면 marked 파싱을 건너뜁니다 (들여쓰기로 인한 코드블록화 방지)
-            const isHtml = /<h[1-6]>|<p>|<ul>|<li>|<strong>|<b>|<br>/i.test(cleanHtml);
-            if (isHtml) {
-              setParsedHtml(cleanHtml);
-            } else {
-              try {
-                const htmlStr = await marked.parse(cleanHtml);
-                setParsedHtml(htmlStr as string);
-              } catch(e) {
-                setParsedHtml(cleanHtml);
-              }
-            }
-            setIsLoading(false);
-            
-            // DB에서 생성된 title을 전달받은 경우 최우선 적용
-            if (data.title) {
-              setPostTitle(data.title.replace(' (SEO 최적화)', '').trim());
-            } else {
-              setPostTitle((prev) => prev.replace(' (AI 제목 생성 중...)', ''));
-            }
-            
-            toast({ title: '작성 완료', description: 'SEO 최적화 블로그 글이 생성되었습니다.' });
-            return;
-          } else if (data.status === 'ERROR') {
-            setIsLoading(false);
-            toast({ title: '에러', description: data.error_message || '작업 실패', variant: 'destructive' });
-            return;
-          }
-        }
-      } catch (err: any) {
-        console.error('Polling error:', err);
-      }
-      
-      attempts++;
-      let nextInterval = 3000;
-      if (attempts > 3) nextInterval = 5000;
-      if (attempts > 6) nextInterval = 10000;
-      if (attempts > 12) nextInterval = 15000;
-      
-      timeoutId = setTimeout(poll, nextInterval);
-    };
-    
-    if (jobId && isLoading && status !== 'COMPLETED' && status !== 'ERROR') {
-      timeoutId = setTimeout(poll, 3000);
+  const { completion, complete, isLoading, error } = useCompletion({
+    api: '/api/generate-seo',
+    streamProtocol: 'text',
+    onError: (err) => {
+      toast({
+        title: '생성 에러',
+        description: err.message || '글 생성 중 오류가 발생했습니다 (크레딧 부족 등).',
+        variant: 'destructive'
+      })
+    },
+    onFinish: () => {
+      toast({
+        title: '작성 완료',
+        description: 'SEO 최적화 블로그 글이 생성되었습니다.',
+      })
     }
+  })
+
+  // 실시간 스트리밍 중 제목 파싱
+  useEffect(() => {
+    const titleMatch = completion.match(/<post_title>([\s\S]*?)<\/post_title>/i);
+    if (titleMatch && titleMatch[1]) {
+      setPostTitle(titleMatch[1].trim());
+    }
+  }, [completion]);
+
+  // Parse markdown completion to HTML
+  const parsedHtml = useMemo(() => {
+    if (!completion) return '';
     
-    return () => clearTimeout(timeoutId);
-  }, [jobId, isLoading, status]);
+    // 1. JSON 스트리밍에서 에러 발생 시 처리
+    if (completion.includes('"error"')) {
+      return `<div style="color:red; padding:20px;">생성 중 오류가 발생했습니다. 크레딧 부족이거나 서버 일시적 장애일 수 있습니다.</div>`
+    }
+
+    let content = completion;
+    const match = completion.match(/```(?:html)?\n([\s\S]*?)```/i);
+    if (match) {
+      content = match[1].trim();
+    } else {
+      content = completion
+        .replace(/^[\s\S]*?```(?:html)?\n?/i, '')
+        .replace(/\n?```$/i, '')
+        .trim();
+    }
+
+    return content.replace(/<post_title>[\s\S]*?<\/post_title>/i, '').trim();
+  }, [completion]);
 
   const handleGenerate = async () => {
     if (!keyword.trim()) {
@@ -129,106 +100,20 @@ export default function WritePage() {
     })
 
     setPostTitle(`${keyword.trim()} (AI 제목 생성 중...)`)
-    setStatus('SEARCHING');
-    setIsLoading(true);
-    setParsedHtml('');
-    setCitations(null);
-    setJobId(null);
-    setIsPanelOpen(false);
 
-    try {
-      const res = await fetch('/api/generate-seo', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt: keyword, tone, experience })
-      });
-      const data = await res.json();
-      
-      if (!res.ok) throw new Error(data.error || '생성 실패');
-      
-      setJobId(data.jobId);
-      if (data.citations) setCitations(data.citations);
-      setStatus('GENERATING'); // generate-seo now sets it to PLANNING, but we follow frontend flow
-      
-    } catch(err: any) {
-      toast({ title: '에러', description: err.message, variant: 'destructive' });
-      setIsLoading(false);
-      setStatus('');
-    }
-  }
-
-  const showCitations = (citations && citations.length > 0) || isLoading
-
-  // Status Stepper Data
-  const steps = [
-    { id: 'SEARCHING', label: '자료 수집' },
-    { id: 'PLANNING', label: '기획안 작성' },
-    { id: 'GENERATING', label: '초안 작성' },
-    { id: 'EVALUATING', label: '최종 검수' }
-  ];
-
-  const getStepIndex = (st: string) => {
-    if (st === 'SEARCHING') return 0;
-    if (st === 'PLANNING') return 1;
-    if (st === 'GENERATING') return 2;
-    if (st === 'EVALUATING') return 3;
-    if (st === 'COMPLETED') return 4;
-    return -1;
-  };
-  const currentIndex = getStepIndex(status);
-
-  // Stepper UI
-  const renderStepper = () => {
-    if (currentIndex === -1 || currentIndex === 4) return null;
-    return (
-      <div className="flex items-center w-full max-w-2xl mx-auto mb-4 bg-slate-50/50 p-3 rounded-lg border border-slate-100 shadow-sm">
-        {steps.map((step, idx) => {
-          const isCompleted = currentIndex > idx;
-          const isActive = currentIndex === idx;
-          const isLast = idx === steps.length - 1;
-          
-          return (
-            <div key={step.id} className="flex items-center flex-1">
-              <div className="flex flex-col items-center flex-1">
-                <div className={`flex items-center justify-center w-8 h-8 rounded-full mb-1 transition-colors ${
-                  isCompleted ? 'bg-indigo-100 text-indigo-600' :
-                  isActive ? 'bg-indigo-600 text-white shadow-sm ring-2 ring-indigo-200 ring-offset-2' :
-                  'bg-slate-100 text-slate-400'
-                }`}>
-                  {isCompleted ? <CheckCircle2 className="w-5 h-5" /> :
-                   isActive ? <Loader2 className="w-4 h-4 animate-spin" /> :
-                   <span className="text-xs font-semibold">{idx + 1}</span>}
-                </div>
-                <span className={`text-[10px] font-medium ${isActive || isCompleted ? 'text-slate-800' : 'text-slate-400'}`}>
-                  {step.label}
-                </span>
-              </div>
-              {!isLast && (
-                <div className="w-full h-[2px] -mt-4 bg-slate-100 flex-1 relative">
-                  <div className={`absolute top-0 left-0 h-full bg-indigo-500 transition-all duration-500 ${isCompleted ? 'w-full' : 'w-0'}`} />
-                </div>
-              )}
-            </div>
-          );
-        })}
-      </div>
-    );
-  };
-
-  let buttonContent = <><Sparkles className="w-4 h-4 mr-2" /> AI 블로그 생성하기</>;
-  if (isLoading) {
-    if (status === 'SEARCHING') buttonContent = <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> 자료 조사 중...</>;
-    else if (status === 'PLANNING') buttonContent = <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> AI 기획안 작성 중...</>;
-    else if (status === 'GENERATING') buttonContent = <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> AI 초안 작성 중...</>;
-    else if (status === 'EVALUATING') buttonContent = <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> 광고법 위반 검수 중...</>;
-    else buttonContent = <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> 생성 중...</>;
+    complete(keyword, {
+      body: {
+        tone,
+        experience
+      }
+    })
   }
 
   return (
-    <div className="flex h-[calc(100vh-8rem)] gap-6 overflow-hidden">
+    <div className="grid gap-6 lg:grid-cols-[400px_1fr] h-[calc(100vh-8rem)]">
       
       {/* 좌측 패널: 설정 */}
-      <Card className="w-[350px] shrink-0 flex flex-col h-full border-slate-200 shadow-sm">
+      <Card className="flex flex-col h-full border-slate-200 shadow-sm">
         <CardHeader className="bg-slate-50/50 border-b">
           <CardTitle className="flex items-center gap-2">
             <PenTool className="w-5 h-5 text-indigo-500" />
@@ -250,6 +135,8 @@ export default function WritePage() {
               />
             </div>
             
+
+
             <div className="space-y-2">
               <label className="text-sm font-medium text-slate-700">톤앤매너 (문체)</label>
               <Select value={tone} onValueChange={(val) => setTone(val || '')} disabled={isLoading}>
@@ -288,7 +175,15 @@ export default function WritePage() {
             disabled={isLoading || !keyword}
             className="w-full bg-indigo-600 hover:bg-indigo-700 text-white shadow-md transition-all mt-4"
           >
-            {buttonContent}
+            {isLoading ? (
+              !completion ? (
+                <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> 상위 블로그 분석 중...</>
+              ) : (
+                <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> AI 원고 작성 중...</>
+              )
+            ) : (
+              <><Sparkles className="w-4 h-4 mr-2" /> AI 블로그 생성하기</>
+            )}
           </Button>
 
           <div className="bg-indigo-50 text-indigo-800 p-4 rounded-lg text-sm leading-relaxed mt-auto border border-indigo-100">
@@ -303,53 +198,36 @@ export default function WritePage() {
       </Card>
 
       {/* 우측 패널: 렌더링 뷰어 */}
-      <Card className="flex-1 flex flex-col h-full border-slate-200 shadow-sm overflow-hidden bg-[#f9f9f9]">
-        <CardHeader className="bg-white border-b py-3 px-4 flex flex-col gap-3 shadow-sm z-10">
-          <div className="flex flex-row items-center justify-between w-full">
-            <div className="flex items-center gap-3">
-              <CardTitle className="text-sm font-medium text-slate-700 flex items-center">
-                <span className="w-2 h-2 rounded-full bg-[#03C75A] mr-2"></span>
-                스마트에디터 미리보기
-              </CardTitle>
-              {isLoading && <span className="text-xs text-indigo-500 font-medium animate-pulse">작업 중...</span>}
+      <Card className="flex flex-col h-full border-slate-200 shadow-sm overflow-hidden bg-[#f9f9f9]">
+        <CardHeader className="bg-white border-b py-3 px-4 flex-row items-center justify-between shadow-sm z-10">
+          <CardTitle className="text-sm font-medium text-slate-700 flex items-center">
+            <span className="w-2 h-2 rounded-full bg-[#03C75A] mr-2"></span>
+            스마트에디터 미리보기
+          </CardTitle>
+          {isLoading && <span className="text-xs text-indigo-500 font-medium animate-pulse">스트리밍 중...</span>}
+        </CardHeader>
+        
+        {/* HTML 렌더링 영역 */}
+        <CardContent className="p-0 flex-1 overflow-auto">
+          {!parsedHtml && !isLoading ? (
+            <div className="flex items-center justify-center h-full text-slate-400">
+              좌측 패널에서 생성하기 버튼을 눌러주세요.
             </div>
-            
-            <div className="flex items-center gap-2">
-              <div className="flex items-center bg-slate-100 rounded-md p-1 border border-slate-200">
-                <button
-                  onClick={() => setIsMobileView(false)}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-sm text-xs font-medium transition-colors ${
-                    !isMobileView ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-700'
-                  }`}
-                >
-                  <Monitor className="w-3.5 h-3.5" />
-                  PC 뷰
-                </button>
-                <button
-                  onClick={() => setIsMobileView(true)}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-sm text-xs font-medium transition-colors ${
-                    isMobileView ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-700'
-                  }`}
-                >
-                  <Smartphone className="w-3.5 h-3.5" />
-                  모바일 뷰
-                </button>
-              </div>
-              
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setIsPanelOpen(!isPanelOpen)}
-                className="h-[30px] flex items-center gap-1 text-slate-600 border-slate-200 bg-white hover:bg-indigo-50 hover:text-indigo-600 transition-colors shadow-sm px-2.5"
-                title="팩트체크 패널 토글"
-              >
-                {isPanelOpen ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
-                <span className="text-xs font-medium">팩트체크</span>
-              </Button>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2 w-full mt-1">
+          ) : (
+            <div 
+              id="editor-preview"
+              contentEditable={true}
+              suppressContentEditableWarning={true}
+              className="p-8 max-w-3xl mx-auto bg-white min-h-full prose prose-slate prose-headings:text-slate-800 prose-h2:border-b-2 prose-h2:border-slate-100 prose-h2:pb-2 prose-h3:text-slate-700 prose-p:text-slate-600 outline-none focus:ring-2 focus:ring-indigo-500 rounded-lg transition-shadow"
+              dangerouslySetInnerHTML={{ __html: parsedHtml }}
+            />
+          )}
+        </CardContent>
+        
+        {/* 하단 복사 버튼 영역 */}
+        <div className="p-4 bg-white border-t border-slate-200 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] z-10 flex flex-col gap-3">
+           <div className="flex items-center gap-2">
+             <label className="text-sm font-bold text-slate-700 whitespace-nowrap">제목</label>
              <Input 
                value={postTitle}
                onChange={(e) => setPostTitle(e.target.value)}
@@ -366,89 +244,14 @@ export default function WritePage() {
              >
                제목 복사
              </Button>
-             <CopyToNaverBtn content={parsedHtml} className="h-10 px-4" />
-          </div>
-        </CardHeader>
-        
-        <CardContent className="p-0 flex-1 overflow-auto bg-[#f9f9f9] flex flex-col items-center relative">
-          
-          <div className="w-full pt-4 px-4 sticky top-0 bg-gradient-to-b from-[#f9f9f9] via-[#f9f9f9] to-transparent z-10 pb-4">
-            {renderStepper()}
-          </div>
-          
-          {!parsedHtml && !isLoading ? (
-            <div className="flex items-center justify-center h-full text-slate-400 w-full flex-1">
-              좌측 패널에서 생성하기 버튼을 눌러주세요.
-            </div>
-          ) : (
-            <div 
-              id="editor-preview"
-              contentEditable={true}
-              suppressContentEditableWarning={true}
-              className={`p-8 bg-white min-h-full prose max-w-none prose-h2:border-b-2 prose-h2:border-slate-100 prose-h2:pb-2 outline-none focus:ring-2 focus:ring-indigo-500 transition-all duration-300 ${
-                isMobileView 
-                  ? 'w-[390px] shadow-[0_0_15px_rgba(0,0,0,0.1)] border-x border-slate-200' 
-                  : 'w-full max-w-3xl rounded-lg'
-              }`}
-              dangerouslySetInnerHTML={{ __html: parsedHtml || '<div style="color: #64748b; margin-top: 2rem;">작업 진행 중... 잠시만 기다려주세요.</div>' }}
-            />
-          )}
-        </CardContent>
-        
-        <div className="p-4 bg-white border-t border-slate-200 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] z-10 flex flex-col gap-3">
-           <div className="grid grid-cols-1 xl:grid-cols-2 gap-2 items-stretch">
-             <AutoPublishBtn title={postTitle} content={parsedHtml} className="w-full h-11" />
+           </div>
+           <div className="flex flex-col xl:flex-row gap-2 items-stretch">
+             <CopyToNaverBtn content={parsedHtml} className="flex-1 h-11" />
+             <AutoPublishBtn title={postTitle} content={parsedHtml} className="flex-1 h-11" />
              <MultiPublishBtn title={postTitle} content={parsedHtml} />
            </div>
         </div>
       </Card>
-
-      {/* 우측 팩트체크 패널 (Citations) */}
-      <div 
-        className={`shrink-0 transition-all duration-300 ease-in-out origin-right ${
-          isPanelOpen ? 'w-[350px] opacity-100' : 'w-0 opacity-0 overflow-hidden'
-        }`}
-      >
-        <Card className="flex flex-col h-full border-slate-200 shadow-sm overflow-hidden bg-slate-50 w-[350px]">
-          <CardHeader className="bg-white border-b py-3 px-4 shadow-sm z-10">
-            <CardTitle className="text-sm font-medium text-slate-800 flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-amber-500" />
-              AI 팩트체크 패널
-            </CardTitle>
-            <CardDescription className="text-xs mt-1">
-              본문에 인용된 출처 [1], [2] 와 원문을 대조하여 사실관계를 검증하세요.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="p-4 flex-1 overflow-auto flex flex-col gap-4">
-            {isLoading && (!citations || citations.length === 0) ? (
-              <div className="flex flex-col items-center justify-center h-full text-slate-400 gap-3">
-                <Loader2 className="w-6 h-6 animate-spin text-indigo-400" />
-                <span className="text-xs text-center leading-relaxed">에이전트가 국가법령정보센터 등<br/>신뢰할 수 있는 출처를 실시간으로<br/>수집하고 검증하고 있습니다...</span>
-              </div>
-            ) : (!citations || citations.length === 0) ? (
-              <div className="flex flex-col items-center justify-center h-full text-slate-400 gap-3">
-                <span className="text-xs text-center leading-relaxed">수집된 팩트체크(인용) 자료가 없습니다.<br/>키워드나 설정에 따라 검색 자료가<br/>존재하지 않을 수 있습니다.</span>
-              </div>
-            ) : citations.map((c: any, idx: number) => (
-              <div key={idx} className="bg-white p-3 rounded-md border border-slate-200 shadow-sm text-sm">
-                <div className="font-bold text-slate-800 mb-1 flex items-start gap-1">
-                  <span className="text-indigo-600">[{idx + 1}]</span> 
-                  <span className="line-clamp-2">{c.title}</span>
-                </div>
-                <p className="text-slate-600 text-xs line-clamp-4 mb-2">{c.content}</p>
-                <a 
-                  href={c.url} 
-                  target="_blank" 
-                  rel="noreferrer"
-                  className="text-xs text-blue-600 hover:underline break-all"
-                >
-                  원문 보기 &rarr;
-                </a>
-              </div>
-            ))}
-          </CardContent>
-        </Card>
-      </div>
 
     </div>
   )

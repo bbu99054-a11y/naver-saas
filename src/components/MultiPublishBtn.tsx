@@ -66,25 +66,25 @@ export function MultiPublishBtn({ articleId, title, content }: MultiPublishBtnPr
   }
 
   return (
-    <div className="flex gap-2 h-full">
+    <div className="flex gap-2">
       <Button 
         onClick={() => handlePublish('wordpress')}
         disabled={wpLoading}
         title="워드프레스에 발행"
-        className="bg-blue-600 hover:bg-blue-700 text-white px-2 sm:px-3 flex-1 h-11 shadow-sm overflow-hidden"
+        className="bg-blue-600 hover:bg-blue-700 text-white px-3 flex-1 h-11 shadow-sm"
       >
-        {wpLoading ? <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin shrink-0" /> : <Globe className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />}
-        <span className="ml-1 sm:ml-2 whitespace-nowrap overflow-hidden text-ellipsis text-xs sm:text-sm">워드프레스</span>
+        {wpLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Globe className="w-5 h-5" />}
+        <span className="hidden xl:inline ml-2">워드프레스</span>
       </Button>
 
       <Button 
         onClick={() => handlePublish('tistory')}
         disabled={tsLoading}
         title="티스토리에 발행"
-        className="bg-orange-500 hover:bg-orange-600 text-white px-2 sm:px-3 flex-1 h-11 shadow-sm overflow-hidden"
+        className="bg-orange-500 hover:bg-orange-600 text-white px-3 flex-1 h-11 shadow-sm"
       >
-        {tsLoading ? <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin shrink-0" /> : <FileText className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />}
-        <span className="ml-1 sm:ml-2 whitespace-nowrap overflow-hidden text-ellipsis text-xs sm:text-sm">티스토리</span>
+        {tsLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <FileText className="w-5 h-5" />}
+        <span className="hidden xl:inline ml-2">티스토리</span>
       </Button>
     </div>
   )

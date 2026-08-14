@@ -27,26 +27,3 @@ export async function checkKeywordDuplicate(keyword: string): Promise<boolean> {
 
   return !!existingArticle
 }
-
-export async function getLatestArticleCitations(keyword: string): Promise<any | null> {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-
-  if (!user) return null
-
-  const article = await prisma.article.findFirst({
-    where: {
-      user_id: user.id,
-      target_keyword: keyword
-    },
-    orderBy: {
-      created_at: 'desc'
-    },
-    select: {
-      citations: true
-    }
-  })
-
-  return article?.citations || null
-}
-

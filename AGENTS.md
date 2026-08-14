@@ -13,10 +13,3 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 2. **Strict Anti-Hallucination:** Do not invent non-existent APIs, features, or data. If you are unsure, check the files or ask the user.
 3. **Context Retention (Deployment):** This project is live-deployed on **Vercel**. When debugging frontend non-responsiveness, **DO NOT assume local caching**. You MUST verify if the Vercel build failed by running `npm run build` or `npx tsc --noEmit` locally before declaring a fix complete.
 4. **General Context Retention:** Maintain strict focus on the current task and do not lose sight of previously established rules or architectures.
-5. **Architecture Zones (Strict Isolation):** The system architecture is divided into **11 distinct zones** documented in `DETAILED_ARCHITECTURE.md`. When the user instructs to avoid or isolate specific zones, you MUST strictly comply. **CRITICAL WARNING:** Zone 12 (Affiliate Marketing / Coupang) has been PERMANENTLY DEPRECATED. You are STRICTLY FORBIDDEN from reviving, suggesting, or writing any code related to affiliate marketing. Focus purely on the Trend Pixel SEO SaaS logic.
-6. **Non-Developer Communication (Implementation Plan):** The user is a non-developer CEO. Before writing or modifying ANY code, you MUST present an 'Implementation Plan' and wait for the user's explicit `Proceed` approval. You must NOT use complex code jargon. The plan MUST be formatted exactly as follows:
-   - 🎯 What is resolved? (1-2 sentences in plain language)
-   - 👁️ UI Changes? (Visible changes like buttons, colors)
-   - ⚙️ Under the hood? (Explain data flow with analogies. Must comply with local Chrome extension architecture, no n8n/Make)
-   - 🗺️ Zones Touched: (List the Zone IDs from DETAILED_ARCHITECTURE.md being modified)
-   - ⚠️ Risks/Side effects: (Any chance of breaking existing features)

@@ -13,6 +13,9 @@ export async function saveApiKeys(formData: FormData) {
     return { success: false, error: '인증되지 않은 사용자입니다.' }
   }
 
+  const coupangAccessKey = formData.get('coupangAccessKey') as string
+  const coupangSecretKey = formData.get('coupangSecretKey') as string
+  
   const wpUrl = formData.get('wpUrl') as string
   const wpUsername = formData.get('wpUsername') as string
   const wpApiKey = formData.get('wpApiKey') as string
@@ -25,6 +28,8 @@ export async function saveApiKeys(formData: FormData) {
     
     // 빈 값이 아니면 암호화하여 저장할 준비
     // 빈 값이 아니면 저장할 준비
+    if (coupangAccessKey?.trim()) dataToSave.coupang_access_key = encrypt(coupangAccessKey.trim())
+    if (coupangSecretKey?.trim()) dataToSave.coupang_secret_key = encrypt(coupangSecretKey.trim())
     
     if (wpUrl?.trim()) dataToSave.wp_url = wpUrl.trim()
     if (wpUsername?.trim()) dataToSave.wp_username = wpUsername.trim()

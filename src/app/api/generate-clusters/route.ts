@@ -38,7 +38,12 @@ export async function POST(req: Request) {
     const dbUser = await prisma.user.findUnique({ where: { id: user.id } });
     const planType = dbUser?.plan_type || 'free';
 
-    const aiModel = google('gemini-3.6-flash');
+    let aiModel;
+    if (planType === 'pro' || planType === 'premium') {
+      aiModel = anthropic('claude-5-sonnet-latest');
+    } else {
+      aiModel = google('gemini-3.6-flash');
+    }
 
     const { object } = await generateObject({
       model: aiModel,

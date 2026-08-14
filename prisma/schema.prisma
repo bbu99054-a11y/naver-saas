@@ -11,7 +11,7 @@ model User {
   email             String    @unique
   name              String?
   plan_type         String    @default("free")
-  credits           Int       @default(3)
+  credits           Int       @default(10)
   subscription_tier String    @default("FREE")
   created_at        DateTime  @default(now())
 
@@ -61,11 +61,8 @@ model Article {
   target_keyword   String
   content_markdown String?   @db.Text
   content_html     String?   @db.Text
-  generator_draft  String?   @db.Text
-  citations        Json?
+  coupang_links    Json?
   status           String    @default("DRAFT")
-  job_id           String?
-  error_message    String?   @db.Text
   created_at       DateTime  @default(now())
 
   user    User    @relation(fields: [user_id], references: [id], onDelete: Cascade)
@@ -77,6 +74,8 @@ model Article {
 model ApiKey {
   id                 String   @id @default(uuid())
   user_id            String   @unique
+  coupang_access_key   String?
+  coupang_secret_key   String?
   
   // WordPress
   wp_url               String?
