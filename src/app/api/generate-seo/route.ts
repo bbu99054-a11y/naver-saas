@@ -8,6 +8,9 @@ import { NextResponse } from 'next/server'
 export const maxDuration = 60
 
 export async function POST(req: Request) {
+  let currentUserId: string | null = null
+  let isCreditDeducted = false
+
   try {
     const supabase = await createClient()
     const { data: { user } } = await supabase.auth.getUser()
@@ -15,6 +18,8 @@ export async function POST(req: Request) {
     if (!user) {
       return NextResponse.json({ error: '인증되지 않은 사용자입니다.' }, { status: 401 })
     }
+
+    currentUserId = user.id
 
     let dbUser = await prisma.user.findUnique({ where: { id: user.id } });
     if (!dbUser) {
@@ -41,9 +46,17 @@ export async function POST(req: Request) {
       })
     ])
 
-    if (dbUser.credits <= 0) {
+    // 원자적 선차감 (동시성 다중 요청 시 크레딧 누수 원천 차단)
+    const deduction = await prisma.user.updateMany({
+      where: { id: user.id, credits: { gt: 0 } },
+      data: { credits: { decrement: 1 } }
+    });
+
+    if (deduction.count === 0) {
       return NextResponse.json({ error: '크레딧이 부족합니다. 요금제를 업그레이드해주세요.' }, { status: 403 })
     }
+
+    isCreditDeducted = true
 
     const body = await req.json()
     // prompt는 useCompletion에서 자동으로 전달되는 텍스트 (여기서는 타겟 키워드와 톤 등)
@@ -292,13 +305,7 @@ ${profileFooterPrompt}
       prompt: `타겟 키워드: ${prompt}\n\n위 지침에 맞춰 완벽한 네이버 블로그용 HTML 본문을 작성해줘.`,
       async onFinish({ text }) {
         try {
-          // 1. 크레딧 차감
-          await prisma.user.update({
-            where: { id: user.id },
-            data: { credits: { decrement: 1 } }
-          });
-
-          // 2. 프로젝트 및 아티클 저장
+          // 프로젝트 및 아티클 저장
           let project = await prisma.project.findFirst({
             where: { user_id: user.id },
             orderBy: { created_at: 'asc' }
@@ -337,6 +344,17 @@ ${profileFooterPrompt}
 
   } catch (error: any) {
     console.error('Generation API error:', error);
+    // 사전 에러 발생 시 선차감된 크레딧 롤백
+    try {
+      if (isCreditDeducted && currentUserId) {
+        await prisma.user.update({
+          where: { id: currentUserId },
+          data: { credits: { increment: 1 } }
+        });
+      }
+    } catch (refundError) {
+      console.error('Failed to refund credit on error:', refundError);
+    }
     const errorMessage = error.message || error.toString() || '알 수 없는 서버 에러가 발생했습니다.';
     return NextResponse.json({ error: errorMessage }, { status: 500 })
   }
