@@ -88,6 +88,38 @@ export default function WritePage() {
     // 단락(<p>) 태그에 한해서만 중앙정렬을 좌측정렬로 보정 (1:1 썸네일 카드, 테이블, 뱃지 중앙정렬 완벽 보존)
     clean = clean.replace(/(<p[^>]*style="[^"]*?)text-align:\s*center;?([^"]*">)/gi, '$1text-align: left;$2');
 
+    // SVG Data-URI 자동 정규화 및 라이트 모드 고대비 컬러 가드 (따옴표 쪼개짐 및 검은 화면 원천 차단)
+    clean = clean.replace(/<img([^>]+)src=(["'])(data:image\/svg\+xml[\s\S]*?)\2([^>]*)>/gi, (match, beforeSrc, quote, rawDataUri, afterSrc) => {
+      try {
+        const commaIdx = rawDataUri.indexOf(',');
+        if (commaIdx === -1) return match;
+
+        let svgContent = rawDataUri.substring(commaIdx + 1);
+        try {
+          if (svgContent.startsWith('%3C') || svgContent.includes('%20') || svgContent.includes('%23')) {
+            svgContent = decodeURIComponent(svgContent);
+          }
+        } catch {}
+
+        // 1. 어두운 배경을 화사한 라이트 배경(#F8FAFC, #FDFBF7)으로 실시간 자동 치환
+        svgContent = svgContent
+          .replace(/<rect([^>]*?)fill=['"](#000000|#0f172a|#111827|black)['"]/gi, "<rect$1fill='#F8FAFC'")
+          .replace(/<rect([^>]*?)fill=['"]#0[fF]172[aA]['"]/gi, "<rect$1fill='#FDFBF7'");
+
+        // 2. fill이 누락된 <text>에 짙은 네이비(#0F172A) 강제 주입
+        svgContent = svgContent.replace(/<text(?![^>]*fill=)([^>]*)>/gi, "<text fill='#0F172A'$1>");
+
+        // 3. 필수 SVG 네임스페이스 보장
+        if (!svgContent.includes('xmlns=')) {
+          svgContent = svgContent.replace('<svg', '<svg xmlns="http://www.w3.org/2000/svg"');
+        }
+
+        const safeEncoded = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svgContent.trim())}`;
+        return `<img${beforeSrc}src="${safeEncoded}"${afterSrc}>`;
+      } catch {}
+      return match;
+    });
+
     return clean;
   }, [completion]);
 

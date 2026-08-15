@@ -332,10 +332,10 @@ graph LR
   - ⑦ 골든타임 & 리스크 주의 경고 카드
   - ⑧ 핵심 3줄 결론 요약 카드
   - ⑨ 하단 상담 유도 (CTA) & 찾아오시는 길 배너
-  - 스마트에디터 ONE 100% 호환 인라인 CSS로 구현되어 원클릭 복사 시 서식 깨짐 제로(0%) 보장.
+  - 고해상도 `<img>` (SVG/Canvas Data-URI) 이미지 태그로 본문에 자동 삽입되어 네이버가 100% 실물 첨부 사진(5~6장)으로 수집하며 서식 깨짐 제로(0%) 보장.
 - **탈-양산형 다이내믹 디자인 결정 (AI-Native Dynamic Selection):**
   - 글의 성격, 긴급도, 길이에 맞춰 8종 중 최적의 2~4종 카드를 AI가 자율 선별하여 3~6장 규모로 유동 배치.
-  - 10종 럭셔리 무드 팔레트(Classic Navy/Gold, Tech Blue, Editorial Green, Dark Luxury, Warm Oatmeal, Deep Burgundy, Frosted Sage 등)를 실시간 자동 조색.
+  - 네이버 블로그에 최적화된 2026 프리미엄 라이트 모드 팔레트(Classic Cream/Gold, Modern Ice Blue, Frosted Sage, Warm Oatmeal, Soft Lavender, Clean Modern Slate)로 화사하고 선명한 고대비 가독성 보장.
 - **모델 라우팅 (Model Tiering):**
   - `pro` / `premium` 플랜 유저: `anthropic('claude-5-sonnet-latest')` (최고 수준의 자연스러운 한국어 문장력 및 전문성)
   - `free` / `starter` 플랜 유저: `google('gemini-3.6-flash')` (초고속 스트리밍 및 가성비)
