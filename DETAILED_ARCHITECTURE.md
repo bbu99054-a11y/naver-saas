@@ -13,7 +13,7 @@
 | **[ZONE-1]** | **디렉토리 트리 (Directory Tree)** | 핵심 폴더 구조 및 파일별 비즈니스 로직 맵핑 |
 | **[ZONE-2]** | **프론트엔드 UI 및 상태 흐름 (Frontend UI & State Flow)** | RSC/RCC 경계 분리 및 에디터/미리보기 상태 동기화 |
 | **[ZONE-3]** | **백엔드 및 AI 파이프라인 (Backend & AI Flow)** | Next.js 내부 라우트 파이프라인 및 JSON 입출력 스키마 |
-| **[ZONE-4]** | **클라이언트 RPA 자동화 (Chrome Extension RPA)** | 네이버 스마트에디터 ONE DOM 주입 및 이벤트 폭격 원리 |
+| **[ZONE-4]** | **클라이언트 스마트 복사 (Smart Clipboard & Direct Open)** | 스마트에디터 호환 서식 복사 및 네이버 글쓰기 새탭 연동 (확장프로그램 RPA 폐기 완료) |
 | **[ZONE-5]** | **데이터베이스 (Database Schema & Relations)** | Prisma PostgreSQL 모델 정의, 관계도(ERD) 및 매핑 |
 | **[ZONE-6]** | **글쓰기 코어 엔진 (Writing Engine & Prompts)** | C-Rank/DIA+ 대응 CoT 프롬프트, 인젝션 모듈, AI 파라미터 |
 | **[ZONE-7]** | **Vercel 배포 및 인프라 (Deployment & Infra)** | Serverless 실행 시간(`maxDuration`), 스트리밍, 커넥션 풀링 |
@@ -21,8 +21,8 @@
 | **[ZONE-9]** | **결제 및 과금 (Billing & Monetization)** | 토스페이먼츠/포트원 연동, 티어 체계, 크레딧 트랜잭션 |
 | **[ZONE-10]** | **외부 API 및 검색 (3rd-Party & Search)** | Tavily 실시간 검색 RAG, Unsplash 이미지, 채널톡 CS |
 | **[ZONE-11]** | **멀티 플랫폼 자동 발행 (Multi-Platform Publishing)** | 워드프레스 REST API 및 티스토리 OpenAPI 동시 발행 |
-| **[ZONE-12]** | **스마트 큐레이션 및 클러스터링 (Smart Curation & Clustering)** | `generateObject` 기반 토픽 클러스터 및 롱테일 키워드 추출 |
-| **[ZONE-13]** | **시스템 정화 이력 및 확장 슬롯 (System Deprecation & Extension)** | 폐기된 제휴 마케팅(쿠팡) 완전 삭제 내역 및 신규 모듈 확장 슬롯 |
+| **[ZONE-12]** | **[폐기 완료] 스마트 큐레이션 및 클러스터링 (Deprecated)** | 토픽 클러스터링 및 큐레이션 모듈 완전 삭제 완료 |
+| **[ZONE-13]** | **시스템 정화 이력 및 확장 슬롯 (System Deprecation & Extension)** | 폐기된 제휴마케팅, 확장프로그램 RPA, 클러스터링 내역 및 확장 슬롯 |
 | **[ZONE-14]** | **관리자 조종 및 유지보수 플레이북 (Admin Playbook)** | 구역별 명령어 가이드 및 장애 대응 체크리스트 |
 
 ---
@@ -314,13 +314,28 @@ graph LR
 ### 2. 2026 표준 5단계 문서 뼈대 (Skeleton-of-Thought) 및 APB 훅
 
 1. **Title (제목 - 25자 내외):** 검색 유저의 구체적 고충 해결을 명시한 1인칭 후킹 제목.
-2. **Introduction (도입부 - 15%):** **APB 훅 (Attention - Problem - Bridge)**으로 7초 이탈을 방지하고 핵심 해결책 3줄 요약.
-3. **Body 1 (핵심 법리 및 규정 - 40%):** 법적/세무적 기준 설명 및 비교표(`Table`) 등 시각화 템플릿 자연 결합.
-4. **Body 2 (실무 대응 전략 - 35%):** 단계별 실무 행동 가이드라인(`StepByStep` / 번호 매기기) 일목요연 정리.
-5. **Conclusion & CTA (결론 및 상담 안내 - 10%):** 사안의 심각성 환기 + 사무소 정보/네이버 예약 지도 푸터 박스 결합.
+2. **Top Custom 1:1 Thumbnail Card (본문 최상단):** 1:1 정방형 세이프존(Safe Zone), 동적 폰트 스케일링, 직군/주제별 테마 컬러 및 브랜드 서명이 결합된 고화질 카드.
+3. **Introduction (도입부 - 15%):** **APB 훅 (Attention - Problem - Bridge)** 프레임워크 기반 몰입형 서론.
+4. **Body 1 & In-Body Visual Cards (핵심 법리 및 규정 - 40%):** 스마트블록 최적화 H2 소제목 + 설명 직후 AI 선별 인포그래픽 카드([체크리스트], [Before/After 비교], [핵심 수치 강조] 등).
+5. **Body 2 & In-Body Visual Cards (실무 대응 전략 - 35%):** H2 소제목 + 설명 직후 AI 선별 카드([3단계 로드맵], [Q&A 해설], [골든타임 리스크 경고] 등).
+6. **Key Takeaways & CTA (결론 및 상담 안내 - 10%):** [💡 오늘의 핵심 3줄 요약 카드] + 하단 상담 유도 및 찾아오시는 길 배너(전화/카톡/지도).
 
-### 3. 엔진 파라미터 및 모델 라우팅 정책
+### 3. 엔진 파라미터 및 탈-양산형 8종 시각 카드 자동화 정책
 
+- **8종 인포그래픽 시각 카드 라이브러리 (`src/lib/templates.ts`):**
+  - ① 최상단 1:1 맞춤 썸네일 카드
+  - ② 3대 필수 요건 체크리스트 카드
+  - ③ Before vs After 유리/불리 2열 대비 카드
+  - ④ 핵심 수치/세율/공제액 대형 하이라이트 카드
+  - ⑤ 3단계 실무 행동 로드맵 카드
+  - ⑥ 의뢰인 빈출 질문 & 전문가 Q&A 팩트 해설 카드
+  - ⑦ 골든타임 & 리스크 주의 경고 카드
+  - ⑧ 핵심 3줄 결론 요약 카드
+  - ⑨ 하단 상담 유도 (CTA) & 찾아오시는 길 배너
+  - 스마트에디터 ONE 100% 호환 인라인 CSS로 구현되어 원클릭 복사 시 서식 깨짐 제로(0%) 보장.
+- **탈-양산형 다이내믹 디자인 결정 (AI-Native Dynamic Selection):**
+  - 글의 성격, 긴급도, 길이에 맞춰 8종 중 최적의 2~4종 카드를 AI가 자율 선별하여 3~6장 규모로 유동 배치.
+  - 10종 럭셔리 무드 팔레트(Classic Navy/Gold, Tech Blue, Editorial Green, Dark Luxury, Warm Oatmeal, Deep Burgundy, Frosted Sage 등)를 실시간 자동 조색.
 - **모델 라우팅 (Model Tiering):**
   - `pro` / `premium` 플랜 유저: `anthropic('claude-5-sonnet-latest')` (최고 수준의 자연스러운 한국어 문장력 및 전문성)
   - `free` / `starter` 플랜 유저: `google('gemini-3.6-flash')` (초고속 스트리밍 및 가성비)
@@ -400,20 +415,27 @@ sequenceDiagram
 
 ---
 
-## ## [ZONE-12] 스마트 큐레이션 및 클러스터링 (Smart Curation & Clustering)
+## ## [ZONE-12] [폐기 완료] 스마트 큐레이션 및 클러스터링 (Deprecated)
 
-- **Vercel AI SDK `generateObject` + Zod 스키마:**
-  - `clusterSchema`를 통해 `keyword`, `intent`, `reason`, `competitionLevel`('낮음'|'보통'|'높음'), `score`(1~100)의 정형화된 JSON 배열 출력 강제.
-  - 메인 키워드(Pillar) 하나로부터 잠재 고객의 전환 여정(인지-고려-결정)에 맞춘 10개의 롱테일 토픽 클러스터를 생성하여 블로그의 **주제 권위(Topical Authority)**를 급상승시킴.
+- **폐기 내역:**
+  - `src/app/api/generate-clusters/route.ts`: 클러스터링 JSON 생성 API 완전 삭제 완료.
+  - `src/actions/curation.ts`: `generateObject` 기반 토픽 클러스터 서버 액션 완전 삭제 완료.
+  - `src/app/dashboard/clustering/page.tsx`: 연재 기획기 UI 페이지 완전 삭제 완료.
+  - `src/app/dashboard/DashboardCuration.tsx` 및 `CurationLinkBtn.tsx`: 메인 대시보드 로컬 큐레이션 컴포넌트 정리 완료.
 
 ---
 
 ## ## [ZONE-13] 시스템 정화 이력 및 확장 슬롯 (System Deprecation & Extension)
 
-- **폐기된 제휴 마케팅(쿠팡 파트너스) 완전 삭제 내역:**
+- **1. 폐기된 제휴 마케팅(쿠팡 파트너스) 완전 삭제 내역:**
   - `prisma/schema.prisma`: `Article.coupang_links`, `ApiKey.coupang_access_key`, `ApiKey.coupang_secret_key` 필드 완전 삭제 및 클라이언트 재생성 완료.
   - `src/actions/coupang.ts`, `src/app/api/generate/route.ts`, `src/app/dashboard/generator/page.tsx`: 레거시 제휴 마케팅 파일/라우트 완전 삭제.
   - `src/app/dashboard/settings/page.tsx` 및 `src/actions/settings.ts`: 쿠팡 API 키 입력 폼 및 핸들러 정화 완료.
+- **2. 폐기된 크롬 확장프로그램(RPA 자동 발행) 완전 삭제 내역:**
+  - `src/extension/` (manifest.json, background.js, content.js): 크롬 익스텐션 소스코드 완전 삭제.
+  - `src/components/AutoPublishBtn.tsx`: 확장프로그램 연동 버튼 완전 삭제 및 `CopyToNaverBtn` 서식 복사 체계로 통합.
+- **3. 폐기된 토픽 클러스터링(연재 기획) 완전 삭제 내역:**
+  - `src/app/dashboard/clustering/`, `src/app/api/generate-clusters/`, `src/actions/curation.ts` 완전 삭제.
 - **확장 슬롯 (Extension Slot):**
   - 향후 신규 전문직 플랫폼 연동(예: 변호사 로톡, 의사 닥톡, 세무통 등) 또는 추가 발행 채널(브런치스토리, 노션 등) 추가 시 본 구역을 활용하여 규격화된 모듈 확장 수행.
 
@@ -426,7 +448,7 @@ sequenceDiagram
 | 작업 목적 | 지시 대상 ZONE | 수정 대상 핵심 파일 | 주의 사항 |
 | :--- | :--- | :--- | :--- |
 | **블로그 글 생성 품질/프롬프트 개선** | `[ZONE-6]` | `src/app/api/generate-seo/route.ts`<br>`src/lib/templates.ts` | 인라인 CSS 깨짐 방지 (`flex`, `grid` 금지 유지) |
-| **네이버 자동 발행 확장프로그램 로직 수정** | `[ZONE-4]` | `src/extension/content.js`<br>`src/extension/background.js` | 스마트에디터 ONE의 `.se-main-container` DOM 변경 여부 확인 |
+| **네이버 스마트 서식 복사 로직 개선** | `[ZONE-4]` | `src/components/CopyToNaverBtn.tsx` | `contentEditable` 트릭 및 클립보드 서식 유지 검증 |
 | **새로운 결제 수단 추가 또는 요금제 변경** | `[ZONE-9]` | `src/app/api/payments/confirm/route.ts`<br>`src/app/dashboard/billing/page.tsx` | 크레딧 가산 트랜잭션(`prisma.$transaction`) 정합성 유지 |
 | **DB 스키마 필드 추가 (새로운 메타데이터 등)** | `[ZONE-5]` | `prisma/schema.prisma` | 수정 후 `npx prisma db push` 또는 마이그레이션 필수 |
 | **실시간 검색 출처 도메인 추가 (의료, 부동산 등)** | `[ZONE-10]` | `src/app/api/generate-seo/route.ts` | `includeDomains` 배열에 신규 공공기관 도메인 맵핑 |

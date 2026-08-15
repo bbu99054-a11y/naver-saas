@@ -12,7 +12,6 @@ import {
   Copy, Check, FileText, Clock 
 } from 'lucide-react'
 import { CopyToNaverBtn } from '@/components/CopyToNaverBtn'
-import { AutoPublishBtn } from '@/components/AutoPublishBtn'
 import { MultiPublishBtn } from '@/components/MultiPublishBtn'
 import { checkKeywordDuplicate } from '@/actions/articles'
 
@@ -86,10 +85,8 @@ export default function WritePage() {
     // <post_title> 태그 제거
     let clean = content.replace(/<post_title>[\s\S]*?<\/post_title>/i, '').trim();
 
-    // 단락(<p>)의 강제 중앙정렬 스타일을 자연스러운 좌측 정렬로 변환
-    clean = clean.replace(/style="([^"]*?)text-align:\s*center;?([^"]*?)"/gi, (m, before, after) => {
-      return `style="${before}text-align: left;${after}"`;
-    });
+    // 단락(<p>) 태그에 한해서만 중앙정렬을 좌측정렬로 보정 (1:1 썸네일 카드, 테이블, 뱃지 중앙정렬 완벽 보존)
+    clean = clean.replace(/(<p[^>]*style="[^"]*?)text-align:\s*center;?([^"]*">)/gi, '$1text-align: left;$2');
 
     return clean;
   }, [completion]);
@@ -358,10 +355,9 @@ export default function WritePage() {
         </CardContent>
         
         {/* 하단 고정 액션 버튼 툴바 (초슬림 & 컴팩트) */}
-        <div className="p-2 bg-white border-t border-slate-200 shadow-2xs z-10 flex gap-1.5 items-stretch">
-          <CopyToNaverBtn content={parsedHtml} className="flex-1 h-8.5 shadow-2xs font-bold text-xs" />
-          <AutoPublishBtn title={postTitle} content={parsedHtml} className="flex-1 h-8.5 shadow-2xs font-bold text-xs" />
-          <MultiPublishBtn title={postTitle} content={parsedHtml} buttonClassName="h-8.5 text-xs font-bold" />
+        <div className="p-2 bg-white border-t border-slate-200 shadow-2xs z-10 flex gap-2 items-stretch">
+          <CopyToNaverBtn content={parsedHtml} className="flex-[1.3] h-8.5 shadow-2xs font-bold text-xs" />
+          <MultiPublishBtn title={postTitle} content={parsedHtml} className="flex-1" buttonClassName="h-8.5 text-xs font-bold" />
         </div>
       </Card>
 

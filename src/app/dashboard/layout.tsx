@@ -1,5 +1,5 @@
 import { ReactNode } from 'react'
-import { LayoutDashboard, PenTool, Settings, CreditCard, LogOut, Search, FileText, Network, UserCircle } from 'lucide-react'
+import { LayoutDashboard, PenTool, Settings, CreditCard, LogOut, Search, FileText, UserCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
@@ -9,8 +9,6 @@ import Link from 'next/link'
 const sidebarLinks = [
   { href: '/dashboard', label: '대시보드 메인', icon: LayoutDashboard },
   { href: '/dashboard/settings/profile', label: '내 정보 관리 (RAG)', icon: UserCircle },
-
-  { href: '/dashboard/clustering', label: '블로그 연재 기획', icon: Network },
   { href: '/dashboard/write', label: 'SEO 블로그 쓰기', icon: PenTool },
   { href: '/dashboard/archive', label: '나의 원고 저장소', icon: FileText },
   { href: '/dashboard/settings', label: 'API 설정', icon: Settings },

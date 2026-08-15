@@ -114,12 +114,16 @@ ${profile.about_us}
 
     const { scrapeNaverSerpContext } = await import('@/lib/scraper');
     const { 
-      getRandomColor, getInfoBoxTemplate, getQuoteTemplate, 
+      getThemeByIndustry,
+      getTopThumbnailTemplate, getChecklistCardTemplate, getComparisonCardTemplate,
+      getHighlightStatCardTemplate, getProcessFlowCardTemplate, getQnACardTemplate,
+      getWarningRiskCardTemplate, getKeyTakeawaysTemplate, getFooterBannerTemplate,
+      getInfoBoxTemplate, getQuoteTemplate, 
       getTableTemplate, getDividerTemplate, getStepByStepTemplate 
     } = await import('@/lib/templates');
     
     const serpData = await scrapeNaverSerpContext(prompt);
-    const mainColor = getRandomColor();
+    const matchedTheme = getThemeByIndustry(profile?.industry || '');
 
     let contextInjection = '';
     let designInjection = '';
@@ -129,30 +133,40 @@ ${profile.about_us}
 <serp_context>
 [실시간 네이버 상위 5개 블로그 분석 데이터 (이 규칙을 반드시 따를 것)]
 - 권장 글자 수: 약 ${serpData.averageTextLength}자 내외로 작성해.
-- 권장 이미지 수: 약 ${serpData.averageImageCount}장의 이미지가 필요해.
-- 이미지 맥락 추천: 상위 블로거들은 주로 이런 사진을 넣었어 -> ${serpData.imageContexts.join(', ')}.
 - 자주 쓰이는 목차(H2): ${serpData.commonHeaders.join(', ')}. 이 구조를 자연스럽게 H2 태그로 반영해.
 </serp_context>
 `;
+    }
 
-      const activeTemplates = [];
-      activeTemplates.push(getInfoBoxTemplate(mainColor)); // 기본 정보 박스는 항상 포함
-      activeTemplates.push(getStepByStepTemplate(mainColor)); // 단계별 가이드 포함
+    const activeTemplates = [
+      getTopThumbnailTemplate(),
+      getChecklistCardTemplate(),
+      getComparisonCardTemplate(),
+      getHighlightStatCardTemplate(),
+      getProcessFlowCardTemplate(),
+      getQnACardTemplate(),
+      getWarningRiskCardTemplate(),
+      getKeyTakeawaysTemplate(),
+      getFooterBannerTemplate(),
+      getInfoBoxTemplate(matchedTheme.accentColor),
+      getTableTemplate(matchedTheme.bg),
+      getQuoteTemplate(matchedTheme.accentColor),
+      getStepByStepTemplate(matchedTheme.accentColor)
+    ];
 
-      if (serpData.recommendedComponents.useTable) activeTemplates.push(getTableTemplate(mainColor));
-      if (serpData.recommendedComponents.useQuote) activeTemplates.push(getQuoteTemplate(mainColor));
-      if (serpData.recommendedComponents.useDivider) activeTemplates.push(getDividerTemplate(mainColor));
-
-      designInjection = `
-<design_templates>
-이번 포스팅의 메인 컬러 테마는 ${mainColor} 입니다.
-아래 제공된 HTML 템플릿 코드들을 반드시 활용하여 시각적으로 아름답고 전문적인 글을 구성해 주세요.
-템플릿 형태를 절대 임의로 변형하지 말고, 안의 텍스트(괄호 처리된 부분)만 글 문맥에 맞게 수정해서 그대로 삽입해.
+    designInjection = `
+<visual_card_design_system>
+[네이버 블로그 탈-양산형 8종 시각 카드 디자인 시스템]
+글의 분위기, 주제의 긴급도, 전문가 직군(${profile?.industry || '전문직'})에 맞춰 아래 제공된 인포그래픽 카드 중 글의 흐름과 가장 잘 어울리는 2~4종의 카드를 자율 선별하여 본문의 설명 직후에 자연스럽게 배치하세요.
+- [카드 1: 최상단 1:1 맞춤 썸네일]: 본문 가장 첫머리에 필수 1장 배치.
+- [본문 중간 시각 카드]: 본론 1(Body 1) 및 본론 2(Body 2)의 내용 설명 직후에 [체크리스트, Before/After 비교, 핵심 수치 강조, 3단계 로드맵, Q&A, 리스크 경고] 중 가장 어울리는 카드를 2~3장 선별 삽입.
+- [카드 8: 핵심 3줄 요약 카드]: 결론부 직전에 필수 1장 배치.
+- [카드 9: 하단 상담 유도 배너]: 글 최하단에 필수 1장 배치.
+- 소제목(H2)은 별도의 장식 없이 스마트블록 검색에 강력한 문장형 제목으로 깨끗하게 작성하고, 카드는 설명 직후 시각적 요약/근거로 배치하여 제목 중복이 없도록 하세요.
 
 ${activeTemplates.join('\n\n')}
-</design_templates>
+</visual_card_design_system>
 `;
-    }
 
     // 내부 링크(Internal Linking) 주입 (SEO 2026 트렌드)
     let internalLinkInjection = '';
@@ -273,7 +287,17 @@ ${profileFooterPrompt}
 
 <html_constraints>
 0. 응답의 가장 첫 줄에 반드시 <post_title>네이버 검색 유저의 클릭을 유도하는 매혹적인 1인칭 후킹 제목 (25자 내외)</post_title> 을 작성해.
-1. [문서 5단계 뼈대 구조화 (Skeleton-of-Thought)]
+1. [본문 최상단 1:1 맞춤 썸네일 카드 필수 삽입 (최우선)]
+   - <post_title> 태그 바로 다음 줄(본문 HTML의 가장 첫머리)에 반드시 [카드 1: 최상단 1:1 맞춤 썸네일 카드]를 삽입해.
+   - 썸네일 안의 카테고리 뱃지, 메인 타이틀, 서브카피, 하단 브랜드 서명을 글의 주제와 사용자 정보(${profile?.store_name || '전문가 사무소'})에 맞게 완성할 것.
+2. [본문 중간 시각 인포그래픽 카드 2~3장 가변 삽입]
+   - Body 1 및 Body 2에서 각 소제목(H2)의 본문 설명 직후에, 글의 맥락에 가장 어울리는 인포그래픽 카드([체크리스트], [Before/After 비교], [핵심 수치 강조], [3단계 로드맵], [Q&A 해설], [골든타임 리스크 경고])를 2~3장 자율 선별하여 배치할 것.
+   - 소제목(H2)은 별도의 챕터 바 없이 네이버 스마트블록 검색에 강력한 문장형 제목(예: 📌 1주택자 상속세 과세표준과 핵심 공제 기준)으로 작성하여 제목 중복이 없도록 할 것.
+3. [결론부 직전: 핵심 3줄 결론 요약 카드 필수 삽입]
+   - 본론 마무리 후 결론부 직전에 [카드 8: 핵심 3줄 결론 요약 카드]를 반드시 삽입하여 바쁜 모바일 독자가 핵심을 3초 만에 스캐닝할 수 있게 할 것.
+4. [글 최하단: 하단 상담 유도 (CTA) & 찾아오시는 길 배너 카드 필수 삽입]
+   - 글의 맨 마지막(마무리 문단 후)에는 [카드 9: 하단 상담 유도 배너]를 삽입하여 전화번호(${profile?.phone || ''}), 주소(${profile?.address || ''}), 지도 링크(${profile?.reservation_link || ''})를 완벽히 안내할 것.
+6. [문서 5단계 뼈대 구조화 (Skeleton-of-Thought)]
    - 1단계: <post_title> (타깃 키워드를 자연스럽게 포함하고 의뢰인의 구체적 고민 해결을 명시한 25자 내외 제목)
    - 2단계: Introduction (도입부 - 15%) ➔ **APB 훅(Attention-Problem-Bridge)** 프레임워크를 적용하여 7초 이내 독자를 몰입시킬 것:
      * Attention (주의 환기): 독자가 처한 긴박한 상황이나 가장 궁금해하는 핵심 질문으로 첫 문장 시작.
@@ -281,17 +305,17 @@ ${profileFooterPrompt}
      * Bridge (해결의 다리): "오늘 글에서는 15년 차 전문가의 실무 경험을 바탕으로, OOO 상황에서 반드시 챙겨야 할 핵심 3가지를 명쾌하게 정리해 드립니다"로 본론과 매끄럽게 연결.
    - 3단계: Body 1 (핵심 법리 및 규정 - 40%) ➔ 문제를 해결하기 위한 법리적, 세무적 기준과 법적 원리를 설명. 복잡한 정보(양형 기준, 세율 구간, 절차 등)가 있을 경우 제공된 템플릿(비교표 Table 등)을 문맥에 맞게 자연스럽게 활용.
    - 4단계: Body 2 (실무 대응 전략 - 35%) ➔ 실제 사건 발생 시 의뢰인이 취해야 할 실무 행동 지침 및 단계별 가이드라인(StepByStep 템플릿 또는 번호 매기기)을 일목요연하게 정리.
-   - 5단계: Conclusion & CTA (결론 및 상담 안내 - 10%) ➔ 사안의 심각성을 차분히 상기시키고, 하단에 사무소 정보 푸터 박스를 결합하여 전문가 조력의 필요성을 품격 있게 안내.
-2. 1인칭 스토리텔링 100% 강제 (최우선): <expert_experience> 데이터를 바탕으로, 글의 서론 직후나 본론 중간에 네이버 인용구(<blockquote>)나 형광펜 효과를 적용하여 "실제로 최근 저희 사무소를 찾아주신 의뢰인 사례를 말씀드리면..."과 같은 1인칭 화법의 스토리텔링 문단을 무조건 1개 이상 필수 배치해.
-3. 법령 및 판례 출처(Citation) 인용 표준화: 법적 요건, 처벌 수위, 세율 등을 설명할 때는 본문 텍스트 내에 괄호를 사용하여 [출처: 관련 법령 조항 및 판례 번호](예: 형법 제297조, 대법원 2021도XXXX 판결)를 자연스럽게 병기해.
-4. 키워드 밀도 및 LSI 분산: 타깃 키워드의 단순 반복을 금지하고, 전체 본문 대비 키워드 밀도를 2~3% 수준으로 유지하며, 의미가 유사한 동의어(LSI)를 고르게 분산 배치해.
-5. 마크다운 안됨: 순수한 HTML 코드로만 제공. <html>, <body>, \`\`\`html 같은 코드 블럭 절대 금지.
-6. 네이버 에디터 호환성: display: flex, display: grid, position: absolute 같이 네이버 스마트에디터에서 깨지는 CSS 속성은 절대 사용 금지. 오직 기본 margin, padding, text-align, color, background-color 등 호환되는 안전한 인라인 CSS만 사용해.
-7. 제목 금지: <post_title> 태그 외에 본문 안에는 <h1> 쓰지 마. 오직 <h2>와 <h3> 태그만 사용. 
-8. 트렌디한 블로그 디자인: 전체 문단(<p>)에 \`text-align: center; line-height: 2.0; font-size: 16px; margin-bottom: 24px;\` 기본 적용. 헤딩(<h2>, <h3>) 앞에 눈에 띄는 이모지 필수.
-9. 형광펜 강조: 핵심 내용에는 형광펜 효과(\`<span style="background-color: #fffbeb; padding: 2px 6px; font-weight: bold; color: #1e40af; border-radius: 4px;">...</span>\`)를 적극 사용.
-10. 이모지 적극 사용: 💡, 🔥, ✨, 📌 등을 적절히 배치해 가독성을 높임.
-11. 시각 자료: 서론이나 본론 중간, 시각 자료가 필요한 곳에 고품질 실사 이미지 2장을 필수 삽입해. 태그 형식: <img src="https://naver-saas.vercel.app/api/unsplash?query={문맥에_맞는_영문_명사_1개}" alt="{설명}" style="width:100%; max-width: 600px; display: block; margin: 30px auto; border-radius:12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">. {문맥에_맞는_영문_명사_1개} 부분에는 'lawyer', 'tax', 'office', 'contract' 등 상황에 맞는 단일 영문 명사 1개만 넣어.
+   - 5단계: Conclusion & CTA (결론 및 상담 안내 - 10%) ➔ 사안의 심각성을 차분히 상기시키고 전문가 조력의 필요성을 품격 있게 안내.
+7. 1인칭 스토리텔링 100% 강제 (최우선): <expert_experience> 데이터를 바탕으로, 글의 서론 직후나 본론 중간에 네이버 인용구(<blockquote>)나 형광펜 효과를 적용하여 "실제로 최근 저희 사무소를 찾아주신 의뢰인 사례를 말씀드리면..."과 같은 1인칭 화법의 스토리텔링 문단을 무조건 1개 이상 필수 배치해.
+8. 법령 및 판례 출처(Citation) 인용 표준화: 법적 요건, 처벌 수위, 세율 등을 설명할 때는 본문 텍스트 내에 괄호를 사용하여 [출처: 관련 법령 조항 및 판례 번호](예: 형법 제297조, 대법원 2021도XXXX 판결)를 자연스럽게 병기해.
+9. 키워드 밀도 및 LSI 분산: 타깃 키워드의 단순 반복을 금지하고, 전체 본문 대비 키워드 밀도를 2~3% 수준으로 유지하며, 의미가 유사한 동의어(LSI)를 고르게 분산 배치해.
+10. 마크다운 안됨: 순수한 HTML 코드로만 제공. <html>, <body>, \`\`\`html 같은 코드 블럭 절대 금지.
+11. 네이버 에디터 호환성: display: flex, display: grid, position: absolute 같이 네이버 스마트에디터에서 깨지는 CSS 속성은 절대 사용 금지. 오직 기본 margin, padding, text-align, color, background-color, border, border-radius, box-shadow 등 호환되는 안전한 인라인 CSS만 사용해.
+12. 제목 금지: <post_title> 태그 외에 본문 안에는 <h1> 쓰지 마. 오직 <h2>와 <h3> 태그만 사용. 
+13. 트렌디한 블로그 디자인: 전체 문단(<p>)에 \`text-align: left; line-height: 1.95; font-size: 15.5px; margin-bottom: 20px; color: #334155;\` 기본 적용. 헤딩(<h2>, <h3>) 앞에 눈에 띄는 이모지 필수.
+14. 형광펜 강조: 핵심 내용에는 형광펜 효과(\`<span style="background-color: #fffbeb; padding: 2px 6px; font-weight: bold; color: #1e40af; border-radius: 4px;">...</span>\`)를 적극 사용.
+15. 이모지 적극 사용: 💡, 🔥, ✨, 📌 등을 적절히 배치해 가독성을 높임.
+16. 이미지 삽입 엄격 금지 (FROZEN): 본문 내에 <img> 태그나 외부 이미지 URL을 일체 삽입하지 마세요. 상단 1:1 맞춤 썸네일 카드와 본문 시각 카드 4종으로 최고의 시각적 품질을 완성하세요.
 </html_constraints>
     `;
 

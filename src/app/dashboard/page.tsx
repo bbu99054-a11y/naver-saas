@@ -4,9 +4,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { MapPin, Store, PenTool, TrendingUp, Zap } from 'lucide-react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { DashboardCuration } from './DashboardCuration'
 import { createClient } from '@/lib/supabase/server'
 import prisma from '@/lib/prisma'
+import { DashboardCuration } from './DashboardCuration'
 
 export default async function DashboardPage() {
   const profile = await getProfile()

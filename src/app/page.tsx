@@ -124,8 +124,8 @@ export default function LandingPage() {
                 <Send className="w-8 h-8 text-slate-400 group-hover:text-indigo-600" />
                 <div className="absolute -top-2 -right-2 w-6 h-6 bg-indigo-600 text-white rounded-full flex items-center justify-center text-sm font-bold shadow-md">3</div>
               </div>
-              <h3 className="text-xl font-bold mb-3">네이버/워프/티스토리 동시 발행</h3>
-              <p className="text-slate-600 text-sm leading-relaxed">작성된 고품질 원고를 버튼 한 번으로 네이버 블로그, 워드프레스, 티스토리에 동시 배포합니다.</p>
+              <h3 className="text-xl font-bold mb-3">네이버 스마트 복사 & 멀티 발행</h3>
+              <p className="text-slate-600 text-sm leading-relaxed">작성된 고품질 원고를 버튼 한 번으로 네이버 스마트에디터 서식 복사 및 워드프레스, 티스토리에 즉시 배포합니다.</p>
             </div>
           </div>
 
@@ -239,7 +239,7 @@ export default function LandingPage() {
                 <li className="flex items-center gap-3"><CheckCircle2 className="w-5 h-5 text-yellow-400" /> 광고법 위반 필터링 (Compliance)</li>
                 <li className="flex items-center gap-3"><CheckCircle2 className="w-5 h-5 text-yellow-400" /> 과거 글 내부 링크 자동 주입</li>
                 <li className="flex items-center gap-3"><CheckCircle2 className="w-5 h-5 text-yellow-400" /> 1인칭 경험/사례 프롬프트 </li>
-                <li className="flex items-center gap-3"><CheckCircle2 className="w-5 h-5 text-yellow-400" /> 네이버 블로그 원클릭 자동 발행</li>
+                <li className="flex items-center gap-3"><CheckCircle2 className="w-5 h-5 text-yellow-400" /> 네이버 블로그 원클릭 스마트 복사</li>
               </ul>
               <Button className="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-bold border-none shadow-lg">10크레딧 무료 체험하기</Button>
             </div>

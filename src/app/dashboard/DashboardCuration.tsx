@@ -13,8 +13,8 @@ export function DashboardCuration({ profile }: { profile: any }) {
   const [error, setError] = useState<string | null>(null)
 
   // 프로필의 주소(구/동)와 업종을 결합하여 필러 키워드 생성
-  const localRegion = profile.address.split(' ').slice(1, 3).join(' ') // "강남구 역삼동"
-  const pillarKeyword = `${localRegion} ${profile.industry}`
+  const localRegion = profile.address ? profile.address.split(' ').slice(1, 3).join(' ') : '' // "강남구 역삼동"
+  const pillarKeyword = `${localRegion} ${profile.industry || ''}`.trim() || '전문직 블로그 마케팅'
 
   const handleGenerate = async () => {
     setIsLoading(true)
@@ -68,7 +68,7 @@ export function DashboardCuration({ profile }: { profile: any }) {
           오늘의 추천 로컬 키워드 Top 10
         </CardTitle>
         <CardDescription className="text-indigo-700">
-          사장님의 매장({profile.address}) 주변에서 검색량이 발생하는 유효 키워드입니다. 바로 글을 작성해 보세요!
+          대표님의 매장({profile.address || '소재지'}) 주변에서 실제 검색량이 발생하는 유효 키워드입니다. 바로 글을 작성해 보세요!
         </CardDescription>
       </CardHeader>
       <CardContent className="pt-6">
@@ -76,13 +76,13 @@ export function DashboardCuration({ profile }: { profile: any }) {
           <div className="flex flex-col items-center justify-center py-8 text-center bg-slate-50 rounded-xl border border-dashed border-slate-200">
             <h3 className="text-lg font-bold text-slate-700 mb-2">어떤 키워드로 글을 쓸지 고민되시나요?</h3>
             <p className="text-sm text-slate-500 mb-6 max-w-md">
-              AI가 사장님의 업종과 지역 데이터를 분석하여, 지금 당장 쓰기 좋고 상위노출 가능성이 높은 블루오션 키워드 10개를 발굴해 드립니다.
+              AI가 대표님의 업종과 지역 데이터를 분석하여, 지금 당장 쓰기 좋고 상위노출 가능성이 높은 블루오션 키워드 10개를 발굴해 드립니다.
             </p>
             <Button 
               onClick={handleGenerate} 
               disabled={isLoading}
               size="lg"
-              className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-full px-8 shadow-md"
+              className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-full px-8 shadow-md cursor-pointer"
             >
               {isLoading ? (
                 <><Loader2 className="w-5 h-5 mr-2 animate-spin" /> 상권 데이터 분석 중...</>
