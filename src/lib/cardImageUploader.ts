@@ -1,6 +1,94 @@
 /**
- * [ZONE-4] 클라이언트 카드 이미지 2배수 초고화질 렌더링 & 영구 DB 사전 업로드 및 URL 정규화 엔진
+ * [ZONE-4] 클라이언트 카드 이미지 2배수 초고화질 렌더링 & 본문 인포그래픽 자동 탐지/치환 파이프라인
  */
+
+export type CardType =
+  | 'MAIN_THUMBNAIL'
+  | 'CHECKLIST'
+  | 'COMPARISON'
+  | 'STAT_HIGHLIGHT'
+  | 'PROCESS_FLOW'
+  | 'QNA'
+  | 'WARNING_RISK'
+  | 'KEY_TAKEAWAYS'
+  | 'CTA_FOOTER'
+
+/**
+ * Alt 텍스트 및 주변 문맥으로부터 적합한 CardType을 자동 판별
+ */
+export function determineCardType(altText: string): CardType {
+  const t = altText.toLowerCase()
+  if (t.includes('썸네일') || t.includes('대표')) return 'MAIN_THUMBNAIL'
+  if (t.includes('체크리스트') || t.includes('요건') || t.includes('점검')) return 'CHECKLIST'
+  if (t.includes('비교') || t.includes('대비') || t.includes('before') || t.includes('versus') || t.includes('vs')) return 'COMPARISON'
+  if (t.includes('수치') || t.includes('통계') || t.includes('감면율') || t.includes('금액') || t.includes('세율')) return 'STAT_HIGHLIGHT'
+  if (t.includes('로드맵') || t.includes('절차') || t.includes('단계') || t.includes('행동') || t.includes('step')) return 'PROCESS_FLOW'
+  if (t.includes('질문') || t.includes('qna') || t.includes('q&a') || t.includes('해설') || t.includes('자주')) return 'QNA'
+  if (t.includes('주의') || t.includes('경고') || t.includes('골든타임') || t.includes('리스크') || t.includes('위험')) return 'WARNING_RISK'
+  if (t.includes('요약') || t.includes('결론') || t.includes('3줄') || t.includes('핵심')) return 'KEY_TAKEAWAYS'
+  if (t.includes('상담') || t.includes('배너') || t.includes('안내') || t.includes('위치') || t.includes('문의') || t.includes('cta')) return 'CTA_FOOTER'
+  return 'CHECKLIST'
+}
+
+/**
+ * 본문 내의 마크다운 이미지 태그(![...](...)), 빈 img 태그, 사진 안내 텍스트를 감지하여
+ * 100% 동작하는 고화질 Headless Serverless 카드 이미지 태그로 자동 치환
+ */
+export function processPostInfographics(
+  postContent: string,
+  articleSeed: string = 'postsynk_post_seed'
+): string {
+  if (!postContent) return ''
+
+  let updated = postContent
+  const origin =
+    typeof window !== 'undefined'
+      ? process.env.NEXT_PUBLIC_APP_URL || process.env.NEXT_PUBLIC_SITE_URL || window.location.origin
+      : ''
+
+  // 1. 마크다운 이미지 태그 감지 및 치환: ![헬리오시티 감정평가 체크리스트 인포그래픽](...)
+  const mdImageRegex = /!\[(.*?)\]\((.*?)\)/gi
+  updated = updated.replace(mdImageRegex, (match, altText, url) => {
+    const cleanAlt = altText.trim() || '블로그 핵심 인포그래픽'
+    // 이미 정상적인 /api/card-image/ URL이 들어있는 경우
+    if (url && url.includes('/api/card-image/')) {
+      const fullUrl = url.startsWith('/') && origin ? `${origin}${url}` : url
+      return `<p style="text-align: center; margin: 25px 0;"><img src="${fullUrl}" alt="${cleanAlt}" style="display: block; max-width: 100%; height: auto; margin: 20px auto; border-radius: 14px; box-shadow: 0 8px 24px rgba(0,0,0,0.06);" /></p>`
+    }
+
+    const cardType = determineCardType(cleanAlt)
+    const encodedTitle = encodeURIComponent(cleanAlt.replace(/인포그래픽|이미지|카드/g, '').trim() || '핵심 실무 분석')
+    const finalUrl = `${origin}/api/card-image/render?type=${cardType}&title=${encodedTitle}&category=2026+실무+분석&seed=${encodeURIComponent(articleSeed)}`
+
+    return `<p style="text-align: center; margin: 25px 0;"><img src="${finalUrl}" alt="${cleanAlt}" style="display: block; max-width: 100%; height: auto; margin: 20px auto; border-radius: 14px; box-shadow: 0 8px 24px rgba(0,0,0,0.06);" /></p>`
+  })
+
+  // 2. src가 비어있거나 플레이스홀더인 <img ...> 태그 치환
+  const emptyImgRegex = /<img([^>]*?)src=(["'])([\s\S]*?)\2([^>]*?)>/gi
+  updated = updated.replace(emptyImgRegex, (match, before, quote, srcValue, after) => {
+    const combined = `${before} ${after}`
+    const altMatch = combined.match(/alt=(["'])([\s\S]*?)\1/i)
+    const altText = altMatch ? altMatch[2].trim() : '블로그 핵심 인포그래픽'
+
+    const isInvalidSrc =
+      !srcValue ||
+      srcValue.trim() === '' ||
+      srcValue === '#' ||
+      srcValue.toLowerCase().includes('placeholder') ||
+      srcValue.startsWith('data:image/svg+xml;utf8,<svg') === false && srcValue.startsWith('http') === false && srcValue.startsWith('/api/') === false
+
+    if (isInvalidSrc) {
+      const cardType = determineCardType(altText)
+      const encodedTitle = encodeURIComponent(altText.replace(/인포그래픽|이미지|카드/g, '').trim() || '핵심 실무 분석')
+      const finalUrl = `${origin}/api/card-image/render?type=${cardType}&title=${encodedTitle}&category=2026+실무+분석&seed=${encodeURIComponent(articleSeed)}`
+      return `<img src="${finalUrl}" alt="${altText}" style="display: block; max-width: 100%; height: auto; margin: 20px auto; border-radius: 14px; box-shadow: 0 8px 24px rgba(0,0,0,0.06);" />`
+    }
+
+    return match
+  })
+
+  return updated
+}
 
 /**
  * SVG Data-URI 또는 SVG 코드를 2배수 레티나(2x Retina) 초고해상도 순수 PNG(Base64)로 변환 (흰색 배경 보장)
@@ -113,8 +201,11 @@ export async function preUploadCardImages(
   }
 
   try {
+    // 0. 마크다운 태그 및 빈 이미지 자동 복구 선제 적용
+    const processedHtml = processPostInfographics(htmlContent)
+
     const parser = new DOMParser()
-    const doc = parser.parseFromString(htmlContent, 'text/html')
+    const doc = parser.parseFromString(processedHtml, 'text/html')
     const images = Array.from(doc.querySelectorAll('img'))
 
     const origin =

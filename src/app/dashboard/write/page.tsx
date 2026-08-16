@@ -14,7 +14,10 @@ import {
 import { CopyToNaverBtn } from '@/components/CopyToNaverBtn'
 import { MultiPublishBtn } from '@/components/MultiPublishBtn'
 import { checkKeywordDuplicate } from '@/actions/articles'
-import { preUploadCardImages } from '@/lib/cardImageUploader'
+import { preUploadCardImages, processPostInfographics } from '@/lib/cardImageUploader'
+
+
+
 
 // Mock useToast fallback
 const useToast = () => {
@@ -123,6 +126,9 @@ export default function WritePage() {
       return match;
     });
 
+    // 0. 본문 마크다운 이미지 및 엑스박스 이미지 태그 자동 탐지 및 고화질 카드 URL로 치환
+    clean = processPostInfographics(clean, keyword || 'postsynk_post_seed');
+
     // 카드 이미지 미리보기 스타일 보정
     clean = clean.replace(/<img([^>]+src=["']\/api\/card-image\/[^"']+["'][^>]*)>/gi, (match) => {
       if (!match.includes('style=')) {
@@ -131,8 +137,13 @@ export default function WritePage() {
       return match
     });
 
+    // 유니코드 결합 제어 문자 (바코드 글리프 잔여물) 완전 제거
+    clean = clean.replace(/[\uFE00-\uFE0F\u200B-\u200D\u20E0-\u20E3]+/g, '');
+
     return clean;
-  }, [completion]);
+  }, [completion, keyword]);
+
+
 
 
   // 원고 실시간 통계 메트릭 계산

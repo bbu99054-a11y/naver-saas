@@ -20,3 +20,4 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
    - ⚙️ Under the hood? (Explain data flow with analogies. Must comply with local Chrome extension architecture, no n8n/Make)
    - 🗺️ Zones Touched: (List the Zone IDs from DETAILED_ARCHITECTURE.md being modified)
    - ⚠️ Risks/Side effects: (Any chance of breaking existing features)
+7. **No Automatic Git Push:** 작업을 완료한 후 절대로 깃허브 푸시(`git push`)를 자동으로 실행하지 마십시오. 로컬 빌드(`npm run build`) 및 검증 완료 후 보고하고, 대표님이 명시적으로 '푸시해줘'라고 지시할 때만 깃허브 푸시를 실행해야 합니다.

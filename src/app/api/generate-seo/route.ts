@@ -3,7 +3,9 @@ import prisma from '@/lib/prisma'
 import { streamText } from 'ai'
 import { anthropic } from '@ai-sdk/anthropic'
 import { google } from '@ai-sdk/google'
+import { openai } from '@ai-sdk/openai'
 import { NextResponse } from 'next/server'
+
 
 export const maxDuration = 60
 
@@ -157,18 +159,21 @@ ${profile.about_us}
 
     designInjection = `
 <visual_card_design_system>
-[네이버 블로그 2026 프리미엄 라이트 모드 8종 시각 카드 디자인 시스템]
-네이버 블로그의 화사한 화이트 본문과 가장 완벽하게 조화를 이루는 프리미엄 라이트 모드(웜 크림, 아이스 블루, 프로스티드 세이지, 웜 오트밀 등) 디자인 시스템입니다.
-- 절대 칙칙하고 어두운 검정(Black) 배경을 사용하지 마세요.
-- 모든 카드는 화사하고 부드러운 라이트 배경(fill='%23FDFBF7', fill='%23F0F9FF', fill='%23F8FAFC' 등) 위에 고대비 볼드 텍스트(fill='%230F172A', fill='%231E293B', fill='%23B45309')로 작성되어 글씨가 100% 뚜렷하게 읽히도록 하세요.
-- [사진 1: 최상단 1:1 맞춤 썸네일]: 본문 가장 첫머리에 필수 1장 배치 (화사한 크림/골드 라이트 배경 + 짙은 네이비 메인 타이틀).
-- [본문 중간 시각 카드]: 본론 1(Body 1) 및 본론 2(Body 2)의 내용 설명 직후에 [체크리스트, Before/After 비교, 핵심 수치 강조, 3단계 로드맵, Q&A, 리스크 경고] 중 가장 어울리는 카드를 2~3장 선별 삽입.
-- [사진 8: 핵심 3줄 요약 카드]: 결론부 직전에 필수 1장 배치 (화사한 웜 크림/옐로우 바탕 + 짙은 챠콜 3줄 요약).
-- [사진 9: 하단 상담 유도 배너]: 글 최하단에 필수 1장 배치 (프리미엄 웜 크림/골드 프레임 + 짙은 텍스트).
-- 소제목(H2)은 별도의 장식 없이 스마트블록 검색에 강력한 문장형 제목으로 깨끗하게 작성하고, 카드는 설명 직후 시각적 요약/근거로 배치하여 제목 중복이 없도록 하세요.
+[네이버 블로그 2026 프리미엄 8종 시각 카드 및 안전 서식 시스템]
+네이버 블로그의 화사한 본문 및 스마트에디터 ONE 붙여넣기에 100% 호환되는 프리미엄 시각 카드 디자인 시스템입니다.
+- 모든 시각 카드는 아래 제공된 8종의 \`<img src="/api/card-image/render?type=..." alt="..." style="..." />\` 템플릿 태그를 그대로 사용하여, URL의 \`title\`, \`sub\`, \`points\`, \`sig\` 등의 텍스트만 현재 주제에 맞게 변경하여 삽입하세요.
+- 마크다운 형식(\`![]()\`)이나 빈 \`src=""\`를 절대 사용하지 말고, 반드시 제공된 \`<img src="/api/card-image/render?..." ...>\` 태그를 사용하세요.
+- [사진 1: 최상단 1:1 맞춤 썸네일]: 본문 가장 첫머리에 필수 1장 배치.
+- [본문 중간 시각 카드]: 본론 1 및 본론 2의 설명 직후에 [체크리스트, Before/After 비교, 핵심 수치 강조, 3단계 로드맵, Q&A, 리스크 경고] 중 가장 어울리는 카드를 2~3장 선별 삽입.
+- [사진 8: 핵심 3줄 요약 카드]: 결론부 직전에 필수 1장 배치.
+- [사진 9: 하단 상담 유도 배너]: 글 최하단에 필수 1장 배치.
+- 안내/리스크 박스 서식은 네이버 에디터가 100% 보존하는 표준 인라인 CSS(\`<div style="background-color: #FEF9C3; border-left: 4px solid #EAB308; padding: 18px 20px; margin: 24px 0; border-radius: 4px; line-height: 1.6;">...</div>\`)를 사용하세요.
+- 복잡한 비교 표나 준비 서류 목록은 이미지 대신 아래 제공된 순수 인라인 HTML Table 서식(\`<table style="width: 100%; border-collapse: collapse; margin: 24px 0; font-size: 15px; text-align: left; background-color: #FFFFFF;">...</table>\`)으로 작성하여 한글이 100% 또렷하게 읽히도록 하세요.
 
 ${activeTemplates.join('\n\n')}
 </visual_card_design_system>
+
+
 `;
 
     // 내부 링크(Internal Linking) 주입 (SEO 2026 트렌드)
@@ -325,10 +330,22 @@ ${profileFooterPrompt}
 
     let aiModel;
     if (dbUser.plan_type === 'pro' || dbUser.plan_type === 'premium') {
-      aiModel = anthropic('claude-5-sonnet-latest'); // 유료 요금제 (최고 품질)
+      if (process.env.ANTHROPIC_API_KEY) {
+        aiModel = anthropic('claude-5-sonnet-latest'); // 유료 요금제 (최고 품질)
+      } else if (process.env.OPENAI_API_KEY) {
+        aiModel = openai('gpt-5.6-luna'); // GPT-5.6 Luna 고성능 Fallback
+      } else {
+        aiModel = google('gemini-3.6-flash');
+      }
     } else {
-      aiModel = google('gemini-3.6-flash'); // 무료 요금제 (가성비 초고속)
+      // 무료 요금제 및 기본 모드: OPENAI_API_KEY 존재 시 gpt-5.6-luna 우선 우회, 부재 시 gemini-3.6-flash
+      if (process.env.OPENAI_API_KEY) {
+        aiModel = openai('gpt-5.6-luna');
+      } else {
+        aiModel = google('gemini-3.6-flash');
+      }
     }
+
 
     // 1. Tavily API로 최신 뉴스/트렌드 사전 검색 (RAG)
     let searchContext = '';

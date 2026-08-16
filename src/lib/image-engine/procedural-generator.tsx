@@ -39,7 +39,16 @@ function createPrng(seedStr: string) {
   }
 }
 
+import { cleanSummaryText } from '@/lib/utils/textCleaner'
+
+// Number duplicate strip helper (removes leading "1. ", "1 ", "① ", "1️⃣ " and barcode glyphs)
+function cleanItemText(raw: string): string {
+  return cleanSummaryText(raw)
+}
+
 export function buildProceduralCardComponent(payload: CardPayload): React.ReactElement {
+
+
   const prng = createPrng(payload.seed + payload.type)
 
   // 1. Tier 3: 동적 지오메트리 & 여백 섭동 (40px ~ 56px, 코너 12~24px)
@@ -245,14 +254,15 @@ function renderThumbnailCard(
           width: '80%',
         }}
       >
-        <div style={{ fontSize: '22px', fontWeight: 'bold', color: palette.text }}>
+        <div style={{ display: 'flex', fontSize: '22px', fontWeight: 'bold', color: palette.text }}>
           {payload.signature || '(전문가 사무소명)'}
         </div>
-        <div style={{ fontSize: '17px', color: palette.sub }}>
+        <div style={{ display: 'flex', fontSize: '17px', color: palette.sub }}>
           PostSynk Verified C-Rank SEO Content
         </div>
       </div>
     </div>
+
   )
 }
 
@@ -290,8 +300,9 @@ function renderChecklistCard(
       }}
     >
       <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-        <div style={{ fontSize: '24px', fontWeight: 'bold', color: palette.text }}>
-          📋 {payload.title || '반드시 검토해야 할 필수 체크리스트'}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '24px', fontWeight: 'bold', color: palette.text }}>
+          <span>📋</span>
+          <span>{payload.title || '반드시 검토해야 할 필수 체크리스트'}</span>
         </div>
       </div>
 
@@ -320,12 +331,12 @@ function renderChecklistCard(
               ☑️
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-              <div style={{ fontSize: '18px', fontWeight: 'bold', color: palette.text }}>
-                {`0${idx + 1}. ${pt.split(':')[0] || pt}`}
+              <div style={{ display: 'flex', fontSize: '18px', fontWeight: 'bold', color: palette.text }}>
+                {`0${idx + 1}. ${cleanItemText(pt.split(':')[0] || pt)}`}
               </div>
               {pt.includes(':') && (
-                <div style={{ fontSize: '15px', color: palette.sub }}>
-                  {pt.split(':')[1]}
+                <div style={{ display: 'flex', fontSize: '15px', color: palette.sub }}>
+                  {cleanItemText(pt.split(':')[1])}
                 </div>
               )}
             </div>
@@ -333,6 +344,7 @@ function renderChecklistCard(
         ))}
       </div>
     </div>
+
   )
 }
 
@@ -406,10 +418,10 @@ function renderComparisonCard(
           <div style={{ fontSize: '18px', fontWeight: 'bold', color: '#991B1B' }}>
             {payload.extra1 || '단순 방치 및 부실 증빙 제출'}
           </div>
-          <div style={{ fontSize: '15px', color: '#7F1D1D', lineHeight: 1.5 }}>
-            • 과태료 및 가산세 리스크 발생<br />
-            • 실질 소명 기회 상실 및 불이익<br />
-            • 법적 구제 골든타임 경과
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '15px', color: '#7F1D1D', lineHeight: 1.5 }}>
+            <div>• 과태료 및 가산세 리스크 발생</div>
+            <div>• 실질 소명 기회 상실 및 불이익</div>
+            <div>• 법적 구제 골든타임 경과</div>
           </div>
         </div>
 
@@ -443,15 +455,16 @@ function renderComparisonCard(
           <div style={{ fontSize: '18px', fontWeight: 'bold', color: '#166534' }}>
             {payload.extra2 || '적격증빙 선제적 검증 및 1:1 방어'}
           </div>
-          <div style={{ fontSize: '15px', color: '#14532D', lineHeight: 1.5 }}>
-            • 법정 감면/공제 혜택 100% 확보<br />
-            • 사실관계 입증 서류 완벽 구비<br />
-            • 사건 종결까지 세무/법률 리스크 차단
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '15px', color: '#14532D', lineHeight: 1.5 }}>
+            <div>• 법정 감면/공제 혜택 100% 확보</div>
+            <div>• 사실관계 입증 서류 완벽 구비</div>
+            <div>• 사건 종결까지 세무/법률 리스크 차단</div>
           </div>
         </div>
       </div>
     </div>
   )
+
 }
 
 /**
@@ -549,9 +562,11 @@ function renderProcessFlowCard(
         boxSizing: 'border-box',
       }}
     >
-      <div style={{ fontSize: '22px', fontWeight: 'bold', color: palette.text }}>
-        🚀 {payload.title || '원스톱 사건 해결 3단계 실무 절차'}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '22px', fontWeight: 'bold', color: palette.text }}>
+        <span>🚀</span>
+        <span>{payload.title || '원스톱 사건 해결 3단계 실무 절차'}</span>
       </div>
+
 
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '14px' }}>
         {steps.slice(0, 3).map((step, idx) => (
@@ -585,12 +600,13 @@ function renderProcessFlowCard(
             </div>
 
             <div style={{ fontSize: '18px', fontWeight: 'bold', color: palette.text, lineHeight: 1.35 }}>
-              {step.split(':')[0] || step}
+              {cleanItemText(step.split(':')[0] || step)}
             </div>
 
             <div style={{ fontSize: '14px', color: palette.sub, lineHeight: 1.4 }}>
-              {step.split(':')[1] || '전문가 사전 검토 및 1:1 맞춤 조치'}
+              {cleanItemText(step.split(':')[1]) || '전문가 사전 검토 및 1:1 맞춤 조치'}
             </div>
+
           </div>
         ))}
       </div>
@@ -637,7 +653,7 @@ function renderQnaCard(
         >
           Q. 자주 묻는 질문
         </div>
-        <div style={{ fontSize: '20px', fontWeight: 'bold', color: palette.text }}>
+        <div style={{ display: 'flex', fontSize: '20px', fontWeight: 'bold', color: palette.text }}>
           {payload.title}
         </div>
       </div>
@@ -653,10 +669,10 @@ function renderQnaCard(
           gap: '12px',
         }}
       >
-        <div style={{ fontSize: '20px', fontWeight: 'bold', color: palette.accent }}>
+        <div style={{ display: 'flex', fontSize: '20px', fontWeight: 'bold', color: palette.accent }}>
           💡 전문가 명쾌 해설:
         </div>
-        <div style={{ fontSize: '18px', fontWeight: '600', color: palette.text, lineHeight: 1.5 }}>
+        <div style={{ display: 'flex', fontSize: '18px', fontWeight: '600', color: palette.text, lineHeight: 1.5 }}>
           {payload.subText || payload.extra2 || '법정 기한 및 요건에 맞춰 선제적으로 대응하면 세액공제와 권리 구제가 모두 가능합니다.'}
         </div>
       </div>
@@ -690,8 +706,8 @@ function renderWarningCard(
       }}
     >
       <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-        <div style={{ fontSize: '32px' }}>🚨</div>
-        <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#991B1B' }}>
+        <div style={{ display: 'flex', fontSize: '32px' }}>🚨</div>
+        <div style={{ display: 'flex', fontSize: '24px', fontWeight: 'bold', color: '#991B1B' }}>
           {payload.title || '골든타임 경과 시 치명적 불이익 주의'}
         </div>
       </div>
@@ -707,10 +723,10 @@ function renderWarningCard(
           gap: '10px',
         }}
       >
-        <div style={{ fontSize: '18px', fontWeight: 'bold', color: '#B91C1C' }}>
+        <div style={{ display: 'flex', fontSize: '18px', fontWeight: 'bold', color: '#B91C1C' }}>
           • {payload.subText || '법정 기한 미준수 시 가산세 부과 및 소명 권리 상실'}
         </div>
-        <div style={{ fontSize: '16px', color: '#475569', lineHeight: 1.45 }}>
+        <div style={{ display: 'flex', fontSize: '16px', color: '#475569', lineHeight: 1.45 }}>
           사안에 따라 대응 시한이 엄격히 정해져 있으므로, 신속하게 전문가와 사실관계를 검토해야 손실을 방어할 수 있습니다.
         </div>
       </div>
@@ -751,7 +767,7 @@ function renderSummaryCard(
         boxSizing: 'border-box',
       }}
     >
-      <div style={{ fontSize: '26px', fontWeight: 'bold', color: '#B45309' }}>
+      <div style={{ display: 'flex', fontSize: '26px', fontWeight: 'bold', color: '#B45309' }}>
         💡 오늘 포스팅 핵심 3줄 요약
       </div>
 
@@ -768,16 +784,17 @@ function renderSummaryCard(
       >
         {points.slice(0, 3).map((pt, idx) => (
           <div key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
-            <div style={{ fontSize: '22px', fontWeight: 'bold', color: '#2563EB' }}>
+            <div style={{ display: 'flex', fontSize: '22px', fontWeight: 'bold', color: '#2563EB' }}>
               {idx === 0 ? '1️⃣' : idx === 1 ? '2️⃣' : '3️⃣'}
             </div>
-            <div style={{ fontSize: '18px', fontWeight: 'bold', color: '#0F172A', lineHeight: 1.45 }}>
-              {pt}
+            <div style={{ display: 'flex', fontSize: '18px', fontWeight: 'bold', color: '#0F172A', lineHeight: 1.45 }}>
+              {cleanItemText(pt)}
             </div>
           </div>
         ))}
       </div>
     </div>
+
   )
 }
 
@@ -831,16 +848,20 @@ function renderCtaCard(
           textAlign: 'left',
         }}
       >
-        <div style={{ fontSize: '19px', fontWeight: 'bold', color: '#0F172A' }}>
-          📞 직통 상담: <span style={{ color: '#2563EB' }}>{payload.extra1 || '(대표 전화번호)'}</span>
+        <div style={{ display: 'flex', fontSize: '19px', fontWeight: 'bold', color: '#0F172A', gap: '8px' }}>
+          <span>📞 직통 상담:</span>
+          <span style={{ color: '#2563EB' }}>{payload.extra1 || '(대표 전화번호)'}</span>
         </div>
-        <div style={{ fontSize: '19px', fontWeight: 'bold', color: '#0F172A' }}>
-          🏢 사무소 위치: <span style={{ color: '#475569', fontWeight: 'normal' }}>{payload.extra2 || '(상세 주소)'}</span>
+        <div style={{ display: 'flex', fontSize: '19px', fontWeight: 'bold', color: '#0F172A', gap: '8px' }}>
+          <span>🏢 사무소 위치:</span>
+          <span style={{ color: '#475569', fontWeight: 'normal' }}>{payload.extra2 || '(상세 주소)'}</span>
         </div>
-        <div style={{ fontSize: '19px', fontWeight: 'bold', color: '#0F172A' }}>
-          📍 네이버 예약: <span style={{ color: '#2563EB', fontWeight: 'normal' }}>{payload.extra3 || '(예약 링크)'}</span>
+        <div style={{ display: 'flex', fontSize: '19px', fontWeight: 'bold', color: '#0F172A', gap: '8px' }}>
+          <span>📍 네이버 예약:</span>
+          <span style={{ color: '#2563EB', fontWeight: 'normal' }}>{payload.extra3 || '(예약 링크)'}</span>
         </div>
       </div>
+
 
       <div style={{ fontSize: '14px', color: '#94A3B8' }}>
         * 사전 예약을 통해 원활한 1:1 맞춤 상담이 가능합니다.
