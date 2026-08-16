@@ -123,8 +123,17 @@ export default function WritePage() {
       return match;
     });
 
+    // 카드 이미지 미리보기 스타일 보정
+    clean = clean.replace(/<img([^>]+src=["']\/api\/card-image\/[^"']+["'][^>]*)>/gi, (match) => {
+      if (!match.includes('style=')) {
+        return match.replace('<img', '<img style="display:block;max-width:100%;height:auto;margin:20px auto;border-radius:14px;box-shadow:0 8px 24px rgba(0,0,0,0.06);"')
+      }
+      return match
+    });
+
     return clean;
   }, [completion]);
+
 
   // 원고 실시간 통계 메트릭 계산
   const textMetrics = useMemo(() => {

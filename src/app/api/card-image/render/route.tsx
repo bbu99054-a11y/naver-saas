@@ -6,8 +6,29 @@ import {
   CardType,
 } from '@/lib/image-engine/procedural-generator'
 
-export async function GET(req: NextRequest) {
+// 500KB 이하 경량화 한글 서브셋 폰트 인메모리 캐시 (서버리스 인스턴스 간 재사용)
+let cachedFontBuffer: ArrayBuffer | null = null
 
+async function loadSubsetFont(): Promise<ArrayBuffer | null> {
+  if (cachedFontBuffer) return cachedFontBuffer
+
+  try {
+    // 경량 Pretendard Bold WOFF 서브셋 (<450KB)
+    const fontRes = await fetch(
+      'https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard/dist/web/static/woff/Pretendard-Bold.woff',
+      { cache: 'force-cache' }
+    )
+    if (fontRes.ok) {
+      cachedFontBuffer = await fontRes.arrayBuffer()
+      return cachedFontBuffer
+    }
+  } catch (fontErr) {
+    console.warn('SubsetFont load failed, falling back to system sans-serif:', fontErr)
+  }
+  return null
+}
+
+export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url)
 
@@ -60,11 +81,26 @@ export async function GET(req: NextRequest) {
       height = 480
     }
 
-    const element = buildProceduralCardComponent(payload)
+    // 3. 섭동 연산 비동기 동기화 (100% 계산 완료 보장)
+    const element = await Promise.resolve(buildProceduralCardComponent(payload))
+
+    // 2. 경량 서브셋 폰트 로드 (<500KB)
+    const fontData = await loadSubsetFont()
+    const fonts = fontData
+      ? [
+          {
+            name: 'Pretendard',
+            data: fontData,
+            weight: 700 as const,
+            style: 'normal' as const,
+          },
+        ]
+      : undefined
 
     return new ImageResponse(element, {
       width,
       height,
+      fonts,
       headers: {
         'Content-Type': 'image/png',
         'Cache-Control': 'public, max-age=31536000, immutable',
