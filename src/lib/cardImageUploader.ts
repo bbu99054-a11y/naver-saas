@@ -1,9 +1,9 @@
 /**
- * [ZONE-4] 클라이언트 카드 이미지 2배수 초고화질 렌더링 & 영구 DB 사전 업로드 (Pre-upload) 엔진
+ * [ZONE-4] 클라이언트 카드 이미지 2배수 초고화질 렌더링 & 영구 DB 사전 업로드 및 URL 정규화 엔진
  */
 
 /**
- * SVG Data-URI 또는 SVG 코드를 2배수 레티나(2x Retina) 초고해상도 순수 PNG(Base64)로 변환
+ * SVG Data-URI 또는 SVG 코드를 2배수 레티나(2x Retina) 초고해상도 순수 PNG(Base64)로 변환 (흰색 배경 보장)
  */
 export function svgToPngDataUrl(svgSrc: string): Promise<string> {
   return new Promise((resolve) => {
@@ -69,6 +69,10 @@ export function svgToPngDataUrl(svgSrc: string): Promise<string> {
 
           const ctx = canvas.getContext('2d')
           if (ctx) {
+            // [검은 화면 원천 차단] 캔버스 바닥에 솔리드 화이트(#FFFFFF) 베이스 강제 주입
+            ctx.fillStyle = '#FFFFFF'
+            ctx.fillRect(0, 0, canvas.width, canvas.height)
+
             ctx.imageSmoothingEnabled = true
             ctx.imageSmoothingQuality = 'high'
             ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
@@ -98,7 +102,8 @@ export function svgToPngDataUrl(svgSrc: string): Promise<string> {
 }
 
 /**
- * HTML 내의 모든 SVG 카드를 2x PNG로 렌더링하고, 개별 병렬 업로드하여 영구 HTTPS URL로 교체
+ * HTML 내의 모든 카드 이미지를 절대 공개 HTTPS URL로 정규화하고,
+ * 레거시 SVG 카드가 있는 경우 2x PNG로 렌더링/업로드 수행
  */
 export async function preUploadCardImages(
   htmlContent: string
@@ -112,64 +117,81 @@ export async function preUploadCardImages(
     const doc = parser.parseFromString(htmlContent, 'text/html')
     const images = Array.from(doc.querySelectorAll('img'))
 
+    const origin =
+      process.env.NEXT_PUBLIC_APP_URL ||
+      process.env.NEXT_PUBLIC_SITE_URL ||
+      window.location.origin
+
+    let totalUploaded = 0
+
+    // 1. 상대 경로(/api/card-image/...)를 절대 공개 HTTPS URL로 정규화
+    images.forEach((img) => {
+      let src = img.getAttribute('src') || ''
+      if (src.startsWith('/api/card-image/')) {
+        src = `${origin}${src}`
+        img.setAttribute('src', src)
+        img.style.display = 'block'
+        img.style.maxWidth = '100%'
+        img.style.height = 'auto'
+        img.style.margin = '20px auto'
+        img.style.borderRadius = '14px'
+        img.style.boxShadow = '0 8px 24px rgba(0,0,0,0.06)'
+      }
+    })
+
+    // 2. 레거시 SVG Data-URI 이미지가 있는 경우에만 백그라운드 업로드 수행
     const targetImages = images.filter((img) => {
       const src = img.getAttribute('src') || ''
-      // 이미 /api/card-image/ URL이 들어간 경우 스킵
       if (src.includes('/api/card-image/')) return false
       return src.startsWith('data:image/') || src.includes('<svg') || src.includes('data:image/svg+xml')
     })
 
-    if (targetImages.length === 0) {
-      return { updatedHtml: doc.body.innerHTML, totalUploaded: 0 }
-    }
+    if (targetImages.length > 0) {
+      const timestamp = Date.now()
 
-    const timestamp = Date.now()
+      await Promise.all(
+        targetImages.map(async (img, idx) => {
+          const originalSrc = img.getAttribute('src') || ''
+          const alt = img.getAttribute('alt') || '블로그 핵심 요약 카드'
+          const cardId = `card_${timestamp}_${idx}_${Math.random().toString(36).substring(2, 7)}`
 
-    // 4. Vercel 페이로드 제한 방지: 개별 병렬 업로드 (Promise.all)
-    await Promise.all(
-      targetImages.map(async (img, idx) => {
-        const originalSrc = img.getAttribute('src') || ''
-        const alt = img.getAttribute('alt') || '블로그 핵심 요약 카드'
-        const cardId = `card_${timestamp}_${idx}_${Math.random().toString(36).substring(2, 7)}`
+          try {
+            const pngDataUrl = await svgToPngDataUrl(originalSrc)
 
-        try {
-          // 1. 2x Retina PNG 변환
-          const pngDataUrl = await svgToPngDataUrl(originalSrc)
+            const res = await fetch('/api/card-image/upload', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                id: cardId,
+                imageBase64: pngDataUrl,
+                mimeType: 'image/png',
+              }),
+            })
 
-          // 2. 단일 카드 개별 POST 업로드
-          const res = await fetch('/api/card-image/upload', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              id: cardId,
-              imageBase64: pngDataUrl,
-              mimeType: 'image/png',
-            }),
-          })
+            if (res.ok) {
+              const data = await res.json()
+              const finalUrl = data.url || `${origin}/api/card-image/${cardId}.png`
 
-          if (res.ok) {
-            const data = await res.json()
-            const finalUrl = data.url || `${window.location.origin}/api/card-image/${cardId}.png`
-
-            // 3. 네이버 스마트에디터 ONE 최적화 포맷팅 적용
-            img.setAttribute('src', finalUrl)
-            img.setAttribute('alt', alt)
-            img.style.display = 'block'
-            img.style.maxWidth = '100%'
-            img.style.height = 'auto'
-            img.style.margin = '20px auto'
-            img.style.borderRadius = '14px'
-            img.style.boxShadow = '0 8px 24px rgba(0,0,0,0.06)'
+              img.setAttribute('src', finalUrl)
+              img.setAttribute('alt', alt)
+              img.style.display = 'block'
+              img.style.maxWidth = '100%'
+              img.style.height = 'auto'
+              img.style.margin = '20px auto'
+              img.style.borderRadius = '14px'
+              img.style.boxShadow = '0 8px 24px rgba(0,0,0,0.06)'
+              totalUploaded++
+            }
+          } catch (uploadErr) {
+            console.warn(`Legacy card image upload failed for index ${idx}:`, uploadErr)
           }
-        } catch (uploadErr) {
-          console.warn(`Card image upload failed for index ${idx}:`, uploadErr)
-        }
-      })
-    )
+        })
+      )
+    }
 
     return {
       updatedHtml: doc.body.innerHTML,
-      totalUploaded: targetImages.length,
+      totalUploaded,
     }
   } catch (err) {
     console.error('preUploadCardImages error:', err)

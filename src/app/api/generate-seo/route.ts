@@ -318,8 +318,9 @@ ${profileFooterPrompt}
 13. 트렌디한 블로그 디자인: 전체 문단(<p>)에 \`text-align: left; line-height: 1.95; font-size: 15.5px; margin-bottom: 20px; color: #334155;\` 기본 적용. 헤딩(<h2>, <h3>) 앞에 눈에 띄는 이모지 필수.
 14. 형광펜 강조: 핵심 내용에는 형광펜 효과(\`<span style="background-color: #fffbeb; padding: 2px 6px; font-weight: bold; color: #1e40af; border-radius: 4px;">...</span>\`)를 적극 사용.
 15. 이모지 적극 사용: 💡, 🔥, ✨, 📌 등을 적절히 배치해 가독성을 높임.
-16. [고화질 <img> 인포그래픽 카드 이미지 필수 사용]: 제공된 8종의 고해상도 인포그래픽 카드 이미지(<img> 태그)를 적재적소에 배치하세요. (단, 무관한 외부 스톡 사진 URL은 일체 금지하며, 제공된 <img src="data:image/svg+xml;utf8,..."> 인포그래픽 카드로 네이버 공식 사진 점수와 완벽한 시각적 퀄리티를 완성하세요.)
+16. [고화질 <img> 시각 카드 이미지 필수 사용]: 제공된 8종의 카드 이미지 템플릿(<img> 태그)의 URL 파라미터(title, sub, points, sig 등)를 현재 글 주제에 맞게 알맞게 수정하여 적재적소에 배치하세요. (단, 무관한 외부 스톡 사진 URL은 일체 금지하며, 제공된 <img src="/api/card-image/render?type=..." ...> 카드 이미지로 네이버 공식 사진 점수와 완벽한 시각적 퀄리티를 완성하세요.)
 </html_constraints>
+
     `;
 
     let aiModel;
