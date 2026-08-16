@@ -6,6 +6,8 @@ datasource db {
   provider  = "postgresql"
 }
 
+
+
 model User {
   id                String    @id // Supabase Auth user id
   email             String    @unique
@@ -32,6 +34,7 @@ model Profile {
   address          String?
   phone            String?
   reservation_link String?
+  brand_color      String?
   tone             String?
   about_us         String?  @db.Text
   created_at       DateTime @default(now())
@@ -62,6 +65,10 @@ model Article {
   content_markdown String?   @db.Text
   content_html     String?   @db.Text
   status           String    @default("DRAFT")
+  job_id           String?
+  generator_draft  String?   @db.Text
+  error_message    String?   @db.Text
+  citations        String?   @db.Text
   created_at       DateTime  @default(now())
 
   user    User    @relation(fields: [user_id], references: [id], onDelete: Cascade)
@@ -69,6 +76,7 @@ model Article {
 
   @@map("articles")
 }
+
 
 model ApiKey {
   id                 String   @id @default(uuid())
@@ -106,3 +114,13 @@ model PaymentHistory {
 
   @@map("payment_history")
 }
+
+model CardImage {
+  id         String   @id // e.g. "card_xxxx"
+  data       Bytes    @db.ByteA
+  mime_type  String   @default("image/png")
+  created_at DateTime @default(now())
+
+  @@map("card_images")
+}
+

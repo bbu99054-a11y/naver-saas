@@ -14,6 +14,7 @@ import {
 import { CopyToNaverBtn } from '@/components/CopyToNaverBtn'
 import { MultiPublishBtn } from '@/components/MultiPublishBtn'
 import { checkKeywordDuplicate } from '@/actions/articles'
+import { preUploadCardImages } from '@/lib/cardImageUploader'
 
 // Mock useToast fallback
 const useToast = () => {
@@ -34,6 +35,8 @@ export default function WritePage() {
   const [postTitle, setPostTitle] = useState('')
   const [viewMode, setViewMode] = useState<'pc' | 'mobile'>('pc')
   const [isTitleCopied, setIsTitleCopied] = useState(false)
+  const [readyHtml, setReadyHtml] = useState('')
+  const [isImagesReady, setIsImagesReady] = useState(false)
   const { toast } = useToast()
 
   const { completion, complete, isLoading, error } = useCompletion({
@@ -132,6 +135,31 @@ export default function WritePage() {
     const readTimeMin = Math.max(1, Math.ceil(charsNoSpaces / 500));
     return { charsWithSpaces, charsNoSpaces, readTimeMin };
   }, [parsedHtml]);
+
+  // 원고 스트리밍 완료 시 백그라운드 사전 업로드 (0.01초 무손실 복사 준비)
+  useEffect(() => {
+    let isMounted = true;
+    if (!isLoading && parsedHtml && parsedHtml.length > 50) {
+      setIsImagesReady(false);
+      preUploadCardImages(parsedHtml).then(({ updatedHtml }) => {
+        if (isMounted) {
+          setReadyHtml(updatedHtml);
+          setIsImagesReady(true);
+        }
+      });
+    }
+    return () => {
+      isMounted = false;
+    };
+  }, [isLoading, parsedHtml]);
+
+  const ensurePreUploadReady = async (): Promise<string> => {
+    if (readyHtml) return readyHtml;
+    const { updatedHtml } = await preUploadCardImages(parsedHtml);
+    setReadyHtml(updatedHtml);
+    setIsImagesReady(true);
+    return updatedHtml;
+  };
 
   const handleGenerate = async () => {
     if (!keyword.trim()) {
@@ -388,9 +416,15 @@ export default function WritePage() {
         
         {/* 하단 고정 액션 버튼 툴바 (초슬림 & 컴팩트) */}
         <div className="p-2 bg-white border-t border-slate-200 shadow-2xs z-10 flex gap-2 items-stretch">
-          <CopyToNaverBtn content={parsedHtml} className="flex-[1.3] h-8.5 shadow-2xs font-bold text-xs" />
-          <MultiPublishBtn title={postTitle} content={parsedHtml} className="flex-1" buttonClassName="h-8.5 text-xs font-bold" />
+          <CopyToNaverBtn 
+            content={readyHtml || parsedHtml} 
+            isImagesReady={isImagesReady}
+            onEnsureReady={ensurePreUploadReady}
+            className="flex-[1.3] h-8.5 shadow-2xs font-bold text-xs" 
+          />
+          <MultiPublishBtn title={postTitle} content={readyHtml || parsedHtml} className="flex-1" buttonClassName="h-8.5 text-xs font-bold" />
         </div>
+
       </Card>
 
     </div>
