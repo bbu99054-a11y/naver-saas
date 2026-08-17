@@ -147,31 +147,16 @@ export async function POST(req: Request) {
       })
     }
 
-    // 3. 플랜별 1일 생성 쿼터 검사 (Free: 3회, Pro: 30회, Agency: 100회)
-    const todayStart = new Date()
-    todayStart.setHours(0, 0, 0, 0)
-
-    const todayArticleCount = await prisma.article.count({
-      where: {
-        user_id: user.id,
-        created_at: {
-          gte: todayStart
-        }
-      }
-    })
-
     const userPlan = dbUser.plan_type || 'free'
-    const dailyLimit = userPlan === 'pro' ? 30 : userPlan === 'agency' ? 100 : 3
-
-    if (todayArticleCount >= dailyLimit) {
+    
+    // 크레딧이 0개인 경우 즉시 결제 모달 유도
+    if (dbUser.credits <= 0) {
       releaseConcurrentLock(user.id)
       return NextResponse.json({
-        error: 'DAILY_LIMIT_EXCEEDED',
-        message: `오늘 일일 생성 한도(${dailyLimit}회)를 모두 소모하셨습니다. 매일 자정에 초기화되며, Pro 요금제로 업그레이드하시면 하루 30회까지 고품질 블로그 작성이 가능합니다.`,
-        dailyLimit,
-        todayCount: todayArticleCount,
+        error: 'INSUFFICIENT_CREDITS',
+        message: '무료 체험 크레딧이 모두 소진되었습니다. 요금제를 업그레이드해 주세요.',
         plan: userPlan
-      }, { status: 429 })
+      }, { status: 403 })
     }
 
     const [profile, pastArticles] = await Promise.all([

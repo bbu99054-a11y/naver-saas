@@ -34,6 +34,8 @@ export async function saveProfile(data: {
           id: user.id,
           email: email,
           name: name,
+          credits: 3,
+          plan_type: 'free',
         }
       })
     }

@@ -52,8 +52,8 @@ export default function WritePage() {
     streamProtocol: 'text',
     onError: (err) => {
       const errMsg = err.message || ''
-      if (errMsg.includes('DAILY_LIMIT_EXCEEDED') || errMsg.includes('일일 생성 한도')) {
-        setQuotaMessage('오늘 일일 무료 생성 한도(3회)를 모두 소모하셨습니다.')
+      if (errMsg.includes('DAILY_LIMIT_EXCEEDED') || errMsg.includes('일일 생성 한도') || errMsg.includes('크레딧이 부족') || errMsg.includes('INSUFFICIENT_CREDITS')) {
+        setQuotaMessage('무료 체험 크레딧(3회)을 모두 소진하셨습니다.')
         setShowQuotaModal(true)
         return
       }
@@ -513,7 +513,7 @@ export default function WritePage() {
 
       </Card>
 
-      {/* 🚀 [신규] 1일 한도 초과 시 Pro 요금제 업그레이드 유도 모달 팝업 */}
+      {/* 🚀 [신규] 무료 체험 소진 시 Pro 요금제 업그레이드 유도 모달 팝업 */}
       {showQuotaModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4 animate-in fade-in duration-200">
           <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-100 text-center space-y-5 relative animate-in zoom-in-95 duration-200">
@@ -523,23 +523,24 @@ export default function WritePage() {
 
             <div className="space-y-1.5">
               <h3 className="text-lg font-extrabold text-slate-900">
-                오늘의 무료 생성 한도를 모두 소모하셨습니다 💡
+                무료 체험 3회를 모두 사용하셨습니다 💡
               </h3>
               <p className="text-xs text-slate-600 leading-relaxed">
-                무료 체험 플랜은 1일 최대 3회까지 생성이 가능하며, <br />
-                <strong>매일 자정(00:00)에 3회가 자동으로 재충전</strong>됩니다.
+                가입 시 제공된 <strong>3회 무료 체험 크레딧이 모두 소진</strong>되었습니다. <br />
+                계속해서 1위 노출 전문 블로그를 작성하시려면 요금제를 업그레이드해 주세요.
               </p>
             </div>
 
             <div className="bg-indigo-50/70 border border-indigo-100/80 rounded-xl p-4 text-left space-y-2 text-xs">
-              <p className="font-bold text-indigo-950 flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-indigo-600" /> Pro 요금제 업그레이드 시 혜택:
+              <p className="font-bold text-indigo-950 flex items-center justify-between">
+                <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-indigo-600" /> Pro 요금제 업그레이드 혜택:</span>
+                <span className="text-[10px] bg-indigo-600 text-white px-2 py-0.5 rounded-full font-extrabold">50% 평생 특가</span>
               </p>
               <ul className="space-y-1.5 text-slate-700 font-medium pl-3.5 list-disc">
-                <li><strong>하루 30회</strong> 넉넉한 고품질 포스팅 무제한 발행</li>
-                <li><strong>1080px 고화질 카드 인포그래픽</strong> 자동 생성</li>
+                <li><strong>월 30건 (주 3~5회)</strong> 넉넉한 정기 포스팅 발행</li>
+                <li><strong>1080px 고화질 실사 인포그래픽 카드</strong> 자동 생성</li>
                 <li>전문직 맞춤 <strong>RAG 지식베이스 & 4대 톤앤매너</strong> 최적화</li>
-                <li>워드프레스·티스토리 <strong>원클릭 멀티 발행</strong> 지원</li>
+                <li>워드프레스 · 티스토리 <strong>원클릭 동시 발행</strong> 지원</li>
               </ul>
             </div>
 
@@ -555,7 +556,7 @@ export default function WritePage() {
                 onClick={() => setShowQuotaModal(false)}
                 className="w-full text-xs text-slate-500 hover:text-slate-800 h-8 font-medium cursor-pointer"
               >
-                내일 다시 이용하기 (닫기)
+                다음에 하기 (닫기)
               </Button>
             </div>
           </div>
