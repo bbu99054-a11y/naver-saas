@@ -1,25 +1,69 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
-import { Sparkles, TrendingUp, Loader2, RefreshCw, Calendar, MapPin, Gem, Layers } from 'lucide-react'
+import { Sparkles, TrendingUp, Loader2, RefreshCw, Calendar, MapPin, Gem, Layers, Clock, CheckCircle2 } from 'lucide-react'
 import { getCurationClusters, RecommendedKeyword } from '@/actions/curation'
 import { CurationLinkBtn } from './CurationLinkBtn'
 import { Button } from '@/components/ui/button'
 
 type CategoryFilter = 'ALL' | 'SEASON' | 'LOCAL' | 'HIGH_VALUE'
 
+interface CurationCache {
+  clusters: RecommendedKeyword[]
+  timestamp: number
+  pillarKeyword: string
+}
+
+const CACHE_TTL_MS = 24 * 60 * 60 * 1000 // 24시간
+
 export function DashboardCuration({ profile }: { profile: any }) {
   const [clusters, setClusters] = useState<RecommendedKeyword[] | null>(null)
+  const [lastUpdated, setLastUpdated] = useState<number | null>(null)
+  const [isCacheLoaded, setIsCacheLoaded] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState<CategoryFilter>('ALL')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
+  const cacheKey = `postsynk_curation_cache_${profile?.id || profile?.user_id || 'default'}`
 
   // 프로필 주소와 업종 기반 필러 키워드
   const address = profile?.address || ''
   const industry = profile?.industry || '전문직'
   const localRegion = address ? address.split(' ').slice(1, 3).join(' ') : ''
   const pillarKeyword = `${localRegion} ${industry}`.trim() || '전문직 블로그 마케팅'
+
+  // 1. 대시보드 마운트 시 24시간 유효 캐시 즉시 복원 (0.01초 렌더링)
+  useEffect(() => {
+    try {
+      const cachedRaw = localStorage.getItem(cacheKey)
+      if (cachedRaw) {
+        const cached: CurationCache = JSON.parse(cachedRaw)
+        if (cached.clusters && Array.isArray(cached.clusters) && cached.clusters.length > 0) {
+          setClusters(cached.clusters)
+          setLastUpdated(cached.timestamp)
+        }
+      }
+    } catch (e) {
+      console.warn('[Curation Cache] 캐시 로드 실패:', e)
+    } finally {
+      setIsCacheLoaded(true)
+    }
+  }, [cacheKey])
+
+  const saveCache = (newClusters: RecommendedKeyword[]) => {
+    try {
+      const cacheData: CurationCache = {
+        clusters: newClusters,
+        timestamp: Date.now(),
+        pillarKeyword
+      }
+      localStorage.setItem(cacheKey, JSON.stringify(cacheData))
+      setLastUpdated(cacheData.timestamp)
+    } catch (e) {
+      console.warn('[Curation Cache] 캐시 저장 실패:', e)
+    }
+  }
 
   const handleGenerate = async () => {
     setIsLoading(true)
@@ -34,13 +78,32 @@ export function DashboardCuration({ profile }: { profile: any }) {
       if (result.error) {
         setError(result.error)
       } else {
-        setClusters(result.clusters.slice(0, 10))
+        const top10 = result.clusters.slice(0, 10)
+        setClusters(top10)
+        saveCache(top10)
       }
     } catch (err: any) {
       setError(err.message || '알 수 없는 오류가 발생했습니다.')
     } finally {
       setIsLoading(false)
     }
+  }
+
+  // 24시간 경과 여부 계산
+  const isCacheExpired = lastUpdated ? Date.now() - lastUpdated > CACHE_TTL_MS : false
+
+  const formatTimeAgo = (ts: number | null) => {
+    if (!ts) return ''
+    const diffMs = Date.now() - ts
+    const diffMin = Math.floor(diffMs / (1000 * 60))
+    const diffHours = Math.floor(diffMin / 60)
+    
+    if (diffMin < 1) return '방금 전'
+    if (diffMin < 60) return `${diffMin}분 전`
+    if (diffHours < 24) return `${diffHours}시간 전`
+    
+    const date = new Date(ts)
+    return `${date.getMonth() + 1}월 ${date.getDate()}일`
   }
 
   // 카테고리 필터링
@@ -124,16 +187,28 @@ export function DashboardCuration({ profile }: { profile: any }) {
           </div>
           
           {clusters && (
-            <Button
-              onClick={handleGenerate}
-              disabled={isLoading}
-              variant="outline"
-              size="sm"
-              className="bg-white hover:bg-indigo-50 text-indigo-700 border-indigo-200 self-start sm:self-auto shrink-0 shadow-sm"
-            >
-              <RefreshCw className={`w-4 h-4 mr-1.5 ${isLoading ? 'animate-spin' : ''}`} />
-              트렌드 새로고침
-            </Button>
+            <div className="flex items-center gap-2 self-start sm:self-auto shrink-0">
+              {lastUpdated && (
+                <span className={`inline-flex items-center gap-1 text-[11px] px-2.5 py-1 rounded-full border ${
+                  isCacheExpired 
+                    ? 'bg-amber-50 text-amber-700 border-amber-200' 
+                    : 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                }`}>
+                  <Clock className="w-3 h-3" />
+                  {isCacheExpired ? '24시간 경과됨' : `${formatTimeAgo(lastUpdated)} 분석 (24h 캐시)`}
+                </span>
+              )}
+              <Button
+                onClick={handleGenerate}
+                disabled={isLoading}
+                variant="outline"
+                size="sm"
+                className="bg-white hover:bg-indigo-50 text-indigo-700 border-indigo-200 shadow-sm"
+              >
+                <RefreshCw className={`w-3.5 h-3.5 mr-1.5 ${isLoading ? 'animate-spin' : ''}`} />
+                {isLoading ? '분석 중...' : '트렌드 새로고침'}
+              </Button>
+            </div>
           )}
         </div>
 
