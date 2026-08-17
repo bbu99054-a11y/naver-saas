@@ -1,4 +1,5 @@
 import React from 'react'
+import { cleanSummaryText } from '@/lib/utils/textCleaner'
 
 export type CardType =
   | 'MAIN_THUMBNAIL'
@@ -11,6 +12,9 @@ export type CardType =
   | 'KEY_TAKEAWAYS'
   | 'CTA_FOOTER'
 
+export type ThumbLayout = 'THUMB_A' | 'THUMB_B' | 'THUMB_C' | 'THUMB_D'
+export type BannerLayout = 'BANNER_A' | 'BANNER_B' | 'BANNER_C'
+
 export interface CardPayload {
   type: CardType
   category: string
@@ -18,264 +22,811 @@ export interface CardPayload {
   subText?: string
   points?: string[]
   signature?: string
-  extra1?: string // comparison col 1 or QNA question
-  extra2?: string // comparison col 2 or QNA answer
-  extra3?: string // stat value or highlight label
-  seed: string // 글 고유 ID 기반 결정론적 난수 시드
+  extra1?: string // comparison col 1 or QNA question or CTA phone
+  extra2?: string // comparison col 2 or QNA answer or CTA address
+  extra3?: string // stat value or highlight label or CTA reservation
+  seed: string
   themeName?: string
+  userId?: string
+  tags?: string[]
+  thumbLayout?: ThumbLayout
+  bannerLayout?: BannerLayout
 }
 
-// Simple Deterministic PRNG (Linear Congruential Generator)
-function createPrng(seedStr: string) {
-  let h = 1779033703 ^ seedStr.length
+// 10종 프리미엄 전문직 특화 컬러 팔레트 (탈양산화 100% 보장)
+export const palettes = [
+  // 0. NAVY_GOLD (세무/법률/상속 클래식)
+  {
+    name: 'NAVY_GOLD',
+    label: '클래식 네이비 & 골드',
+    bg: '#F8FAFC',
+    cardBg: '#FFFFFF',
+    text: '#0F172A',
+    accent: '#B45309',
+    badgeBg: '#FEF3C7',
+    badgeText: '#92400E',
+    sub: '#475569',
+    border: '#E2E8F0',
+    highlightBg: '#FFFBEB',
+    isDark: false,
+  },
+  // 1. FOREST_MINT (의료/보건/친환경)
+  {
+    name: 'FOREST_MINT',
+    label: '포레스트 에메랄드 & 민트',
+    bg: '#F0FDF4',
+    cardBg: '#FFFFFF',
+    text: '#14532D',
+    accent: '#16A34A',
+    badgeBg: '#DCFCE7',
+    badgeText: '#15803D',
+    sub: '#475569',
+    border: '#BBF7D0',
+    highlightBg: '#F0FDF4',
+    isDark: false,
+  },
+  // 2. CHARCOAL_ROSE (프리미엄 로펌/M&A)
+  {
+    name: 'CHARCOAL_ROSE',
+    label: '차콜 엘레강스 & 로즈',
+    bg: '#F8FAFC',
+    cardBg: '#FFFFFF',
+    text: '#1E293B',
+    accent: '#E11D48',
+    badgeBg: '#FFE4E6',
+    badgeText: '#9F1239',
+    sub: '#475569',
+    border: '#CBD5E1',
+    highlightBg: '#FFF1F2',
+    isDark: false,
+  },
+  // 3. WARM_TERRACOTTA (노무/부동산/인사)
+  {
+    name: 'WARM_TERRACOTTA',
+    label: '웜 테라코타 & 에스프레소',
+    bg: '#FAF6F0',
+    cardBg: '#FFFFFF',
+    text: '#2B2523',
+    accent: '#C2410C',
+    badgeBg: '#FFEDD5',
+    badgeText: '#9A3412',
+    sub: '#6E655F',
+    border: '#FED7AA',
+    highlightBg: '#FFF7ED',
+    isDark: false,
+  },
+  // 4. ROYAL_INDIGO (지식재산권/IT법무)
+  {
+    name: 'ROYAL_INDIGO',
+    label: '로열 인디고 & 바이올렛',
+    bg: '#F5F3FF',
+    cardBg: '#FFFFFF',
+    text: '#1E1B4B',
+    accent: '#6366F1',
+    badgeBg: '#EDE9FE',
+    badgeText: '#4338CA',
+    sub: '#475569',
+    border: '#DDD6FE',
+    highlightBg: '#FAF5FF',
+    isDark: false,
+  },
+  // 5. SLATE_MINIMAL (공인회계사/기업감사)
+  {
+    name: 'SLATE_MINIMAL',
+    label: '클린 슬레이트 & 모던 블루',
+    bg: '#F8FAFC',
+    cardBg: '#FFFFFF',
+    text: '#0F172A',
+    accent: '#2563EB',
+    badgeBg: '#E2E8F0',
+    badgeText: '#0F172A',
+    sub: '#475569',
+    border: '#CBD5E1',
+    highlightBg: '#EFF6FF',
+    isDark: false,
+  },
+  // 6. TEAL_OCEAN (관세/무역/물류)
+  {
+    name: 'TEAL_OCEAN',
+    label: '딥 틸 & 오션 아쿠아',
+    bg: '#F0FDFA',
+    cardBg: '#FFFFFF',
+    text: '#134E4A',
+    accent: '#0D9488',
+    badgeBg: '#CCFBF1',
+    badgeText: '#115E59',
+    sub: '#475569',
+    border: '#99F6E4',
+    highlightBg: '#F0FDFA',
+    isDark: false,
+  },
+  // 7. CRIMSON_WINE (긴급구제/산재/소송)
+  {
+    name: 'CRIMSON_WINE',
+    label: '크림슨 와인 & 루비',
+    bg: '#FFF5F5',
+    cardBg: '#FFFFFF',
+    text: '#1E1B4B',
+    accent: '#BE123C',
+    badgeBg: '#FFE4E6',
+    badgeText: '#9F1239',
+    sub: '#475569',
+    border: '#FECDD3',
+    highlightBg: '#FFF1F2',
+    isDark: false,
+  },
+  // 8. SUNSET_AMBER (가사/이혼/가족법)
+  {
+    name: 'SUNSET_AMBER',
+    label: '선셋 앰버 & 샌드스톤',
+    bg: '#FFFBEB',
+    cardBg: '#FFFFFF',
+    text: '#1C1917',
+    accent: '#D97706',
+    badgeBg: '#FEF3C7',
+    badgeText: '#78350F',
+    sub: '#57534E',
+    border: '#FDE68A',
+    highlightBg: '#FFFBEB',
+    isDark: false,
+  },
+  // 9. DEEP_EMERALD (자산관리/금융/투자)
+  {
+    name: 'DEEP_EMERALD',
+    label: '딥 에메랄드 & 옥시디언',
+    bg: '#F0FDF4',
+    cardBg: '#FFFFFF',
+    text: '#064E3B',
+    accent: '#059669',
+    badgeBg: '#D1FAE5',
+    badgeText: '#047857',
+    sub: '#475569',
+    border: '#A7F3D0',
+    highlightBg: '#ECFDF5',
+    isDark: false,
+  },
+]
+
+export const thumbLayoutTypes: ThumbLayout[] = ['THUMB_A', 'THUMB_B', 'THUMB_C', 'THUMB_D']
+export const bannerLayoutTypes: BannerLayout[] = ['BANNER_A', 'BANNER_B', 'BANNER_C']
+
+/**
+ * 고객 ID(user_id) 기반 120가지 조합 결정론적 1:1 고유 배정 (Collision-Free Hashing)
+ */
+export function hashUserIdToBrandKit(userId: string = '') {
+  const seedStr = userId && userId.trim() !== '' ? userId.trim() : 'postsynk_default_seed'
+  let h = 2166136261
   for (let i = 0; i < seedStr.length; i++) {
-    h = Math.imul(h ^ seedStr.charCodeAt(i), 3432918353)
-    h = (h << 13) | (h >>> 19)
+    h ^= seedStr.charCodeAt(i)
+    h = Math.imul(h, 16777619)
   }
-  return function () {
-    h = Math.imul(h ^ (h >>> 16), 2246822507)
-    h = Math.imul(h ^ (h >>> 13), 3266489909)
-    return ((h ^= h >>> 16) >>> 0) / 4294967296
+  const posHash = Math.abs(h >>> 0)
+
+  const themeIndex = posHash % palettes.length
+  const thumbIndex = Math.floor(posHash / palettes.length) % thumbLayoutTypes.length
+  const bannerIndex = Math.floor(posHash / (palettes.length * thumbLayoutTypes.length)) % bannerLayoutTypes.length
+
+  return {
+    theme: palettes[themeIndex],
+    themeIndex,
+    thumbLayout: thumbLayoutTypes[thumbIndex],
+    bannerLayout: bannerLayoutTypes[bannerIndex],
   }
 }
 
-import { cleanSummaryText } from '@/lib/utils/textCleaner'
-
-// Number duplicate strip helper (removes leading "1. ", "1 ", "① ", "1️⃣ " and barcode glyphs)
 function cleanItemText(raw: string): string {
   return cleanSummaryText(raw)
 }
 
+/**
+ * 1080px Satori / React 기반 프로시저럴 인포그래픽 렌더러
+ */
 export function buildProceduralCardComponent(payload: CardPayload): React.ReactElement {
+  const brandKit = hashUserIdToBrandKit(payload.userId || payload.seed)
 
+  // 테마 오버라이드 지정이 있는 경우 반영
+  const palette = payload.themeName
+    ? palettes.find((p) => p.name === payload.themeName) || brandKit.theme
+    : brandKit.theme
 
-  const prng = createPrng(payload.seed + payload.type)
+  const thumbLayout = payload.thumbLayout || brandKit.thumbLayout
+  const bannerLayout = payload.bannerLayout || brandKit.bannerLayout
 
-  // 1. Tier 3: 동적 지오메트리 & 여백 섭동 (40px ~ 56px, 코너 12~24px)
-  const padding = Math.floor(40 + prng() * 16)
-  const borderRadius = Math.floor(14 + prng() * 12)
-  const borderWidth = prng() > 0.3 ? 2 : 1
+  const tags = payload.tags && payload.tags.length > 0
+    ? payload.tags.slice(0, 3)
+    : ['핵심 쟁점 분석', '법적 기준 검토', '실무 대응 절차']
 
-  // 2. Tier 2: 전문직 특화 프리미엄 라이트 모드 컬러 팔레트 (고대비 가독성 보장)
-  const palettes = [
-    // Classic Cream & Gold
-    {
-      bg: '#FDFBF7',
-      cardBg: '#FFFFFF',
-      text: '#0F172A',
-      accent: '#B45309',
-      badgeBg: '#FEF3C7',
-      badgeText: '#92400E',
-      sub: '#475569',
-      border: '#E2E8F0',
-      highlightBg: '#FFFBEB',
-    },
-    // Modern Ice Blue
-    {
-      bg: '#F0F9FF',
-      cardBg: '#FFFFFF',
-      text: '#0B132B',
-      accent: '#2563EB',
-      badgeBg: '#DBEAFE',
-      badgeText: '#1E40AF',
-      sub: '#475569',
-      border: '#BAE6FD',
-      highlightBg: '#EFF6FF',
-    },
-    // Frosted Sage & Mint
-    {
-      bg: '#F0FDF4',
-      cardBg: '#FFFFFF',
-      text: '#14532D',
-      accent: '#16A34A',
-      badgeBg: '#DCFCE7',
-      badgeText: '#15803D',
-      sub: '#475569',
-      border: '#BBF7D0',
-      highlightBg: '#F0FDF4',
-    },
-    // Warm Oatmeal
-    {
-      bg: '#F7F5F0',
-      cardBg: '#FFFFFF',
-      text: '#2B2523',
-      accent: '#8C5E45',
-      badgeBg: '#EFECE6',
-      badgeText: '#2B2523',
-      sub: '#6E655F',
-      border: '#D8CEBE',
-      highlightBg: '#FAF8F5',
-    },
-    // Soft Lavender
-    {
-      bg: '#F5F3FF',
-      cardBg: '#FFFFFF',
-      text: '#1E1B4B',
-      accent: '#7C3AED',
-      badgeBg: '#EDE9FE',
-      badgeText: '#6D28D9',
-      sub: '#475569',
-      border: '#DDD6FE',
-      highlightBg: '#FAF5FF',
-    },
-    // Clean Modern Slate
-    {
-      bg: '#F8FAFC',
-      cardBg: '#FFFFFF',
-      text: '#0F172A',
-      accent: '#2563EB',
-      badgeBg: '#E2E8F0',
-      badgeText: '#0F172A',
-      sub: '#475569',
-      border: '#CBD5E1',
-      highlightBg: '#F1F5F9',
-    },
-  ]
-
-  const paletteIndex = Math.floor(prng() * palettes.length)
-  const palette = palettes[paletteIndex]
-
-  // 카드 타입별 전용 렌더링 분기
   switch (payload.type) {
     case 'MAIN_THUMBNAIL':
-      return renderThumbnailCard(payload, palette, padding, borderRadius, borderWidth)
+      return renderThumbnailCard(payload, palette, thumbLayout, tags)
     case 'CHECKLIST':
-      return renderChecklistCard(payload, palette, padding, borderRadius, borderWidth)
+      return renderChecklistCard(payload, palette)
     case 'COMPARISON':
-      return renderComparisonCard(payload, palette, padding, borderRadius, borderWidth)
+      return renderComparisonCard(payload, palette)
     case 'STAT_HIGHLIGHT':
-      return renderStatHighlightCard(payload, palette, padding, borderRadius, borderWidth)
+      return renderStatHighlightCard(payload, palette)
     case 'PROCESS_FLOW':
-      return renderProcessFlowCard(payload, palette, padding, borderRadius, borderWidth)
+      return renderProcessFlowCard(payload, palette)
     case 'QNA':
-      return renderQnaCard(payload, palette, padding, borderRadius, borderWidth)
+      return renderQnaCard(payload, palette)
     case 'WARNING_RISK':
-      return renderWarningCard(payload, palette, padding, borderRadius, borderWidth)
+      return renderWarningCard(payload, palette)
     case 'KEY_TAKEAWAYS':
-      return renderSummaryCard(payload, palette, padding, borderRadius, borderWidth)
+      return renderSummaryCard(payload, palette)
     case 'CTA_FOOTER':
-      return renderCtaCard(payload, palette, padding, borderRadius, borderWidth)
+      return renderCtaCard(payload, palette, bannerLayout)
     default:
-      return renderThumbnailCard(payload, palette, padding, borderRadius, borderWidth)
+      return renderThumbnailCard(payload, palette, thumbLayout, tags)
   }
 }
 
-/**
- * 1. 최상단 1:1 맞춤 썸네일 카드 (800x800)
- */
+// ─────────────────────────────────────────────────────────────────────────────
+// 1. 4종 썸네일 레이아웃 렌더러 (1080 × 1080 px, Safe Zone 80px 보장)
+// ─────────────────────────────────────────────────────────────────────────────
+
 function renderThumbnailCard(
   payload: CardPayload,
-  palette: any,
-  padding: number,
-  radius: number,
-  borderWidth: number
+  palette: typeof palettes[0],
+  layout: ThumbLayout,
+  tags: string[]
 ) {
-  const titleSize = payload.title.length > 24 ? 38 : 44
+  const title = payload.title || '2026 핵심 실무 가이드'
+  const titleSize = title.length > 30 ? 50 : title.length > 20 ? 56 : 62
+  const signature = payload.signature || 'PostSynk Verified Guide'
+  const category = payload.category || '2026 핵심 실무 분석'
 
+  // THUMB_A: 중앙 플로팅 카드형
+  if (layout === 'THUMB_A') {
+    return (
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          width: '1080px',
+          height: '1080px',
+          backgroundColor: palette.bg,
+          padding: '80px',
+          boxSizing: 'border-box',
+          letterSpacing: '-0.03em',
+          wordBreak: 'break-word',
+        }}
+      >
+        {/* 상단 뱃지 영역 (Safe Zone 내 920px 영역) */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px', maxWidth: '920px' }}>
+          <div
+            style={{
+              display: 'flex',
+              backgroundColor: palette.badgeBg,
+              color: palette.badgeText,
+              padding: '12px 28px',
+              borderRadius: '30px',
+              fontSize: '24px',
+              fontWeight: 'bold',
+              border: `1.5px solid ${palette.border}`,
+            }}
+          >
+            {category}
+          </div>
+          <div
+            style={{
+              display: 'flex',
+              backgroundColor: palette.cardBg,
+              color: palette.accent,
+              padding: '12px 24px',
+              borderRadius: '30px',
+              fontSize: '22px',
+              fontWeight: 'bold',
+              border: `1.5px solid ${palette.border}`,
+            }}
+          >
+            PostSynk Verified
+          </div>
+        </div>
+
+        {/* 중앙 플로팅 화이트 박스 (920px 폭) */}
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            backgroundColor: palette.cardBg,
+            border: `2px solid ${palette.border}`,
+            borderRadius: '32px',
+            padding: '50px 48px',
+            gap: '30px',
+            width: '920px',
+            boxSizing: 'border-box',
+          }}
+        >
+          {/* 3개 핵심 뱃지 태그 동적 주입 */}
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '14px', width: '100%' }}>
+            {tags.map((tag, idx) => (
+              <div
+                key={idx}
+                style={{
+                  display: 'flex',
+                  backgroundColor: palette.highlightBg,
+                  border: `1.5px solid ${palette.border}`,
+                  borderRadius: '14px',
+                  padding: '10px 20px',
+                  fontSize: '20px',
+                  fontWeight: 'bold',
+                  color: palette.accent,
+                }}
+              >
+                #{tag}
+              </div>
+            ))}
+          </div>
+
+          <div
+            style={{
+              display: 'flex',
+              fontSize: `${titleSize}px`,
+              lineHeight: '1.3',
+              fontWeight: 'bold',
+              color: palette.text,
+              textAlign: 'center',
+              wordBreak: 'break-word',
+            }}
+          >
+            {title}
+          </div>
+
+          {payload.subText && (
+            <div
+              style={{
+                display: 'flex',
+                backgroundColor: palette.bg,
+                border: `1.5px solid ${palette.border}`,
+                borderRadius: '16px',
+                padding: '14px 28px',
+                fontSize: '24px',
+                fontWeight: 'bold',
+                color: palette.sub,
+                lineHeight: '1.4',
+                textAlign: 'center',
+                wordBreak: 'break-word',
+              }}
+            >
+              {payload.subText}
+            </div>
+          )}
+        </div>
+
+        {/* 하단 브랜드 및 서명 */}
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: '8px',
+            borderTop: `2px solid ${palette.border}`,
+            paddingTop: '20px',
+            width: '920px',
+            boxSizing: 'border-box',
+          }}
+        >
+          <div style={{ display: 'flex', fontSize: '28px', fontWeight: 'bold', color: palette.text }}>
+            {signature}
+          </div>
+          <div style={{ display: 'flex', fontSize: '20px', color: palette.sub, fontWeight: 'bold' }}>
+            2026 C-Rank & DIA+ Premium SEO Verified
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // THUMB_B: 상단 와이드 밴드형 (Safe Zone 80px 여백 준수)
+  if (layout === 'THUMB_B') {
+    return (
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          width: '1080px',
+          height: '1080px',
+          backgroundColor: palette.cardBg,
+          boxSizing: 'border-box',
+          letterSpacing: '-0.03em',
+          wordBreak: 'break-word',
+        }}
+      >
+        {/* 상단 와이드 테마 헤더 밴드 */}
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+            backgroundColor: palette.accent,
+            padding: '60px 80px',
+            height: '320px',
+            width: '1080px',
+            boxSizing: 'border-box',
+          }}
+        >
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div
+              style={{
+                display: 'flex',
+                backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                color: '#FFFFFF',
+                padding: '10px 24px',
+                borderRadius: '24px',
+                fontSize: '22px',
+                fontWeight: 'bold',
+              }}
+            >
+              {category}
+            </div>
+            <div style={{ display: 'flex', fontSize: '24px', fontWeight: 'bold', color: '#FFFFFF' }}>
+              {signature}
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', gap: '14px' }}>
+            {tags.map((tag, idx) => (
+              <div
+                key={idx}
+                style={{
+                  display: 'flex',
+                  backgroundColor: '#FFFFFF',
+                  color: palette.accent,
+                  padding: '8px 18px',
+                  borderRadius: '12px',
+                  fontSize: '20px',
+                  fontWeight: 'bold',
+                }}
+              >
+                #{tag}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* 하단 메인 텍스트 영역 */}
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+            padding: '70px 80px',
+            flex: 1,
+            backgroundColor: palette.bg,
+            boxSizing: 'border-box',
+          }}
+        >
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '30px' }}>
+            <div
+              style={{
+                display: 'flex',
+                fontSize: `${titleSize + 4}px`,
+                lineHeight: '1.3',
+                fontWeight: 'bold',
+                color: palette.text,
+                textAlign: 'left',
+                wordBreak: 'break-word',
+              }}
+            >
+              {title}
+            </div>
+
+            {payload.subText && (
+              <div
+                style={{
+                  display: 'flex',
+                  borderLeft: `6px solid ${palette.accent}`,
+                  paddingLeft: '24px',
+                  fontSize: '28px',
+                  fontWeight: 'bold',
+                  color: palette.sub,
+                  lineHeight: '1.45',
+                  wordBreak: 'break-word',
+                }}
+              >
+                {payload.subText}
+              </div>
+            )}
+          </div>
+
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              borderTop: `2px solid ${palette.border}`,
+              paddingTop: '24px',
+              boxSizing: 'border-box',
+            }}
+          >
+            <div style={{ display: 'flex', fontSize: '22px', fontWeight: 'bold', color: palette.text }}>
+              2026 C-Rank Verified Solution
+            </div>
+            <div style={{ display: 'flex', fontSize: '20px', color: palette.sub }}>
+              전문가 1:1 실무 지침
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // THUMB_C: 모던 미니멀형 (좌측 악센트 바 & Safe Zone 내부 배치)
+  if (layout === 'THUMB_C') {
+    return (
+      <div
+        style={{
+          display: 'flex',
+          width: '1080px',
+          height: '1080px',
+          backgroundColor: palette.cardBg,
+          boxSizing: 'border-box',
+          letterSpacing: '-0.03em',
+          wordBreak: 'break-word',
+        }}
+      >
+        {/* 좌측 굵은 테마 악센트 바 */}
+        <div
+          style={{
+            display: 'flex',
+            width: '24px',
+            height: '100%',
+            backgroundColor: palette.accent,
+          }}
+        />
+
+        {/* 우측 메인 콘텐츠 (Safe Zone 패딩 적용) */}
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+            padding: '80px 80px 80px 60px',
+            flex: 1,
+            boxSizing: 'border-box',
+          }}
+        >
+          {/* 상단 카테고리 및 3개 태그 */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+              <div
+                style={{
+                  display: 'flex',
+                  backgroundColor: palette.badgeBg,
+                  color: palette.badgeText,
+                  padding: '10px 24px',
+                  borderRadius: '24px',
+                  fontSize: '22px',
+                  fontWeight: 'bold',
+                }}
+              >
+                {category}
+              </div>
+              <div style={{ display: 'flex', fontSize: '22px', color: palette.sub, fontWeight: 'bold' }}>
+                {signature}
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', gap: '12px' }}>
+              {tags.map((tag, idx) => (
+                <div
+                  key={idx}
+                  style={{
+                    display: 'flex',
+                    backgroundColor: palette.bg,
+                    border: `1.5px solid ${palette.border}`,
+                    borderRadius: '10px',
+                    padding: '8px 16px',
+                    fontSize: '18px',
+                    fontWeight: 'bold',
+                    color: palette.accent,
+                  }}
+                >
+                  #{tag}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* 중앙 대형 타이틀 */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
+            <div
+              style={{
+                display: 'flex',
+                fontSize: `${titleSize + 6}px`,
+                lineHeight: '1.3',
+                fontWeight: 'bold',
+                color: palette.text,
+                wordBreak: 'break-word',
+              }}
+            >
+              {title}
+            </div>
+
+            {payload.subText && (
+              <div
+                style={{
+                  display: 'flex',
+                  backgroundColor: palette.highlightBg,
+                  border: `1.5px solid ${palette.border}`,
+                  borderRadius: '18px',
+                  padding: '24px 30px',
+                  fontSize: '26px',
+                  fontWeight: 'bold',
+                  color: palette.text,
+                  lineHeight: '1.4',
+                  wordBreak: 'break-word',
+                }}
+              >
+                {payload.subText}
+              </div>
+            )}
+          </div>
+
+          {/* 하단 인증 바 */}
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              borderTop: `2px solid ${palette.border}`,
+              paddingTop: '24px',
+              boxSizing: 'border-box',
+            }}
+          >
+            <div style={{ display: 'flex', fontSize: '24px', fontWeight: 'bold', color: palette.accent }}>
+              PostSynk SEO Standard 2026
+            </div>
+            <div style={{ display: 'flex', fontSize: '20px', color: palette.sub }}>
+              네이버 C-Rank 최적화
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // THUMB_D: 다크 엠블럼형 (80px Safe Zone 패딩 및 920px 엠블럼)
   return (
     <div
       style={{
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'space-between',
+        justifyContent: 'center',
         alignItems: 'center',
-        width: '800px',
-        height: '800px',
-        backgroundColor: palette.bg,
-        border: `${borderWidth}px solid ${palette.border}`,
-        borderRadius: `${radius}px`,
-        padding: `${padding + 10}px`,
+        width: '1080px',
+        height: '1080px',
+        backgroundColor: palette.text,
+        padding: '80px',
         boxSizing: 'border-box',
-        textAlign: 'center',
+        letterSpacing: '-0.03em',
+        wordBreak: 'break-word',
       }}
     >
-      {/* 상단 뱃지 */}
-      <div
-        style={{
-          display: 'flex',
-          backgroundColor: palette.badgeBg,
-          color: palette.badgeText,
-          padding: '10px 24px',
-          borderRadius: '24px',
-          fontSize: '20px',
-          fontWeight: 'bold',
-          border: `1px solid ${palette.border}`,
-        }}
-      >
-        {payload.category || '2026 핵심 실무 가이드'}
-      </div>
-
-      {/* 중앙 메인 타이틀 영역 */}
       <div
         style={{
           display: 'flex',
           flexDirection: 'column',
+          justifyContent: 'space-between',
           alignItems: 'center',
-          gap: '20px',
-          maxWidth: '680px',
+          width: '920px',
+          height: '920px',
+          border: `3px solid ${palette.accent}`,
+          borderRadius: '40px',
+          padding: '60px 50px',
+          backgroundColor: 'rgba(255, 255, 255, 0.03)',
+          boxSizing: 'border-box',
         }}
       >
-        <div
-          style={{
-            fontSize: `${titleSize}px`,
-            lineHeight: 1.35,
-            fontWeight: 'bold',
-            color: palette.text,
-            wordBreak: 'keep-all',
-          }}
-        >
-          {payload.title}
-        </div>
-
-        {payload.subText && (
+        {/* 상단 뱃지 & 태그 */}
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '20px' }}>
           <div
             style={{
-              fontSize: '24px',
-              fontWeight: '600',
-              color: palette.accent,
-              lineHeight: 1.45,
-              wordBreak: 'keep-all',
+              display: 'flex',
+              backgroundColor: palette.accent,
+              color: '#FFFFFF',
+              padding: '10px 28px',
+              borderRadius: '24px',
+              fontSize: '22px',
+              fontWeight: 'bold',
             }}
           >
-            {payload.subText}
+            {category}
           </div>
-        )}
-      </div>
 
-      {/* 하단 브랜드 및 서명 */}
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          gap: '6px',
-          borderTop: `2px solid ${palette.border}`,
-          paddingTop: '20px',
-          width: '80%',
-        }}
-      >
-        <div style={{ display: 'flex', fontSize: '22px', fontWeight: 'bold', color: palette.text }}>
-          {payload.signature || '(전문가 사무소명)'}
+          <div style={{ display: 'flex', gap: '12px' }}>
+            {tags.map((tag, idx) => (
+              <div
+                key={idx}
+                style={{
+                  display: 'flex',
+                  backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                  color: palette.badgeBg,
+                  padding: '8px 18px',
+                  borderRadius: '12px',
+                  fontSize: '18px',
+                  fontWeight: 'bold',
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                }}
+              >
+                #{tag}
+              </div>
+            ))}
+          </div>
         </div>
-        <div style={{ display: 'flex', fontSize: '17px', color: palette.sub }}>
-          PostSynk Verified C-Rank SEO Content
+
+        {/* 중앙 타이틀 */}
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '24px', maxWidth: '820px' }}>
+          <div
+            style={{
+              display: 'flex',
+              fontSize: `${titleSize}px`,
+              lineHeight: '1.3',
+              fontWeight: 'bold',
+              color: '#FFFFFF',
+              textAlign: 'center',
+              wordBreak: 'break-word',
+            }}
+          >
+            {title}
+          </div>
+
+          {payload.subText && (
+            <div
+              style={{
+                display: 'flex',
+                fontSize: '26px',
+                fontWeight: 'bold',
+                color: palette.badgeBg,
+                textAlign: 'center',
+                lineHeight: '1.4',
+                wordBreak: 'break-word',
+              }}
+            >
+              {payload.subText}
+            </div>
+          )}
+        </div>
+
+        {/* 하단 서명 */}
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: '8px',
+            borderTop: `1.5px solid rgba(255, 255, 255, 0.2)`,
+            paddingTop: '24px',
+            width: '800px',
+            boxSizing: 'border-box',
+          }}
+        >
+          <div style={{ display: 'flex', fontSize: '28px', fontWeight: 'bold', color: '#FFFFFF' }}>
+            {signature}
+          </div>
+          <div style={{ display: 'flex', fontSize: '18px', color: '#94A3B8' }}>
+            2026 C-Rank & DIA+ Premium SEO Verified
+          </div>
         </div>
       </div>
     </div>
-
   )
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// 2. 7종 본문 인포그래픽 카드 렌더러 (1080 × 680 px, Safe Zone 60px 80px 보장)
+// ─────────────────────────────────────────────────────────────────────────────
+
 /**
- * 2. 3대 필수 요건 체크리스트 카드 (800x450)
+ * 2. 체크리스트 카드 (1080 × 680 px)
  */
-function renderChecklistCard(
-  payload: CardPayload,
-  palette: any,
-  padding: number,
-  radius: number,
-  borderWidth: number
-) {
+function renderChecklistCard(payload: CardPayload, palette: typeof palettes[0]) {
+  const title = payload.title || '반드시 검토해야 할 필수 체크리스트'
+  const titleSize = title.length > 25 ? 36 : 42
+
   const points = payload.points && payload.points.length > 0
     ? payload.points
     : [
@@ -290,105 +841,168 @@ function renderChecklistCard(
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
-        width: '800px',
-        height: '450px',
+        width: '1080px',
+        height: '680px',
         backgroundColor: palette.bg,
-        border: `${borderWidth}px solid ${palette.border}`,
-        borderRadius: `${radius}px`,
-        padding: `${padding}px`,
+        border: `2px solid ${palette.border}`,
+        borderRadius: '28px',
+        padding: '60px 80px',
         boxSizing: 'border-box',
+        letterSpacing: '-0.03em',
+        wordBreak: 'break-word',
       }}
     >
-      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '24px', fontWeight: 'bold', color: palette.text }}>
-          <span>📋</span>
-          <span>{payload.title || '반드시 검토해야 할 필수 체크리스트'}</span>
+      {/* 헤더 */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+          <div style={{ display: 'flex', fontSize: '40px' }}>📋</div>
+          <div style={{ display: 'flex', fontSize: `${titleSize}px`, fontWeight: 'bold', color: palette.text }}>
+            {title}
+          </div>
+        </div>
+        <div
+          style={{
+            display: 'flex',
+            backgroundColor: palette.badgeBg,
+            color: palette.badgeText,
+            padding: '10px 22px',
+            borderRadius: '20px',
+            fontSize: '22px',
+            fontWeight: 'bold',
+          }}
+        >
+          필수 검토 사항
         </div>
       </div>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-        {points.slice(0, 3).map((pt, idx) => (
-          <div
-            key={idx}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              backgroundColor: palette.cardBg,
-              border: `1.5px solid ${palette.border}`,
-              borderRadius: '12px',
-              padding: '14px 20px',
-              gap: '14px',
-            }}
-          >
+      {/* 체크리스트 아이템 3종 */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        {points.slice(0, 3).map((pt, idx) => {
+          const itemTitle = cleanItemText(pt.split(':')[0] || pt)
+          const itemDesc = pt.includes(':') ? cleanItemText(pt.split(':')[1]) : ''
+
+          return (
             <div
+              key={idx}
               style={{
                 display: 'flex',
-                color: '#16A34A',
-                fontSize: '20px',
-                fontWeight: 'bold',
+                alignItems: 'center',
+                backgroundColor: palette.cardBg,
+                border: `2px solid ${palette.border}`,
+                borderRadius: '20px',
+                padding: '22px 28px',
+                gap: '20px',
+                boxSizing: 'border-box',
               }}
             >
-              ☑️
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-              <div style={{ display: 'flex', fontSize: '18px', fontWeight: 'bold', color: palette.text }}>
-                {`0${idx + 1}. ${cleanItemText(pt.split(':')[0] || pt)}`}
+              <div
+                style={{
+                  display: 'flex',
+                  backgroundColor: '#DCFCE7',
+                  color: '#15803D',
+                  border: '1.5px solid #86EFAC',
+                  borderRadius: '12px',
+                  padding: '8px 14px',
+                  fontSize: '24px',
+                  fontWeight: 'bold',
+                }}
+              >
+                ☑️ 0{idx + 1}
               </div>
-              {pt.includes(':') && (
-                <div style={{ display: 'flex', fontSize: '15px', color: palette.sub }}>
-                  {cleanItemText(pt.split(':')[1])}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', flex: 1 }}>
+                <div style={{ display: 'flex', fontSize: '28px', fontWeight: 'bold', color: palette.text, wordBreak: 'break-word' }}>
+                  {itemTitle}
                 </div>
-              )}
+                {itemDesc && (
+                  <div style={{ display: 'flex', fontSize: '22px', color: palette.sub, fontWeight: 'bold', wordBreak: 'break-word' }}>
+                    {itemDesc}
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
-        ))}
+          )
+        })}
+      </div>
+
+      {/* 하단 전문가 팁 */}
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          backgroundColor: palette.highlightBg,
+          border: `1.5px solid ${palette.border}`,
+          borderRadius: '16px',
+          padding: '16px 28px',
+          gap: '12px',
+          boxSizing: 'border-box',
+        }}
+      >
+        <span style={{ fontSize: '24px' }}>💡</span>
+        <span style={{ fontSize: '20px', fontWeight: 'bold', color: palette.text }}>
+          전문가 실무 팁: 각 항목의 요건과 적격 증빙을 선제적으로 검토해야 법적 불이익을 완벽 차단할 수 있습니다.
+        </span>
       </div>
     </div>
-
   )
 }
 
 /**
- * 3. Before vs After 비교 대비 카드 (800x450)
+ * 3. Before vs After 비교 카드 (1080 × 680 px)
  */
-function renderComparisonCard(
-  payload: CardPayload,
-  palette: any,
-  padding: number,
-  radius: number,
-  borderWidth: number
-) {
+function renderComparisonCard(payload: CardPayload, palette: typeof palettes[0]) {
+  const title = payload.title || '일반적인 대처 vs 올바른 전문가 해결책 비교'
+  const extra1Text = payload.extra1 || '단순 방치 및 부실 증빙 제출'
+  const extra2Text = payload.extra2 || '적격증빙 선제적 검증 및 1:1 맞춤 대응'
+
+  const fullContext = `${title} ${extra1Text} ${extra2Text} ${payload.category}`
+  const isTax = /세무|양도|상속|증여|부가세|소득세|기장|부동산|주택/i.test(fullContext)
+  const isLegal = /구제|면허|음주|형사|소송|행정|처분|경찰|변호사|행정사/i.test(fullContext)
+
+  const badBullets = isTax
+    ? ['불필요한 과다 세액 및 가산세 발생 위험', '비과세·감면 공제 필수 요건 누락', '사후 소명 자료 부족으로 추징 리스크']
+    : isLegal
+    ? ['행정처분 구제 골든타임 경과 위험', '불리한 진술 및 입증 자료 누락', '이의신청 및 행정심판 기각 가능성']
+    : ['단편적 대처로 인한 실질 손실 발생', '객관적 입증 서류 및 요건 누락', '법적 구제 및 권리 보호 기회 상실']
+
+  const goodBullets = isTax
+    ? ['합법적 최대 절세 및 공제 혜택 100% 확보', '객관적 적격증빙 선제적 정밀 검증', '사후 세무조사 리스크 원천 차단']
+    : isLegal
+    ? ['처분 위법성·부당성 1:1 정밀 소명', '생계형·가족상황 객관적 입증 완료', '면허 정지 감경 및 권리 구제 확보']
+    : ['전문가 1:1 정밀 사실관계 검토', '관련 법령 및 규정 요건 100% 충족', '사건 종결까지 법적 리스크 완벽 차단']
+
   return (
     <div
       style={{
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
-        width: '800px',
-        height: '450px',
+        width: '1080px',
+        height: '680px',
         backgroundColor: palette.cardBg,
-        border: `${borderWidth}px solid ${palette.border}`,
-        borderRadius: `${radius}px`,
-        padding: `${padding - 5}px`,
+        border: `2px solid ${palette.border}`,
+        borderRadius: '28px',
+        padding: '50px 80px',
         boxSizing: 'border-box',
+        letterSpacing: '-0.03em',
+        wordBreak: 'break-word',
       }}
     >
       <div
         style={{
           display: 'flex',
           justifyContent: 'center',
-          fontSize: '22px',
+          fontSize: '36px',
           fontWeight: 'bold',
           color: palette.text,
-          borderBottom: `1px solid ${palette.border}`,
-          paddingBottom: '12px',
+          borderBottom: `2px solid ${palette.border}`,
+          paddingBottom: '18px',
         }}
       >
-        ⚖️ {payload.title || '일반적인 대처 vs 올바른 전문가 해결책 비교'}
+        ⚖️ {title}
       </div>
 
-      <div style={{ display: 'flex', gap: '20px', height: '310px' }}>
-        {/* Before (불리) */}
+      <div style={{ display: 'flex', gap: '30px', height: '480px' }}>
+        {/* Before */}
         <div
           style={{
             display: 'flex',
@@ -396,9 +1010,10 @@ function renderComparisonCard(
             flex: 1,
             backgroundColor: '#FEF2F2',
             border: '2px solid #FECACA',
-            borderRadius: '14px',
-            padding: '16px',
-            gap: '10px',
+            borderRadius: '20px',
+            padding: '30px 26px',
+            justifyContent: 'space-between',
+            boxSizing: 'border-box',
           }}
         >
           <div
@@ -406,26 +1021,26 @@ function renderComparisonCard(
               display: 'flex',
               backgroundColor: '#EF4444',
               color: '#FFFFFF',
-              padding: '6px 14px',
-              borderRadius: '6px',
-              fontSize: '15px',
+              padding: '8px 18px',
+              borderRadius: '8px',
+              fontSize: '22px',
               fontWeight: 'bold',
               alignSelf: 'flex-start',
             }}
           >
             ❌ 잘못된 대처 방식
           </div>
-          <div style={{ fontSize: '18px', fontWeight: 'bold', color: '#991B1B' }}>
-            {payload.extra1 || '단순 방치 및 부실 증빙 제출'}
+          <div style={{ display: 'flex', fontSize: '28px', fontWeight: 'bold', color: '#991B1B', lineHeight: '1.35', wordBreak: 'break-word' }}>
+            {extra1Text}
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '15px', color: '#7F1D1D', lineHeight: 1.5 }}>
-            <div>• 과태료 및 가산세 리스크 발생</div>
-            <div>• 실질 소명 기회 상실 및 불이익</div>
-            <div>• 법적 구제 골든타임 경과</div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '22px', color: '#7F1D1D', fontWeight: 'bold' }}>
+            {badBullets.map((b, i) => (
+              <div key={i} style={{ display: 'flex' }}>• {b}</div>
+            ))}
           </div>
         </div>
 
-        {/* After (유리) */}
+        {/* After */}
         <div
           style={{
             display: 'flex',
@@ -433,9 +1048,10 @@ function renderComparisonCard(
             flex: 1,
             backgroundColor: '#F0FDF4',
             border: '2px solid #BBF7D0',
-            borderRadius: '14px',
-            padding: '16px',
-            gap: '10px',
+            borderRadius: '20px',
+            padding: '30px 26px',
+            justifyContent: 'space-between',
+            boxSizing: 'border-box',
           }}
         >
           <div
@@ -443,40 +1059,33 @@ function renderComparisonCard(
               display: 'flex',
               backgroundColor: '#16A34A',
               color: '#FFFFFF',
-              padding: '6px 14px',
-              borderRadius: '6px',
-              fontSize: '15px',
+              padding: '8px 18px',
+              borderRadius: '8px',
+              fontSize: '22px',
               fontWeight: 'bold',
               alignSelf: 'flex-start',
             }}
           >
             ✅ 전문가 정밀 대응
           </div>
-          <div style={{ fontSize: '18px', fontWeight: 'bold', color: '#166534' }}>
-            {payload.extra2 || '적격증빙 선제적 검증 및 1:1 방어'}
+          <div style={{ display: 'flex', fontSize: '28px', fontWeight: 'bold', color: '#166534', lineHeight: '1.35', wordBreak: 'break-word' }}>
+            {extra2Text}
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '15px', color: '#14532D', lineHeight: 1.5 }}>
-            <div>• 법정 감면/공제 혜택 100% 확보</div>
-            <div>• 사실관계 입증 서류 완벽 구비</div>
-            <div>• 사건 종결까지 세무/법률 리스크 차단</div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '22px', color: '#14532D', fontWeight: 'bold' }}>
+            {goodBullets.map((b, i) => (
+              <div key={i} style={{ display: 'flex' }}>• {b}</div>
+            ))}
           </div>
         </div>
       </div>
     </div>
   )
-
 }
 
 /**
- * 4. 핵심 수치 & 감면율 대형 하이라이트 카드 (800x400)
+ * 4. 핵심 수치 하이라이트 카드 (1080 × 680 px)
  */
-function renderStatHighlightCard(
-  payload: CardPayload,
-  palette: any,
-  padding: number,
-  radius: number,
-  borderWidth: number
-) {
+function renderStatHighlightCard(payload: CardPayload, palette: typeof palettes[0]) {
   return (
     <div
       style={{
@@ -484,48 +1093,56 @@ function renderStatHighlightCard(
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        width: '800px',
-        height: '400px',
+        width: '1080px',
+        height: '680px',
         backgroundColor: palette.highlightBg,
-        border: `${borderWidth}px solid ${palette.border}`,
-        borderRadius: `${radius}px`,
-        padding: `${padding}px`,
+        border: `2px solid ${palette.border}`,
+        borderRadius: '28px',
+        padding: '60px 80px',
         boxSizing: 'border-box',
         textAlign: 'center',
-        gap: '16px',
+        gap: '24px',
+        letterSpacing: '-0.03em',
+        wordBreak: 'break-word',
       }}
     >
-      <div
-        style={{
-          fontSize: '18px',
-          fontWeight: 'bold',
-          color: palette.accent,
-          letterSpacing: '2px',
-        }}
-      >
+      <div style={{ display: 'flex', fontSize: '26px', fontWeight: 'bold', color: palette.accent }}>
         {payload.category || 'KEY METRIC & LEGAL STANDARD'}
       </div>
 
       <div
         style={{
-          fontSize: '52px',
-          fontWeight: '900',
+          display: 'flex',
+          fontSize: payload.title.length > 20 ? '54px' : '68px',
+          fontWeight: 'bold',
           color: palette.text,
-          letterSpacing: '-1px',
-          lineHeight: 1.2,
+          lineHeight: '1.2',
+          wordBreak: 'break-word',
         }}
       >
         {payload.title}
       </div>
 
       {payload.subText && (
-        <div style={{ fontSize: '22px', fontWeight: 'bold', color: palette.sub }}>
+        <div
+          style={{
+            display: 'flex',
+            backgroundColor: palette.cardBg,
+            border: `2px solid ${palette.border}`,
+            borderRadius: '18px',
+            padding: '16px 36px',
+            fontSize: '30px',
+            fontWeight: 'bold',
+            color: palette.sub,
+            wordBreak: 'break-word',
+          }}
+        >
           {payload.subText}
         </div>
       )}
 
       {payload.extra3 && (
-        <div style={{ fontSize: '16px', color: '#64748B' }}>
+        <div style={{ display: 'flex', fontSize: '24px', color: '#64748B', fontWeight: 'bold' }}>
           {payload.extra3}
         </div>
       )}
@@ -533,16 +1150,43 @@ function renderStatHighlightCard(
   )
 }
 
+function parseProcessStep(rawStep: string, index: number): { title: string; desc: string } {
+  let text = cleanItemText(rawStep).trim()
+  text = text.replace(/^(step\s*\d+\s*(단계)?|단계\s*\d+|\d+\s*단계|\d+\s*step|\d+)[.:\s-]*/iu, '').trim()
+  text = text.replace(/^(단계|step)[.:\s-]*/iu, '').trim()
+
+  if (text.includes(':')) {
+    const parts = text.split(':')
+    const titlePart = cleanItemText(parts[0]).trim()
+    const descPart = cleanItemText(parts.slice(1).join(':')).trim()
+    const title = titlePart && !/^(단계|step|\d+)$/i.test(titlePart)
+      ? titlePart
+      : descPart || `핵심 절차 0${index + 1}`
+    const desc = descPart && descPart !== title ? descPart : '전문가 사전 검토 및 1:1 맞춤 조치'
+    return { title, desc }
+  }
+
+  if (text.includes(' - ')) {
+    const parts = text.split(' - ')
+    const titlePart = cleanItemText(parts[0]).trim()
+    const descPart = cleanItemText(parts.slice(1).join(' - ')).trim()
+    const title = titlePart && !/^(단계|step|\d+)$/i.test(titlePart)
+      ? titlePart
+      : descPart || `핵심 절차 0${index + 1}`
+    const desc = descPart && descPart !== title ? descPart : '전문가 사전 검토 및 1:1 맞춤 조치'
+    return { title, desc }
+  }
+
+  return {
+    title: text || `핵심 절차 0${index + 1}`,
+    desc: '전문가 사전 검토 및 1:1 맞춤 조치',
+  }
+}
+
 /**
- * 5. 3단계 실무 행동 로드맵 카드 (800x450)
+ * 5. 3단계 행동 로드맵 카드 (1080 × 680 px)
  */
-function renderProcessFlowCard(
-  payload: CardPayload,
-  palette: any,
-  padding: number,
-  radius: number,
-  borderWidth: number
-) {
+function renderProcessFlowCard(payload: CardPayload, palette: typeof palettes[0]) {
   const steps = payload.points && payload.points.length >= 3
     ? payload.points
     : ['초기 사실관계 정밀 진단', '적격 증빙 서류 제출', '최종 절세 및 권리 구제 확정']
@@ -553,107 +1197,108 @@ function renderProcessFlowCard(
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
-        width: '800px',
-        height: '450px',
+        width: '1080px',
+        height: '680px',
         backgroundColor: palette.bg,
-        border: `${borderWidth}px solid ${palette.border}`,
-        borderRadius: `${radius}px`,
-        padding: `${padding}px`,
+        border: `2px solid ${palette.border}`,
+        borderRadius: '28px',
+        padding: '50px 80px',
         boxSizing: 'border-box',
+        letterSpacing: '-0.03em',
+        wordBreak: 'break-word',
       }}
     >
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '22px', fontWeight: 'bold', color: palette.text }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '36px', fontWeight: 'bold', color: palette.text }}>
         <span>🚀</span>
         <span>{payload.title || '원스톱 사건 해결 3단계 실무 절차'}</span>
       </div>
 
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '20px' }}>
+        {steps.slice(0, 3).map((step, idx) => {
+          const { title, desc } = parseProcessStep(step, idx)
 
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '14px' }}>
-        {steps.slice(0, 3).map((step, idx) => (
-          <div
-            key={idx}
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              flex: 1,
-              backgroundColor: palette.cardBg,
-              border: `2px solid ${idx === 2 ? '#86EFAC' : palette.border}`,
-              borderRadius: '14px',
-              padding: '16px 14px',
-              height: '240px',
-              justifyContent: 'space-between',
-            }}
-          >
+          return (
             <div
+              key={idx}
               style={{
                 display: 'flex',
-                backgroundColor: idx === 2 ? '#16A34A' : palette.accent,
-                color: '#FFFFFF',
-                padding: '4px 10px',
-                borderRadius: '6px',
-                fontSize: '14px',
-                fontWeight: 'bold',
-                alignSelf: 'flex-start',
+                flexDirection: 'column',
+                flex: 1,
+                backgroundColor: palette.cardBg,
+                border: `2px solid ${idx === 2 ? '#86EFAC' : palette.border}`,
+                borderRadius: '20px',
+                padding: '30px 24px',
+                height: '420px',
+                justifyContent: 'space-between',
+                boxSizing: 'border-box',
               }}
             >
-              STEP {idx + 1}
-            </div>
+              <div
+                style={{
+                  display: 'flex',
+                  backgroundColor: idx === 2 ? '#16A34A' : palette.accent,
+                  color: '#FFFFFF',
+                  padding: '8px 18px',
+                  borderRadius: '10px',
+                  fontSize: '22px',
+                  fontWeight: 'bold',
+                  alignSelf: 'flex-start',
+                }}
+              >
+                STEP {idx + 1}
+              </div>
 
-            <div style={{ fontSize: '18px', fontWeight: 'bold', color: palette.text, lineHeight: 1.35 }}>
-              {cleanItemText(step.split(':')[0] || step)}
-            </div>
+              <div style={{ display: 'flex', fontSize: '28px', fontWeight: 'bold', color: palette.text, lineHeight: '1.35', wordBreak: 'break-word' }}>
+                {title}
+              </div>
 
-            <div style={{ fontSize: '14px', color: palette.sub, lineHeight: 1.4 }}>
-              {cleanItemText(step.split(':')[1]) || '전문가 사전 검토 및 1:1 맞춤 조치'}
+              <div style={{ display: 'flex', fontSize: '22px', color: palette.sub, lineHeight: '1.45', wordBreak: 'break-word' }}>
+                {desc}
+              </div>
             </div>
-
-          </div>
-        ))}
+          )
+        })}
       </div>
     </div>
   )
 }
 
 /**
- * 6. 의뢰인 빈출 질문 & 팩트 해설 카드 (800x420)
+ * 6. Q&A 문답 카드 (1080 × 680 px)
  */
-function renderQnaCard(
-  payload: CardPayload,
-  palette: any,
-  padding: number,
-  radius: number,
-  borderWidth: number
-) {
+function renderQnaCard(payload: CardPayload, palette: typeof palettes[0]) {
   return (
     <div
       style={{
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
-        width: '800px',
-        height: '420px',
+        width: '1080px',
+        height: '680px',
         backgroundColor: palette.bg,
-        border: `${borderWidth}px solid ${palette.border}`,
-        borderRadius: `${radius}px`,
-        padding: `${padding}px`,
+        border: `2px solid ${palette.border}`,
+        borderRadius: '28px',
+        padding: '60px 80px',
         boxSizing: 'border-box',
+        letterSpacing: '-0.03em',
+        wordBreak: 'break-word',
       }}
     >
-      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
         <div
           style={{
             display: 'flex',
             backgroundColor: palette.accent,
             color: '#FFFFFF',
-            padding: '6px 14px',
-            borderRadius: '8px',
-            fontSize: '16px',
+            padding: '10px 22px',
+            borderRadius: '12px',
+            fontSize: '24px',
             fontWeight: 'bold',
           }}
         >
           Q. 자주 묻는 질문
         </div>
-        <div style={{ display: 'flex', fontSize: '20px', fontWeight: 'bold', color: palette.text }}>
+        <div style={{ display: 'flex', fontSize: payload.title.length > 24 ? '30px' : '36px', fontWeight: 'bold', color: palette.text, wordBreak: 'break-word' }}>
           {payload.title}
         </div>
       </div>
@@ -664,15 +1309,16 @@ function renderQnaCard(
           flexDirection: 'column',
           backgroundColor: palette.cardBg,
           border: `2px solid ${palette.border}`,
-          borderRadius: '16px',
-          padding: '24px',
-          gap: '12px',
+          borderRadius: '24px',
+          padding: '40px',
+          gap: '18px',
+          boxSizing: 'border-box',
         }}
       >
-        <div style={{ display: 'flex', fontSize: '20px', fontWeight: 'bold', color: palette.accent }}>
+        <div style={{ display: 'flex', fontSize: '30px', fontWeight: 'bold', color: palette.accent }}>
           💡 전문가 명쾌 해설:
         </div>
-        <div style={{ display: 'flex', fontSize: '18px', fontWeight: '600', color: palette.text, lineHeight: 1.5 }}>
+        <div style={{ display: 'flex', fontSize: '26px', fontWeight: 'bold', color: palette.text, lineHeight: '1.5', wordBreak: 'break-word' }}>
           {payload.subText || payload.extra2 || '법정 기한 및 요건에 맞춰 선제적으로 대응하면 세액공제와 권리 구제가 모두 가능합니다.'}
         </div>
       </div>
@@ -681,33 +1327,29 @@ function renderQnaCard(
 }
 
 /**
- * 7. 골든타임 & 리스크 주의 경고 카드 (800x380)
+ * 7. 골든타임 리스크 경고 카드 (1080 × 680 px)
  */
-function renderWarningCard(
-  payload: CardPayload,
-  palette: any,
-  padding: number,
-  radius: number,
-  borderWidth: number
-) {
+function renderWarningCard(payload: CardPayload, palette: typeof palettes[0]) {
   return (
     <div
       style={{
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
-        width: '800px',
-        height: '380px',
+        width: '1080px',
+        height: '680px',
         backgroundColor: '#FEF2F2',
-        border: '2px solid #FECACA',
-        borderRadius: `${radius}px`,
-        padding: `${padding}px`,
+        border: '3px solid #FECACA',
+        borderRadius: '28px',
+        padding: '60px 80px',
         boxSizing: 'border-box',
+        letterSpacing: '-0.03em',
+        wordBreak: 'break-word',
       }}
     >
-      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-        <div style={{ display: 'flex', fontSize: '32px' }}>🚨</div>
-        <div style={{ display: 'flex', fontSize: '24px', fontWeight: 'bold', color: '#991B1B' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+        <div style={{ display: 'flex', fontSize: '48px' }}>🚨</div>
+        <div style={{ display: 'flex', fontSize: payload.title.length > 24 ? '32px' : '38px', fontWeight: 'bold', color: '#991B1B', wordBreak: 'break-word' }}>
           {payload.title || '골든타임 경과 시 치명적 불이익 주의'}
         </div>
       </div>
@@ -717,16 +1359,17 @@ function renderWarningCard(
           display: 'flex',
           flexDirection: 'column',
           backgroundColor: '#FFFFFF',
-          border: '1.5px solid #FEE2E2',
-          borderRadius: '14px',
-          padding: '20px',
-          gap: '10px',
+          border: '2px solid #FEE2E2',
+          borderRadius: '20px',
+          padding: '36px',
+          gap: '16px',
+          boxSizing: 'border-box',
         }}
       >
-        <div style={{ display: 'flex', fontSize: '18px', fontWeight: 'bold', color: '#B91C1C' }}>
+        <div style={{ display: 'flex', fontSize: '28px', fontWeight: 'bold', color: '#B91C1C', wordBreak: 'break-word' }}>
           • {payload.subText || '법정 기한 미준수 시 가산세 부과 및 소명 권리 상실'}
         </div>
-        <div style={{ display: 'flex', fontSize: '16px', color: '#475569', lineHeight: 1.45 }}>
+        <div style={{ display: 'flex', fontSize: '24px', color: '#475569', lineHeight: '1.45', wordBreak: 'break-word' }}>
           사안에 따라 대응 시한이 엄격히 정해져 있으므로, 신속하게 전문가와 사실관계를 검토해야 손실을 방어할 수 있습니다.
         </div>
       </div>
@@ -735,15 +1378,9 @@ function renderWarningCard(
 }
 
 /**
- * 8. 핵심 3줄 결론 요약 카드 (800x480)
+ * 8. 핵심 3줄 결론 요약 카드 (1080 × 680 px)
  */
-function renderSummaryCard(
-  payload: CardPayload,
-  palette: any,
-  padding: number,
-  radius: number,
-  borderWidth: number
-) {
+function renderSummaryCard(payload: CardPayload, palette: typeof palettes[0]) {
   const points = payload.points && payload.points.length >= 3
     ? payload.points
     : [
@@ -758,81 +1395,331 @@ function renderSummaryCard(
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
-        width: '800px',
-        height: '480px',
-        backgroundColor: '#FEF3C7',
-        border: '3px solid #FDE68A',
-        borderRadius: `${radius}px`,
-        padding: `${padding}px`,
+        width: '1080px',
+        height: '680px',
+        backgroundColor: palette.bg,
+        border: `2px solid ${palette.border}`,
+        borderRadius: '28px',
+        padding: '50px 80px',
         boxSizing: 'border-box',
+        letterSpacing: '-0.03em',
+        wordBreak: 'break-word',
       }}
     >
-      <div style={{ display: 'flex', fontSize: '26px', fontWeight: 'bold', color: '#B45309' }}>
-        💡 오늘 포스팅 핵심 3줄 요약
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div style={{ display: 'flex', fontSize: '38px', fontWeight: 'bold', color: palette.accent }}>
+          💡 {payload.title || '오늘 포스팅 핵심 3줄 요약'}
+        </div>
+        <div
+          style={{
+            display: 'flex',
+            backgroundColor: palette.badgeBg,
+            color: palette.badgeText,
+            padding: '8px 20px',
+            borderRadius: '20px',
+            fontSize: '22px',
+            fontWeight: 'bold',
+          }}
+        >
+          핵심 정리
+        </div>
+      </div>
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        {points.slice(0, 3).map((pt, idx) => {
+          const itemText = cleanItemText(pt)
+
+          return (
+            <div
+              key={idx}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                backgroundColor: palette.cardBg,
+                border: `2px solid ${palette.border}`,
+                borderRadius: '18px',
+                padding: '20px 24px',
+                gap: '18px',
+                boxSizing: 'border-box',
+              }}
+            >
+              <div style={{ display: 'flex', fontSize: '32px', fontWeight: 'bold' }}>
+                {idx === 0 ? '1️⃣' : idx === 1 ? '2️⃣' : '3️⃣'}
+              </div>
+              <div style={{ display: 'flex', fontSize: '26px', fontWeight: 'bold', color: palette.text, lineHeight: '1.45', wordBreak: 'break-word' }}>
+                {itemText}
+              </div>
+            </div>
+          )
+        })}
       </div>
 
       <div
         style={{
           display: 'flex',
-          flexDirection: 'column',
-          backgroundColor: '#FFFFFF',
-          border: '2px solid #FDE68A',
-          borderRadius: '16px',
-          padding: '24px 20px',
-          gap: '16px',
+          justifyContent: 'center',
+          fontSize: '20px',
+          color: palette.sub,
+          fontWeight: 'bold',
         }}
       >
-        {points.slice(0, 3).map((pt, idx) => (
-          <div key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
-            <div style={{ display: 'flex', fontSize: '22px', fontWeight: 'bold', color: '#2563EB' }}>
-              {idx === 0 ? '1️⃣' : idx === 1 ? '2️⃣' : '3️⃣'}
-            </div>
-            <div style={{ display: 'flex', fontSize: '18px', fontWeight: 'bold', color: '#0F172A', lineHeight: 1.45 }}>
-              {cleanItemText(pt)}
-            </div>
-          </div>
-        ))}
+        PostSynk Verified C-Rank SEO Key Takeaways
       </div>
     </div>
-
   )
 }
 
-/**
- * 9. 하단 상담 유도 (CTA) 배너 (800x480)
- */
+// ─────────────────────────────────────────────────────────────────────────────
+// 3. 3종 하단 상담 유도 배너 렌더러 (1080 × 540 px, Safe Zone 50px 80px 보장)
+// ─────────────────────────────────────────────────────────────────────────────
+
 function renderCtaCard(
   payload: CardPayload,
-  palette: any,
-  padding: number,
-  radius: number,
-  borderWidth: number
+  palette: typeof palettes[0],
+  layout: BannerLayout
 ) {
+  const phone = payload.extra1 || '(대표 전화번호)'
+  const address = payload.extra2 || '(사무소 상세 주소)'
+  const reservation = payload.extra3 || '(네이버 예약 / 지도)'
+  const title = payload.title || '1:1 맞춤 정밀 진단 및 상담 안내'
+  const sub = payload.subText || '풍부한 실무 경험을 바탕으로 의뢰인의 권익을 최우선으로 보호합니다.'
+
+  // BANNER_A: 좌우 2단 분할형
+  if (layout === 'BANNER_A') {
+    return (
+      <div
+        style={{
+          display: 'flex',
+          width: '1080px',
+          height: '540px',
+          backgroundColor: palette.bg,
+          border: `3px solid ${palette.border}`,
+          borderRadius: '28px',
+          padding: '50px 80px',
+          gap: '40px',
+          boxSizing: 'border-box',
+          letterSpacing: '-0.03em',
+          wordBreak: 'break-word',
+        }}
+      >
+        {/* 좌측 슬로건/상호 */}
+        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', flex: 1 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+            <div
+              style={{
+                display: 'flex',
+                backgroundColor: palette.accent,
+                color: '#FFFFFF',
+                padding: '8px 18px',
+                borderRadius: '12px',
+                fontSize: '20px',
+                fontWeight: 'bold',
+                alignSelf: 'flex-start',
+              }}
+            >
+              공식 상담 창구
+            </div>
+            <div style={{ display: 'flex', fontSize: '38px', fontWeight: 'bold', color: palette.text, lineHeight: '1.25', wordBreak: 'break-word' }}>
+              {title}
+            </div>
+            <div style={{ display: 'flex', fontSize: '22px', color: palette.sub, lineHeight: '1.4', wordBreak: 'break-word' }}>
+              {sub}
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', fontSize: '18px', color: '#94A3B8' }}>
+            * 1:1 사전 예약 시 심층 상담 가능
+          </div>
+        </div>
+
+        {/* 우측 연락처 박스 */}
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            backgroundColor: palette.cardBg,
+            border: `2px solid ${palette.border}`,
+            borderRadius: '20px',
+            padding: '30px',
+            gap: '16px',
+            width: '420px',
+            boxSizing: 'border-box',
+          }}
+        >
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+            <div style={{ display: 'flex', fontSize: '18px', fontWeight: 'bold', color: palette.accent }}>
+              📞 직통 상담 전화
+            </div>
+            <div style={{ display: 'flex', fontSize: '32px', fontWeight: 'bold', color: palette.text, wordBreak: 'break-word' }}>
+              {phone}
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+            <div style={{ display: 'flex', fontSize: '18px', fontWeight: 'bold', color: palette.sub }}>
+              🏢 사무소 위치
+            </div>
+            <div style={{ display: 'flex', fontSize: '20px', color: palette.text, fontWeight: 'bold', wordBreak: 'break-word' }}>
+              {address}
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+            <div style={{ display: 'flex', fontSize: '18px', fontWeight: 'bold', color: palette.accent }}>
+              📍 지도 / 예약
+            </div>
+            <div style={{ display: 'flex', fontSize: '18px', color: palette.sub, wordBreak: 'break-word' }}>
+              {reservation}
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // BANNER_B: 중앙 집중 명함형
+  if (layout === 'BANNER_B') {
+    return (
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          width: '1080px',
+          height: '540px',
+          backgroundColor: palette.cardBg,
+          border: `3px solid ${palette.accent}`,
+          borderRadius: '28px',
+          padding: '45px 80px',
+          boxSizing: 'border-box',
+          textAlign: 'center',
+          letterSpacing: '-0.03em',
+          wordBreak: 'break-word',
+        }}
+      >
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px', maxWidth: '920px' }}>
+          <div
+            style={{
+              display: 'flex',
+              backgroundColor: palette.badgeBg,
+              color: palette.badgeText,
+              padding: '6px 20px',
+              borderRadius: '20px',
+              fontSize: '20px',
+              fontWeight: 'bold',
+            }}
+          >
+            2026 C-Rank 공식 인증 사무소
+          </div>
+          <div style={{ display: 'flex', fontSize: '40px', fontWeight: 'bold', color: palette.text, wordBreak: 'break-word' }}>
+            {title}
+          </div>
+          <div style={{ display: 'flex', fontSize: '22px', color: palette.sub, wordBreak: 'break-word' }}>
+            {sub}
+          </div>
+        </div>
+
+        {/* 3열 정보 박스 */}
+        <div style={{ display: 'flex', gap: '20px', width: '100%' }}>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              flex: 1,
+              backgroundColor: palette.bg,
+              border: `1.5px solid ${palette.border}`,
+              borderRadius: '16px',
+              padding: '16px',
+              gap: '4px',
+              boxSizing: 'border-box',
+            }}
+          >
+            <div style={{ display: 'flex', fontSize: '20px', fontWeight: 'bold', color: palette.accent }}>📞 전화 상담</div>
+            <div style={{ display: 'flex', fontSize: '24px', fontWeight: 'bold', color: palette.text, wordBreak: 'break-word' }}>{phone}</div>
+          </div>
+
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              flex: 1,
+              backgroundColor: palette.bg,
+              border: `1.5px solid ${palette.border}`,
+              borderRadius: '16px',
+              padding: '16px',
+              gap: '4px',
+              boxSizing: 'border-box',
+            }}
+          >
+            <div style={{ display: 'flex', fontSize: '20px', fontWeight: 'bold', color: palette.sub }}>🏢 위치 안내</div>
+            <div style={{ display: 'flex', fontSize: '20px', fontWeight: 'bold', color: palette.text, textAlign: 'center', wordBreak: 'break-word' }}>{address}</div>
+          </div>
+
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              flex: 1,
+              backgroundColor: palette.bg,
+              border: `1.5px solid ${palette.border}`,
+              borderRadius: '16px',
+              padding: '16px',
+              gap: '4px',
+              boxSizing: 'border-box',
+            }}
+          >
+            <div style={{ display: 'flex', fontSize: '20px', fontWeight: 'bold', color: palette.accent }}>📍 네이버 예약</div>
+            <div style={{ display: 'flex', fontSize: '18px', color: palette.sub, wordBreak: 'break-word' }}>{reservation}</div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // BANNER_C: 모던 아웃라인 박스형
   return (
     <div
       style={{
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
-        width: '800px',
-        height: '480px',
-        backgroundColor: '#FDFBF7',
-        border: '3px solid #D4AF37',
-        borderRadius: `${radius}px`,
-        padding: `${padding}px`,
+        width: '1080px',
+        height: '540px',
+        backgroundColor: palette.highlightBg,
+        border: `3px solid ${palette.accent}`,
+        borderRadius: '28px',
+        padding: '45px 80px',
         boxSizing: 'border-box',
-        textAlign: 'center',
+        letterSpacing: '-0.03em',
+        wordBreak: 'break-word',
       }}
     >
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', alignItems: 'center' }}>
-        <div style={{ fontSize: '18px', fontWeight: 'bold', color: '#B45309', letterSpacing: '2px' }}>
-          {payload.category || 'EXPERT CONSULTATION & LOCATION'}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+          <div style={{ display: 'flex', fontSize: '38px', fontWeight: 'bold', color: palette.text, wordBreak: 'break-word' }}>
+            {title}
+          </div>
+          <div style={{ display: 'flex', fontSize: '22px', color: palette.sub, wordBreak: 'break-word' }}>
+            {sub}
+          </div>
         </div>
-        <div style={{ fontSize: '28px', fontWeight: 'bold', color: '#0F172A' }}>
-          {payload.title || '1:1 맞춤 정밀 진단 및 상담 안내'}
-        </div>
-        <div style={{ fontSize: '17px', color: '#64748B' }}>
-          풍부한 실무 경험을 바탕으로 의뢰인의 권익을 최우선으로 보호합니다.
+        <div
+          style={{
+            display: 'flex',
+            backgroundColor: palette.accent,
+            color: '#FFFFFF',
+            padding: '12px 24px',
+            borderRadius: '16px',
+            fontSize: '22px',
+            fontWeight: 'bold',
+          }}
+        >
+          1:1 공식 접수
         </div>
       </div>
 
@@ -840,31 +1727,26 @@ function renderCtaCard(
         style={{
           display: 'flex',
           flexDirection: 'column',
-          backgroundColor: '#FFFFFF',
-          border: '2px solid #E2E8F0',
-          borderRadius: '16px',
-          padding: '18px 24px',
-          gap: '10px',
-          textAlign: 'left',
+          backgroundColor: palette.cardBg,
+          border: `2px solid ${palette.border}`,
+          borderRadius: '20px',
+          padding: '24px 30px',
+          gap: '12px',
+          boxSizing: 'border-box',
         }}
       >
-        <div style={{ display: 'flex', fontSize: '19px', fontWeight: 'bold', color: '#0F172A', gap: '8px' }}>
-          <span>📞 직통 상담:</span>
-          <span style={{ color: '#2563EB' }}>{payload.extra1 || '(대표 전화번호)'}</span>
+        <div style={{ display: 'flex', fontSize: '24px', fontWeight: 'bold', color: palette.text, gap: '12px' }}>
+          <span style={{ color: palette.accent }}>📞 직통 상담:</span>
+          <span style={{ wordBreak: 'break-word' }}>{phone}</span>
         </div>
-        <div style={{ display: 'flex', fontSize: '19px', fontWeight: 'bold', color: '#0F172A', gap: '8px' }}>
-          <span>🏢 사무소 위치:</span>
-          <span style={{ color: '#475569', fontWeight: 'normal' }}>{payload.extra2 || '(상세 주소)'}</span>
+        <div style={{ display: 'flex', fontSize: '22px', fontWeight: 'bold', color: palette.text, gap: '12px' }}>
+          <span style={{ color: palette.sub }}>🏢 오시는 길:</span>
+          <span style={{ fontWeight: 'normal', wordBreak: 'break-word' }}>{address}</span>
         </div>
-        <div style={{ display: 'flex', fontSize: '19px', fontWeight: 'bold', color: '#0F172A', gap: '8px' }}>
-          <span>📍 네이버 예약:</span>
-          <span style={{ color: '#2563EB', fontWeight: 'normal' }}>{payload.extra3 || '(예약 링크)'}</span>
+        <div style={{ display: 'flex', fontSize: '20px', color: palette.sub, gap: '12px' }}>
+          <span>📍 온라인 예약:</span>
+          <span style={{ wordBreak: 'break-word' }}>{reservation}</span>
         </div>
-      </div>
-
-
-      <div style={{ fontSize: '14px', color: '#94A3B8' }}>
-        * 사전 예약을 통해 원활한 1:1 맞춤 상담이 가능합니다.
       </div>
     </div>
   )

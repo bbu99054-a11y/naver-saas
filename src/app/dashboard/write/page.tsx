@@ -28,6 +28,8 @@ const useToast = () => {
   }
 }
 
+import { stripInternalMetadata } from '@/lib/utils/postSanitizer'
+
 export default function WritePage() {
   const searchParams = useSearchParams()
   const initialKeyword = searchParams.get('keyword') || ''
@@ -88,8 +90,18 @@ export default function WritePage() {
         .trim();
     }
 
-    // <post_title> 태그 제거
-    let clean = content.replace(/<post_title>[\s\S]*?<\/post_title>/i, '').trim();
+    // <post_title> 태그 제거 (완성형 및 스트리밍 중인 미완성 태그 모두 제거)
+    let clean = content.replace(/<post_title>[\s\S]*?<\/post_title>/i, '').replace(/<post_title>[\s\S]*$/i, '').trim();
+
+    // 내부 기획 메모([팩트 체크], [목표 분량], [탈 양산화 설계도]) 원천 정제
+    clean = stripInternalMetadata(clean);
+
+    // 마크다운 소제목(##, ###)을 네이버 100% 호환 22px 대제목 HTML로 자동 변환 (2중 안전장치)
+    clean = clean.replace(/^##\s+(.*?)$/gm, '<h2 style="font-size: 22px; font-weight: bold; color: #0F172A; margin: 36px 0 16px 0; border-bottom: 2px solid #E2E8F0; padding-bottom: 8px;">$1</h2>');
+    clean = clean.replace(/^###\s+(.*?)$/gm, '<h3 style="font-size: 18px; font-weight: bold; color: #1E293B; margin: 24px 0 12px 0;">$1</h3>');
+
+    // 문단(<p>) 태그에 표준 16px 인라인 스타일 보장
+    clean = clean.replace(/<p(?![^>]*style=)([^>]*)>/gi, '<p style="font-size: 16px; line-height: 1.85; margin: 16px 0; color: #1F2937;"$1>');
 
     // 단락(<p>) 태그에 한해서만 중앙정렬을 좌측정렬로 보정 (1:1 썸네일 카드, 테이블, 뱃지 중앙정렬 완벽 보존)
     clean = clean.replace(/(<p[^>]*style="[^"]*?)text-align:\s*center;?([^"]*">)/gi, '$1text-align: left;$2');
@@ -415,7 +427,7 @@ export default function WritePage() {
                   id="editor-preview"
                   contentEditable={true}
                   suppressContentEditableWarning={true}
-                  className="p-4 flex-1 bg-white text-left prose prose-slate prose-headings:text-slate-900 prose-h2:text-base prose-h2:border-b prose-h2:border-slate-100 prose-h2:pb-1.5 prose-h3:text-sm prose-p:text-slate-700 prose-p:leading-[1.8] prose-p:text-[14px] prose-p:mb-3.5 outline-none select-text"
+                  className="p-4 flex-1 bg-white text-left prose prose-slate prose-headings:text-slate-900 prose-h2:text-[19px] prose-h2:font-bold prose-h2:border-b-2 prose-h2:border-slate-100 prose-h2:pb-1.5 prose-h3:text-sm prose-p:text-slate-700 prose-p:leading-[1.8] prose-p:text-[15px] prose-p:mb-3.5 outline-none select-text"
                   dangerouslySetInnerHTML={{ __html: parsedHtml }}
                 />
               </div>
@@ -427,7 +439,7 @@ export default function WritePage() {
                 id="editor-preview"
                 contentEditable={true}
                 suppressContentEditableWarning={true}
-                className="p-8 max-w-3xl w-full bg-white text-left min-h-[650px] shadow-2xs rounded-lg border border-slate-200 prose prose-slate prose-headings:text-slate-900 prose-h2:border-b-2 prose-h2:border-slate-100 prose-h2:pb-2 prose-h3:text-slate-800 prose-p:text-slate-700 prose-p:leading-[1.9] prose-p:text-[15.5px] prose-p:mb-4.5 outline-none focus:ring-1 focus:ring-indigo-500 transition-all select-text"
+                className="p-8 max-w-3xl w-full bg-white text-left min-h-[650px] shadow-2xs rounded-lg border border-slate-200 prose prose-slate prose-headings:text-slate-900 prose-h2:text-[22px] prose-h2:font-bold prose-h2:border-b-2 prose-h2:border-slate-100 prose-h2:pb-2 prose-h3:text-lg prose-p:text-slate-700 prose-p:leading-[1.9] prose-p:text-[16px] prose-p:mb-4.5 outline-none focus:ring-1 focus:ring-indigo-500 transition-all select-text"
                 dangerouslySetInnerHTML={{ __html: parsedHtml }}
               />
             </div>

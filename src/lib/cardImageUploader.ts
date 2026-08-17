@@ -13,6 +13,18 @@ export type CardType =
   | 'KEY_TAKEAWAYS'
   | 'CTA_FOOTER'
 
+export const CARD_TYPE_KOREAN_NAMES: Record<CardType, string> = {
+  MAIN_THUMBNAIL: '대표 썸네일',
+  CHECKLIST: '필수 준비 서류 체크리스트',
+  COMPARISON: '잘못된 대처 vs 올바른 해결 비교',
+  STAT_HIGHLIGHT: '핵심 수치 및 공제 기준 하이라이트',
+  PROCESS_FLOW: '3단계 진행 절차 로드맵',
+  QNA: '자주 묻는 질문과 전문가 팩트 해설',
+  WARNING_RISK: '골든타임 및 패널티 리스크 주의 경고',
+  KEY_TAKEAWAYS: '오늘 포스팅 핵심 3줄 요약',
+  CTA_FOOTER: '1:1 전문 상담 및 예약 안내',
+}
+
 /**
  * Alt 텍스트 및 주변 문맥으로부터 적합한 CardType을 자동 판별
  */
@@ -215,9 +227,18 @@ export async function preUploadCardImages(
 
     let totalUploaded = 0
 
-    // 1. 상대 경로(/api/card-image/...)를 절대 공개 HTTPS URL로 정규화
+    // 1. 상대 경로(/api/card-image/...)를 절대 공개 HTTPS URL로 정규화 및 SEO Alt 태그 보장
     images.forEach((img) => {
       let src = img.getAttribute('src') || ''
+      let alt = img.getAttribute('alt') || ''
+
+      if (!alt || alt.trim() === '' || alt === '블로그 핵심 인포그래픽') {
+        const urlMatch = src.match(/type=([A-Z_]+)/i)
+        const cardType = urlMatch ? (urlMatch[1].toUpperCase() as CardType) : determineCardType(alt || src)
+        const cardNameKr = CARD_TYPE_KOREAN_NAMES[cardType] || '핵심 인포그래픽'
+        img.setAttribute('alt', `${cardNameKr}`)
+      }
+
       if (src.startsWith('/api/card-image/')) {
         src = `${origin}${src}`
         img.setAttribute('src', src)
@@ -227,6 +248,27 @@ export async function preUploadCardImages(
         img.style.margin = '20px auto'
         img.style.borderRadius = '14px'
         img.style.boxShadow = '0 8px 24px rgba(0,0,0,0.06)'
+      }
+    })
+
+    // 1-2. 네이버 스마트에디터 ONE 붙여넣기 시 H2 22px 대제목 및 P 16px 본문 크기 100% 보장
+    const h2Elements = Array.from(doc.querySelectorAll('h2'))
+    h2Elements.forEach((h2) => {
+      h2.style.fontSize = '22px'
+      h2.style.fontWeight = 'bold'
+      h2.style.color = '#0F172A'
+      h2.style.margin = '36px 0 16px 0'
+      h2.style.borderBottom = '2px solid #E2E8F0'
+      h2.style.paddingBottom = '8px'
+    })
+
+    const pElements = Array.from(doc.querySelectorAll('p'))
+    pElements.forEach((p) => {
+      if (!p.style.fontSize) {
+        p.style.fontSize = '16px'
+        p.style.lineHeight = '1.85'
+        p.style.margin = '16px 0'
+        p.style.color = '#1F2937'
       }
     })
 

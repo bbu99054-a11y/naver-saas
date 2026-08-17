@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Copy, CheckCircle2, Loader2 } from 'lucide-react'
 import { preUploadCardImages } from '@/lib/cardImageUploader'
+import { stripInternalMetadata } from '@/lib/utils/postSanitizer'
 
 // Mock useToast fallback
 const useToast = () => {
@@ -34,6 +35,16 @@ export function CopyToNaverBtn({
   const handleCopyClick = async () => {
     const editorDom = document.getElementById('editor-preview')
     let htmlToCopy = editorDom ? editorDom.innerHTML : content
+
+    // 내부 기획 메모([팩트 체크], [목표 분량], [탈 양산화 설계도]) 원천 정제
+    htmlToCopy = stripInternalMetadata(htmlToCopy)
+
+    // 마크다운 소제목을 22px 대제목 HTML로 확실하게 변환
+    htmlToCopy = htmlToCopy.replace(/^##\s+(.*?)$/gm, '<h2 style="font-size: 22px; font-weight: bold; color: #0F172A; margin: 36px 0 16px 0; border-bottom: 2px solid #E2E8F0; padding-bottom: 8px;">$1</h2>')
+    htmlToCopy = htmlToCopy.replace(/^###\s+(.*?)$/gm, '<h3 style="font-size: 18px; font-weight: bold; color: #1E293B; margin: 24px 0 12px 0;">$1</h3>')
+
+    // 문단(<p>) 태그에 16px 표준 인라인 스타일 보장 (네이버 에디터 11pt 다운그레이드 방지)
+    htmlToCopy = htmlToCopy.replace(/<p(?![^>]*style=)([^>]*)>/gi, '<p style="font-size: 16px; line-height: 1.85; margin: 16px 0; color: #1F2937;"$1>')
 
     if (!htmlToCopy) {
       toast({

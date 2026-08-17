@@ -5,9 +5,53 @@ import { anthropic } from '@ai-sdk/anthropic'
 import { google } from '@ai-sdk/google'
 import { openai } from '@ai-sdk/openai'
 import { NextResponse } from 'next/server'
-
+import { stripInternalMetadata } from '@/lib/utils/postSanitizer'
 
 export const maxDuration = 60
+
+// Tavily RAG 검색 헬퍼 (최대 2초 타임아웃 & 공공 도메인 가드)
+async function fetchTavilyContext(keyword: string, industry: string = ''): Promise<string> {
+  if (!process.env.TAVILY_API_KEY) {
+    return '\n[알림: TAVILY_API_KEY가 없어 실시간 웹 검색이 생략되었습니다. 일반적인 지식을 바탕으로 작성하세요.]'
+  }
+  try {
+    let includeDomains: string[] = ['law.go.kr']
+    if (industry.includes('변호사') || industry.includes('법률')) {
+      includeDomains = ['law.go.kr', 'scourt.go.kr', 'ccourt.go.kr', 'ftc.go.kr', 'likms.assembly.go.kr']
+    } else if (industry.includes('세무사') || industry.includes('회계사')) {
+      includeDomains = ['txsi.hometax.go.kr', 'nts.go.kr', 'tt.go.kr', 'moef.go.kr', 'law.go.kr']
+    } else if (industry.includes('노무사')) {
+      includeDomains = ['moel.go.kr', 'nlrc.go.kr', 'comwel.or.kr', 'law.go.kr']
+    } else if (industry.includes('행정사')) {
+      includeDomains = ['acrc.go.kr', 'hikorea.go.kr', 'moleg.go.kr', 'mfds.go.kr', 'law.go.kr']
+    }
+
+    const searchRes = await fetch('https://api.tavily.com/search', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        api_key: process.env.TAVILY_API_KEY,
+        query: keyword,
+        search_depth: 'basic',
+        include_answer: true,
+        max_results: 3,
+        include_domains: includeDomains,
+      }),
+      signal: AbortSignal.timeout(2000),
+    })
+
+    const searchData = await searchRes.json()
+    if (searchData && searchData.results && searchData.results.length > 0) {
+      const formattedResults = searchData.results
+        .map((r: any) => `- 제목: ${r.title}\n  내용: ${r.content}\n  출처: ${r.url}`)
+        .join('\n\n')
+      return `\n[${keyword} 관련 공식/최신 정보 요약 (Tavily Search)]\n${searchData.answer || ''}\n\n[관련 기사/웹 문서]\n${formattedResults}\n\n이 공식 데이터를 본문 작성 시 참고하고 환각 없이 출처 기반으로 작성해.`
+    }
+  } catch (e) {
+    console.warn('Tavily search warning (graceful fallback):', e)
+  }
+  return '\n[알림: 실시간 공공 데이터 조회가 안전하게 완료되었습니다. 일반적인 전문 지식과 결합하여 작성하세요.]'
+}
 
 export async function POST(req: Request) {
   let currentUserId: string | null = null
@@ -23,36 +67,34 @@ export async function POST(req: Request) {
 
     currentUserId = user.id
 
-    let dbUser = await prisma.user.findUnique({ where: { id: user.id } });
+    let dbUser = await prisma.user.findUnique({ where: { id: user.id } })
     if (!dbUser) {
       dbUser = await prisma.user.create({
         data: {
           id: user.id,
           email: user.email || '',
           credits: 5000,
-          plan_type: 'free'
-        }
-      });
+          plan_type: 'free',
+        },
+      })
     }
 
     const [profile, pastArticles] = await Promise.all([
       prisma.profile.findUnique({
-        where: { user_id: user.id }
+        where: { user_id: user.id },
       }),
-      // 내부 링크 자동 생성을 위해 과거 작성된 원고 5개 최근순 조회 (문맥 필터링용)
       prisma.article.findMany({
         where: { user_id: user.id, status: 'DRAFT' },
         orderBy: { created_at: 'desc' },
         take: 5,
-        select: { id: true, title: true, target_keyword: true }
-      })
+        select: { id: true, title: true, target_keyword: true },
+      }),
     ])
 
-    // 원자적 선차감 (동시성 다중 요청 시 크레딧 누수 원천 차단)
     const deduction = await prisma.user.updateMany({
       where: { id: user.id, credits: { gt: 0 } },
-      data: { credits: { decrement: 1 } }
-    });
+      data: { credits: { decrement: 1 } },
+    })
 
     if (deduction.count === 0) {
       return NextResponse.json({ error: '크레딧이 부족합니다. 요금제를 업그레이드해주세요.' }, { status: 403 })
@@ -61,15 +103,14 @@ export async function POST(req: Request) {
     isCreditDeducted = true
 
     const body = await req.json()
-    // prompt는 useCompletion에서 자동으로 전달되는 텍스트 (여기서는 타겟 키워드와 톤 등)
     const { prompt, tone, experience } = body
 
     if (!prompt) {
       return NextResponse.json({ error: '타겟 키워드가 필요합니다.' }, { status: 400 })
     }
 
-    let profileFooterPrompt = '';
-    let ragInjection = '';
+    let profileFooterPrompt = ''
+    let ragInjection = ''
 
     if (profile) {
       profileFooterPrompt = `
@@ -85,7 +126,7 @@ export async function POST(req: Request) {
 "본 포스팅은 일반적인 정보 제공을 목적으로 하며, 구체적인 사안에 따라 법적 판단이 달라질 수 있으므로 반드시 정식 상담을 받아보시기 바랍니다."
 (주의: 배너 아래에 별도의 회색 텍스트 안내 박스를 중복으로 생성하지 마세요. 모든 사무소 정보는 [사진 9 배너 이미지] 하나로 완벽하게 통합합니다.)
 </footer_cta>
-`;
+`
 
       if (profile.about_us) {
         ragInjection = `
@@ -96,121 +137,136 @@ export async function POST(req: Request) {
 ${profile.about_us}
 ---
 </expert_persona>
-`;
+`
       }
     }
 
-    let experienceInjection = '';
+    let experienceInjection = ''
     if (experience && experience.trim() !== '') {
       experienceInjection = `
 <expert_experience>
 작성자의 실제 에피소드: "${experience}"
 </expert_experience>
-`;
+`
     } else {
       experienceInjection = `
 <expert_experience>
 작성자의 실제 에피소드는 제공되지 않았으므로, 타겟 키워드와 관련된 가장 보편적이고 사실적인 가상의 의뢰인 상담 사례 하나를 1인칭 시점("얼마 전 저희 사무소를 찾아주신 의뢰인이 계셨습니다...")으로 창작하여 적용할 것.
 </expert_experience>
-`;
+`
     }
 
-    const { scrapeNaverSerpContext } = await import('@/lib/scraper');
+    const { scrapeNaverSerpContext } = await import('@/lib/scraper')
     const { 
       getThemeByIndustry,
       getTopThumbnailTemplate, getChecklistCardTemplate, getComparisonCardTemplate,
       getHighlightStatCardTemplate, getProcessFlowCardTemplate, getQnACardTemplate,
       getWarningRiskCardTemplate, getKeyTakeawaysTemplate, getFooterBannerTemplate,
-      getInfoBoxTemplate, getQuoteTemplate, 
+      getIntroSummaryBoxTemplate, getInfoBoxTemplate, getQuoteTemplate, 
       getTableTemplate, getDividerTemplate, getStepByStepTemplate 
-    } = await import('@/lib/templates');
-    
-    const serpData = await scrapeNaverSerpContext(prompt);
-    const matchedTheme = getThemeByIndustry(profile?.industry || '');
+    } = await import('@/lib/templates')
 
-    let contextInjection = '';
-    let designInjection = '';
+    const [serpData, searchContext] = await Promise.all([
+      scrapeNaverSerpContext(prompt),
+      fetchTavilyContext(prompt, profile?.industry || ''),
+    ])
 
+    const matchedTheme = getThemeByIndustry(profile?.industry || '')
+
+    let contextInjection = ''
     if (serpData) {
       contextInjection = `
 <serp_context>
-[실시간 네이버 상위 5개 블로그 분석 데이터 (이 규칙을 반드시 따를 것)]
-- 권장 글자 수: 약 ${serpData.averageTextLength}자 내외로 작성해.
-- 자주 쓰이는 목차(H2): ${serpData.commonHeaders.join(', ')}. 이 구조를 자연스럽게 H2 태그로 반영해.
+[실시간 네이버 상위 5개 블로그 SERP 역설계 데이터 (이 규칙을 최우선 반영할 것)]
+- 권장 글자 수: 상위 경쟁사 평균(${serpData.averageTextLength}자)보다 300자 더 길고 풍부한 약 ${serpData.recommendedTextLength}자 내외로 작성해.
+- 경쟁사 주요 목차(H2): ${serpData.commonHeaders.join(', ') || '핵심 쟁점, 법적 판단 기준, 실무 대응 절차'}. 이 목차들의 장점을 흡수하고 빈틈을 메우는 차별화된 H2 구조로 전개해.
+- 권장 서식: ${serpData.recommendedComponents.useTable ? '비교표(Table) 적극 활용' : ''} ${serpData.recommendedComponents.useQuote ? '인용구(Quote) 적극 활용' : ''}
 </serp_context>
-`;
+`
     }
 
     const activeTemplates = [
-      getTopThumbnailTemplate(),
-      getChecklistCardTemplate(),
-      getComparisonCardTemplate(),
-      getHighlightStatCardTemplate(),
-      getProcessFlowCardTemplate(),
-      getQnACardTemplate(),
-      getWarningRiskCardTemplate(),
-      getKeyTakeawaysTemplate(),
-      getFooterBannerTemplate(),
+      getTopThumbnailTemplate(currentUserId || '', prompt),
+      getChecklistCardTemplate(currentUserId || '', prompt),
+      getComparisonCardTemplate(currentUserId || '', prompt),
+      getHighlightStatCardTemplate(currentUserId || '', prompt),
+      getProcessFlowCardTemplate(currentUserId || '', prompt),
+      getQnACardTemplate(currentUserId || '', prompt),
+      getWarningRiskCardTemplate(currentUserId || '', prompt),
+      getKeyTakeawaysTemplate(currentUserId || '', prompt),
+      getFooterBannerTemplate(currentUserId || '', prompt),
+      getIntroSummaryBoxTemplate(matchedTheme.accentColor, prompt),
       getInfoBoxTemplate(matchedTheme.accentColor),
       getTableTemplate(matchedTheme.bg),
       getQuoteTemplate(matchedTheme.accentColor),
       getStepByStepTemplate(matchedTheme.accentColor)
-    ];
+    ]
 
-    designInjection = `
+    const designInjection = `
 <visual_card_design_system>
-[네이버 블로그 2026 프리미엄 8종 시각 카드 및 안전 서식 시스템]
+[네이버 블로그 2026 프리미엄 9종 시각 카드 및 안전 서식 시스템 (1080px 고해상도 & 고유 브랜드 킷 적용)]
 네이버 블로그의 화사한 본문 및 스마트에디터 ONE 붙여넣기에 100% 호환되는 프리미엄 시각 카드 디자인 시스템입니다.
-- 모든 시각 카드는 아래 제공된 8종의 \`<img src="/api/card-image/render?type=..." alt="..." style="..." />\` 템플릿 태그를 그대로 사용하여, URL의 \`title\`, \`sub\`, \`points\`, \`sig\` 등의 텍스트만 현재 주제에 맞게 변경하여 삽입하세요.
-- 마크다운 형식(\`![]()\`)이나 빈 \`src=""\`를 절대 사용하지 말고, 반드시 제공된 \`<img src="/api/card-image/render?..." ...>\` 태그를 사용하세요.
-- [사진 1: 최상단 1:1 맞춤 썸네일]: 본문 가장 첫머리에 필수 1장 배치.
-- [본문 중간 시각 카드]: 본론 1 및 본론 2의 설명 직후에 [체크리스트, Before/After 비교, 핵심 수치 강조, 3단계 로드맵, Q&A, 리스크 경고] 중 가장 어울리는 카드를 2~3장 선별 삽입.
-- [사진 8: 핵심 3줄 요약 카드]: 결론부 직전에 필수 1장 배치.
-- [사진 9: 하단 상담 유도 배너]: 글 최하단에 필수 1장 배치.
-- 안내/리스크 박스 서식은 네이버 에디터가 100% 보존하는 표준 인라인 CSS(\`<div style="background-color: #FEF9C3; border-left: 4px solid #EAB308; padding: 18px 20px; margin: 24px 0; border-radius: 4px; line-height: 1.6;">...</div>\`)를 사용하세요.
-- 복잡한 비교 표나 준비 서류 목록은 이미지 대신 아래 제공된 순수 인라인 HTML Table 서식(\`<table style="width: 100%; border-collapse: collapse; margin: 24px 0; font-size: 15px; text-align: left; background-color: #FFFFFF;">...</table>\`)으로 작성하여 한글이 100% 또렷하게 읽히도록 하세요.
+- 모든 시각 카드는 아래 제공된 9종의 <img src="/api/card-image/render?type=...&userId=..." alt="..." style="..." /> 템플릿 태그를 그대로 사용하되, URL 내부의 title, sub, tags, points, sig 등의 텍스트를 현재 주제에 맞게 변경하여 삽입하세요.
+- [네이버 이미지 검색 SEO 필수 규칙]: 모든 <img> 태그의 alt 속성은 반드시 템플릿에 명시된 대로 'alt="${prompt} - (카드유형한글명)"' 형태로 이번 글의 메인 타겟 키워드를 반드시 포함하여 작성하세요.
+- 마크다운 형식(![]())이나 빈 src=""를 절대 사용하지 말고, 반드시 제공된 <img src="/api/card-image/render?..." ...> 태그를 사용하세요.
+- [사진 1: 최상단 1:1 맞춤 썸네일]은 반드시 URL에 &tags=핵심키워드1|핵심키워드2|핵심키워드3 형태로 이번 글의 3개 핵심 뱃지 태그를 파이프(|)로 구분하여 주입하세요.
+- [사진 3: 비교 카드]는 반드시 URL에 &extra1=(잘못된 대처 요약)&extra2=(올바른 전문가 대응 요약) 파라미터를 정확히 분리하여 사용하세요 (절대 '|extra2='로 쓰지 마세요).
+- [사진 5: 3단계 로드맵 카드]는 &points=1단계 핵심제목:구체적 설명|2단계 핵심제목:구체적 설명|3단계 핵심제목:구체적 설명 형태로 파이프(|)로 3단계를 연결하세요.
+
+[탈 양산화 시각 카드 배치 원칙 (글마다 2~5장 유기적 가변 배치)]:
+1. [사진 1: 최상단 1:1 맞춤 썸네일]: 본문 가장 첫머리에 필수 1장 배치.
+2. [본문 중간 맞춤형 시각 카드 (주제에 따라 1~3장 선별)]:
+   - 획일적으로 똑같은 카드를 반복하지 말고, 이번 글의 핵심 내용에 가장 적합한 카드를 9종 중에서 1~3장만 유기적으로 선택해 배치하세요:
+     • 잘못된 대처와 올바른 해결의 대비가 중요할 때 ➔ [사진 3: Before/After 비교 카드]
+     • 필수 준비 서류나 요건 나열이 필요할 때 ➔ [사진 2: 체크리스트 카드]
+     • 실무 처리 순서나 행동 로드맵이 필요할 때 ➔ [사진 5: 3단계 로드맵 카드]
+     • 핵심 수치, 감면율, 벌금 금액 강조 시 ➔ [사진 4: 핵심 수치 하이라이트 카드]
+     • 독자의 오해 해소나 빈출 질문 해설 시 ➔ [사진 6: Q&A 카드]
+     • 기한 만료 리스크나 가산세 경고 시 ➔ [사진 7: 골든타임 리스크 카드]
+3. [결론부 카드]: 내용에 따라 [사진 8: 핵심 3줄 요약 카드]를 선택 배치.
+4. [사진 9: 하단 상담 유도 배너]: 글 최하단에 필수 1장 배치.
+- 전체 글에 들어가는 카드 이미지의 총 개수는 주제에 맞춰 자연스럽게 총 2~5장 사이로 자율 구성하세요.
+
+- 안내/리스크 박스 서식은 네이버 에디터가 100% 보존하는 표준 인라인 CSS(<div style="background-color: #FEF9C3; border-left: 4px solid #EAB308; padding: 18px 20px; margin: 24px 0; border-radius: 4px; line-height: 1.6;">...</div>)를 사용하세요.
+- 복잡한 비교 표나 준비 서류 목록은 이미지 대신 아래 제공된 순수 인라인 HTML Table 서식(<table style="width: 100%; border-collapse: collapse; margin: 24px 0; font-size: 15px; text-align: left; background-color: #FFFFFF;">...</table>)으로 작성하여 한글이 100% 또렷하게 읽히도록 하세요.
 
 ${activeTemplates.join('\n\n')}
 </visual_card_design_system>
+`
 
-
-`;
-
-    // 내부 링크(Internal Linking) 주입 (SEO 2026 트렌드)
-    let internalLinkInjection = '';
+    let internalLinkInjection = ''
     if (pastArticles && pastArticles.length > 0) {
       const links = pastArticles.map((a: any) => {
-        const cleanTitle = a.title.replace(' (SEO 최적화)', '');
-        return `- <a href="https://blog.naver.com">${cleanTitle}</a>`;
-      }).join('\n');
+        const cleanTitle = a.title.replace(' (SEO 최적화)', '')
+        return `- <a href="https://blog.naver.com">${cleanTitle}</a>`
+      }).join('\n')
       
       internalLinkInjection = `
 <internal_links>
 [중요 지시사항: 조건부 내부 링크 삽입]
 아래 제공된 과거 글 목록을 확인하고, **현재 작성 중인 타겟 키워드와 문맥상 자연스럽게 이어질 수 있는 글이 있다면 최대 1~2개만 선택**하여 본문에 삽입해.
-만약 과거 글 내용이 현재 주제와 전혀 무관하다면(예: 비자 관련 글에 음주운전 링크 삽입 등) **절대로 억지로 삽입하지 말고 완전히 무시해**.
-링크를 삽입할 때는 서로 완전히 다른 문단에 분산시키고, "내부 링크 삽입 시" 등의 부연 설명 없이 자연스러운 문맥 속에 스며들게 해.
+만약 과거 글 내용이 현재 주제와 전혀 무관하다면 **절대로 억지로 삽입하지 말고 완전히 무시해**.
 
 선택 가능한 과거 링크 후보 목록:
 ${links}
 </internal_links>
-`;
+`
     }
 
-    let terminologyStrictness = '';
-    const industryForTerm = profile?.industry || '';
+    let terminologyStrictness = ''
+    const industryForTerm = profile?.industry || ''
     if (industryForTerm.includes('세무사') || industryForTerm.includes('회계사')) {
-      terminologyStrictness = `[세무사/회계사 용어 엄격성]\n- 세법 용어(소득공제, 세액공제, 감면, 비과세, 경정청구 등)를 절대 뭉뚱그려 혼용하지 말고, 과세표준 적용인지 산출세액 적용인지 명확하고 엄격하게 분리하여 작성해.`;
+      terminologyStrictness = `[세무사/회계사 용어 엄격성]\n- 세법 용어(소득공제, 세액공제, 감면, 비과세, 경정청구 등)를 절대 뭉뚱그려 혼용하지 말고, 과세표준 적용인지 산출세액 적용인지 명확하고 엄격하게 분리하여 작성해.`
     } else if (industryForTerm.includes('변호사') || industryForTerm.includes('법률')) {
-      terminologyStrictness = `[법률 용어 엄격성]\n- 법률 용어(벌금/과태료/과징금, 해제/해지, 무효/취소 등)의 법적 효력 차이를 절대 혼용하지 말고 명확하고 엄격하게 구분하여 작성해.`;
+      terminologyStrictness = `[법률 용어 엄격성]\n- 법률 용어(벌금/과태료/과징금, 해제/해지, 무효/취소 등)의 법적 효력 차이를 절대 혼용하지 말고 명확하고 엄격하게 구분하여 작성해.`
     } else if (industryForTerm.includes('노무사')) {
-      terminologyStrictness = `[노무 용어 엄격성]\n- 노동법 용어(해고/권고사직/퇴사, 임금/수당/퇴직금 등)의 법적 요건 차이를 엄격히 구분하여 작성해.`;
+      terminologyStrictness = `[노무 용어 엄격성]\n- 노동법 용어(해고/권고사직/퇴사, 임금/수당/퇴직금 등)의 법적 요건 차이를 엄격히 구분하여 작성해.`
     } else {
-      terminologyStrictness = `[전문 용어 엄격성]\n- 도메인 전문 용어들을 일반인처럼 뭉뚱그려 쓰지 말고, 전문가적 관점에서 정확하고 엄격하게 분리하여 작성해.`;
+      terminologyStrictness = `[전문 용어 엄격성]\n- 도메인 전문 용어들을 일반인처럼 뭉뚱그려 쓰지 말고, 전문가적 관점에서 정확하고 엄격하게 분리하여 작성해.`
     }
 
-    let complianceInjection = '';
-    const userIndustry = profile?.industry || '';
+    let complianceInjection = ''
+    const userIndustry = profile?.industry || ''
 
     if (userIndustry.includes('변호사') || userIndustry.includes('법률')) {
       complianceInjection = `
@@ -221,7 +277,7 @@ ${links}
 3. 명칭 규정: 공식 등록되지 않은 전문분야는 '전문' 대신 '주요 취급 분야' 또는 '집중 수행'으로 서술.
 4. 기계적 상투어 금지: "안녕하세요", "오늘은 ~에 대해 알아보겠습니다", "결론부터 말씀드리자면" 등 진부한 상투어 절대 사용 금지.
 </compliance>
-`;
+`
     } else if (userIndustry.includes('세무사') || userIndustry.includes('회계사')) {
       complianceInjection = `
 <compliance>
@@ -231,7 +287,7 @@ ${links}
 3. 객관적 서술 원칙: 금전적 환급을 확정 약속하지 말고, 절세가 이루어지는 '법적 원리'와 '세법 적용 요건'을 객관적으로 명쾌하게 설명할 것.
 4. 기계적 상투어 금지: "안녕하세요", "오늘은 ~에 대해 알아보겠습니다" 등 진부한 상투어 절대 사용 금지.
 </compliance>
-`;
+`
     } else if (userIndustry.includes('의사') || userIndustry.includes('병원') || userIndustry.includes('의료')) {
       complianceInjection = `
 <compliance>
@@ -239,27 +295,9 @@ ${links}
 1. 치료 경험담 및 후기성 서술 금지: 로그인 절차 없는 공개 블로그에서 주관적 '치료 후기', '환자 만족도', '수술 전후(Before/After)' 비교 절대 금지.
 2. 환자 유인 및 할인 이벤트 금지: "특별 할인", "페이백", "지인 동반 무료" 등 영리 목적 유인 문구 일체 금지.
 3. 객관적 정보 전달 포맷: 시술의 의학적 원리, 소요 시간, 부작용 및 주의사항 위주로 객관적이고 차분하게 설명할 것.
-4. 기계적 상투어 금지: "안녕하세요", "오늘은 ~에 대해 알아보겠습니다" 등 진부한 상투어 절대 사용 금지.
+4. 기계적 상투어 금지.
 </compliance>
-`;
-    } else if (userIndustry.includes('노무사')) {
-      complianceInjection = `
-<compliance>
-[공인노무사 광고 가이드]
-1. 직무 범위 준수: 무자격자(사무장 등) 수행 오인 표현 및 소송 대리/사법 분쟁 개입 암시 표현 절대 금지.
-2. 과장/보장성 단어("100% 보상", "무조건 승인") 금지 및 노동관계법령 기준 객관적 권리 구제 절차 중심 서술.
-3. 기계적 상투어 금지.
-</compliance>
-`;
-    } else if (userIndustry.includes('행정사')) {
-      complianceInjection = `
-<compliance>
-[행정사법 제22조 준수 가이드]
-1. 직무 범위 엄수: 소송 대리 및 사법 분쟁 대리 암시 문구 절대 금지 (행정청 서류 작성 및 인허가 대리 직무 범위로 명확히 한정).
-2. 과장/보장성 단어("100% 인허가 보장") 금지 및 법정 요건 중심 서술.
-3. 기계적 상투어 금지.
-</compliance>
-`;
+`
     } else {
       complianceInjection = `
 <compliance>
@@ -268,7 +306,7 @@ ${links}
 2. 근거 없는 가격 할인 및 기계적인 상투어("안녕하세요", "오늘은 ~에 대해 알아보겠습니다") 금지.
 3. 차분하고 신뢰감을 주는 전문가적 객관성 유지.
 </compliance>
-`;
+`
     }
 
     const systemPrompt = `
@@ -276,10 +314,17 @@ ${links}
 글은 반드시 사용자의 검색 의도를 파악한 '정보성' 혹은 '직접 경험한 듯한 후기성'의 자연스러운 톤앤매너(${tone || '신뢰감을 주는 전문가 톤'})로 작성되어야 해. 
 
 <anti_hallucination_guideline>
-1. CoT (Chain of Thought) 팩트 체크 강제:
-반드시 HTML 본문을 작성하기 전에, <div style="display: none;" id="fact-check-memo"> </div> 태그 안에 타겟 키워드와 관련된 핵심 세무/법률 용어들의 정의와 RAG 검색 수치를 명확히 분리하여 메모(팩트 체크)를 먼저 작성해. 이 메모를 완료한 후에만 본격적인 HTML 글을 작성해.
+1. CoT (Chain of Thought) 팩트 체크 및 동적 아웃라인 설계 강제:
+반드시 HTML 본문을 작성하기 전에, <internal_fact_check> 태그 안에 아래 3가지 설계 메모를 먼저 완벽히 작성해:
+- [팩트 체크]: 타겟 키워드 관련 핵심 전문 용어 정의 및 Tavily RAG 검색 팩트/출처 분리
+- [목표 분량]: SERP 분석 기반 목표 글자 수 (약 ${serpData?.recommendedTextLength || 2800}자)
+- [탈 양산화 설계도]: 이번 글의 맞춤형 H2 소제목 전개 계획 및 본문에 선별 배치할 2~5장의 시각 카드 종류 명시
+</internal_fact_check>
+이 기획 메모는 반드시 <internal_fact_check> 태그 안에만 작성하고, 닫는 태그(</internal_fact_check>) 이후의 실제 본문에는 [팩트 체크] 등의 텍스트를 절대 다시 노출하지 마. 본격적인 글은 바로 <post_title> 및 [사진 1 썸네일]부터 시작해.
+
 2. 수치 날조 절대 금지 (Strict Grounding):
 본문에 들어가는 수치(세율, 공제 한도 금액, 과태료 등)나 법조항 번호는 오직 제공된 [Tavily Search] 데이터에만 기반해야 해. 제공되지 않은 구체적 수치는 절대 LLM의 지식으로 임의 생성(날조)하지 말고 일반적인 개념 설명으로 대체해.
+
 3. 용어 엄격성:
 ${terminologyStrictness}
 </anti_hallucination_guideline>
@@ -297,145 +342,75 @@ ${profileFooterPrompt}
 0. 응답의 가장 첫 줄에 반드시 <post_title>네이버 검색 유저의 클릭을 유도하는 매혹적인 1인칭 후킹 제목 (25자 내외)</post_title> 을 작성해.
 1. [본문 최상단 1:1 맞춤 썸네일 카드 필수 삽입 (최우선)]
    - <post_title> 태그 바로 다음 줄(본문 HTML의 가장 첫머리)에 반드시 [사진 1: 최상단 1:1 맞춤 썸네일 이미지]를 삽입해.
-   - 썸네일은 화사한 웜 크림/골드 라이트 배경(fill='%23FDFBF7') 위에 짙은 네이비 텍스트(fill='%230F172A')로 카테고리 뱃지, 메인 타이틀, 서브카피, 하단 브랜드 서명을 완성하여 글씨가 100% 뚜렷하게 보이도록 할 것.
-2. [본문 중간 시각 인포그래픽 카드 2~3장 가변 삽입]
-   - Body 1 및 Body 2에서 각 소제목(H2)의 본문 설명 직후에, 화사한 라이트 테마의 인포그래픽 카드([체크리스트], [Before/After 비교], [핵심 수치 강조], [3단계 로드맵], [Q&A 해설], [골든타임 리스크 경고])를 2~3장 자율 선별하여 배치할 것.
-   - 소제목(H2)은 별도의 챕터 바 없이 네이버 스마트블록 검색에 강력한 문장형 제목(예: 📌 송파구 문정동 음식점 창업 시 세금 감면 혜택 기준)으로 작성하여 제목 중복이 없도록 할 것.
-3. [결론부 직전: 핵심 3줄 결론 요약 카드 필수 삽입]
-   - 본론 마무리 후 결론부 직전에 [사진 8: 핵심 3줄 결론 요약 카드]를 반드시 삽입하여 화사한 웜 옐로우/크림 바탕 위에 짙은 챠콜(fill='%230F172A') 글씨로 3줄 요약을 작성할 것.
-4. [글 최하단: 하단 상담 유도 (CTA) & 찾아오시는 길 배너 카드 필수 삽입]
+   - 썸네일은 화사한 웜 크림/골드 라이트 배경 위에 카테고리 뱃지, 메인 타이틀, 서브카피, 하단 브랜드 서명을 완성하여 모바일에서도 글씨가 100% 뚜렷하게 보이도록 할 것.
+2. [본문 중간 시각 인포그래픽 카드 1~3장 가변 선별 삽입 (탈 양산화)]
+   - Body 1 및 Body 2에서 각 소제목(H2)의 본문 설명 직후에, 이번 글의 주제에 가장 꼭 맞는 인포그래픽 카드([체크리스트], [Before/After 비교], [핵심 수치 강조], [3단계 로드맵], [Q&A 해설], [골든타임 리스크 경고])를 1~3장 자율 선별하여 배치할 것. (모든 글에 똑같은 카드를 반복하지 말 것)
+   - 소제목(H2)은 별도의 챕터 바 없이 네이버 스마트블록 검색에 강력한 문장형 제목으로 작성할 것.
+3. [결론부 요약 카드]: 본론 마무리 후 결론부 직전에 내용에 따라 [사진 8: 핵심 3줄 결론 요약 카드]를 선택 배치.
+4. [글 최하단: 하단 상담 유도 (CTA) 배너 카드 필수 삽입]
    - 글의 맨 마지막(마무리 문단 후)에는 [사진 9: 하단 상담 유도 배너]를 삽입하여 전화번호(${profile?.phone || ''}), 주소(${profile?.address || ''}), 지도 링크(${profile?.reservation_link || ''})를 완벽히 안내할 것.
 6. [문서 5단계 뼈대 구조화 (Skeleton-of-Thought)]
    - 1단계: <post_title> (타깃 키워드를 자연스럽게 포함하고 의뢰인의 구체적 고민 해결을 명시한 25자 내외 제목)
-   - 2단계: Introduction (도입부 - 15%) ➔ **APB 훅(Attention-Problem-Bridge)** 프레임워크를 적용하여 7초 이내 독자를 몰입시킬 것:
-     * Attention (주의 환기): 독자가 처한 긴박한 상황이나 가장 궁금해하는 핵심 질문으로 첫 문장 시작.
-     * Problem (고통/위기 공감): 방치하거나 잘못 대처했을 때 겪게 될 실질적 리스크(세금 폭탄, 패소, 과태료 등)를 날카롭게 짚음.
-     * Bridge (해결의 다리): "오늘 글에서는 15년 차 전문가의 실무 경험을 바탕으로, OOO 상황에서 반드시 챙겨야 할 핵심 3가지를 명쾌하게 정리해 드립니다"로 본론과 매끄럽게 연결.
-   - 3단계: Body 1 (핵심 법리 및 규정 - 40%) ➔ 문제를 해결하기 위한 법리적, 세무적 기준과 법적 원리를 설명. 복잡한 정보(양형 기준, 세율 구간, 절차 등)가 있을 경우 제공된 템플릿(비교표 Table 등)을 문맥에 맞게 자연스럽게 활용.
-   - 4단계: Body 2 (실무 대응 전략 - 35%) ➔ 실제 사건 발생 시 의뢰인이 취해야 할 실무 행동 지침 및 단계별 가이드라인(StepByStep 템플릿 또는 번호 매기기)을 일목요연하게 정리.
-   - 5단계: Conclusion & CTA (결론 및 상담 안내 - 10%) ➔ 사안의 심각성을 차분히 상기시키고 전문가 조력의 필요성을 품격 있게 안내.
-7. 1인칭 스토리텔링 100% 강제 (최우선): <expert_experience> 데이터를 바탕으로, 글의 서론 직후나 본론 중간에 네이버 인용구(<blockquote>)나 형광펜 효과를 적용하여 "실제로 최근 저희 사무소를 찾아주신 의뢰인 사례를 말씀드리면..."과 같은 1인칭 화법의 스토리텔링 문단을 무조건 1개 이상 필수 배치해.
-8. 법령 및 판례 출처(Citation) 인용 표준화: 법적 요건, 처벌 수위, 세율 등을 설명할 때는 본문 텍스트 내에 괄호를 사용하여 [출처: 관련 법령 조항 및 판례 번호](예: 형법 제297조, 대법원 2021도XXXX 판결)를 자연스럽게 병기해.
-9. 키워드 밀도 및 LSI 분산: 타깃 키워드의 단순 반복을 금지하고, 전체 본문 대비 키워드 밀도를 2~3% 수준으로 유지하며, 의미가 유사한 동의어(LSI)를 고르게 분산 배치해.
-10. 마크다운 안됨: 순수한 HTML 코드로만 제공. <html>, <body>, \`\`\`html 같은 코드 블럭 절대 금지.
-11. 네이버 에디터 호환성: display: flex, display: grid, position: absolute 같이 네이버 스마트에디터에서 깨지는 CSS 속성은 절대 사용 금지. 오직 기본 margin, padding, text-align, color, background-color, border, border-radius, box-shadow 등 호환되는 안전한 인라인 CSS만 사용해.
-12. 제목 금지: <post_title> 태그 외에 본문 안에는 <h1> 쓰지 마. 오직 <h2>와 <h3> 태그만 사용. 
-13. 트렌디한 블로그 디자인: 전체 문단(<p>)에 \`text-align: left; line-height: 1.95; font-size: 15.5px; margin-bottom: 20px; color: #334155;\` 기본 적용. 헤딩(<h2>, <h3>) 앞에 눈에 띄는 이모지 필수.
-14. 형광펜 강조: 핵심 내용에는 형광펜 효과(\`<span style="background-color: #fffbeb; padding: 2px 6px; font-weight: bold; color: #1e40af; border-radius: 4px;">...</span>\`)를 적극 사용.
-15. 이모지 적극 사용: 💡, 🔥, ✨, 📌 등을 적절히 배치해 가독성을 높임.
-16. [고화질 <img> 시각 카드 이미지 필수 사용]: 제공된 8종의 카드 이미지 템플릿(<img> 태그)의 URL 파라미터(title, sub, points, sig 등)를 현재 글 주제에 맞게 알맞게 수정하여 적재적소에 배치하세요. (단, 무관한 외부 스톡 사진 URL은 일체 금지하며, 제공된 <img src="/api/card-image/render?type=..." ...> 카드 이미지로 네이버 공식 사진 점수와 완벽한 시각적 퀄리티를 완성하세요.)
+   - 2단계: Introduction (도입부 - 15%) ➔ [사진 1 썸네일] 바로 아래 APB 훅(Attention-Problem-Bridge) 프레임워크 적용 ➔ **도입부 문단 종료 직후, 첫 번째 <h2> 소제목이 시작되기 바로 전에 반드시 [서론 직후 스마트블록 스니펫용 3초 핵심 요약 박스]를 1회 의무 삽입할 것.**
+   - 3단계: Body 1 (핵심 법리 및 규정 - 40%) ➔ 복잡한 정보는 순수 HTML Table 서식 적극 활용
+   - 4단계: Body 2 (실무 대응 전략 - 35%) ➔ 실무 행동 지침 및 단계별 가이드라인
+   - 5단계: Conclusion & CTA (결론 및 상담 안내 - 10%) ➔ 전문가 조력 안내
+7. 1인칭 스토리텔링 100% 강제 (최우선): <expert_experience> 데이터를 바탕으로 1인칭 화법의 스토리텔링 문단을 무조건 1개 이상 필수 배치.
+8. 법령 및 판례 출처(Citation) 인용 표준화: 본문 텍스트 내에 괄호를 사용하여 [출처: 관련 법령 조항 및 판례 번호] 병기.
+9. 키워드 밀도 및 LSI 분산: 타깃 키워드의 단순 반복을 금지하고, 전체 본문 대비 키워드 밀도를 2~3% 수준 유지.
+10. [마크다운 절대 금지 & 순수 HTML 강제]: 절대로 마크다운(#, ##, ###, **, -, >)을 쓰지 마세요. 모든 제목과 문단은 반드시 인라인 스타일이 적용된 순수 HTML 태그(<h2>, <h3>, <p>, <blockquote>, <table>)로만 작성하세요.
+11. [네이버 스마트에디터 ONE 표준 인라인 스타일 규격 준수 (필수)]:
+    - 대제목(H2): 반드시 '<h2 style="font-size: 22px; font-weight: bold; color: #0F172A; margin: 36px 0 16px 0; border-bottom: 2px solid #E2E8F0; padding-bottom: 8px;">(시각이모지) (소제목 내용)</h2>' 형태로 작성하여 22px 대형 크기와 밑줄 구분선을 보장할 것.
+    - 중제목(H3): '<h3 style="font-size: 18px; font-weight: bold; color: #1E293B; margin: 24px 0 12px 0;">(시각이모지) (중제목 내용)</h3>'
+    - 일반 본문 문단(P): 반드시 '<p style="font-size: 16px; line-height: 1.85; margin: 16px 0; color: #1F2937;">(문단 내용)</p>' 형태로 16px 표준 크기를 적용하여 네이버 에디터에서 11pt로 쪼그라들지 않도록 할 것.
+12. [H2/H3 소제목 앞 이모지 필수]: <post_title> 외에 본문 안에는 <h1>을 쓰지 말고 오직 <h2>와 <h3> 태그만 사용하되, **모든 <h2> 및 <h3> 소제목 맨 앞에는 주제 맥락에 맞는 직관적인 시각 이모지(🏢, ⚖️, 📋, 👥, 🚀, 💡, 🔍, 📊 등)를 반드시 1개씩 포함**하세요 (예: '<h2 style="...">🏢 송파 세무사 기장료가 사무실마다 다른 이유</h2>').
+13. [본문 내부 이모지 남발 엄격 금지]: 소제목 앞을 제외한 본문 일반 문장에서는 이모지 남발을 엄격히 금지하고, 안내 박스나 강조 팁 등에서만 최소한(💡, 📌)으로 절제하여 전문직의 신뢰도 높은 필력을 완성하세요.
+14. 형광펜 강조: 핵심 내용에는 형광펜 효과 적극 사용.
+16. [고화질 <img> 시각 카드 이미지 필수 사용]: 제공된 9종의 카드 이미지 템플릿(<img> 태그)의 URL 파라미터를 현재 글 주제에 맞게 수정하여 글마다 총 2~5장 사이로 적재적소에 가변 배치하세요.
 </html_constraints>
+`
 
-    `;
-
-    let aiModel;
+    let aiModel
     if (dbUser.plan_type === 'pro' || dbUser.plan_type === 'premium') {
       if (process.env.ANTHROPIC_API_KEY) {
-        aiModel = anthropic('claude-5-sonnet-latest'); // 유료 요금제 (최고 품질)
+        aiModel = anthropic('claude-5-sonnet-latest')
       } else if (process.env.OPENAI_API_KEY) {
-        aiModel = openai('gpt-5.6-luna'); // GPT-5.6 Luna 고성능 Fallback
+        aiModel = openai('gpt-5.6-luna')
       } else {
-        aiModel = google('gemini-3.6-flash');
+        aiModel = google('gemini-3.6-flash')
       }
     } else {
-      // 무료 요금제 및 기본 모드: OPENAI_API_KEY 존재 시 gpt-5.6-luna 우선 우회, 부재 시 gemini-3.6-flash
       if (process.env.OPENAI_API_KEY) {
-        aiModel = openai('gpt-5.6-luna');
+        aiModel = openai('gpt-5.6-luna')
       } else {
-        aiModel = google('gemini-3.6-flash');
+        aiModel = google('gemini-3.6-flash')
       }
-    }
-
-
-    // 1. Tavily API로 최신 뉴스/트렌드 사전 검색 (RAG)
-    let searchContext = '';
-    if (process.env.TAVILY_API_KEY) {
-      try {
-        // 직군별 공공/국가 도메인 맵핑 로직
-        let includeDomains: string[] = [];
-        const industry = profile?.industry || '';
-        
-        if (industry.includes('변호사') || industry.includes('법률')) {
-          includeDomains = ['law.go.kr', 'scourt.go.kr', 'ccourt.go.kr', 'ftc.go.kr', 'likms.assembly.go.kr', 'kipris.or.kr', 'kipo.go.kr'];
-        } else if (industry.includes('세무사') || industry.includes('회계사')) {
-          includeDomains = ['txsi.hometax.go.kr', 'nts.go.kr', 'tt.go.kr', 'moef.go.kr', 'law.go.kr'];
-        } else if (industry.includes('노무사')) {
-          includeDomains = ['moel.go.kr', 'nlrc.go.kr', 'comwel.or.kr', 'law.go.kr'];
-        } else if (industry.includes('행정사')) {
-          includeDomains = ['acrc.go.kr', 'hikorea.go.kr', 'moleg.go.kr', 'mfds.go.kr', 'law.go.kr'];
-        } else {
-          // 애매하거나 기타 직종일 경우 법률의 기본인 국가법령정보센터만 할당 (Default Fallback)
-          includeDomains = ['law.go.kr'];
-        }
-
-        // 1차 검색 (도메인 강제)
-        let searchRes = await fetch('https://api.tavily.com/search', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            api_key: process.env.TAVILY_API_KEY,
-            query: prompt,
-            search_depth: 'basic',
-            include_answer: true,
-            max_results: 3,
-            include_domains: includeDomains
-          }),
-        });
-        
-        let searchData = await searchRes.json();
-
-        // 2차 검색 (Fallback: 만약 결과가 0건이면 도메인 제한 풀고 재검색)
-        if (!searchData.results || searchData.results.length === 0) {
-          searchRes = await fetch('https://api.tavily.com/search', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              api_key: process.env.TAVILY_API_KEY,
-              query: prompt,
-              search_depth: 'basic',
-              include_answer: true,
-              max_results: 3
-            }),
-          });
-          searchData = await searchRes.json();
-        }
-
-        if (searchData && searchData.results && searchData.results.length > 0) {
-          const formattedResults = searchData.results.map((r: any) => `- 제목: ${r.title}\n  내용: ${r.content}\n  출처: ${r.url}`).join('\n\n');
-          searchContext = `\n[${prompt} 관련 공식/최신 정보 요약 (Tavily Search)]\n${searchData.answer || ''}\n\n[관련 기사/웹 문서]\n${formattedResults}\n\n이 공식 데이터를 본문 작성 시 참고하고 환각 없이 출처 기반으로 작성해.`;
-        }
-      } catch (e) {
-        console.error('Tavily search failed:', e);
-      }
-    } else {
-      searchContext = `\n[알림: TAVILY_API_KEY가 없어 실시간 웹 검색이 생략되었습니다. 일반적인 지식을 바탕으로 작성하세요.]`;
     }
 
     const result = streamText({
       model: aiModel,
-      temperature: 0.75, // 동일 키워드라도 유니크한 문장 구조를 만들기 위해 약간 높임
+      temperature: 0.75,
       system: systemPrompt + searchContext,
       prompt: `타겟 키워드: ${prompt}\n\n위 지침에 맞춰 완벽한 네이버 블로그용 HTML 본문을 작성해줘.`,
       async onFinish({ text }) {
         try {
-          // 프로젝트 및 아티클 저장
           let project = await prisma.project.findFirst({
             where: { user_id: user.id },
-            orderBy: { created_at: 'asc' }
-          });
+            orderBy: { created_at: 'asc' },
+          })
 
           if (!project) {
             project = await prisma.project.create({
               data: {
                 user_id: user.id,
                 project_name: '기본 프로젝트',
-              }
-            });
+              },
+            })
           }
 
-          const titleMatch = text.match(/<post_title>([\s\S]*?)<\/post_title>/i);
-          const generatedTitle = titleMatch && titleMatch[1] ? titleMatch[1].trim() : `${prompt} (SEO 최적화)`;
-          const cleanHtml = text.replace(/<post_title>[\s\S]*?<\/post_title>/i, '').trim();
+          const titleMatch = text.match(/<post_title>([\s\S]*?)<\/post_title>/i)
+          const generatedTitle = titleMatch && titleMatch[1] ? titleMatch[1].trim() : `${prompt} (SEO 최적화)`
+          const cleanHtml = stripInternalMetadata(text.replace(/<post_title>[\s\S]*?<\/post_title>/i, '').trim())
 
           await prisma.article.create({
             data: {
@@ -445,30 +420,29 @@ ${profileFooterPrompt}
               target_keyword: prompt,
               content_html: cleanHtml,
               status: 'DRAFT',
-            }
-          });
+            },
+          })
         } catch (error) {
-          console.error('Failed to update DB onFinish:', error);
+          console.error('Failed to update DB onFinish:', error)
         }
-      }
-    });
+      },
+    })
 
-    return result.toTextStreamResponse();
+    return result.toTextStreamResponse()
 
   } catch (error: any) {
-    console.error('Generation API error:', error);
-    // 사전 에러 발생 시 선차감된 크레딧 롤백
+    console.error('Generation API error:', error)
     try {
       if (isCreditDeducted && currentUserId) {
         await prisma.user.update({
           where: { id: currentUserId },
-          data: { credits: { increment: 1 } }
-        });
+          data: { credits: { increment: 1 } },
+        })
       }
     } catch (refundError) {
-      console.error('Failed to refund credit on error:', refundError);
+      console.error('Failed to refund credit on error:', refundError)
     }
-    const errorMessage = error.message || error.toString() || '알 수 없는 서버 에러가 발생했습니다.';
+    const errorMessage = error.message || error.toString() || '알 수 없는 서버 에러가 발생했습니다.'
     return NextResponse.json({ error: errorMessage }, { status: 500 })
   }
 }

@@ -4,6 +4,9 @@ import {
   buildProceduralCardComponent,
   CardPayload,
   CardType,
+  ThumbLayout,
+  BannerLayout,
+  hashUserIdToBrandKit,
 } from '@/lib/image-engine/procedural-generator'
 
 // 500KB 이하 경량화 한글 서브셋 폰트 인메모리 캐시
@@ -45,116 +48,156 @@ function generateFailproofSvg(payload: CardPayload, width: number, height: numbe
     .replace(/&/g, '&amp;')
     .replace(/"/g, '&quot;')
 
-  const titleSize = cleanTitle.length > 25 ? 32 : 38
+  const titleSize = cleanTitle.length > 25 ? 44 : 54
 
   return `
 <svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">
-  <rect width="${width}" height="${height}" rx="20" fill="#FDFBF7" stroke="#E2E8F0" stroke-width="2"/>
-  <rect x="40" y="32" width="220" height="40" rx="20" fill="#FEF3C7" stroke="#FDE68A" stroke-width="1.5"/>
-  <text x="150" y="58" font-family="-apple-system, BlinkMacSystemFont, 'Pretendard', 'Malgun Gothic', sans-serif" font-size="16" font-weight="bold" fill="#92400E" text-anchor="middle">${cleanCat}</text>
+  <rect width="${width}" height="${height}" rx="28" fill="#FDFBF7" stroke="#E2E8F0" stroke-width="3"/>
+  <rect x="80" y="60" width="300" height="56" rx="28" fill="#FEF3C7" stroke="#FDE68A" stroke-width="2"/>
+  <text x="230" y="97" font-family="-apple-system, BlinkMacSystemFont, 'Pretendard', 'Malgun Gothic', sans-serif" font-size="24" font-weight="bold" fill="#92400E" text-anchor="middle">${cleanCat}</text>
   
-  <text x="40" y="${height > 600 ? 320 : 160}" font-family="-apple-system, BlinkMacSystemFont, 'Pretendard', 'Malgun Gothic', sans-serif" font-size="${titleSize}" font-weight="bold" fill="#0F172A">${cleanTitle}</text>
-  ${cleanSub ? `<text x="40" y="${height > 600 ? 390 : 225}" font-family="-apple-system, BlinkMacSystemFont, 'Pretendard', 'Malgun Gothic', sans-serif" font-size="20" fill="#475569">${cleanSub}</text>` : ''}
+  <text x="80" y="${height > 700 ? 460 : 260}" font-family="-apple-system, BlinkMacSystemFont, 'Pretendard', 'Malgun Gothic', sans-serif" font-size="${titleSize}" font-weight="bold" fill="#0F172A">${cleanTitle}</text>
+  ${cleanSub ? `<text x="80" y="${height > 700 ? 560 : 340}" font-family="-apple-system, BlinkMacSystemFont, 'Pretendard', 'Malgun Gothic', sans-serif" font-size="30" fill="#475569">${cleanSub}</text>` : ''}
   
-  <line x1="40" y1="${height - 70}" x2="${width - 40}" y2="${height - 70}" stroke="#E2E8F0" stroke-width="1.5"/>
-  <text x="40" y="${height - 35}" font-family="-apple-system, BlinkMacSystemFont, 'Pretendard', sans-serif" font-size="15" fill="#64748B">${signature}</text>
-  <text x="${width - 40}" y="${height - 35}" font-family="-apple-system, BlinkMacSystemFont, 'Pretendard', sans-serif" font-size="14" fill="#94A3B8" text-anchor="end">C-Rank SEO 2026</text>
+  <line x1="80" y1="${height - 110}" x2="${width - 80}" y2="${height - 110}" stroke="#E2E8F0" stroke-width="2"/>
+  <text x="80" y="${height - 55}" font-family="-apple-system, BlinkMacSystemFont, 'Pretendard', sans-serif" font-size="24" font-weight="bold" fill="#64748B">${signature}</text>
+  <text x="${width - 80}" y="${height - 55}" font-family="-apple-system, BlinkMacSystemFont, 'Pretendard', sans-serif" font-size="22" fill="#94A3B8" text-anchor="end">2026 C-Rank &amp; DIA+ SEO</text>
 </svg>
 `.trim()
 }
 
 export async function GET(req: NextRequest) {
-  const { searchParams } = new URL(req.url)
-
-  const type = (searchParams.get('type') || 'MAIN_THUMBNAIL') as CardType
-  const title = searchParams.get('title') || '2026 핵심 실무 가이드'
-  const category = searchParams.get('category') || '전문가 실무 분석'
-  const subText = searchParams.get('sub') || ''
-  const signature = searchParams.get('sig') || ''
-  const extra1 = searchParams.get('extra1') || ''
-  const extra2 = searchParams.get('extra2') || ''
-  const extra3 = searchParams.get('extra3') || ''
-  const seed = searchParams.get('seed') || 'postsynk_default_seed'
-  const rawPoints = searchParams.get('points') || ''
-
-  let points: string[] | undefined = undefined
-  if (rawPoints) {
-    points = rawPoints.split('|').map((p) => p.trim()).filter(Boolean)
-  }
-
-  const payload: CardPayload = {
-    type,
-    title,
-    category,
-    subText,
-    points,
-    signature,
-    extra1,
-    extra2,
-    extra3,
-    seed,
-  }
-
-  // 치수(Dimension) 최적화
-  let width = 800
-  let height = 450
-  if (type === 'MAIN_THUMBNAIL') {
-    width = 800
-    height = 800
-  } else if (type === 'STAT_HIGHLIGHT') {
-    width = 800
-    height = 400
-  } else if (type === 'WARNING_RISK') {
-    width = 800
-    height = 380
-  } else if (type === 'QNA') {
-    width = 800
-    height = 420
-  } else if (type === 'KEY_TAKEAWAYS' || type === 'CTA_FOOTER') {
-    width = 800
-    height = 480
-  }
-
-  // 1차 시도: ImageResponse (PNG 고화질)
   try {
-    const element = buildProceduralCardComponent(payload)
-    const fontData = await loadSubsetFont()
-    const fonts = fontData
-      ? [
-          {
-            name: 'Pretendard',
-            data: fontData,
-            weight: 700 as const,
-            style: 'normal' as const,
-          },
-        ]
-      : undefined
+    const { searchParams } = new URL(req.url)
 
-    return new ImageResponse(element, {
-      width,
-      height,
-      fonts,
-      headers: {
-        'Content-Type': 'image/png',
-        'Cache-Control': 'public, max-age=31536000, immutable',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET, OPTIONS',
-      },
-    })
-  } catch (error) {
-    console.warn('ImageResponse error, serving 100% fail-proof SVG fallback:', error)
+    const type = (searchParams.get('type') || 'MAIN_THUMBNAIL') as CardType
+    let title = searchParams.get('title') || '2026 핵심 실무 가이드'
+    let category = searchParams.get('category') || '전문가 실무 분석'
+    let subText = searchParams.get('sub') || ''
+    let signature = searchParams.get('sig') || ''
+    let extra1 = searchParams.get('extra1') || ''
+    let extra2 = searchParams.get('extra2') || ''
+    let extra3 = searchParams.get('extra3') || ''
+    const userId = searchParams.get('userId') || ''
+    const themeName = searchParams.get('theme') || undefined
+    const thumbLayout = (searchParams.get('thumbLayout') as ThumbLayout) || undefined
+    const bannerLayout = (searchParams.get('bannerLayout') as BannerLayout) || undefined
 
-    // 2차 Fallback: 100% 무장애 인라인 SVG (0% 500 에러 보장)
-    const fallbackSvg = generateFailproofSvg(payload, width, height)
-    return new Response(fallbackSvg, {
-      status: 200,
-      headers: {
-        'Content-Type': 'image/svg+xml; charset=utf-8',
-        'Cache-Control': 'public, max-age=31536000, immutable',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET, OPTIONS',
-      },
-    })
+    // AI가 URL 쿼리 작성 시 '&extra2=' 대신 '|extra2=' 또는 파이프로 넘겼을 때 지능형 자동 분리 복구
+    if (extra1.includes('|extra2=') || extra1.includes('&extra2=')) {
+      const parts = extra1.split(/[|&]extra2=/)
+      extra1 = parts[0].trim()
+      if (!extra2 && parts[1]) {
+        extra2 = parts[1].trim()
+      }
+    } else if (!extra2 && extra1.includes('|') && type === 'COMPARISON') {
+      const parts = extra1.split('|')
+      extra1 = parts[0].trim()
+      extra2 = parts.slice(1).join('|').trim()
+    }
+
+    // extra2 내부에 extra3가 연결된 경우도 자동 분리
+    if (extra2.includes('|extra3=') || extra2.includes('&extra3=')) {
+      const parts = extra2.split(/[|&]extra3=/)
+      extra2 = parts[0].trim()
+      if (!extra3 && parts[1]) {
+        extra3 = parts[1].trim()
+      }
+    }
+
+    // 3개 태그 파싱
+    const rawTags = searchParams.get('tags') || ''
+    let tags: string[] | undefined = undefined
+    if (rawTags) {
+      tags = rawTags.split('|').map((t) => t.trim()).filter(Boolean)
+    }
+
+    // 시드(Seed)가 기본값이거나 없을 경우, 요청된 글의 제목/카테고리/타입 문자열을 결합하여 고유 시드 자동 생성
+    let seed = searchParams.get('seed')
+    if (!seed || seed === 'postsynk_default_seed') {
+      seed = `${userId}_${type}_${title}_${category}_${subText}_${extra1}`
+    }
+
+    const rawPoints = searchParams.get('points') || ''
+    let points: string[] | undefined = undefined
+    if (rawPoints) {
+      points = rawPoints.split('|').map((p) => p.trim()).filter(Boolean)
+    }
+
+    const payload: CardPayload = {
+      type,
+      title,
+      category,
+      subText,
+      points,
+      signature,
+      extra1,
+      extra2,
+      extra3,
+      seed,
+      userId,
+      themeName,
+      tags,
+      thumbLayout,
+      bannerLayout,
+    }
+
+    // 1080px 표준 캔버스 치수 (모바일 최적화)
+    let width = 1080
+    let height = 680
+    if (type === 'MAIN_THUMBNAIL') {
+      width = 1080
+      height = 1080
+    } else if (type === 'CTA_FOOTER') {
+      width = 1080
+      height = 540
+    } else {
+      width = 1080
+      height = 680
+    }
+
+    // 1차 시도: ImageResponse (PNG 고화질)
+    try {
+      const element = buildProceduralCardComponent(payload)
+      const fontData = await loadSubsetFont()
+      const fonts = fontData
+        ? [
+            {
+              name: 'Pretendard',
+              data: fontData,
+              weight: 700 as const,
+              style: 'normal' as const,
+            },
+          ]
+        : undefined
+
+      return new ImageResponse(element, {
+        width,
+        height,
+        fonts,
+        headers: {
+          'Content-Type': 'image/png',
+          'Cache-Control': 'public, max-age=31536000, immutable',
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'GET, OPTIONS',
+        },
+      })
+    } catch (innerError) {
+      console.warn('ImageResponse inner error, serving SVG fallback:', innerError)
+      const fallbackSvg = generateFailproofSvg(payload, width, height)
+      return new Response(fallbackSvg, {
+        status: 200,
+        headers: {
+          'Content-Type': 'image/svg+xml; charset=utf-8',
+          'Cache-Control': 'public, max-age=31536000, immutable',
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'GET, OPTIONS',
+        },
+      })
+    }
+  } catch (outerError: any) {
+    console.error('Fatal GET error in card render:', outerError)
+    return new Response(`Error: ${outerError?.message || outerError}`, { status: 200 })
   }
 }
 
