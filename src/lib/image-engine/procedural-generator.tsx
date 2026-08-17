@@ -1481,7 +1481,7 @@ function renderCtaCard(
           backgroundColor: palette.bg,
           border: `3px solid ${palette.border}`,
           borderRadius: '28px',
-          padding: '50px 70px',
+          padding: '40px 60px',
           gap: '36px',
           boxSizing: 'border-box',
           letterSpacing: '-0.03em',
@@ -1490,30 +1490,30 @@ function renderCtaCard(
       >
         {/* 좌측 슬로건/상호 */}
         <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', flex: 1 }}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
             <div
               style={{
                 display: 'flex',
                 backgroundColor: palette.accent,
                 color: '#FFFFFF',
-                padding: '8px 18px',
-                borderRadius: '12px',
-                fontSize: '20px',
+                padding: '8px 20px',
+                borderRadius: '14px',
+                fontSize: '22px',
                 fontWeight: 'bold',
                 alignSelf: 'flex-start',
               }}
             >
               공식 상담 창구
             </div>
-            <div style={{ display: 'flex', fontSize: '38px', fontWeight: 'bold', color: palette.text, lineHeight: '1.25', wordBreak: 'break-word' }}>
+            <div style={{ display: 'flex', fontSize: '44px', fontWeight: 'bold', color: palette.text, lineHeight: '1.22', wordBreak: 'break-word' }}>
               {title}
             </div>
-            <div style={{ display: 'flex', fontSize: '22px', color: palette.sub, lineHeight: '1.4', wordBreak: 'break-word' }}>
+            <div style={{ display: 'flex', fontSize: '24px', color: palette.sub, lineHeight: '1.38', wordBreak: 'break-word' }}>
               {sub}
             </div>
           </div>
 
-          <div style={{ display: 'flex', fontSize: '18px', color: '#94A3B8' }}>
+          <div style={{ display: 'flex', fontSize: '18px', color: '#94A3B8', fontWeight: 'bold' }}>
             * 1:1 사전 예약 시 심층 상담 가능
           </div>
         </div>
@@ -1525,28 +1525,28 @@ function renderCtaCard(
             flexDirection: 'column',
             justifyContent: 'center',
             backgroundColor: palette.cardBg,
-            border: `2px solid ${palette.border}`,
+            border: `2.5px solid ${palette.border}`,
             borderRadius: '24px',
-            padding: '36px 32px',
-            gap: '28px',
-            width: '450px',
+            padding: '36px 36px',
+            gap: '24px',
+            width: '460px',
             boxSizing: 'border-box',
           }}
         >
           <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-            <div style={{ display: 'flex', fontSize: '20px', fontWeight: 'bold', color: palette.accent }}>
+            <div style={{ display: 'flex', fontSize: '24px', fontWeight: 'bold', color: palette.accent }}>
               📞 직통 상담
             </div>
-            <div style={{ display: 'flex', fontSize: '36px', fontWeight: 'bold', color: palette.text, wordBreak: 'break-word' }}>
+            <div style={{ display: 'flex', fontSize: '40px', fontWeight: 'bold', color: palette.text, wordBreak: 'break-word' }}>
               {phone}
             </div>
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-            <div style={{ display: 'flex', fontSize: '20px', fontWeight: 'bold', color: palette.sub }}>
+            <div style={{ display: 'flex', fontSize: '22px', fontWeight: 'bold', color: palette.sub }}>
               🏢 오시는 길
             </div>
-            <div style={{ display: 'flex', fontSize: '24px', color: palette.text, fontWeight: 'bold', wordBreak: 'break-word' }}>
+            <div style={{ display: 'flex', fontSize: '28px', color: palette.text, fontWeight: 'bold', wordBreak: 'break-word' }}>
               {address}
             </div>
           </div>
@@ -1555,51 +1555,52 @@ function renderCtaCard(
     )
   }
 
-  // BANNER_B: 중앙 집중 명함형 (2열 대형 정보 박스)
+  // BANNER_B: 중앙 집중 명함형 (2열 대형 정보 박스 & 상하 밀착)
   if (layout === 'BANNER_B') {
     return (
       <div
         style={{
           display: 'flex',
           flexDirection: 'column',
-          justifyContent: 'space-between',
+          justifyContent: 'center',
           alignItems: 'center',
           width: '1080px',
           height: '540px',
           backgroundColor: palette.cardBg,
           border: `3px solid ${palette.accent}`,
           borderRadius: '28px',
-          padding: '45px 70px',
+          padding: '36px 54px',
+          gap: '22px',
           boxSizing: 'border-box',
           textAlign: 'center',
           letterSpacing: '-0.03em',
           wordBreak: 'break-word',
         }}
       >
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px', maxWidth: '920px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', maxWidth: '960px' }}>
           <div
             style={{
               display: 'flex',
               backgroundColor: palette.badgeBg,
               color: palette.badgeText,
-              padding: '6px 20px',
+              padding: '8px 24px',
               borderRadius: '20px',
-              fontSize: '20px',
+              fontSize: '22px',
               fontWeight: 'bold',
             }}
           >
             공식 1:1 심층 상담 창구
           </div>
-          <div style={{ display: 'flex', fontSize: '40px', fontWeight: 'bold', color: palette.text, wordBreak: 'break-word' }}>
+          <div style={{ display: 'flex', fontSize: '46px', fontWeight: 'bold', color: palette.text, wordBreak: 'break-word', lineHeight: '1.2' }}>
             {title}
           </div>
-          <div style={{ display: 'flex', fontSize: '22px', color: palette.sub, wordBreak: 'break-word' }}>
+          <div style={{ display: 'flex', fontSize: '26px', color: palette.sub, wordBreak: 'break-word', lineHeight: '1.35' }}>
             {sub}
           </div>
         </div>
 
         {/* 2열 와이드 정보 박스 (직통 상담 + 오시는 길) */}
-        <div style={{ display: 'flex', gap: '24px', width: '100%' }}>
+        <div style={{ display: 'flex', gap: '20px', width: '100%' }}>
           <div
             style={{
               display: 'flex',
@@ -1608,14 +1609,14 @@ function renderCtaCard(
               flex: 1,
               backgroundColor: palette.bg,
               border: `2px solid ${palette.accent}`,
-              borderRadius: '20px',
+              borderRadius: '22px',
               padding: '24px 20px',
-              gap: '8px',
+              gap: '6px',
               boxSizing: 'border-box',
             }}
           >
-            <div style={{ display: 'flex', fontSize: '22px', fontWeight: 'bold', color: palette.accent }}>📞 직통 전화 상담</div>
-            <div style={{ display: 'flex', fontSize: '32px', fontWeight: 'bold', color: palette.text, wordBreak: 'break-word' }}>{phone}</div>
+            <div style={{ display: 'flex', fontSize: '24px', fontWeight: 'bold', color: palette.accent }}>📞 직통 전화 상담</div>
+            <div style={{ display: 'flex', fontSize: '38px', fontWeight: 'bold', color: palette.text, wordBreak: 'break-word' }}>{phone}</div>
           </div>
 
           <div
@@ -1626,44 +1627,46 @@ function renderCtaCard(
               flex: 1,
               backgroundColor: palette.bg,
               border: `2px solid ${palette.border}`,
-              borderRadius: '20px',
+              borderRadius: '22px',
               padding: '24px 20px',
-              gap: '8px',
+              gap: '6px',
               boxSizing: 'border-box',
             }}
           >
-            <div style={{ display: 'flex', fontSize: '22px', fontWeight: 'bold', color: palette.sub }}>🏢 사무소 오시는 길</div>
-            <div style={{ display: 'flex', fontSize: '24px', fontWeight: 'bold', color: palette.text, textAlign: 'center', wordBreak: 'break-word' }}>{address}</div>
+            <div style={{ display: 'flex', fontSize: '24px', fontWeight: 'bold', color: palette.sub }}>🏢 사무소 오시는 길</div>
+            <div style={{ display: 'flex', fontSize: '28px', fontWeight: 'bold', color: palette.text, textAlign: 'center', wordBreak: 'break-word' }}>{address}</div>
           </div>
         </div>
       </div>
     )
   }
 
-  // BANNER_C: 모던 아웃라인 박스형 (직통상담 + 오시는길 대형 폰트 & 공백 최소화)
+  // BANNER_C: 모던 아웃라인 박스형 (중앙 빈 공간 완전 제거 & 상하 밀착 대형 폰트)
   return (
     <div
       style={{
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'space-between',
+        justifyContent: 'center',
         width: '1080px',
         height: '540px',
         backgroundColor: palette.highlightBg,
         border: `3px solid ${palette.accent}`,
         borderRadius: '28px',
-        padding: '40px 60px',
+        padding: '36px 54px',
+        gap: '22px',
         boxSizing: 'border-box',
         letterSpacing: '-0.03em',
         wordBreak: 'break-word',
       }}
     >
+      {/* 상단 타이틀 & 1:1 공식접수 뱃지 */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-          <div style={{ display: 'flex', fontSize: '38px', fontWeight: 'bold', color: palette.text, wordBreak: 'break-word' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', maxWidth: '780px' }}>
+          <div style={{ display: 'flex', fontSize: '46px', fontWeight: 'bold', color: palette.text, lineHeight: '1.2', wordBreak: 'break-word' }}>
             {title}
           </div>
-          <div style={{ display: 'flex', fontSize: '22px', color: palette.sub, wordBreak: 'break-word' }}>
+          <div style={{ display: 'flex', fontSize: '26px', color: palette.sub, lineHeight: '1.35', wordBreak: 'break-word' }}>
             {sub}
           </div>
         </div>
@@ -1672,36 +1675,37 @@ function renderCtaCard(
             display: 'flex',
             backgroundColor: palette.accent,
             color: '#FFFFFF',
-            padding: '12px 24px',
-            borderRadius: '16px',
-            fontSize: '22px',
+            padding: '14px 28px',
+            borderRadius: '18px',
+            fontSize: '24px',
             fontWeight: 'bold',
+            whiteSpace: 'nowrap',
           }}
         >
           1:1 공식 접수
         </div>
       </div>
 
-      {/* 2단 큼직한 직통상담 및 오시는길 박스 */}
+      {/* 하단 2단 큼직한 직통상담 및 오시는길 밀착 박스 */}
       <div
         style={{
           display: 'flex',
           flexDirection: 'column',
           backgroundColor: palette.cardBg,
           border: `2.5px solid ${palette.border}`,
-          borderRadius: '22px',
-          padding: '28px 36px',
-          gap: '16px',
+          borderRadius: '24px',
+          padding: '30px 38px',
+          gap: '18px',
           boxSizing: 'border-box',
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', fontSize: '32px', fontWeight: 'bold', color: palette.text, gap: '16px' }}>
-          <span style={{ color: palette.accent, whiteSpace: 'nowrap' }}>📞 직통 상담:</span>
-          <span style={{ fontSize: '34px', color: palette.text, wordBreak: 'break-word' }}>{phone}</span>
+        <div style={{ display: 'flex', alignItems: 'center', fontSize: '38px', fontWeight: 'bold', color: palette.text, gap: '16px' }}>
+          <span style={{ color: palette.accent, whiteSpace: 'nowrap', fontSize: '38px' }}>📞 직통 상담:</span>
+          <span style={{ fontSize: '40px', color: palette.text, wordBreak: 'break-word' }}>{phone}</span>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', fontSize: '28px', fontWeight: 'bold', color: palette.text, gap: '16px' }}>
-          <span style={{ color: palette.sub, whiteSpace: 'nowrap' }}>🏢 오시는 길:</span>
-          <span style={{ fontSize: '28px', color: palette.text, fontWeight: 'bold', wordBreak: 'break-word' }}>{address}</span>
+        <div style={{ display: 'flex', alignItems: 'center', fontSize: '30px', fontWeight: 'bold', color: palette.text, gap: '16px' }}>
+          <span style={{ color: palette.sub, whiteSpace: 'nowrap', fontSize: '30px' }}>🏢 오시는 길:</span>
+          <span style={{ fontSize: '30px', color: palette.text, fontWeight: 'bold', wordBreak: 'break-word' }}>{address}</span>
         </div>
       </div>
     </div>

@@ -1,0 +1,29 @@
+<svg width="1080" height="540" viewBox="0 0 1080 540" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="cardShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="#000000" flood-opacity="0.06"/>
+    </filter>
+  </defs>
+
+  <!-- 메인 배너 배경 및 테두리 (1080x540) -->
+  <rect width="1080" height="540" rx="28" fill="#FEF9C3" stroke="#D4AF37" stroke-width="3"/>
+
+  <!-- 상단 메인 타이틀 & 서브 카피 -->
+  <text x="54" y="90" font-family="-apple-system, BlinkMacSystemFont, 'Pretendard', 'Malgun Gothic', sans-serif" font-size="46" font-weight="bold" fill="#0F172A">분양권 상속재산분할 1:1 사실관계 검토</text>
+  <text x="54" y="132" font-family="-apple-system, BlinkMacSystemFont, 'Pretendard', 'Malgun Gothic', sans-serif" font-size="26" font-weight="normal" fill="#475569">풍부한 실무 경험을 바탕으로 의뢰인의 권익을 최우선으로 보호합니다.</text>
+
+  <!-- 1:1 공식 접수 뱃지 (우측 상단) -->
+  <rect x="880" y="52" width="146" height="56" rx="18" fill="#D4AF37"/>
+  <text x="953" y="88" font-family="-apple-system, BlinkMacSystemFont, 'Pretendard', 'Malgun Gothic', sans-serif" font-size="24" font-weight="bold" fill="#FFFFFF" text-anchor="middle">1:1 공식 접수</text>
+
+  <!-- 하단 화이트 정보 박스 (상하 밀착 고밀도) -->
+  <rect x="54" y="180" width="972" height="300" rx="24" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="2.5" filter="url(#cardShadow)"/>
+
+  <!-- 📞 직통 상담 행 -->
+  <text x="94" y="290" font-family="-apple-system, BlinkMacSystemFont, 'Pretendard', 'Malgun Gothic', sans-serif" font-size="38" font-weight="bold" fill="#D4AF37">📞 직통 상담:</text>
+  <text x="350" y="290" font-family="-apple-system, BlinkMacSystemFont, 'Pretendard', 'Malgun Gothic', sans-serif" font-size="40" font-weight="bold" fill="#0F172A">02-345-6789 (정원 사랑 변호사)</text>
+
+  <!-- 🏢 오시는 길 행 -->
+  <text x="94" y="390" font-family="-apple-system, BlinkMacSystemFont, 'Pretendard', 'Malgun Gothic', sans-serif" font-size="30" font-weight="bold" fill="#475569">🏢 오시는 길:</text>
+  <text x="350" y="390" font-family="-apple-system, BlinkMacSystemFont, 'Pretendard', 'Malgun Gothic', sans-serif" font-size="30" font-weight="bold" fill="#0F172A">서울 송파구 송파대로345</text>
+</svg>

@@ -36,7 +36,9 @@ export default async function DashboardLayout({ children }: { children: ReactNod
       <aside className="w-full md:w-64 bg-white border-r border-slate-200 flex-shrink-0 flex flex-col justify-between overflow-y-auto">
         <div>
           <div className="h-16 flex items-center px-6 border-b border-slate-200 sticky top-0 bg-white z-10">
-            <h1 className="text-xl font-bold text-slate-800">PostSync</h1>
+            <Link href="/dashboard" className="flex items-center hover:opacity-80 transition-opacity">
+              <h1 className="text-xl font-bold text-slate-800 cursor-pointer">PostSync</h1>
+            </Link>
           </div>
           <nav className="p-4 space-y-1">
             {sidebarLinks.map((link) => {
