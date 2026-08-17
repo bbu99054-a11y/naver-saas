@@ -89,10 +89,10 @@ export default function PricingPage() {
               <span className="text-indigo-200 font-medium">/월</span>
             </div>
             <ul className="space-y-4 mb-8 flex-1">
-              <li className="flex items-start gap-3 text-sm text-white"><CheckCircle2 className="w-5 h-5 text-pink-400 shrink-0" /> <span>월 100회 AI 포스팅 생성</span></li>
-              <li className="flex items-start gap-3 text-sm text-white"><CheckCircle2 className="w-5 h-5 text-pink-400 shrink-0" /> <span>Claude 5 Sonnet 최고 품질 모델</span></li>
-              <li className="flex items-start gap-3 text-sm text-white"><CheckCircle2 className="w-5 h-5 text-pink-400 shrink-0" /> <span>AI 썸네일 & 본문 이미지 무제한</span></li>
-              <li className="flex items-start gap-3 text-sm text-white"><CheckCircle2 className="w-5 h-5 text-pink-400 shrink-0" /> <span>네이버 스마트에디터 원클릭 복사</span></li>
+              <li className="flex items-start gap-3 text-sm text-white"><CheckCircle2 className="w-5 h-5 text-pink-400 shrink-0" /> <span><strong>월 30회</strong> AI 포스팅 생성</span></li>
+              <li className="flex items-start gap-3 text-sm text-white"><CheckCircle2 className="w-5 h-5 text-pink-400 shrink-0" /> <span><strong>2026 스마트블록 1위 DIA+ & C-Rank 듀얼 최적화 엔진</strong></span></li>
+              <li className="flex items-start gap-3 text-sm text-white"><CheckCircle2 className="w-5 h-5 text-pink-400 shrink-0" /> <span>1080px 고화질 카드 인포그래픽 자동 생성</span></li>
+              <li className="flex items-start gap-3 text-sm text-white"><CheckCircle2 className="w-5 h-5 text-pink-400 shrink-0" /> <span>워드프레스 · 티스토리 원클릭 동시 발행</span></li>
             </ul>
             <Link href="/dashboard/billing">
               <Button className="w-full h-12 rounded-xl bg-white hover:bg-slate-100 text-indigo-900 font-bold shadow-lg">

@@ -100,23 +100,31 @@ export default function BillingClient({ userId, email, planType, credits }: Bill
             </Button>
           </div>
 
-          <div className="relative p-4 border-2 border-indigo-500 rounded-xl bg-white shadow-md">
-            <div className="absolute -top-3 right-4 bg-indigo-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm">
-              가장 인기 ⭐️
+          <div className="relative p-5 border-2 border-indigo-500 rounded-xl bg-gradient-to-b from-white to-indigo-50/30 shadow-md">
+            <div className="absolute -top-3 right-4 bg-gradient-to-r from-amber-500 to-indigo-600 text-white text-[11px] font-black px-3 py-0.5 rounded-full shadow-sm flex items-center gap-1">
+              <span>🔥 선착순 10명 한정 (잔여 3자리)</span>
             </div>
-            <div className="flex justify-between items-center mb-2">
-              <h4 className="font-bold text-lg text-slate-900">Pro 플랜</h4>
-              <span className="font-extrabold text-indigo-600">₩149,000</span>
+            <div className="flex justify-between items-baseline mb-1">
+              <h4 className="font-extrabold text-lg text-slate-900">Pro 플랜</h4>
+              <div className="flex items-baseline gap-1.5">
+                <span className="text-slate-400 line-through text-xs font-bold">₩149,000</span>
+                <span className="font-black text-indigo-600 text-xl">₩74,500</span>
+                <span className="text-xs text-indigo-700 font-bold">/ 월</span>
+              </div>
             </div>
-            <ul className="space-y-1 mb-4">
-              <li className="flex items-center gap-2 text-sm text-slate-600"><CheckCircle2 className="w-4 h-4 text-indigo-500" /> 30 크레딧 충전 (3배)</li>
-              <li className="flex items-center gap-2 text-sm text-slate-600"><CheckCircle2 className="w-4 h-4 text-indigo-500" /> 매일 포스팅으로 C-Rank 노출</li>
+            <p className="text-[11px] text-indigo-800/80 mb-3 font-medium">
+              * 최초 결제 후 구독 유지 시 <strong>평생 ₩74,500으로 영구 자동 갱신</strong>됩니다.
+            </p>
+            <ul className="space-y-1.5 mb-4 text-xs text-slate-700">
+              <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-indigo-500 shrink-0" /> <strong>월 30 크레딧 충전</strong> (매일 1위 상위 노출)</li>
+              <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-indigo-500 shrink-0" /> 1080px 실사 인포그래픽 카드 자동 생성</li>
+              <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-indigo-500 shrink-0" /> 워드프레스 · 티스토리 원클릭 동시 발행</li>
             </ul>
             <Button 
-              onClick={() => handlePayment('pro', 149000)} 
-              className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold shadow-lg shadow-indigo-200"
+              onClick={() => handlePayment('pro', 74500)} 
+              className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs h-9 shadow-md shadow-indigo-200 cursor-pointer"
             >
-              Pro 충전하기
+              Pro 50% 특가 결제하기 (₩74,500)
             </Button>
           </div>
         </CardContent>

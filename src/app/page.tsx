@@ -135,40 +135,49 @@ export default function LandingPage() {
       </div>
 
       {/* 2026 Glassmorphism Navbar */}
-      <header className="fixed top-0 w-full bg-[#0A0D14]/80 backdrop-blur-xl z-50 border-b border-white/10">
-        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center shadow-lg shadow-indigo-500/25 border border-indigo-400/30">
-              <Sparkles className="w-5 h-5 text-white" />
-            </div>
-            <span className="text-xl font-black tracking-tight text-white flex items-center gap-2">
-              PostSync
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
-                2026 Engine
+      <header className="fixed top-0 w-full z-50">
+        {/* 🔥 최상단 얼리버드 50% 평생 할인 긴급 띠배너 */}
+        <div className="bg-gradient-to-r from-amber-600 via-indigo-600 to-violet-600 text-white text-[11px] sm:text-xs py-1.5 px-4 text-center font-bold tracking-tight flex items-center justify-center gap-2 shadow-md">
+          <span className="bg-white text-slate-900 px-2 py-0.2 rounded-full text-[10px] font-black uppercase">얼리버드 론칭 특가</span>
+          <span>⚡ 선착순 10명 한정 Pro 플랜 <strong>평생 50% 할인</strong> (현재 7명 마감 / 잔여 3자리!)</span>
+          <a href="#pricing" className="underline underline-offset-2 hover:text-amber-200 ml-1 hidden sm:inline">특가 확인하기 &rarr;</a>
+        </div>
+
+        <div className="bg-[#0A0D14]/85 backdrop-blur-xl border-b border-white/10">
+          <div className="max-w-7xl mx-auto px-6 h-15 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center shadow-lg shadow-indigo-500/25 border border-indigo-400/30">
+                <Sparkles className="w-4 h-4 text-white" />
+              </div>
+              <span className="text-lg font-black tracking-tight text-white flex items-center gap-2">
+                PostSync
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+                  2026 Engine
+                </span>
               </span>
-            </span>
-          </div>
+            </div>
 
-          <nav className="hidden md:flex items-center gap-7 text-sm font-medium text-slate-300">
-            <a href="#demo" className="hover:text-white transition-colors">글쓰기 데모</a>
-            <a href="#features" className="hover:text-white transition-colors">5대 특별함</a>
-            <a href="#comparison" className="hover:text-white transition-colors">품질 비교</a>
-            <a href="#pricing" className="hover:text-white transition-colors">요금제</a>
-            <a href="#faq" className="hover:text-white transition-colors">FAQ</a>
-            <Link href="/seo-check" className="text-rose-400 hover:text-rose-300 font-bold flex items-center gap-1">
-              무료 진단 <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-ping" />
-            </Link>
-          </nav>
+            <nav className="hidden md:flex items-center gap-7 text-sm font-medium text-slate-300">
+              <a href="#demo" className="hover:text-white transition-colors">글쓰기 데모</a>
+              <a href="#features" className="hover:text-white transition-colors">5대 특별함</a>
+              <a href="#comparison" className="hover:text-white transition-colors">품질 비교</a>
+              <a href="#pricing" className="hover:text-white transition-colors">요금제</a>
+              <a href="#faq" className="hover:text-white transition-colors">FAQ</a>
+              <Link href="/seo-check" className="text-rose-400 hover:text-rose-300 font-bold flex items-center gap-1">
+                무료 진단 <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-ping" />
+              </Link>
+            </nav>
 
-          <div className="flex items-center gap-3">
-            <Link href="/login" className="text-sm font-semibold text-slate-300 hover:text-white px-3 py-2 transition-colors">
-              로그인
-            </Link>
-            <Link href="/login">
-              <Button className="bg-indigo-600 hover:bg-indigo-500 text-white rounded-full px-5 h-9 font-bold text-xs shadow-lg shadow-indigo-600/30 transition-all hover:scale-105 border border-indigo-400/30">
-                무료 10회 시작하기
-              </Button>
-            </Link>
+            <div className="flex items-center gap-3">
+              <Link href="/login" className="text-sm font-semibold text-slate-300 hover:text-white px-3 py-2 transition-colors">
+                로그인
+              </Link>
+              <Link href="/login">
+                <Button className="bg-indigo-600 hover:bg-indigo-500 text-white rounded-full px-4.5 h-8.5 font-bold text-xs shadow-lg shadow-indigo-600/30 transition-all hover:scale-105 border border-indigo-400/30 cursor-pointer">
+                  무료 3회 시작하기
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </header>
@@ -886,65 +895,99 @@ export default function LandingPage() {
       {/* ========================================================================= */}
       <section id="pricing" className="py-24 px-6 relative z-10 border-t border-white/10 bg-[#0A0D14]">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-5xl font-extrabold text-white mb-4">합리적인 전문직 요금제</h2>
-            <p className="text-slate-400 text-base">가장 뛰어난 AI 마케팅 파트너를 커피 몇 잔 가격으로 고용하세요.</p>
+          <div className="text-center mb-16 space-y-3">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-black">
+              🔥 얼리버드 론칭 기념 프로모션 진행 중
+            </div>
+            <h2 className="text-3xl md:text-5xl font-extrabold text-white">합리적인 전문직 요금제</h2>
+            <p className="text-slate-400 text-sm md:text-base max-w-2xl mx-auto">
+              마케팅 외주 대행사 비용(월 250만 원)을 1/10 이하로 줄이고, 검증된 1위 노출 전문 칼럼을 직접 발행하세요.
+            </p>
           </div>
           
-          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto items-stretch">
             {/* Basic Plan */}
-            <div className="bg-white/5 p-8 rounded-3xl border border-white/10 flex flex-col hover:border-white/20 transition-all">
-              <h3 className="text-2xl font-bold text-white mb-2">Basic</h3>
-              <p className="text-slate-400 text-xs mb-6">1인 사무소 및 개업 초기 전문가</p>
-              <div className="mb-6"><span className="text-4xl font-extrabold text-white">₩49,000</span><span className="text-slate-400 text-sm"> / 월</span></div>
-              <ul className="space-y-4 mb-8 flex-1 text-sm text-slate-300">
-                <li className="flex items-center gap-3"><CheckCircle2 className="w-4 h-4 text-indigo-400" /> 월 10건 전문 원고 생성</li>
-                <li className="flex items-center gap-3"><CheckCircle2 className="w-4 h-4 text-indigo-400" /> 판례 실시간 검색 RAG</li>
-                <li className="flex items-center gap-3"><CheckCircle2 className="w-4 h-4 text-indigo-400" /> 스마트에디터 ONE 서식 복사</li>
-                <li className="flex items-center gap-3"><CheckCircle2 className="w-4 h-4 text-indigo-400" /> 광고법 기본 컴플라이언스</li>
-              </ul>
+            <div className="bg-white/5 p-8 rounded-3xl border border-white/10 flex flex-col hover:border-white/20 transition-all justify-between">
+              <div>
+                <h3 className="text-2xl font-bold text-white mb-1.5">Basic</h3>
+                <p className="text-slate-400 text-xs mb-6">1인 사무소 및 개업 초기 전문가 필수 포스팅</p>
+                <div className="mb-6">
+                  <span className="text-4xl font-extrabold text-white">₩49,000</span>
+                  <span className="text-slate-400 text-sm"> / 월</span>
+                  <p className="text-[11px] text-indigo-300 mt-1">대행사 1건 비용으로 한 달 10편 발행</p>
+                </div>
+                <ul className="space-y-3.5 mb-8 text-sm text-slate-300">
+                  <li className="flex items-center gap-3"><CheckCircle2 className="w-4 h-4 text-indigo-400 shrink-0" /> <span><strong>월 10건</strong> 전문 원고 생성 (주 2회)</span></li>
+                  <li className="flex items-center gap-3"><CheckCircle2 className="w-4 h-4 text-indigo-400 shrink-0" /> <span>판례·세법 실시간 검색 RAG 탑재</span></li>
+                  <li className="flex items-center gap-3"><CheckCircle2 className="w-4 h-4 text-indigo-400 shrink-0" /> <span>네이버 스마트에디터 ONE 서식 복사</span></li>
+                  <li className="flex items-center gap-3"><CheckCircle2 className="w-4 h-4 text-indigo-400 shrink-0" /> <span>의료·변호사 광고법 기본 가드레일</span></li>
+                </ul>
+              </div>
               <Link href="/login">
-                <Button className="w-full bg-white/10 hover:bg-white/20 text-white font-bold h-11 rounded-xl" variant="outline">
-                  시작하기
+                <Button className="w-full bg-white/10 hover:bg-white/20 text-white font-bold h-11 rounded-xl cursor-pointer" variant="outline">
+                  Basic 시작하기
                 </Button>
               </Link>
             </div>
 
-            {/* Pro Plan (Best) */}
-            <div className="bg-gradient-to-b from-indigo-900/60 to-violet-950/60 text-white p-8 rounded-3xl border-2 border-indigo-400 shadow-2xl flex flex-col relative transform md:-translate-y-4">
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-gradient-to-r from-indigo-500 to-emerald-400 text-slate-950 px-4 py-1 rounded-full text-xs font-black shadow-lg">
-                가장 추천 ⭐
+            {/* Pro Plan (Best + 50% Lifetime Discount) */}
+            <div className="bg-gradient-to-b from-indigo-900/80 via-indigo-950/90 to-violet-950/80 text-white p-8 rounded-3xl border-2 border-indigo-400 shadow-2xl flex flex-col relative transform md:-translate-y-4 justify-between">
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-gradient-to-r from-amber-400 via-amber-300 to-emerald-400 text-slate-950 px-4 py-1 rounded-full text-xs font-black shadow-lg flex items-center gap-1.5 whitespace-nowrap">
+                <span>🔥 선착순 10명 한정 (잔여 3자리)</span>
               </div>
-              <h3 className="text-2xl font-bold mb-2">Pro</h3>
-              <p className="text-indigo-200 text-xs mb-6">주 2~3회 정기 포스팅으로 상위 노출을 노리는 분</p>
-              <div className="mb-6"><span className="text-4xl font-extrabold text-white">₩149,000</span><span className="text-indigo-200 text-sm"> / 월</span></div>
-              <ul className="space-y-4 mb-8 flex-1 text-sm text-slate-200">
-                <li className="flex items-center gap-3"><CheckCircle2 className="w-4 h-4 text-emerald-400" /> 월 30건 전문 원고 생성</li>
-                <li className="flex items-center gap-3"><CheckCircle2 className="w-4 h-4 text-emerald-400" /> 1:1 맞춤형 실사 카드뉴스 자동 생성</li>
-                <li className="flex items-center gap-3"><CheckCircle2 className="w-4 h-4 text-emerald-400" /> 과거 글 자동 내부 링크 연결</li>
-                <li className="flex items-center gap-3"><CheckCircle2 className="w-4 h-4 text-emerald-400" /> 광고법 위반 필터링 가드레일</li>
-                <li className="flex items-center gap-3"><CheckCircle2 className="w-4 h-4 text-emerald-400" /> 워드프레스 · 티스토리 동시 발행</li>
-              </ul>
+              <div>
+                <div className="flex items-center justify-between mt-1 mb-1.5">
+                  <h3 className="text-2xl font-bold">Pro</h3>
+                  <span className="bg-indigo-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full border border-indigo-300/40">50% 평생 할인</span>
+                </div>
+                <p className="text-indigo-200 text-xs mb-5">네이버 스마트블록 1페이지 독점 & 주 3~5회 정기 발행</p>
+                
+                <div className="mb-5 bg-white/5 p-3.5 rounded-2xl border border-indigo-300/20">
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-slate-400 line-through text-lg font-bold">₩149,000</span>
+                    <span className="text-3xl sm:text-4xl font-extrabold text-amber-300">₩74,500</span>
+                    <span className="text-indigo-200 text-xs font-bold">/ 월</span>
+                  </div>
+                  <p className="text-[10px] text-amber-200/90 mt-1 font-medium leading-tight">
+                    * 최초 결제 후 구독 유지 시 <strong>평생 ₩74,500으로 영구 자동 갱신</strong>됩니다. (해지 시 혜택 소멸)
+                  </p>
+                </div>
+
+                <ul className="space-y-3 mb-8 text-xs sm:text-sm text-slate-100">
+                  <li className="flex items-center gap-2.5"><CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" /> <span><strong>월 30건</strong> 전문 원고 생성 (월 30편 독점)</span></li>
+                  <li className="flex items-center gap-2.5"><CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" /> <span><strong>1080px 실사 인포그래픽 카드</strong> 자동 생성</span></li>
+                  <li className="flex items-center gap-2.5"><CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" /> <span><strong>2026 스마트블록 1위 DIA+ & C-Rank 듀얼 최적화 엔진</strong></span></li>
+                  <li className="flex items-center gap-2.5"><CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" /> <span>과거 글 자동 내부 링크 & 앵커링</span></li>
+                  <li className="flex items-center gap-2.5"><CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" /> <span>워드프레스 · 티스토리 <strong>원클릭 동시 발행</strong></span></li>
+                </ul>
+              </div>
+
               <Link href="/login">
-                <Button className="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-bold h-12 rounded-xl shadow-lg shadow-indigo-500/30 border border-indigo-300/30">
-                  10크레딧 무료 체험하기
+                <Button className="w-full bg-gradient-to-r from-indigo-500 to-violet-600 hover:from-indigo-600 hover:to-violet-700 text-white font-extrabold h-12 rounded-xl shadow-lg shadow-indigo-500/40 border border-indigo-300/40 cursor-pointer">
+                  3회 무료 체험 시작하기
                 </Button>
               </Link>
             </div>
 
             {/* Premium Plan */}
-            <div className="bg-white/5 p-8 rounded-3xl border border-white/10 flex flex-col hover:border-white/20 transition-all">
-              <h3 className="text-2xl font-bold text-white mb-2">Premium</h3>
-              <p className="text-slate-400 text-xs mb-6">다채널 운영 및 대형 전문직 법인</p>
-              <div className="mb-6"><span className="text-4xl font-extrabold text-white">₩290,000</span><span className="text-slate-400 text-sm"> / 월</span></div>
-              <ul className="space-y-4 mb-8 flex-1 text-sm text-slate-300">
-                <li className="flex items-center gap-3"><CheckCircle2 className="w-4 h-4 text-indigo-400" /> 월 100건 원고 생성 (다계정)</li>
-                <li className="flex items-center gap-3"><CheckCircle2 className="w-4 h-4 text-indigo-400" /> 전용 커스텀 페르소나 3개 학습</li>
-                <li className="flex items-center gap-3"><CheckCircle2 className="w-4 h-4 text-indigo-400" /> 고화질 스톡 이미지 무제한 매칭</li>
-                <li className="flex items-center gap-3"><CheckCircle2 className="w-4 h-4 text-indigo-400" /> 1:1 전담 매니저 우선 기술 지원</li>
-              </ul>
+            <div className="bg-white/5 p-8 rounded-3xl border border-white/10 flex flex-col hover:border-white/20 transition-all justify-between">
+              <div>
+                <h3 className="text-2xl font-bold text-white mb-1.5">Premium</h3>
+                <p className="text-slate-400 text-xs mb-6">다채널 운영 및 대형 전문직 법인 전용</p>
+                <div className="mb-6">
+                  <span className="text-4xl font-extrabold text-white">₩290,000</span>
+                  <span className="text-slate-400 text-sm"> / 월</span>
+                  <p className="text-[11px] text-indigo-300 mt-1">전담 마케터 1인 채용(월 300만 원) 대체 효과</p>
+                </div>
+                <ul className="space-y-3.5 mb-8 text-sm text-slate-300">
+                  <li className="flex items-center gap-3"><CheckCircle2 className="w-4 h-4 text-indigo-400 shrink-0" /> <span><strong>월 100건</strong> 원고 대량 생성 (다계정 분기)</span></li>
+                  <li className="flex items-center gap-3"><CheckCircle2 className="w-4 h-4 text-indigo-400 shrink-0" /> <span>전용 커스텀 페르소나 3개 맞춤 학습</span></li>
+                  <li className="flex items-center gap-3"><CheckCircle2 className="w-4 h-4 text-indigo-400 shrink-0" /> <span>고화질 스톡 이미지 & 멀티 채널 무제한</span></li>
+                  <li className="flex items-center gap-3"><CheckCircle2 className="w-4 h-4 text-indigo-400 shrink-0" /> <span>1:1 전담 매니저 우선 기술 지원</span></li>
+                </ul>
+              </div>
               <Link href="/login">
-                <Button className="w-full bg-white/10 hover:bg-white/20 text-white font-bold h-11 rounded-xl" variant="outline">
+                <Button className="w-full bg-white/10 hover:bg-white/20 text-white font-bold h-11 rounded-xl cursor-pointer" variant="outline">
                   도입 문의하기
                 </Button>
               </Link>
@@ -1044,12 +1087,12 @@ export default function LandingPage() {
             </span>
           </h2>
           <p className="text-base md:text-xl text-slate-300 mb-10 max-w-2xl mx-auto leading-relaxed">
-            지금 가입하시면 <strong className="text-white">10 크레딧이 즉시 무료 지급</strong>됩니다.<br className="hidden sm:inline" />
+            지금 가입하시면 <strong className="text-white">3회 무료 체험 크레딧이 즉시 지급</strong>됩니다.<br className="hidden sm:inline" />
             단 1분 만에 대표님의 첫 번째 C-Rank 전문 칼럼을 완성해보세요.
           </p>
           <Link href="/login">
-            <Button size="lg" className="h-14 px-10 text-lg rounded-full bg-gradient-to-r from-indigo-600 via-indigo-500 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white shadow-2xl shadow-indigo-600/40 transition-transform hover:scale-105 font-extrabold border border-indigo-400/40">
-              지금 무료 10회 체험 시작하기 <ArrowRight className="ml-2 w-5 h-5" />
+            <Button size="lg" className="h-14 px-10 text-lg rounded-full bg-gradient-to-r from-indigo-600 via-indigo-500 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white shadow-2xl shadow-indigo-600/40 transition-transform hover:scale-105 font-extrabold border border-indigo-400/40 cursor-pointer">
+              지금 무료 3회 체험 시작하기 <ArrowRight className="ml-2 w-5 h-5" />
             </Button>
           </Link>
         </div>

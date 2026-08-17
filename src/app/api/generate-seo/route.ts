@@ -141,13 +141,13 @@ export async function POST(req: Request) {
         data: {
           id: user.id,
           email: user.email || '',
-          credits: 5000,
+          credits: 3,
           plan_type: 'free',
         },
       })
     }
 
-    // 3. 플랜별 1일 생성 쿼터 검사 (Free: 5회, Pro: 30회, Agency: 100회)
+    // 3. 플랜별 1일 생성 쿼터 검사 (Free: 3회, Pro: 30회, Agency: 100회)
     const todayStart = new Date()
     todayStart.setHours(0, 0, 0, 0)
 
@@ -161,7 +161,7 @@ export async function POST(req: Request) {
     })
 
     const userPlan = dbUser.plan_type || 'free'
-    const dailyLimit = userPlan === 'pro' ? 30 : userPlan === 'agency' ? 100 : 5
+    const dailyLimit = userPlan === 'pro' ? 30 : userPlan === 'agency' ? 100 : 3
 
     if (todayArticleCount >= dailyLimit) {
       releaseConcurrentLock(user.id)

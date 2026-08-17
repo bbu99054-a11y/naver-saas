@@ -53,7 +53,7 @@ export default function WritePage() {
     onError: (err) => {
       const errMsg = err.message || ''
       if (errMsg.includes('DAILY_LIMIT_EXCEEDED') || errMsg.includes('일일 생성 한도')) {
-        setQuotaMessage('오늘 일일 무료 생성 한도(5회)를 모두 소모하셨습니다.')
+        setQuotaMessage('오늘 일일 무료 생성 한도(3회)를 모두 소모하셨습니다.')
         setShowQuotaModal(true)
         return
       }
@@ -526,8 +526,8 @@ export default function WritePage() {
                 오늘의 무료 생성 한도를 모두 소모하셨습니다 💡
               </h3>
               <p className="text-xs text-slate-600 leading-relaxed">
-                무료 체험 플랜은 1일 최대 5회까지 생성이 가능하며, <br />
-                <strong>매일 자정(00:00)에 5회가 자동으로 재충전</strong>됩니다.
+                무료 체험 플랜은 1일 최대 3회까지 생성이 가능하며, <br />
+                <strong>매일 자정(00:00)에 3회가 자동으로 재충전</strong>됩니다.
               </p>
             </div>
 
