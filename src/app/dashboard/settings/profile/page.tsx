@@ -29,7 +29,6 @@ export default async function ProfileSettingsPage() {
           address: formData.get('address') as string,
           phone: formData.get('phone') as string,
           reservation_link: formData.get('reservation_link') as string,
-          tone: formData.get('tone') as string,
           about_us: formData.get('about_us') as string,
         })
       }} className="space-y-6">
@@ -70,11 +69,6 @@ export default async function ProfileSettingsPage() {
                 <label className="text-sm font-medium text-slate-700">예약/상담 링크 (네이버 플레이스 등)</label>
                 <Input name="reservation_link" defaultValue={profile.reservation_link || ''} />
               </div>
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-slate-700">기본 글쓰기 톤앤매너</label>
-              <Input name="tone" defaultValue={profile.tone || ''} placeholder="예: 신뢰감을 주는 전문적인 변호사 톤" />
             </div>
           </CardContent>
         </Card>

@@ -29,7 +29,6 @@ export default function OnboardingPage() {
     address: '',
     phone: '',
     reservation_link: '',
-    tone: '친근하고 유머러스한 이웃 느낌'
   })
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -61,53 +60,53 @@ export default function OnboardingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
-      <Card className="w-full max-w-2xl border-slate-200 shadow-xl">
-        <CardHeader className="bg-indigo-900 text-white rounded-t-xl text-center py-10">
-          <CardTitle className="text-3xl font-bold mb-2">전문가님, 환영합니다! 🎉</CardTitle>
-          <CardDescription className="text-indigo-200 text-lg mt-2">
-            딱 1분만 투자해서 사무소 정보를 입력해 주세요.<br/>
-            이후 AI가 이 정보를 바탕으로 완벽한 맞춤형 칼럼을 작성합니다.
+    <div className="min-h-screen bg-slate-50 flex flex-col justify-center items-center p-4">
+      <Card className="w-full max-w-xl shadow-xl border-slate-100">
+        <CardHeader className="text-center pb-6 border-b border-slate-50">
+          <CardTitle className="text-2xl font-bold text-slate-800">
+            전문가 프로필 맞춤 설정
+          </CardTitle>
+          <CardDescription className="text-slate-500 mt-2">
+            블로그 하단에 노출될 사무소 정보와 전문 분야를 입력해 주세요. (추후 수정 가능)
           </CardDescription>
         </CardHeader>
-        <CardContent className="p-8 space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        
+        <CardContent className="pt-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <label className="text-sm font-semibold text-slate-700 flex items-center gap-1">
-                <Store className="w-4 h-4 text-indigo-500" /> 사무소/법인명 (필수)
+                <Store className="w-4 h-4 text-indigo-500" /> 상호 / 사무소명 *
               </label>
               <Input 
                 name="store_name"
-                placeholder="예: 법무법인 태평양, 세무회계 서브"
+                placeholder="예: 법무법인 혜안 / 세무회계 정" 
                 value={formData.store_name}
                 onChange={handleChange}
               />
             </div>
-            
+
             <div className="space-y-2">
               <label className="text-sm font-semibold text-slate-700 flex items-center gap-1">
-                <Store className="w-4 h-4 text-indigo-500" /> 전문 직종 (필수)
+                🏢 전문 업종 *
               </label>
               <Input 
                 name="industry"
-                placeholder="예: 변호사, 세무사, 노무사, 행정사"
+                placeholder="예: 이혼전문변호사, 상속전문세무사" 
                 value={formData.industry}
                 onChange={handleChange}
               />
-              <p className="text-xs text-slate-500 mt-1">입력하신 직종에 따라 강제 RAG 도메인이 세팅됩니다.</p>
             </div>
 
             <div className="space-y-2 md:col-span-2">
               <label className="text-sm font-semibold text-slate-700 flex items-center gap-1">
-                <MapPin className="w-4 h-4 text-indigo-500" /> 사무소 상세 주소 (필수)
+                <MapPin className="w-4 h-4 text-indigo-500" /> 사무소 상세 주소 *
               </label>
               <Input 
                 name="address"
-                placeholder="예: 서울 서초구 서초대로 123 1층"
+                placeholder="예: 서울 서초구 서초대로 123, 4층" 
                 value={formData.address}
                 onChange={handleChange}
               />
-              <p className="text-xs text-slate-500 mt-1">지역 기반 롱테일 키워드(예: 서초동 이혼 변호사) 추천을 위해 정확히 입력해주세요.</p>
             </div>
 
             <div className="space-y-2">
@@ -116,7 +115,7 @@ export default function OnboardingPage() {
               </label>
               <Input 
                 name="phone"
-                placeholder="예: 02-123-4567"
+                placeholder="예: 02-123-4567" 
                 value={formData.phone}
                 onChange={handleChange}
               />
@@ -128,25 +127,10 @@ export default function OnboardingPage() {
               </label>
               <Input 
                 name="reservation_link"
-                placeholder="https://map.naver.com/..."
+                placeholder="https://map.naver.com/..." 
                 value={formData.reservation_link}
                 onChange={handleChange}
               />
-            </div>
-
-            <div className="space-y-2 md:col-span-2">
-              <label className="text-sm font-semibold text-slate-700">블로그 기본 톤앤매너 (문체)</label>
-              <Select value={formData.tone} onValueChange={(val) => setFormData({...formData, tone: val || ''})}>
-                <SelectTrigger className="w-full h-12">
-                  <SelectValue placeholder="문체 선택" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="신뢰감을 주는 객관적이고 전문적인 톤">신뢰감을 주는 전문적인 톤 (추천)</SelectItem>
-                  <SelectItem value="친근하고 유머러스한 이웃 느낌">친근하고 다가기 쉬운 톤</SelectItem>
-                  <SelectItem value="단호하고 명확하게 사건을 분석하는 톤">단호하고 논리적인 톤</SelectItem>
-                  <SelectItem value="의뢰인을 위로하는 감성적이고 따뜻한 톤">따뜻하고 공감하는 톤</SelectItem>
-                </SelectContent>
-              </Select>
             </div>
           </div>
 

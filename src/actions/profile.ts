@@ -10,7 +10,7 @@ export async function saveProfile(data: {
   address: string;
   phone: string;
   reservation_link: string;
-  tone: string;
+  tone?: string;
   about_us?: string;
 }) {
   try {
@@ -52,7 +52,7 @@ export async function saveProfile(data: {
           address: data.address,
           phone: data.phone,
           reservation_link: data.reservation_link,
-          tone: data.tone,
+          ...(data.tone !== undefined ? { tone: data.tone } : {}),
           about_us: data.about_us,
         }
       })
@@ -65,7 +65,7 @@ export async function saveProfile(data: {
           address: data.address,
           phone: data.phone,
           reservation_link: data.reservation_link,
-          tone: data.tone,
+          tone: data.tone || null,
           about_us: data.about_us,
         }
       })

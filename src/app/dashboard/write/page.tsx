@@ -35,7 +35,7 @@ export default function WritePage() {
   const initialKeyword = searchParams.get('keyword') || ''
 
   const [keyword, setKeyword] = useState(initialKeyword)
-  const [tone, setTone] = useState('친근하고 전문적인 블로거 톤 (20~30대 타겟)')
+  const [tone, setTone] = useState('신뢰형 전문가 칼럼 (법리·판례 중심의 차분하고 명쾌한 분석)')
   const [experience, setExperience] = useState('')
   const [postTitle, setPostTitle] = useState('')
   const [viewMode, setViewMode] = useState<'pc' | 'mobile'>('pc')
@@ -256,10 +256,30 @@ export default function WritePage() {
                   <SelectValue placeholder="톤앤매너 선택" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="친근하고 전문적인 블로거 톤 (20~30대 타겟)">친근한 블로거 (2030 타겟)</SelectItem>
-                  <SelectItem value="매우 객관적이고 정보 전달에 충실한 전문가 톤">정보 전달형 전문가</SelectItem>
-                  <SelectItem value="직접 내돈내산으로 경험한 듯한 솔직한 후기 톤">내돈내산 솔직 후기</SelectItem>
-                  <SelectItem value="감성적이고 부드러운 일상 에세이 톤">감성적인 에세이</SelectItem>
+                  <SelectItem value="신뢰형 전문가 칼럼 (법리·판례 중심의 차분하고 명쾌한 분석)">
+                    <span className="flex items-center gap-2 w-full">
+                      <span className="inline-flex items-center justify-center w-5 shrink-0 text-center text-sm">⚖️</span>
+                      <span className="truncate">신뢰형 전문가 칼럼 (기본 권장)</span>
+                    </span>
+                  </SelectItem>
+                  <SelectItem value="친절한 1:1 상담사 (어려운 용어를 쉬운 일상 비유로 설명)">
+                    <span className="flex items-center gap-2 w-full">
+                      <span className="inline-flex items-center justify-center w-5 shrink-0 text-center text-sm">🤝</span>
+                      <span className="truncate">친절한 1:1 상담사 (초보 의뢰인 맞춤)</span>
+                    </span>
+                  </SelectItem>
+                  <SelectItem value="긴급 리스크 경고형 (기한 경과 시 불이익 및 즉각 조치 강조)">
+                    <span className="flex items-center gap-2 w-full">
+                      <span className="inline-flex items-center justify-center w-5 shrink-0 text-center text-sm">🚨</span>
+                      <span className="truncate">긴급 리스크 경고형 (골든타임 대응)</span>
+                    </span>
+                  </SelectItem>
+                  <SelectItem value="성공 사례 스토리텔링 (의뢰인의 고민 접수부터 전략적 해결 서사)">
+                    <span className="flex items-center gap-2 w-full">
+                      <span className="inline-flex items-center justify-center w-5 shrink-0 text-center text-sm">🏆</span>
+                      <span className="truncate">성공 사례 스토리텔링 (실제 사건 해결)</span>
+                    </span>
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>
