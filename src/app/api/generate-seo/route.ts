@@ -6,6 +6,7 @@ import { google } from '@ai-sdk/google'
 import { openai } from '@ai-sdk/openai'
 import { NextResponse } from 'next/server'
 import { stripInternalMetadata } from '@/lib/utils/postSanitizer'
+import { acquireConcurrentLock, releaseConcurrentLock, checkRateLimit } from '@/lib/rateLimit'
 
 export const maxDuration = 60
 
@@ -116,6 +117,24 @@ export async function POST(req: Request) {
 
     currentUserId = user.id
 
+    // 1. 초고속 연타 차단 (Rate Limit: 4초)
+    const rateCheck = checkRateLimit(user.id, 4000)
+    if (!rateCheck.allowed) {
+      return NextResponse.json({
+        error: 'RATE_LIMIT',
+        message: `너무 빠른 요청입니다. ${rateCheck.remainingSec}초 후에 다시 시도해 주세요.`
+      }, { status: 429 })
+    }
+
+    // 2. 동시 다중 탭 생성 락 (Concurrent Lock)
+    const lockCheck = acquireConcurrentLock(user.id, 60000)
+    if (!lockCheck.success) {
+      return NextResponse.json({
+        error: 'CONCURRENT_LOCK',
+        message: lockCheck.message
+      }, { status: 429 })
+    }
+
     let dbUser = await prisma.user.findUnique({ where: { id: user.id } })
     if (!dbUser) {
       dbUser = await prisma.user.create({
@@ -126,6 +145,33 @@ export async function POST(req: Request) {
           plan_type: 'free',
         },
       })
+    }
+
+    // 3. 플랜별 1일 생성 쿼터 검사 (Free: 5회, Pro: 30회, Agency: 100회)
+    const todayStart = new Date()
+    todayStart.setHours(0, 0, 0, 0)
+
+    const todayArticleCount = await prisma.article.count({
+      where: {
+        user_id: user.id,
+        created_at: {
+          gte: todayStart
+        }
+      }
+    })
+
+    const userPlan = dbUser.plan_type || 'free'
+    const dailyLimit = userPlan === 'pro' ? 30 : userPlan === 'agency' ? 100 : 5
+
+    if (todayArticleCount >= dailyLimit) {
+      releaseConcurrentLock(user.id)
+      return NextResponse.json({
+        error: 'DAILY_LIMIT_EXCEEDED',
+        message: `오늘 일일 생성 한도(${dailyLimit}회)를 모두 소모하셨습니다. 매일 자정에 초기화되며, Pro 요금제로 업그레이드하시면 하루 30회까지 고품질 블로그 작성이 가능합니다.`,
+        dailyLimit,
+        todayCount: todayArticleCount,
+        plan: userPlan
+      }, { status: 429 })
     }
 
     const [profile, pastArticles] = await Promise.all([
@@ -146,6 +192,7 @@ export async function POST(req: Request) {
     })
 
     if (deduction.count === 0) {
+      releaseConcurrentLock(user.id)
       return NextResponse.json({ error: '크레딧이 부족합니다. 요금제를 업그레이드해주세요.' }, { status: 403 })
     }
 
@@ -155,6 +202,7 @@ export async function POST(req: Request) {
     const { prompt, tone, experience } = body
 
     if (!prompt) {
+      releaseConcurrentLock(user.id)
       return NextResponse.json({ error: '타겟 키워드가 필요합니다.' }, { status: 400 })
     }
 
@@ -497,6 +545,8 @@ ${profileFooterPrompt}
           })
         } catch (error) {
           console.error('Failed to update DB onFinish:', error)
+        } finally {
+          releaseConcurrentLock(user.id)
         }
       },
     })
@@ -505,6 +555,9 @@ ${profileFooterPrompt}
 
   } catch (error: any) {
     console.error('Generation API error:', error)
+    if (currentUserId) {
+      releaseConcurrentLock(currentUserId)
+    }
     try {
       if (isCreditDeducted && currentUserId) {
         await prisma.user.update({

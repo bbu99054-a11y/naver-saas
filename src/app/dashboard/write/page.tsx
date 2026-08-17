@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useMemo } from 'react'
 import { useSearchParams } from 'next/navigation'
+import Link from 'next/link'
 import { useCompletion } from '@ai-sdk/react'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -9,7 +10,7 @@ import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { 
   Loader2, Sparkles, PenTool, Monitor, Smartphone, 
-  Copy, Check, FileText, Clock 
+  Copy, Check, FileText, Clock, BookOpen 
 } from 'lucide-react'
 import { CopyToNaverBtn } from '@/components/CopyToNaverBtn'
 import { MultiPublishBtn } from '@/components/MultiPublishBtn'
@@ -42,15 +43,39 @@ export default function WritePage() {
   const [isTitleCopied, setIsTitleCopied] = useState(false)
   const [readyHtml, setReadyHtml] = useState('')
   const [isImagesReady, setIsImagesReady] = useState(false)
+  const [showQuotaModal, setShowQuotaModal] = useState(false)
+  const [quotaMessage, setQuotaMessage] = useState('')
   const { toast } = useToast()
 
   const { completion, complete, isLoading, error } = useCompletion({
     api: '/api/generate-seo',
     streamProtocol: 'text',
     onError: (err) => {
+      const errMsg = err.message || ''
+      if (errMsg.includes('DAILY_LIMIT_EXCEEDED') || errMsg.includes('일일 생성 한도')) {
+        setQuotaMessage('오늘 일일 무료 생성 한도(5회)를 모두 소모하셨습니다.')
+        setShowQuotaModal(true)
+        return
+      }
+      if (errMsg.includes('CONCURRENT_LOCK') || errMsg.includes('다른 창에서')) {
+        toast({
+          title: '⚠️ 동시 생성 제한',
+          description: '현재 다른 창에서 원고 생성이 진행 중입니다. 생성이 완료된 후 다시 시도해 주세요.',
+          variant: 'destructive'
+        })
+        return
+      }
+      if (errMsg.includes('RATE_LIMIT') || errMsg.includes('너무 빠른')) {
+        toast({
+          title: '⏳ 호출 속도 제한',
+          description: '너무 빠른 요청입니다. 잠시 후 다시 시도해 주세요.',
+          variant: 'destructive'
+        })
+        return
+      }
       toast({
         title: '생성 에러',
-        description: err.message || '글 생성 중 오류가 발생했습니다 (크레딧 부족 등).',
+        description: errMsg || '글 생성 중 오류가 발생했습니다 (크레딧 부족 등).',
         variant: 'destructive'
       })
     },
@@ -235,6 +260,15 @@ export default function WritePage() {
               타겟 키워드와 톤을 설정하고 생성합니다.
             </CardDescription>
           </div>
+          <Link 
+            href="/dashboard/guide" 
+            target="_blank"
+            className="text-[11px] font-bold text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200/80 px-2 py-1 rounded-md flex items-center gap-1 transition-all"
+            title="사용 가이드 새창으로 보기"
+          >
+            <BookOpen className="w-3.5 h-3.5" />
+            <span>가이드</span>
+          </Link>
         </CardHeader>
         <CardContent className="p-4 flex-1 flex flex-col gap-3.5 overflow-auto">
           <div className="space-y-3">
@@ -478,6 +512,55 @@ export default function WritePage() {
         </div>
 
       </Card>
+
+      {/* 🚀 [신규] 1일 한도 초과 시 Pro 요금제 업그레이드 유도 모달 팝업 */}
+      {showQuotaModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4 animate-in fade-in duration-200">
+          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-100 text-center space-y-5 relative animate-in zoom-in-95 duration-200">
+            <div className="w-12 h-12 bg-amber-50 rounded-2xl border border-amber-200 flex items-center justify-center mx-auto text-amber-600 shadow-xs">
+              <Sparkles className="w-6 h-6" />
+            </div>
+
+            <div className="space-y-1.5">
+              <h3 className="text-lg font-extrabold text-slate-900">
+                오늘의 무료 생성 한도를 모두 소모하셨습니다 💡
+              </h3>
+              <p className="text-xs text-slate-600 leading-relaxed">
+                무료 체험 플랜은 1일 최대 5회까지 생성이 가능하며, <br />
+                <strong>매일 자정(00:00)에 5회가 자동으로 재충전</strong>됩니다.
+              </p>
+            </div>
+
+            <div className="bg-indigo-50/70 border border-indigo-100/80 rounded-xl p-4 text-left space-y-2 text-xs">
+              <p className="font-bold text-indigo-950 flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-indigo-600" /> Pro 요금제 업그레이드 시 혜택:
+              </p>
+              <ul className="space-y-1.5 text-slate-700 font-medium pl-3.5 list-disc">
+                <li><strong>하루 30회</strong> 넉넉한 고품질 포스팅 무제한 발행</li>
+                <li><strong>1080px 고화질 카드 인포그래픽</strong> 자동 생성</li>
+                <li>전문직 맞춤 <strong>RAG 지식베이스 & 4대 톤앤매너</strong> 최적화</li>
+                <li>워드프레스·티스토리 <strong>원클릭 멀티 발행</strong> 지원</li>
+              </ul>
+            </div>
+
+            <div className="space-y-2 pt-1">
+              <Link href="/dashboard/billing" className="block w-full">
+                <Button className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs h-10 shadow-md gap-1.5 cursor-pointer">
+                  <Sparkles className="w-4 h-4 text-amber-300" />
+                  <span>Pro 요금제 업그레이드하러 가기 →</span>
+                </Button>
+              </Link>
+              <Button 
+                variant="ghost" 
+                onClick={() => setShowQuotaModal(false)}
+                className="w-full text-xs text-slate-500 hover:text-slate-800 h-8 font-medium cursor-pointer"
+              >
+                내일 다시 이용하기 (닫기)
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>
   )

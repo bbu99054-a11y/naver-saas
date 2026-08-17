@@ -1,5 +1,5 @@
 import { ReactNode } from 'react'
-import { LayoutDashboard, PenTool, Settings, CreditCard, LogOut, Search, FileText, UserCircle } from 'lucide-react'
+import { LayoutDashboard, PenTool, Globe, CreditCard, LogOut, FileText, UserCircle, BookOpen } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
@@ -11,7 +11,7 @@ const sidebarLinks = [
   { href: '/dashboard/settings/profile', label: '내 정보 관리 (RAG)', icon: UserCircle },
   { href: '/dashboard/write', label: 'SEO 블로그 쓰기', icon: PenTool },
   { href: '/dashboard/archive', label: '나의 원고 저장소', icon: FileText },
-  { href: '/dashboard/settings', label: 'API 설정', icon: Settings },
+  { href: '/dashboard/settings', label: '외부 블로그 연동 (WP·티스토리)', icon: Globe },
   { href: '/dashboard/billing', label: '요금제 및 결제', icon: CreditCard },
 ]
 
@@ -45,24 +45,20 @@ export default async function DashboardLayout({ children }: { children: ReactNod
               const Icon = link.icon
               return (
                 <SidebarItem key={link.href} href={link.href}>
-                  <Icon className="mr-3 h-5 w-5" />
-                  {link.label}
+                  <Icon className="mr-3 h-5 w-5 shrink-0" />
+                  <span className="truncate">{link.label}</span>
                 </SidebarItem>
               )
             })}
           </nav>
         </div>
         <div className="p-4 border-t border-slate-200 space-y-1 bg-white mt-auto">
-          <Link href="/dashboard/guide" className="flex items-center px-4 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 rounded-md">
-            <span className="mr-3">📖</span>
-            사용 가이드
-          </Link>
-          <a href="#" className="flex items-center px-4 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 rounded-md">
-            <span className="mr-3">🔔</span>
-            공지사항
-          </a>
+          <SidebarItem href="/dashboard/guide">
+            <BookOpen className="mr-3 h-5 w-5 shrink-0 text-indigo-600" />
+            <span className="font-bold">📖 사용 가이드</span>
+          </SidebarItem>
           <form action={handleLogout} className="pt-2 mt-2 border-t border-slate-100">
-            <Button variant="ghost" className="w-full justify-start text-slate-600 hover:text-slate-900" type="submit">
+            <Button variant="ghost" className="w-full justify-start text-slate-600 hover:text-slate-900 cursor-pointer" type="submit">
               <LogOut className="mr-3 h-5 w-5" />
               로그아웃
             </Button>
