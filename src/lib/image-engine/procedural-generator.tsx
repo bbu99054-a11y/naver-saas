@@ -413,7 +413,7 @@ function renderThumbnailCard(
             {signature}
           </div>
           <div style={{ display: 'flex', fontSize: '20px', color: palette.sub, fontWeight: 'bold' }}>
-            2026 C-Rank & DIA+ Premium SEO Verified
+            1:1 전문 상담 · 철저한 비밀 보장
           </div>
         </div>
       </div>
@@ -454,20 +454,20 @@ function renderThumbnailCard(
                 display: 'flex',
                 backgroundColor: 'rgba(255, 255, 255, 0.2)',
                 color: '#FFFFFF',
-                padding: '10px 24px',
-                borderRadius: '24px',
-                fontSize: '22px',
+                padding: '8px 20px',
+                borderRadius: '16px',
+                fontSize: '20px',
                 fontWeight: 'bold',
               }}
             >
               {category}
             </div>
-            <div style={{ display: 'flex', fontSize: '24px', fontWeight: 'bold', color: '#FFFFFF' }}>
+            <div style={{ display: 'flex', fontSize: '22px', color: 'rgba(255, 255, 255, 0.85)', fontWeight: 'bold' }}>
               {signature}
             </div>
           </div>
 
-          <div style={{ display: 'flex', gap: '14px' }}>
+          <div style={{ display: 'flex', gap: '12px' }}>
             {tags.map((tag, idx) => (
               <div
                 key={idx}
@@ -475,9 +475,9 @@ function renderThumbnailCard(
                   display: 'flex',
                   backgroundColor: '#FFFFFF',
                   color: palette.accent,
-                  padding: '8px 18px',
-                  borderRadius: '12px',
-                  fontSize: '20px',
+                  padding: '6px 16px',
+                  borderRadius: '10px',
+                  fontSize: '18px',
                   fontWeight: 'bold',
                 }}
               >
@@ -487,27 +487,25 @@ function renderThumbnailCard(
           </div>
         </div>
 
-        {/* 하단 메인 텍스트 영역 */}
+        {/* 하단 본문 카드 */}
         <div
           style={{
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'space-between',
-            padding: '70px 80px',
             flex: 1,
-            backgroundColor: palette.bg,
+            padding: '60px 80px 80px',
             boxSizing: 'border-box',
           }}
         >
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '30px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
             <div
               style={{
                 display: 'flex',
-                fontSize: `${titleSize + 4}px`,
+                fontSize: `${titleSize}px`,
                 lineHeight: '1.3',
                 fontWeight: 'bold',
                 color: palette.text,
-                textAlign: 'left',
                 wordBreak: 'break-word',
               }}
             >
@@ -518,10 +516,7 @@ function renderThumbnailCard(
               <div
                 style={{
                   display: 'flex',
-                  borderLeft: `6px solid ${palette.accent}`,
-                  paddingLeft: '24px',
-                  fontSize: '28px',
-                  fontWeight: 'bold',
+                  fontSize: '24px',
                   color: palette.sub,
                   lineHeight: '1.45',
                   wordBreak: 'break-word',
@@ -543,10 +538,10 @@ function renderThumbnailCard(
             }}
           >
             <div style={{ display: 'flex', fontSize: '22px', fontWeight: 'bold', color: palette.text }}>
-              2026 C-Rank Verified Solution
+              전문 자격사 1:1 맞춤 검토
             </div>
             <div style={{ display: 'flex', fontSize: '20px', color: palette.sub }}>
-              전문가 1:1 실무 지침
+              철저한 비밀 보장 상담
             </div>
           </div>
         </div>
@@ -568,48 +563,49 @@ function renderThumbnailCard(
           wordBreak: 'break-word',
         }}
       >
-        {/* 좌측 굵은 테마 악센트 바 */}
+        {/* 좌측 강조 바 */}
         <div
           style={{
             display: 'flex',
-            width: '24px',
-            height: '100%',
+            width: '28px',
+            height: '1080px',
             backgroundColor: palette.accent,
           }}
         />
 
-        {/* 우측 메인 콘텐츠 (Safe Zone 패딩 적용) */}
+        {/* 메인 콘텐츠 영역 (내부 패딩 80px) */}
         <div
           style={{
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'space-between',
-            padding: '80px 80px 80px 60px',
             flex: 1,
+            padding: '80px',
             boxSizing: 'border-box',
           }}
         >
-          {/* 상단 카테고리 및 3개 태그 */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-              <div
-                style={{
-                  display: 'flex',
-                  backgroundColor: palette.badgeBg,
-                  color: palette.badgeText,
-                  padding: '10px 24px',
-                  borderRadius: '24px',
-                  fontSize: '22px',
-                  fontWeight: 'bold',
-                }}
-              >
-                {category}
-              </div>
-              <div style={{ display: 'flex', fontSize: '22px', color: palette.sub, fontWeight: 'bold' }}>
-                {signature}
-              </div>
+          {/* 상단 뱃지 및 서명 */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div
+              style={{
+                display: 'flex',
+                backgroundColor: palette.badgeBg,
+                color: palette.badgeText,
+                padding: '10px 24px',
+                borderRadius: '20px',
+                fontSize: '22px',
+                fontWeight: 'bold',
+              }}
+            >
+              {category}
             </div>
+            <div style={{ display: 'flex', fontSize: '24px', fontWeight: 'bold', color: palette.text }}>
+              {signature}
+            </div>
+          </div>
 
+          {/* 중앙 타이틀 & 태그 */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '30px' }}>
             <div style={{ display: 'flex', gap: '12px' }}>
               {tags.map((tag, idx) => (
                 <div
@@ -617,27 +613,24 @@ function renderThumbnailCard(
                   style={{
                     display: 'flex',
                     backgroundColor: palette.bg,
+                    color: palette.sub,
                     border: `1.5px solid ${palette.border}`,
-                    borderRadius: '10px',
-                    padding: '8px 16px',
+                    padding: '8px 18px',
+                    borderRadius: '12px',
                     fontSize: '18px',
                     fontWeight: 'bold',
-                    color: palette.accent,
                   }}
                 >
                   #{tag}
                 </div>
               ))}
             </div>
-          </div>
 
-          {/* 중앙 대형 타이틀 */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
             <div
               style={{
                 display: 'flex',
-                fontSize: `${titleSize + 6}px`,
-                lineHeight: '1.3',
+                fontSize: `${titleSize + 4}px`,
+                lineHeight: '1.28',
                 fontWeight: 'bold',
                 color: palette.text,
                 wordBreak: 'break-word',
@@ -650,14 +643,9 @@ function renderThumbnailCard(
               <div
                 style={{
                   display: 'flex',
-                  backgroundColor: palette.highlightBg,
-                  border: `1.5px solid ${palette.border}`,
-                  borderRadius: '18px',
-                  padding: '24px 30px',
                   fontSize: '26px',
-                  fontWeight: 'bold',
-                  color: palette.text,
-                  lineHeight: '1.4',
+                  color: palette.sub,
+                  lineHeight: '1.45',
                   wordBreak: 'break-word',
                 }}
               >
@@ -666,7 +654,6 @@ function renderThumbnailCard(
             )}
           </div>
 
-          {/* 하단 인증 바 */}
           <div
             style={{
               display: 'flex',
@@ -678,10 +665,10 @@ function renderThumbnailCard(
             }}
           >
             <div style={{ display: 'flex', fontSize: '24px', fontWeight: 'bold', color: palette.accent }}>
-              PostSynk SEO Standard 2026
+              정확한 사실관계 분석
             </div>
             <div style={{ display: 'flex', fontSize: '20px', color: palette.sub }}>
-              네이버 C-Rank 최적화
+              핵심 쟁점 1:1 법률 가이드
             </div>
           </div>
         </div>
@@ -808,7 +795,7 @@ function renderThumbnailCard(
             {signature}
           </div>
           <div style={{ display: 'flex', fontSize: '18px', color: '#94A3B8' }}>
-            2026 C-Rank & DIA+ Premium SEO Verified
+            1:1 전문 상담 · 철저한 비밀 보장
           </div>
         </div>
       </div>
@@ -1463,7 +1450,7 @@ function renderSummaryCard(payload: CardPayload, palette: typeof palettes[0]) {
           fontWeight: 'bold',
         }}
       >
-        PostSynk Verified C-Rank SEO Key Takeaways
+        Key Point · 핵심 요약 및 판단 기준
       </div>
     </div>
   )
@@ -1480,11 +1467,10 @@ function renderCtaCard(
 ) {
   const phone = payload.extra1 || '(대표 전화번호)'
   const address = payload.extra2 || '(사무소 상세 주소)'
-  const reservation = payload.extra3 || '(네이버 예약 / 지도)'
   const title = payload.title || '1:1 맞춤 정밀 진단 및 상담 안내'
   const sub = payload.subText || '풍부한 실무 경험을 바탕으로 의뢰인의 권익을 최우선으로 보호합니다.'
 
-  // BANNER_A: 좌우 2단 분할형
+  // BANNER_A: 좌우 2단 분할형 (직통상담 + 오시는길 2개 중심 대형 레이아웃)
   if (layout === 'BANNER_A') {
     return (
       <div
@@ -1495,8 +1481,8 @@ function renderCtaCard(
           backgroundColor: palette.bg,
           border: `3px solid ${palette.border}`,
           borderRadius: '28px',
-          padding: '50px 80px',
-          gap: '40px',
+          padding: '50px 70px',
+          gap: '36px',
           boxSizing: 'border-box',
           letterSpacing: '-0.03em',
           wordBreak: 'break-word',
@@ -1532,7 +1518,7 @@ function renderCtaCard(
           </div>
         </div>
 
-        {/* 우측 연락처 박스 */}
+        {/* 우측 연락처 & 오시는길 2단 카드 */}
         <div
           style={{
             display: 'flex',
@@ -1540,37 +1526,28 @@ function renderCtaCard(
             justifyContent: 'center',
             backgroundColor: palette.cardBg,
             border: `2px solid ${palette.border}`,
-            borderRadius: '20px',
-            padding: '30px',
-            gap: '16px',
-            width: '420px',
+            borderRadius: '24px',
+            padding: '36px 32px',
+            gap: '28px',
+            width: '450px',
             boxSizing: 'border-box',
           }}
         >
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-            <div style={{ display: 'flex', fontSize: '18px', fontWeight: 'bold', color: palette.accent }}>
-              📞 직통 상담 전화
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+            <div style={{ display: 'flex', fontSize: '20px', fontWeight: 'bold', color: palette.accent }}>
+              📞 직통 상담
             </div>
-            <div style={{ display: 'flex', fontSize: '32px', fontWeight: 'bold', color: palette.text, wordBreak: 'break-word' }}>
+            <div style={{ display: 'flex', fontSize: '36px', fontWeight: 'bold', color: palette.text, wordBreak: 'break-word' }}>
               {phone}
             </div>
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-            <div style={{ display: 'flex', fontSize: '18px', fontWeight: 'bold', color: palette.sub }}>
-              🏢 사무소 위치
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+            <div style={{ display: 'flex', fontSize: '20px', fontWeight: 'bold', color: palette.sub }}>
+              🏢 오시는 길
             </div>
-            <div style={{ display: 'flex', fontSize: '20px', color: palette.text, fontWeight: 'bold', wordBreak: 'break-word' }}>
+            <div style={{ display: 'flex', fontSize: '24px', color: palette.text, fontWeight: 'bold', wordBreak: 'break-word' }}>
               {address}
-            </div>
-          </div>
-
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-            <div style={{ display: 'flex', fontSize: '18px', fontWeight: 'bold', color: palette.accent }}>
-              📍 지도 / 예약
-            </div>
-            <div style={{ display: 'flex', fontSize: '18px', color: palette.sub, wordBreak: 'break-word' }}>
-              {reservation}
             </div>
           </div>
         </div>
@@ -1578,7 +1555,7 @@ function renderCtaCard(
     )
   }
 
-  // BANNER_B: 중앙 집중 명함형
+  // BANNER_B: 중앙 집중 명함형 (2열 대형 정보 박스)
   if (layout === 'BANNER_B') {
     return (
       <div
@@ -1592,7 +1569,7 @@ function renderCtaCard(
           backgroundColor: palette.cardBg,
           border: `3px solid ${palette.accent}`,
           borderRadius: '28px',
-          padding: '45px 80px',
+          padding: '45px 70px',
           boxSizing: 'border-box',
           textAlign: 'center',
           letterSpacing: '-0.03em',
@@ -1611,7 +1588,7 @@ function renderCtaCard(
               fontWeight: 'bold',
             }}
           >
-            2026 C-Rank 공식 인증 사무소
+            공식 1:1 심층 상담 창구
           </div>
           <div style={{ display: 'flex', fontSize: '40px', fontWeight: 'bold', color: palette.text, wordBreak: 'break-word' }}>
             {title}
@@ -1621,8 +1598,8 @@ function renderCtaCard(
           </div>
         </div>
 
-        {/* 3열 정보 박스 */}
-        <div style={{ display: 'flex', gap: '20px', width: '100%' }}>
+        {/* 2열 와이드 정보 박스 (직통 상담 + 오시는 길) */}
+        <div style={{ display: 'flex', gap: '24px', width: '100%' }}>
           <div
             style={{
               display: 'flex',
@@ -1630,15 +1607,15 @@ function renderCtaCard(
               alignItems: 'center',
               flex: 1,
               backgroundColor: palette.bg,
-              border: `1.5px solid ${palette.border}`,
-              borderRadius: '16px',
-              padding: '16px',
-              gap: '4px',
+              border: `2px solid ${palette.accent}`,
+              borderRadius: '20px',
+              padding: '24px 20px',
+              gap: '8px',
               boxSizing: 'border-box',
             }}
           >
-            <div style={{ display: 'flex', fontSize: '20px', fontWeight: 'bold', color: palette.accent }}>📞 전화 상담</div>
-            <div style={{ display: 'flex', fontSize: '24px', fontWeight: 'bold', color: palette.text, wordBreak: 'break-word' }}>{phone}</div>
+            <div style={{ display: 'flex', fontSize: '22px', fontWeight: 'bold', color: palette.accent }}>📞 직통 전화 상담</div>
+            <div style={{ display: 'flex', fontSize: '32px', fontWeight: 'bold', color: palette.text, wordBreak: 'break-word' }}>{phone}</div>
           </div>
 
           <div
@@ -1648,40 +1625,22 @@ function renderCtaCard(
               alignItems: 'center',
               flex: 1,
               backgroundColor: palette.bg,
-              border: `1.5px solid ${palette.border}`,
-              borderRadius: '16px',
-              padding: '16px',
-              gap: '4px',
+              border: `2px solid ${palette.border}`,
+              borderRadius: '20px',
+              padding: '24px 20px',
+              gap: '8px',
               boxSizing: 'border-box',
             }}
           >
-            <div style={{ display: 'flex', fontSize: '20px', fontWeight: 'bold', color: palette.sub }}>🏢 위치 안내</div>
-            <div style={{ display: 'flex', fontSize: '20px', fontWeight: 'bold', color: palette.text, textAlign: 'center', wordBreak: 'break-word' }}>{address}</div>
-          </div>
-
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              flex: 1,
-              backgroundColor: palette.bg,
-              border: `1.5px solid ${palette.border}`,
-              borderRadius: '16px',
-              padding: '16px',
-              gap: '4px',
-              boxSizing: 'border-box',
-            }}
-          >
-            <div style={{ display: 'flex', fontSize: '20px', fontWeight: 'bold', color: palette.accent }}>📍 네이버 예약</div>
-            <div style={{ display: 'flex', fontSize: '18px', color: palette.sub, wordBreak: 'break-word' }}>{reservation}</div>
+            <div style={{ display: 'flex', fontSize: '22px', fontWeight: 'bold', color: palette.sub }}>🏢 사무소 오시는 길</div>
+            <div style={{ display: 'flex', fontSize: '24px', fontWeight: 'bold', color: palette.text, textAlign: 'center', wordBreak: 'break-word' }}>{address}</div>
           </div>
         </div>
       </div>
     )
   }
 
-  // BANNER_C: 모던 아웃라인 박스형
+  // BANNER_C: 모던 아웃라인 박스형 (직통상담 + 오시는길 대형 폰트 & 공백 최소화)
   return (
     <div
       style={{
@@ -1693,7 +1652,7 @@ function renderCtaCard(
         backgroundColor: palette.highlightBg,
         border: `3px solid ${palette.accent}`,
         borderRadius: '28px',
-        padding: '45px 80px',
+        padding: '40px 60px',
         boxSizing: 'border-box',
         letterSpacing: '-0.03em',
         wordBreak: 'break-word',
@@ -1723,29 +1682,26 @@ function renderCtaCard(
         </div>
       </div>
 
+      {/* 2단 큼직한 직통상담 및 오시는길 박스 */}
       <div
         style={{
           display: 'flex',
           flexDirection: 'column',
           backgroundColor: palette.cardBg,
-          border: `2px solid ${palette.border}`,
-          borderRadius: '20px',
-          padding: '24px 30px',
-          gap: '12px',
+          border: `2.5px solid ${palette.border}`,
+          borderRadius: '22px',
+          padding: '28px 36px',
+          gap: '16px',
           boxSizing: 'border-box',
         }}
       >
-        <div style={{ display: 'flex', fontSize: '24px', fontWeight: 'bold', color: palette.text, gap: '12px' }}>
-          <span style={{ color: palette.accent }}>📞 직통 상담:</span>
-          <span style={{ wordBreak: 'break-word' }}>{phone}</span>
+        <div style={{ display: 'flex', alignItems: 'center', fontSize: '32px', fontWeight: 'bold', color: palette.text, gap: '16px' }}>
+          <span style={{ color: palette.accent, whiteSpace: 'nowrap' }}>📞 직통 상담:</span>
+          <span style={{ fontSize: '34px', color: palette.text, wordBreak: 'break-word' }}>{phone}</span>
         </div>
-        <div style={{ display: 'flex', fontSize: '22px', fontWeight: 'bold', color: palette.text, gap: '12px' }}>
-          <span style={{ color: palette.sub }}>🏢 오시는 길:</span>
-          <span style={{ fontWeight: 'normal', wordBreak: 'break-word' }}>{address}</span>
-        </div>
-        <div style={{ display: 'flex', fontSize: '20px', color: palette.sub, gap: '12px' }}>
-          <span>📍 온라인 예약:</span>
-          <span style={{ wordBreak: 'break-word' }}>{reservation}</span>
+        <div style={{ display: 'flex', alignItems: 'center', fontSize: '28px', fontWeight: 'bold', color: palette.text, gap: '16px' }}>
+          <span style={{ color: palette.sub, whiteSpace: 'nowrap' }}>🏢 오시는 길:</span>
+          <span style={{ fontSize: '28px', color: palette.text, fontWeight: 'bold', wordBreak: 'break-word' }}>{address}</span>
         </div>
       </div>
     </div>

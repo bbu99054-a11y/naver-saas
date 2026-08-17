@@ -113,18 +113,24 @@ export async function POST(req: Request) {
     let ragInjection = ''
 
     if (profile) {
+      const mapLinkHtml = profile.reservation_link
+        ? `<p style="text-align: center; margin: 15px 0 30px 0;"><a href="${profile.reservation_link}" target="_blank" rel="noopener noreferrer" style="display: inline-block; font-size: 15px; font-weight: bold; color: #03C75A; text-decoration: none; border: 1.5px solid #03C75A; padding: 10px 22px; border-radius: 25px; background-color: #F0FDF4;">📍 ${profile.store_name || '사무소'} 네이버 지도 / 길찾기 바로가기</a></p>`
+        : ''
+
       profileFooterPrompt = `
 <footer_cta>
-[사무소 프로필 정보: 반드시 [사진 9: 하단 상담 유도 배너 이미지] 안에만 통합하여 반영할 것]
+[사무소 프로필 정보: [사진 9: 하단 상담 유도 배너 이미지]에 직통 상담 및 오시는 길 2개 정보를 집중 반영할 것]
 - 이름/상호: ${profile.store_name || ''}
 - 전문 분야: ${profile.industry || ''}
 - 주소: ${profile.address || ''}
-- 전화번호: ${profile.phone || ''}
-- 예약/지도: ${profile.reservation_link || ''}
+- 직통 전화번호: ${profile.phone || ''}
+${profile.reservation_link ? `- 네이버 지도/예약 링크: ${profile.reservation_link}` : ''}
 
 [필수 면책 조항] 배너 바로 위에 다음 문구를 작고 흐린 글씨(<p style="font-size: 11px; color: #94a3b8; text-align: center; margin: 25px 0 10px 0;">)로 반드시 삽입해: 
 "본 포스팅은 일반적인 정보 제공을 목적으로 하며, 구체적인 사안에 따라 법적 판단이 달라질 수 있으므로 반드시 정식 상담을 받아보시기 바랍니다."
-(주의: 배너 아래에 별도의 회색 텍스트 안내 박스를 중복으로 생성하지 마세요. 모든 사무소 정보는 [사진 9 배너 이미지] 하나로 완벽하게 통합합니다.)
+
+${profile.reservation_link ? `[네이버 지도 바로가기 버튼]: [사진 9 배너 이미지] 바로 아래에 다음 HTML 링크 태그를 1회 정확히 삽입하여 고객이 터치 시 지도로 연결되도록 할 것:
+'${mapLinkHtml}'` : ''}
 </footer_cta>
 `
 
@@ -348,7 +354,7 @@ ${profileFooterPrompt}
    - 소제목(H2)은 별도의 챕터 바 없이 네이버 스마트블록 검색에 강력한 문장형 제목으로 작성할 것.
 3. [결론부 요약 카드]: 본론 마무리 후 결론부 직전에 내용에 따라 [사진 8: 핵심 3줄 결론 요약 카드]를 선택 배치.
 4. [글 최하단: 하단 상담 유도 (CTA) 배너 카드 필수 삽입]
-   - 글의 맨 마지막(마무리 문단 후)에는 [사진 9: 하단 상담 유도 배너]를 삽입하여 전화번호(${profile?.phone || ''}), 주소(${profile?.address || ''}), 지도 링크(${profile?.reservation_link || ''})를 완벽히 안내할 것.
+   - 글의 맨 마지막(마무리 문단 후)에는 [사진 9: 하단 상담 유도 배너]를 삽입하여 직통 전화번호(${profile?.phone || ''})와 사무소 상세 주소(${profile?.address || ''})를 2단 집중 레이아웃으로 선명하게 안내할 것.
 6. [문서 5단계 뼈대 구조화 (Skeleton-of-Thought)]
    - 1단계: <post_title> (타깃 키워드를 자연스럽게 포함하고 의뢰인의 구체적 고민 해결을 명시한 25자 내외 제목)
    - 2단계: Introduction (도입부 - 15%) ➔ [사진 1 썸네일] 바로 아래 APB 훅(Attention-Problem-Bridge) 프레임워크 적용 ➔ **도입부 문단 종료 직후, 첫 번째 <h2> 소제목이 시작되기 바로 전에 반드시 [서론 직후 스마트블록 스니펫용 3초 핵심 요약 박스]를 1회 의무 삽입할 것.**

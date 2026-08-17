@@ -61,7 +61,7 @@ function generateFailproofSvg(payload: CardPayload, width: number, height: numbe
   
   <line x1="80" y1="${height - 110}" x2="${width - 80}" y2="${height - 110}" stroke="#E2E8F0" stroke-width="2"/>
   <text x="80" y="${height - 55}" font-family="-apple-system, BlinkMacSystemFont, 'Pretendard', sans-serif" font-size="24" font-weight="bold" fill="#64748B">${signature}</text>
-  <text x="${width - 80}" y="${height - 55}" font-family="-apple-system, BlinkMacSystemFont, 'Pretendard', sans-serif" font-size="22" fill="#94A3B8" text-anchor="end">2026 C-Rank &amp; DIA+ SEO</text>
+  <text x="${width - 80}" y="${height - 55}" font-family="-apple-system, BlinkMacSystemFont, 'Pretendard', sans-serif" font-size="22" fill="#94A3B8" text-anchor="end">1:1 맞춤 상담 · 비밀 보장</text>
 </svg>
 `.trim()
 }
