@@ -4,9 +4,9 @@ import prisma from '@/lib/prisma'
 import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
 
-// 관리자 이메일 목록
+// 관리자 이메일 목록 (대표님 공식 계정)
 const ADMIN_EMAILS = [
-  'bu99054@gmail.com',
+  'bbu99054@gmail.com',
   'bu99054@naver.com',
   process.env.ADMIN_EMAIL || '',
 ].filter(Boolean)
