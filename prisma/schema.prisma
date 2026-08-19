@@ -99,16 +99,20 @@ model ApiKey {
 }
 
 model PaymentHistory {
-  id           String   @id @default(uuid())
-  user_id      String
-  order_id     String   @unique
-  payment_key  String?
-  amount       Int
-  status       String   @default("PENDING") // PENDING, DONE, CANCELED, ABORTED
-  plan_type    String
-  receipt_url  String?
-  created_at   DateTime @default(now())
-  completed_at DateTime?
+  id                 String    @id @default(uuid())
+  user_id            String
+  order_id           String    @unique
+  payment_key        String?
+  amount             Int
+  status             String    @default("PENDING") // PENDING, DONE, CANCELED, ABORTED
+  plan_type          String
+  receipt_url        String?
+  depositor_name     String?
+  depositor_phone    String?
+  tax_deduction_type String?   // NONE, PERSONAL, BUSINESS
+  tax_deduction_num  String?
+  created_at         DateTime  @default(now())
+  completed_at       DateTime?
 
   user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
 

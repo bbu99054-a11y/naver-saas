@@ -1,9 +1,10 @@
 import { ReactNode } from 'react'
-import { LayoutDashboard, PenTool, Globe, CreditCard, LogOut, FileText, UserCircle, BookOpen } from 'lucide-react'
+import { LayoutDashboard, PenTool, Globe, CreditCard, LogOut, FileText, UserCircle, BookOpen, ShieldCheck } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { SidebarItem } from '@/components/SidebarItem'
+import { checkIsAdmin } from '@/actions/deposit'
 import Link from 'next/link'
 
 const sidebarLinks = [
@@ -22,6 +23,8 @@ export default async function DashboardLayout({ children }: { children: ReactNod
   if (!user) {
     redirect('/login')
   }
+
+  const isAdmin = await checkIsAdmin()
 
   const handleLogout = async () => {
     'use server'
@@ -50,6 +53,19 @@ export default async function DashboardLayout({ children }: { children: ReactNod
                 </SidebarItem>
               )
             })}
+
+            {isAdmin && (
+              <div className="pt-2 mt-2 border-t border-slate-100 space-y-1">
+                <SidebarItem href="/dashboard/admin">
+                  <ShieldCheck className="mr-3 h-5 w-5 shrink-0 text-amber-600" />
+                  <span className="font-extrabold text-amber-900">👑 CEO 통합 관제</span>
+                </SidebarItem>
+                <SidebarItem href="/dashboard/admin/deposits">
+                  <CreditCard className="mr-3 h-5 w-5 shrink-0 text-indigo-600" />
+                  <span className="font-semibold text-slate-700">💳 입금 승인 관리</span>
+                </SidebarItem>
+              </div>
+            )}
           </nav>
         </div>
         <div className="p-4 border-t border-slate-200 space-y-1 bg-white mt-auto">

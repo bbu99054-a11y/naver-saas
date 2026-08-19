@@ -20,6 +20,7 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
    - ⚙️ Under the hood? (Explain data flow with analogies. Must comply with local Chrome extension architecture, no n8n/Make)
    - 🗺️ Zones Touched: (List the Zone IDs from DETAILED_ARCHITECTURE.md being modified)
    - ⚠️ Risks/Side effects: (Any chance of breaking existing features)
+   - 📉 플랜 진행 시 단점/트레이드오프: (이 플랜대로 진행했을 때 발생하는 단점, 예: 수동 관리 소요 시간 증가, 처리 지연 가능성, 유지보수 공수 등)
 7. **No Automatic Git Push:** 작업을 완료한 후 절대로 깃허브 푸시(`git push`)를 자동으로 실행하지 마십시오. 로컬 빌드(`npm run build`) 및 검증 완료 후 보고하고, 대표님이 명시적으로 '푸시해줘'라고 지시할 때만 깃허브 푸시를 실행해야 합니다.
 
 8. walkthrough.md 파일이 생성되면 작업폴더 하위 walkthrough 폴더에 오늘날짜의 폴더에 하위에 walkthrough_날짜(예:walkthrough_111300) 이런식으로 폴더에 저장한다.

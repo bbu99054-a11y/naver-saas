@@ -94,9 +94,9 @@ export default function BillingClient({ userId, email, planType, credits }: Bill
             <Button 
               variant="outline"
               onClick={() => handlePayment('basic', 49000)} 
-              className="w-full font-bold"
+              className="w-full font-bold cursor-pointer hover:bg-slate-50"
             >
-              Basic 충전하기
+              Basic 무통장 입금 신청 (₩49,000)
             </Button>
           </div>
 
@@ -122,10 +122,13 @@ export default function BillingClient({ userId, email, planType, credits }: Bill
             </ul>
             <Button 
               onClick={() => handlePayment('pro', 74500)} 
-              className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs h-9 shadow-md shadow-indigo-200 cursor-pointer"
+              className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs h-10 shadow-md shadow-indigo-200 cursor-pointer"
             >
-              Pro 50% 특가 결제하기 (₩74,500)
+              Pro 50% 특가 입금 신청 (₩74,500)
             </Button>
+            <p className="text-[10px] text-slate-400 text-center mt-2">
+              * 무통장 입금 신청 즉시 입금 계좌 안내 및 세금계산서/현금영수증 발행 지원
+            </p>
           </div>
         </CardContent>
       </Card>
