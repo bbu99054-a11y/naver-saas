@@ -23,6 +23,7 @@ export const metadata: Metadata = {
     canonical: "https://postsyncapp.com",
   },
   verification: {
+    google: "ugoQGlNSdScisq23rSDCxHIZad-HlZLatf1TUZ5006A",
     other: {
       "naver-site-verification": "ba49c1186879f716b9e200013952414d6d5ce723",
     },
