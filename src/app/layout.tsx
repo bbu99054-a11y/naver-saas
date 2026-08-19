@@ -22,6 +22,11 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://postsyncapp.com",
   },
+  verification: {
+    other: {
+      "naver-site-verification": "ba49c1186879f716b9e200013952414d6d5ce723",
+    },
+  },
   openGraph: {
     title: "PostSync - 전문직 전용 AI 블로그 자동화",
     description: "전문직을 위한 완벽한 AI 블로그 엔진. 광고법 위반 제로, 환각 제로.",
