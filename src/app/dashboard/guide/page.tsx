@@ -407,10 +407,10 @@ export default function GuidePage() {
                   <li>
                     <strong>[앱 등록]</strong> 버튼을 누르고 아래 항목을 기입합니다:
                     <div className="mt-1.5 bg-slate-50 p-2.5 rounded border border-slate-200 space-y-1 text-xs">
-                      <div>• <strong>서비스 명:</strong> <span className="font-mono">PostSynk</span></div>
+                      <div>• <strong>서비스 명:</strong> <span className="font-mono">PostSync</span></div>
                       <div>• <strong>서비스 형태:</strong> 웹서비스 (Web)</div>
-                      <div>• <strong>서비스 URL:</strong> <span className="font-mono">https://postsynk.com</span> (또는 본인 사이트 주소)</div>
-                      <div>• <strong>Callback URL:</strong> <span className="font-mono">https://postsynk.com/auth/callback</span></div>
+                      <div>• <strong>서비스 URL:</strong> <span className="font-mono">https://postsyncapp.com</span></div>
+                      <div>• <strong>Callback URL:</strong> <span className="font-mono">https://postsyncapp.com/auth/callback</span></div>
                     </div>
                   </li>
                   <li>

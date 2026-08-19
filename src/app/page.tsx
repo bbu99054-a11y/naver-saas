@@ -1099,21 +1099,61 @@ export default function LandingPage() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-[#070A0F] text-slate-500 py-12 text-center text-xs border-t border-white/5 relative z-10">
-        <div className="max-w-7xl mx-auto px-6 flex flex-col items-center">
-          <div className="flex items-center gap-2 mb-4">
-            <div className="w-6 h-6 rounded-lg bg-indigo-600 flex items-center justify-center text-white">
-              <Sparkles className="w-3.5 h-3.5" />
+      <footer className="bg-[#070A0F] text-slate-400 py-16 text-xs border-t border-white/10 relative z-10">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 pb-8 border-b border-white/5">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center text-white shadow-md shadow-indigo-500/20">
+                <Sparkles className="w-4 h-4" />
+              </div>
+              <div>
+                <span className="text-base font-extrabold text-white tracking-tight">PostSync</span>
+                <span className="ml-2 text-[10px] bg-indigo-500/20 text-indigo-300 px-2 py-0.5 rounded-full border border-indigo-500/30">AI SEO SaaS</span>
+              </div>
             </div>
-            <span className="text-sm font-bold text-white">PostSync</span>
+
+            <div className="flex flex-wrap items-center gap-6 text-sm text-slate-300">
+              <Link href="/terms" className="hover:text-white transition-colors">이용약관</Link>
+              <Link href="/privacy" className="hover:text-indigo-400 font-semibold transition-colors">개인정보 처리방침</Link>
+              <Link href="/pricing" className="hover:text-white transition-colors">요금안내</Link>
+              <Link href="/seo-check" className="hover:text-rose-400 transition-colors text-rose-400/90 font-medium">무료 블로그 진단</Link>
+            </div>
           </div>
-          <div className="flex gap-6 mb-6 text-slate-400">
-            <Link href="/terms" className="hover:text-white transition-colors">이용약관</Link>
-            <Link href="/privacy" className="hover:text-white transition-colors font-bold">개인정보 처리방침</Link>
-            <Link href="/seo-check" className="hover:text-white transition-colors text-rose-400">무료 블로그 진단</Link>
+
+          <div className="pt-8 text-slate-500 leading-relaxed text-[11px] space-y-2">
+            <div className="flex flex-wrap gap-x-4 gap-y-1">
+              <span><strong>상호명:</strong> 와이엠랩스 (YM Labs)</span>
+              <span><strong>대표자:</strong> 유영무</span>
+              <span>
+                <strong>사업자등록번호:</strong> 736-48-01186{' '}
+                <a
+                  href="https://www.ftc.go.kr/bizCommPop.do?wrkr_no=7364801186"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-indigo-400 hover:underline inline-flex items-center gap-0.5 ml-1"
+                >
+                  [사업자정보확인]
+                </a>
+              </span>
+              <span><strong>통신판매업신고:</strong> 신고 준비 중 (신고 완료 즉시 갱신)</span>
+            </div>
+
+            <div className="flex flex-wrap gap-x-4 gap-y-1">
+              <span><strong>사업장 소재지:</strong> 서울특별시 송파구 송파대로 345, 103동 204호(가락동, 헬리오시티)</span>
+              <span><strong>고객센터 / 제휴 문의:</strong> <a href="mailto:bu99054@naver.com" className="text-slate-400 hover:text-white underline">bu99054@naver.com</a></span>
+              <span><strong>호스팅 서비스 제공:</strong> Vercel Inc.</span>
+              <span><strong>개인정보보호책임자:</strong> 유영무 (bu99054@naver.com)</span>
+            </div>
+
+            <p className="pt-2 text-slate-600 text-[10px]">
+              PostSync는 전문직(변호사, 세무사, 의사, 노무사 등)의 네이버 블로그 SEO 원고 작성을 보조하는 AI 생성형 소프트웨어입니다. 생성된 결과물의 최종 검토 및 발행에 대한 책임은 이용자 본인에게 있습니다.
+            </p>
+
+            <div className="pt-4 flex flex-col sm:flex-row justify-between items-center text-slate-600 text-[11px] gap-2">
+              <p>© 2026 와이엠랩스 (YM Labs). All rights reserved.</p>
+              <p className="text-slate-600">Empowering Professionals with 2026 Advanced AI Marketing & SEO Automation.</p>
+            </div>
           </div>
-          <p>© 2026 PostSync SaaS. All rights reserved.</p>
-          <p className="mt-1 text-slate-600">Empowering Professionals with 2026 Advanced AI Marketing & SEO Automation.</p>
         </div>
       </footer>
 
