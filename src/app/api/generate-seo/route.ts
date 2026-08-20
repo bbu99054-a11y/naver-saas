@@ -318,6 +318,7 @@ ${profile.about_us}
 3. [결론부 카드]: 내용에 따라 [사진 8: 핵심 3줄 요약 카드]를 선택 배치.
 4. [사진 9: 하단 상담 유도 배너]: 글 최하단에 필수 1장 배치.
 - 전체 글에 들어가는 카드 이미지의 총 개수는 [사진 1, 9]를 포함하여 주제에 맞춰 자연스럽게 총 4~7장 사이로 풍부하게 구성하세요.
+- 글의 문맥에 맞춰 7종의 카드(Checklist, Comparison, StatHighlight, ProcessFlow, Qna, Warning, Summary)가 중복되지 않게 최소 3~5가지 종류가 골고루 섞여서 출력되도록 type을 다양하게 배정해라.
 
 - 안내/리스크 박스 서식은 네이버 에디터가 100% 보존하는 표준 인라인 CSS(<div style="background-color: #FEF9C3; border-left: 4px solid #EAB308; padding: 18px 20px; margin: 24px 0; border-radius: 4px; line-height: 1.6;">...</div>)를 사용하세요.
 - 복잡한 비교 표나 준비 서류 목록은 이미지 대신 아래 제공된 순수 인라인 HTML Table 서식(<table style="width: 100%; border-collapse: collapse; margin: 24px 0; font-size: 15px; text-align: left; background-color: #FFFFFF;">...</table>)으로 작성하여 한글이 100% 또렷하게 읽히도록 하세요.
