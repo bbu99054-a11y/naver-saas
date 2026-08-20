@@ -227,7 +227,7 @@ export default function LandingPage() {
           <motion.div variants={itemVariants} className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link href="/login">
               <Button size="lg" className="h-13 px-8 text-base rounded-full bg-gradient-to-r from-indigo-600 via-indigo-500 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white shadow-xl shadow-indigo-600/30 transition-all hover:scale-105 font-bold border border-indigo-400/40">
-                10회 무료 생성 시작하기 <ArrowRight className="ml-2 w-5 h-5" />
+                3회 무료 생성 시작하기 <ArrowRight className="ml-2 w-5 h-5" />
               </Button>
             </Link>
             <a href="#demo">
@@ -1034,7 +1034,7 @@ export default function LandingPage() {
               },
               {
                 q: "무료 체험 시 결제 카드를 등록해야 하나요?",
-                a: "아닙니다! 회원가입 시 카드 등록 없이 10 크레딧이 즉시 무료 지급됩니다. 10편의 전문 칼럼을 직접 생성해보시고 품질에 만족하셨을 때 유료 플랜을 선택하시면 됩니다."
+                a: "아닙니다! 회원가입 시 카드 등록 없이 3 크레딧이 즉시 무료 지급됩니다. 3편의 전문 칼럼을 직접 생성해보시고 품질에 만족하셨을 때 유료 플랜을 선택하시면 됩니다."
               }
             ].map((faq, idx) => {
               const isOpen = faqOpenIndex === idx

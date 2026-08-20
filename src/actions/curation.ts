@@ -28,13 +28,19 @@ const clusterSchema = z.object({
 
 export async function getCurationClusters(
   pillarKeyword: string,
-  model: string = 'gemini-3.6-flash',
+  model: string = 'gemini-3.7-flash',
   profileContext?: { address?: string; industry?: string }
 ) {
   try {
     let aiModel;
-    if (model === 'gemini-3.6-flash') {
-      aiModel = google('gemini-3.6-flash');
+    if (model === 'gemini-3.7-flash') {
+      if (process.env.GOOGLE_GENERATIVE_AI_API_KEY || process.env.GOOGLE_API_KEY) {
+        aiModel = google('gemini-3.7-flash');
+      } else if (process.env.OPENAI_API_KEY) {
+        aiModel = openai('gpt-5.6-luna');
+      } else {
+        aiModel = google('gemini-3.7-flash');
+      }
     } else {
       aiModel = openai('gpt-5.6-luna');
     }

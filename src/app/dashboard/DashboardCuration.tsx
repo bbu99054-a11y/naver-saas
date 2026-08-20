@@ -70,7 +70,7 @@ export function DashboardCuration({ profile }: { profile: any }) {
     setError(null)
     
     try {
-      const result = await getCurationClusters(pillarKeyword, 'gemini-3.6-flash', {
+      const result = await getCurationClusters(pillarKeyword, 'gemini-3.7-flash', {
         address,
         industry,
       })

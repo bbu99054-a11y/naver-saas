@@ -485,18 +485,20 @@ ${profileFooterPrompt}
 
     let aiModel
     if (dbUser.plan_type === 'pro' || dbUser.plan_type === 'premium') {
-      if (process.env.ANTHROPIC_API_KEY) {
-        aiModel = anthropic('claude-5-sonnet-latest')
+      if (process.env.OPENAI_API_KEY) {
+        aiModel = openai('gpt-5.6-terra')
       } else if (process.env.OPENAI_API_KEY) {
         aiModel = openai('gpt-5.6-luna')
       } else {
-        aiModel = google('gemini-3.6-flash')
+        aiModel = google('gemini-3.7-flash')
       }
     } else {
-      if (process.env.OPENAI_API_KEY) {
+      if (process.env.GOOGLE_GENERATIVE_AI_API_KEY || process.env.GOOGLE_API_KEY) {
+        aiModel = google('gemini-3.7-flash')
+      } else if (process.env.OPENAI_API_KEY) {
         aiModel = openai('gpt-5.6-luna')
       } else {
-        aiModel = google('gemini-3.6-flash')
+        aiModel = google('gemini-3.7-flash')
       }
     }
 
