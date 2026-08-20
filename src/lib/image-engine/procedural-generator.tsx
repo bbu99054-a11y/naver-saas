@@ -1078,6 +1078,88 @@ export function SummaryTemplate({ data, palette }: TemplateProps) {
 // 6. 🖼️ 대표 썸네일 템플릿 (4종 레이아웃: THUMB_A ~ D, 1080 × 1080 px)
 // ─────────────────────────────────────────────────────────────────────────────
 
+/**
+ * 썸네일 제목 자연스러운 어절(단어) 단위 줄바꿈 및 15자 이상 단어 강제 분할 Fallback 유틸리티
+ */
+export function formatThumbnailTitle(
+  title: string,
+  maxLineChars = 16,
+  fallbackWordLen = 15
+): string[] {
+  if (!title || !title.trim()) return ['2026 핵심 실무 가이드']
+  const cleanTitle = title.trim()
+
+  // 1. 이미 명시적 줄바꿈(\n)이 포함된 경우 존중
+  if (cleanTitle.includes('\n')) {
+    return cleanTitle
+      .split('\n')
+      .map((l) => l.trim())
+      .filter(Boolean)
+  }
+
+  // 2. 어절(단어) 추출 및 15자 이상 긴 단어 강제 분할 Fallback 처리
+  const rawWords = cleanTitle.split(/\s+/).filter(Boolean)
+  const tokens: string[] = []
+
+  for (const w of rawWords) {
+    if (w.length >= fallbackWordLen) {
+      // 15자 이상 단어는 12~13자 단위로 안전하게 분할
+      const chunkSize = 13
+      for (let i = 0; i < w.length; i += chunkSize) {
+        tokens.push(w.slice(i, i + chunkSize))
+      }
+    } else {
+      tokens.push(w)
+    }
+  }
+
+  if (tokens.length === 0) return [cleanTitle]
+  if (tokens.length === 1) return [tokens[0]]
+
+  const fullStr = tokens.join(' ')
+
+  // 3-A. 15자 이하의 짧은 제목: 1줄 유지
+  if (fullStr.length <= 15) {
+    return [fullStr]
+  }
+
+  // 3-B. 16~34자 제목: 어절 손상 없이 2줄 황금비율 분할
+  if (fullStr.length <= 34) {
+    let bestSplit = 1
+    let minDiff = Infinity
+    for (let i = 1; i < tokens.length; i++) {
+      const line1 = tokens.slice(0, i).join(' ')
+      const line2 = tokens.slice(i).join(' ')
+      const diff = Math.abs(line1.length - line2.length)
+      if (diff < minDiff) {
+        minDiff = diff
+        bestSplit = i
+      }
+    }
+    return [
+      tokens.slice(0, bestSplit).join(' '),
+      tokens.slice(bestSplit).join(' '),
+    ]
+  }
+
+  // 3-C. 35자 이상 초장문 제목: 최대 3줄 균형 분할
+  const lines: string[] = []
+  let cur = ''
+  const targetLineLen = Math.max(14, Math.ceil(fullStr.length / 3))
+  for (const t of tokens) {
+    if (!cur) {
+      cur = t
+    } else if ((cur + ' ' + t).length <= targetLineLen + 2) {
+      cur += ' ' + t
+    } else {
+      lines.push(cur)
+      cur = t
+    }
+  }
+  if (cur) lines.push(cur)
+  return lines
+}
+
 export interface ThumbnailTemplateProps extends TemplateProps {
   layout: ThumbLayout
   tags: string[]
@@ -1085,7 +1167,14 @@ export interface ThumbnailTemplateProps extends TemplateProps {
 
 export function ThumbnailTemplate({ data, palette, layout, tags }: ThumbnailTemplateProps) {
   const title = data.title || '2026 핵심 실무 가이드'
-  const titleSize = title.length > 30 ? 50 : title.length > 20 ? 56 : 62
+  const titleLines = formatThumbnailTitle(title)
+  const maxLineLen = Math.max(...titleLines.map((l) => l.length), 0)
+  const titleSize =
+    titleLines.length >= 3 || maxLineLen > 18
+      ? 46
+      : title.length > 25 || maxLineLen > 14
+        ? 52
+        : 58
   const signature = data.signature || CARD_CONFIG.overrides.MAIN_THUMBNAIL.defaultSignature
   const category = data.category || CARD_CONFIG.overrides.MAIN_THUMBNAIL.defaultCategory
   const subContent = data.subText || data.subtitle || ''
@@ -1178,15 +1267,28 @@ export function ThumbnailTemplate({ data, palette, layout, tags }: ThumbnailTemp
           <div
             style={{
               display: 'flex',
-              fontSize: `${titleSize}px`,
-              lineHeight: CARD_CONFIG.base.typography.lineHeightTitle,
-              fontWeight: 'bold',
-              color: palette.text,
-              textAlign: 'center',
-              wordBreak: 'break-word',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '6px',
+              width: '100%',
             }}
           >
-            {title}
+            {titleLines.map((line, idx) => (
+              <div
+                key={idx}
+                style={{
+                  display: 'flex',
+                  fontSize: `${titleSize}px`,
+                  lineHeight: CARD_CONFIG.base.typography.lineHeightTitle,
+                  fontWeight: 'bold',
+                  color: palette.text,
+                  textAlign: 'center',
+                }}
+              >
+                {line}
+              </div>
+            ))}
           </div>
 
           {subContent && (
@@ -1314,14 +1416,28 @@ export function ThumbnailTemplate({ data, palette, layout, tags }: ThumbnailTemp
             <div
               style={{
                 display: 'flex',
-                fontSize: `${titleSize}px`,
-                lineHeight: CARD_CONFIG.base.typography.lineHeightTitle,
-                fontWeight: 'bold',
-                color: palette.text,
-                wordBreak: 'break-word',
+                flexDirection: 'column',
+                alignItems: 'flex-start',
+                justifyContent: 'center',
+                gap: '6px',
+                width: '100%',
               }}
             >
-              {title}
+              {titleLines.map((line, idx) => (
+                <div
+                  key={idx}
+                  style={{
+                    display: 'flex',
+                    fontSize: `${titleSize}px`,
+                    lineHeight: CARD_CONFIG.base.typography.lineHeightTitle,
+                    fontWeight: 'bold',
+                    color: palette.text,
+                    textAlign: 'left',
+                  }}
+                >
+                  {line}
+                </div>
+              ))}
             </div>
 
             {subContent && (
@@ -1437,14 +1553,28 @@ export function ThumbnailTemplate({ data, palette, layout, tags }: ThumbnailTemp
             <div
               style={{
                 display: 'flex',
-                fontSize: `${titleSize + 4}px`,
-                lineHeight: '1.28',
-                fontWeight: 'bold',
-                color: palette.text,
-                wordBreak: 'break-word',
+                flexDirection: 'column',
+                alignItems: 'flex-start',
+                justifyContent: 'center',
+                gap: '6px',
+                width: '100%',
               }}
             >
-              {title}
+              {titleLines.map((line, idx) => (
+                <div
+                  key={idx}
+                  style={{
+                    display: 'flex',
+                    fontSize: `${titleSize + 4}px`,
+                    lineHeight: '1.28',
+                    fontWeight: 'bold',
+                    color: palette.text,
+                    textAlign: 'left',
+                  }}
+                >
+                  {line}
+                </div>
+              ))}
             </div>
 
             {subContent && (
@@ -1556,15 +1686,29 @@ export function ThumbnailTemplate({ data, palette, layout, tags }: ThumbnailTemp
           <div
             style={{
               display: 'flex',
-              fontSize: `${titleSize}px`,
-              lineHeight: CARD_CONFIG.base.typography.lineHeightTitle,
-              fontWeight: 'bold',
-              color: '#FFFFFF',
-              textAlign: 'center',
-              wordBreak: 'break-word',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '6px',
+              maxWidth: '820px',
+              width: '100%',
             }}
           >
-            {title}
+            {titleLines.map((line, idx) => (
+              <div
+                key={idx}
+                style={{
+                  display: 'flex',
+                  fontSize: `${titleSize}px`,
+                  lineHeight: CARD_CONFIG.base.typography.lineHeightTitle,
+                  fontWeight: 'bold',
+                  color: '#FFFFFF',
+                  textAlign: 'center',
+                }}
+              >
+                {line}
+              </div>
+            ))}
           </div>
 
           {subContent && (
