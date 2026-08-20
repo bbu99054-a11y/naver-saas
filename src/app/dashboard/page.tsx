@@ -8,6 +8,8 @@ import { createClient } from '@/lib/supabase/server'
 import prisma from '@/lib/prisma'
 import { DashboardCuration } from './DashboardCuration'
 
+import { checkIsAdmin } from '@/actions/deposit'
+
 export default async function DashboardPage() {
   const profile = await getProfile()
   const supabase = await createClient()
@@ -16,6 +18,8 @@ export default async function DashboardPage() {
   if (!profile || !user) {
     redirect('/onboarding')
   }
+
+  const isAdmin = await checkIsAdmin()
 
   // 이번 달 1일 계산
   const now = new Date()
@@ -37,10 +41,42 @@ export default async function DashboardPage() {
   const credits = dbUser?.credits || 0
 
   return (
-    <div className="space-y-8 pb-12">
+    <div className="space-y-6 pb-12">
+      {/* 👑 관리자 전용 관제 센터 퀵 배너 */}
+      {isAdmin && (
+        <div className="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 border border-amber-500/40 p-4 rounded-2xl text-white shadow-lg flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-300 border border-amber-500/30 flex items-center justify-center font-black text-xl shrink-0">
+              👑
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <p className="font-black text-sm text-white tracking-tight">CEO 비즈니스 통합 관제 & 1초 입금 승인</p>
+                <span className="px-1.5 py-0.2 rounded text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                  대표님 전용
+                </span>
+              </div>
+              <p className="text-xs text-slate-300 mt-0.5">오늘 매출 통계, AI 원고 발행 현황, 무통장 입금 승인을 관리합니다.</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
+            <Link href="/dashboard/admin">
+              <Button size="sm" className="bg-amber-500 hover:bg-amber-600 text-slate-950 font-black text-xs h-9 px-3.5 rounded-xl shadow-xs cursor-pointer">
+                👑 관제 센터 바로가기 ➔
+              </Button>
+            </Link>
+            <Link href="/dashboard/admin/deposits">
+              <Button size="sm" variant="outline" className="border-indigo-400/40 bg-indigo-600/30 text-indigo-200 hover:bg-indigo-600 hover:text-white font-bold text-xs h-9 px-3 rounded-xl cursor-pointer">
+                💳 입금 승인
+              </Button>
+            </Link>
+          </div>
+        </div>
+      )}
+
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-3xl font-extrabold tracking-tight text-slate-900 flex items-center gap-2">
+          <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 flex items-center gap-2">
             반갑습니다, {profile.store_name} 대표님! 👋
           </h2>
           <p className="text-slate-500 mt-1.5 flex items-center gap-2 text-xs sm:text-sm">
