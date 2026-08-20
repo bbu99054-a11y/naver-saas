@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" width="192" height="192">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#1e1b4b" />
+    </linearGradient>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fbbf24" />
+      <stop offset="100%" stop-color="#f59e0b" />
+    </linearGradient>
+  </defs>
+  <rect width="192" height="192" rx="40" fill="url(#bg)" />
+  <circle cx="96" cy="96" r="68" fill="none" stroke="#4f46e5" stroke-width="6" opacity="0.4" />
+  <!-- Crown Icon for CEO -->
+  <path d="M56 128 L136 128 L136 118 L124 86 L96 108 L68 86 L56 118 Z" fill="url(#gold)" />
+  <circle cx="68" cy="80" r="6" fill="#fbbf24" />
+  <circle cx="96" cy="72" r="7" fill="#fbbf24" />
+  <circle cx="124" cy="80" r="6" fill="#fbbf24" />
+  <!-- Text -->
+  <text x="96" y="152" text-anchor="middle" fill="#ffffff" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif" font-weight="900" font-size="16" letter-spacing="1">POSTSYNC</text>
+</svg>

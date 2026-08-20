@@ -1,0 +1,24 @@
+{
+  "name": "PostSync CEO 관제",
+  "short_name": "PostSync CEO",
+  "description": "PostSync CEO 전용 비즈니스 통합 관제 및 1초 입금 승인 시스템",
+  "start_url": "/dashboard/admin",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icons/icon-192.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

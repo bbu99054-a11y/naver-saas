@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -14,13 +14,27 @@ const geistMono = Geist_Mono({
 
 import ChannelTalk from "@/components/ChannelTalk";
 
+export const viewport: Viewport = {
+  themeColor: "#0f172a",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+};
+
 export const metadata: Metadata = {
   metadataBase: new URL("https://postsyncapp.com"),
+  manifest: "/manifest.json",
   title: "PostSync - 전문직 전용 AI 블로그 자동화",
   description: "변호사, 세무사, 노무사 등 YMYL 전문직을 위한 광고법 준수 및 네이버 C-Rank 최적화 AI 포스팅 솔루션입니다.",
   keywords: ["AI 블로그", "전문직 마케팅", "변호사 마케팅", "세무사 블로그", "자동 포스팅"],
   alternates: {
     canonical: "https://postsyncapp.com",
+  },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "PostSync CEO",
   },
   verification: {
     google: "ugoQGlNSdScisq23rSDCxHIZad-HlZLatf1TUZ5006A",

@@ -189,7 +189,7 @@ export async function approveDeposit(orderId: string) {
 }
 
 /**
- * 5. 관리자: 입금 신청 취소/반려
+ * 5. 관리자: 입금 신청 취소/반려 및 기지급 크레딧 환수 (원자적 트랜잭션)
  */
 export async function cancelDeposit(orderId: string, reason?: string) {
   try {
@@ -198,6 +198,52 @@ export async function cancelDeposit(orderId: string, reason?: string) {
       return { success: false, error: '관리자 권한이 없습니다.' }
     }
 
+    const deposit = await prisma.paymentHistory.findUnique({
+      where: { order_id: orderId },
+      include: { user: true },
+    })
+
+    if (!deposit) {
+      return { success: false, error: '해당 입금 내역을 찾을 수 없습니다.' }
+    }
+
+    // 이미 취소된 상태인 경우
+    if (deposit.status === 'CANCELED') {
+      return { success: false, error: '이미 취소 처리된 내역입니다.' }
+    }
+
+    // 이미 승인(DONE)되었던 건을 환수/취소하는 경우: 크레딧 차감 + 상태 CANCELED 원자적 트랜잭션
+    if (deposit.status === 'DONE') {
+      const planConfig = PLAN_CREDITS[deposit.plan_type] || { credits: 10, name: 'Basic' }
+      const revertedCredits = planConfig.credits
+
+      await prisma.$transaction([
+        prisma.paymentHistory.update({
+          where: { order_id: orderId },
+          data: {
+            status: 'CANCELED',
+            receipt_url: reason ? `[환수] ${reason}` : '[환수] 관리자 승인 취소 및 크레딧 회수',
+          },
+        }),
+        prisma.user.update({
+          where: { id: deposit.user_id },
+          data: {
+            credits: { decrement: revertedCredits },
+          },
+        }),
+      ])
+
+      revalidatePath('/dashboard')
+      revalidatePath('/dashboard/billing')
+      revalidatePath('/dashboard/admin/deposits')
+
+      return {
+        success: true,
+        message: `${deposit.user.email} 고객님의 승인이 취소되고 ${revertedCredits} 크레딧이 정상 회수(환수)되었습니다.`,
+      }
+    }
+
+    // 대기(PENDING) 상태인 경우: 단순 상태 CANCELED 변경
     await prisma.paymentHistory.update({
       where: { order_id: orderId },
       data: {
@@ -207,15 +253,56 @@ export async function cancelDeposit(orderId: string, reason?: string) {
     })
 
     revalidatePath('/dashboard/admin/deposits')
-    return { success: true, message: '신청이 취소 처리되었습니다.' }
+    return { success: true, message: '신청이 정상적으로 취소/반려 처리되었습니다.' }
   } catch (error: any) {
     console.error('Cancel deposit error:', error)
-    return { success: false, error: '취소 처리 중 오류가 발생했습니다.' }
+    return { success: false, error: '취소/환수 처리 중 오류가 발생했습니다.' }
   }
 }
 
 /**
- * 6. 현재 로그인한 사용자가 관리자인지 확인
+ * 6. 관리자: 최근 전체 입금 내역 조회 (대기 + 완료 + 취소)
+ */
+export async function getRecentDeposits(statusFilter?: string) {
+  try {
+    const { isAdmin } = await verifyAdmin()
+    if (!isAdmin) {
+      return { success: false, error: '관리자 권한이 없습니다.', data: [] }
+    }
+
+    const whereClause: any = {}
+    if (statusFilter && statusFilter !== 'ALL') {
+      whereClause.status = statusFilter
+    }
+
+    const deposits = await prisma.paymentHistory.findMany({
+      where: whereClause,
+      include: {
+        user: {
+          select: {
+            id: true,
+            email: true,
+            name: true,
+            credits: true,
+            plan_type: true,
+          },
+        },
+      },
+      orderBy: {
+        created_at: 'desc',
+      },
+      take: 50,
+    })
+
+    return { success: true, data: deposits }
+  } catch (error: any) {
+    console.error('Get recent deposits error:', error)
+    return { success: false, error: '입금 목록을 불러오는 중 오류가 발생했습니다.', data: [] }
+  }
+}
+
+/**
+ * 7. 현재 로그인한 사용자가 관리자인지 확인
  */
 export async function checkIsAdmin() {
   const { isAdmin } = await verifyAdmin()

@@ -33,6 +33,7 @@ export default async function AdminDashboardPage() {
     freeArticles: 0,
     paidArticles: 0,
     totalRevenue: 0,
+    todayRevenue: 0,
     pendingDepositsCount: 0,
     topKeywords: [],
   }

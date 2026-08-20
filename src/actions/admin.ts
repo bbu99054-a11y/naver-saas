@@ -76,12 +76,18 @@ export async function getAdminOverviewStats() {
       },
     })
 
-    // 4) 누적 입금 매출액
+    // 4) 누적 입금 매출액 및 오늘 입금 매출액
     const paidPayments = await prisma.paymentHistory.findMany({
       where: { status: 'DONE' },
-      select: { amount: true },
+      select: { amount: true, completed_at: true, created_at: true },
     })
     const totalRevenue = paidPayments.reduce((sum, p) => sum + p.amount, 0)
+    const todayRevenue = paidPayments
+      .filter((p) => {
+        const date = p.completed_at ? new Date(p.completed_at) : new Date(p.created_at)
+        return date >= todayStart
+      })
+      .reduce((sum, p) => sum + p.amount, 0)
 
     // 5) 대기 중인 입금 신청 건수
     const pendingDepositsCount = await prisma.paymentHistory.count({
@@ -119,6 +125,7 @@ export async function getAdminOverviewStats() {
         freeArticles,
         paidArticles,
         totalRevenue,
+        todayRevenue,
         pendingDepositsCount,
         topKeywords,
       },
