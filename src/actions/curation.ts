@@ -95,11 +95,11 @@ ${trendingContext}
     `
 
     // 3. 3단계 AI Fallback 체인으로 10선 매트릭스 무중단 생성
-    // 1순위 gemini-3.7-flash -> 2순위 gpt-5.6-luna -> 3순위 gemini-3.6-flash
+    // 1순위 gpt-5.6-luna -> 2순위 gemini-3.6-flash -> 3순위 gemini-3.7-flash
     const candidateModels = [
-      { name: 'gemini-3.7-flash', getModel: () => ((process.env.GOOGLE_GENERATIVE_AI_API_KEY || process.env.GOOGLE_API_KEY) ? google('gemini-3.7-flash') : null) },
       { name: 'gpt-5.6-luna', getModel: () => (process.env.OPENAI_API_KEY ? openai('gpt-5.6-luna') : null) },
       { name: 'gemini-3.6-flash', getModel: () => ((process.env.GOOGLE_GENERATIVE_AI_API_KEY || process.env.GOOGLE_API_KEY) ? google('gemini-3.6-flash') : null) },
+      { name: 'gemini-3.7-flash', getModel: () => ((process.env.GOOGLE_GENERATIVE_AI_API_KEY || process.env.GOOGLE_API_KEY) ? google('gemini-3.7-flash') : null) },
     ]
 
     let generatedResult: any = null

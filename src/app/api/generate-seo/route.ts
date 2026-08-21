@@ -496,9 +496,9 @@ ${profileFooterPrompt}
           { name: 'gemini-3.7-flash', getModel: () => ((process.env.GOOGLE_GENERATIVE_AI_API_KEY || process.env.GOOGLE_API_KEY) ? google('gemini-3.7-flash') : null) },
         ]
       : [
-          { name: 'gemini-3.7-flash', getModel: () => ((process.env.GOOGLE_GENERATIVE_AI_API_KEY || process.env.GOOGLE_API_KEY) ? google('gemini-3.7-flash') : null) },
           { name: 'gpt-5.6-luna', getModel: () => (process.env.OPENAI_API_KEY ? openai('gpt-5.6-luna') : null) },
           { name: 'gemini-3.6-flash', getModel: () => ((process.env.GOOGLE_GENERATIVE_AI_API_KEY || process.env.GOOGLE_API_KEY) ? google('gemini-3.6-flash') : null) },
+          { name: 'gemini-3.7-flash', getModel: () => ((process.env.GOOGLE_GENERATIVE_AI_API_KEY || process.env.GOOGLE_API_KEY) ? google('gemini-3.7-flash') : null) },
         ]
 
     let resultStream: any = null
