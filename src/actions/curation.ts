@@ -32,19 +32,6 @@ export async function getCurationClusters(
   profileContext?: { address?: string; industry?: string }
 ) {
   try {
-    let aiModel;
-    if (model === 'gemini-3.7-flash') {
-      if (process.env.GOOGLE_GENERATIVE_AI_API_KEY || process.env.GOOGLE_API_KEY) {
-        aiModel = google('gemini-3.7-flash');
-      } else if (process.env.OPENAI_API_KEY) {
-        aiModel = openai('gpt-5.6-luna');
-      } else {
-        aiModel = google('gemini-3.7-flash');
-      }
-    } else {
-      aiModel = openai('gpt-5.6-luna');
-    }
-
     // 1. 프로필 기반 지역 및 업종 분리
     const rawAddress = profileContext?.address || ''
     const industry = profileContext?.industry || pillarKeyword.split(' ').pop() || '전문직'
@@ -79,11 +66,7 @@ export async function getCurationClusters(
       ? `\n\n[최신 지역 및 관련 법령/이슈 뉴스 트렌드]:\n${trendingTopics}`
       : ''
 
-    // 3. Gemini AI를 통한 3대 카테고리 10선 매트릭스 생성
-    const { object } = await generateObject({
-      model: aiModel,
-      schema: clusterSchema,
-      prompt: `
+    const curationPrompt = `
 당신은 네이버 블로그 SEO 및 전문직 로컬 마케팅 최고 권위자입니다.
 현재 연도는 2026년입니다.
 
@@ -109,16 +92,50 @@ ${trendingContext}
 - competition: '낮음' 또는 '보통' 중 하나 지정
 - description: 이 키워드로 유입되는 잠재 고객의 심리와 마케팅 수임 효과 설명 (1~2문장)
 - category: 해당 카테고리 코드('SEASON', 'LOCAL', 'HIGH_VALUE')를 정확히 지정할 것
-      `,
-    });
+    `
 
-    if (!object || !object.clusters || object.clusters.length === 0) {
-      return { clusters: [], error: null };
+    // 3. 3단계 AI Fallback 체인으로 10선 매트릭스 무중단 생성
+    // 1순위 gemini-3.7-flash -> 2순위 gpt-5.6-luna -> 3순위 gemini-3.6-flash
+    const candidateModels = [
+      { name: 'gemini-3.7-flash', getModel: () => ((process.env.GOOGLE_GENERATIVE_AI_API_KEY || process.env.GOOGLE_API_KEY) ? google('gemini-3.7-flash') : null) },
+      { name: 'gpt-5.6-luna', getModel: () => (process.env.OPENAI_API_KEY ? openai('gpt-5.6-luna') : null) },
+      { name: 'gemini-3.6-flash', getModel: () => ((process.env.GOOGLE_GENERATIVE_AI_API_KEY || process.env.GOOGLE_API_KEY) ? google('gemini-3.6-flash') : null) },
+    ]
+
+    let generatedResult: any = null
+    let lastCurationError: any = null
+
+    for (const candidate of candidateModels) {
+      try {
+        const modelInstance = candidate.getModel()
+        if (!modelInstance) continue
+
+        const { object } = await generateObject({
+          model: modelInstance,
+          schema: clusterSchema,
+          prompt: curationPrompt,
+        })
+
+        if (object && object.clusters && object.clusters.length > 0) {
+          generatedResult = object
+          break
+        }
+      } catch (err: any) {
+        console.warn(`Curation model ${candidate.name} failed, trying next fallback:`, err?.message || err)
+        lastCurationError = err
+      }
     }
 
-    return { clusters: object.clusters, error: null };
+    if (!generatedResult || !generatedResult.clusters || generatedResult.clusters.length === 0) {
+      if (lastCurationError) {
+        console.error('All curation models failed:', lastCurationError)
+      }
+      return { clusters: [], error: null }
+    }
+
+    return { clusters: generatedResult.clusters, error: null }
   } catch (error: any) {
-    console.error('getCurationClusters error:', error);
-    return { clusters: [], error: error.message || error.toString() };
+    console.error('getCurationClusters error:', error)
+    return { clusters: [], error: error.message || error.toString() }
   }
 }

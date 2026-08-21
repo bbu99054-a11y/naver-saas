@@ -484,69 +484,87 @@ ${profileFooterPrompt}
 </html_constraints>
 `
 
-    let aiModel
-    if (dbUser.plan_type === 'pro' || dbUser.plan_type === 'premium') {
-      if (process.env.OPENAI_API_KEY) {
-        aiModel = openai('gpt-5.6-terra')
-      } else if (process.env.OPENAI_API_KEY) {
-        aiModel = openai('gpt-5.6-luna')
-      } else {
-        aiModel = google('gemini-3.7-flash')
-      }
-    } else {
-      if (process.env.GOOGLE_GENERATIVE_AI_API_KEY || process.env.GOOGLE_API_KEY) {
-        aiModel = google('gemini-3.7-flash')
-      } else if (process.env.OPENAI_API_KEY) {
-        aiModel = openai('gpt-5.6-luna')
-      } else {
-        aiModel = google('gemini-3.7-flash')
+    const isProPlan = dbUser.plan_type === 'pro' || dbUser.plan_type === 'premium'
+
+    // 대표님 지정 3단계 Fallback 모델 체인
+    // 유료/프리미엄: 1순위 gpt-5.6-terra -> 2순위 gpt-5.6-luna -> 3순위 gemini-3.7-flash
+    // 무료/베이직: 1순위 gemini-3.7-flash -> 2순위 gpt-5.6-luna -> 3순위 gemini-3.6-flash
+    const candidateModels = isProPlan
+      ? [
+          { name: 'gpt-5.6-terra', getModel: () => (process.env.OPENAI_API_KEY ? openai('gpt-5.6-terra') : null) },
+          { name: 'gpt-5.6-luna', getModel: () => (process.env.OPENAI_API_KEY ? openai('gpt-5.6-luna') : null) },
+          { name: 'gemini-3.7-flash', getModel: () => ((process.env.GOOGLE_GENERATIVE_AI_API_KEY || process.env.GOOGLE_API_KEY) ? google('gemini-3.7-flash') : null) },
+        ]
+      : [
+          { name: 'gemini-3.7-flash', getModel: () => ((process.env.GOOGLE_GENERATIVE_AI_API_KEY || process.env.GOOGLE_API_KEY) ? google('gemini-3.7-flash') : null) },
+          { name: 'gpt-5.6-luna', getModel: () => (process.env.OPENAI_API_KEY ? openai('gpt-5.6-luna') : null) },
+          { name: 'gemini-3.6-flash', getModel: () => ((process.env.GOOGLE_GENERATIVE_AI_API_KEY || process.env.GOOGLE_API_KEY) ? google('gemini-3.6-flash') : null) },
+        ]
+
+    let resultStream: any = null
+    let lastError: any = null
+
+    for (const candidate of candidateModels) {
+      try {
+        const modelInstance = candidate.getModel()
+        if (!modelInstance) continue
+
+        resultStream = streamText({
+          model: modelInstance,
+          temperature: 0.75,
+          maxOutputTokens: 8192,
+          system: systemPrompt + searchContext,
+          prompt: `타겟 키워드: ${prompt}\n\n위 지침에 맞춰 완벽한 네이버 블로그용 HTML 본문을 작성해줘.`,
+          async onFinish({ text }) {
+            try {
+              let project = await prisma.project.findFirst({
+                where: { user_id: user.id },
+                orderBy: { created_at: 'asc' },
+              })
+
+              if (!project) {
+                project = await prisma.project.create({
+                  data: {
+                    user_id: user.id,
+                    project_name: '기본 프로젝트',
+                  },
+                })
+              }
+
+              const titleMatch = text.match(/<post_title>([\s\S]*?)<\/post_title>/i)
+              const generatedTitle = titleMatch && titleMatch[1] ? titleMatch[1].trim() : `${prompt} (SEO 최적화)`
+              const cleanHtml = stripInternalMetadata(text.replace(/<post_title>[\s\S]*?<\/post_title>/i, '').trim())
+
+              await prisma.article.create({
+                data: {
+                  user_id: user.id,
+                  project_id: project.id,
+                  title: generatedTitle,
+                  target_keyword: prompt,
+                  content_html: cleanHtml,
+                  status: 'DRAFT',
+                },
+              })
+            } catch (error) {
+              console.error('Failed to update DB onFinish:', error)
+            } finally {
+              releaseConcurrentLock(user.id)
+            }
+          },
+        })
+
+        break
+      } catch (err: any) {
+        console.warn(`Model ${candidate.name} initialization failed, falling back:`, err?.message || err)
+        lastError = err
       }
     }
 
-    const result = streamText({
-      model: aiModel,
-      temperature: 0.75,
-      system: systemPrompt + searchContext,
-      prompt: `타겟 키워드: ${prompt}\n\n위 지침에 맞춰 완벽한 네이버 블로그용 HTML 본문을 작성해줘.`,
-      async onFinish({ text }) {
-        try {
-          let project = await prisma.project.findFirst({
-            where: { user_id: user.id },
-            orderBy: { created_at: 'asc' },
-          })
+    if (!resultStream) {
+      throw lastError || new Error('모든 AI 모델 연결에 실패했습니다. 잠시 후 다시 시도해 주세요.')
+    }
 
-          if (!project) {
-            project = await prisma.project.create({
-              data: {
-                user_id: user.id,
-                project_name: '기본 프로젝트',
-              },
-            })
-          }
-
-          const titleMatch = text.match(/<post_title>([\s\S]*?)<\/post_title>/i)
-          const generatedTitle = titleMatch && titleMatch[1] ? titleMatch[1].trim() : `${prompt} (SEO 최적화)`
-          const cleanHtml = stripInternalMetadata(text.replace(/<post_title>[\s\S]*?<\/post_title>/i, '').trim())
-
-          await prisma.article.create({
-            data: {
-              user_id: user.id,
-              project_id: project.id,
-              title: generatedTitle,
-              target_keyword: prompt,
-              content_html: cleanHtml,
-              status: 'DRAFT',
-            },
-          })
-        } catch (error) {
-          console.error('Failed to update DB onFinish:', error)
-        } finally {
-          releaseConcurrentLock(user.id)
-        }
-      },
-    })
-
-    return result.toTextStreamResponse()
+    return resultStream.toTextStreamResponse()
 
   } catch (error: any) {
     console.error('Generation API error:', error)
