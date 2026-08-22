@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>구글 AI 검색(SGE) 시대, 변호사 마케팅의 생존 공식이 바뀌었다</title>
+    <meta name="description" content="2026년 구글 AI Overviews(SGE) 시대에 변호사 블로그 마케팅의 게임 규칙이 어떻게 바뀌었는지 분석하고, E-E-A-T 구조화 데이터 기반의 새로운 생존 전략을 제시합니다.">
+    <!-- JSON-LD 스키마 마크업 -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Article",
+          "headline": "구글 AI 검색(SGE) 시대, 변호사 마케팅의 생존 공식이 바뀌었다",
+          "author": {
+            "@type": "Organization",
+            "name": "PostSync"
+          },
+          "datePublished": "2026-08-11",
+          "description": "2026년 구글 AI Overviews 시대에 변호사 마케팅의 게임 규칙이 어떻게 바뀌었는지 분석하고, E-E-A-T 구조화 데이터 기반의 새로운 생존 전략을 제시합니다."
+        },
+        {
+          "@type": "FAQPage",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "구글 AI Overviews(SGE)란 무엇이며, 변호사 마케팅에 어떤 영향을 미치나요?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "구글 AI Overviews는 사용자의 검색 질문에 대해 AI가 여러 웹페이지의 정보를 종합하여 검색 결과 최상단에 요약 답변을 제공하는 기능입니다. 이 요약에 인용되는 출처로 선정되기 위해서는 E-E-A-T(경험·전문성·권위·신뢰) 기반의 구조화 데이터(JSON-LD 스키마)가 필수적으로 요구됩니다."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "기존 SEO 방식만으로 구글 AI 검색에서 살아남을 수 있나요?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "기존의 키워드 나열, 백링크 위주의 SEO만으로는 불충분합니다. AI Overviews는 구조화된 전문가 답변과 신뢰할 수 있는 출처 정보를 우선 인용하므로, JSON-LD 스키마 마크업과 E-E-A-T 신호가 HTML에 직접 삽입되어 있어야 합니다."
+              }
+            }
+          ]
+        }
+      ]
+    }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap');
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            line-height: 1.8;
+            color: #1e293b;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 30px 20px;
+            background: #f8fafc;
+        }
+        h1 { color: #0f172a; font-size: 28px; line-height: 1.4; margin-bottom: 10px; }
+        h2 { color: #1a365d; font-size: 22px; margin-top: 50px; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; }
+        h3 { color: #1e40af; font-size: 18px; }
+        p { color: #334155; }
+
+        .author-profile {
+            background-color: #f1f5f9;
+            padding: 10px 15px;
+            border-radius: 4px;
+            font-weight: bold;
+            color: #475569;
+            display: inline-block;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        .summary-box {
+            background: #fff;
+            border-left: 4px solid #1a365d;
+            padding: 20px 24px;
+            margin: 24px 0 40px;
+            border-radius: 0 8px 8px 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        .summary-box p { margin: 0; color: #1e293b; font-weight: 500; }
+
+        /* 비교형(Before vs After) 구조 */
+        .compare-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 30px 0;
+        }
+        @media (max-width: 640px) {
+            .compare-grid { grid-template-columns: 1fr; }
+        }
+        .compare-card {
+            border-radius: 10px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        .compare-card.old {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+        }
+        .compare-card.old .compare-badge {
+            background: #dc2626;
+            color: #fff;
+        }
+        .compare-card.new {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+        }
+        .compare-card.new .compare-badge {
+            background: #16a34a;
+            color: #fff;
+        }
+        .compare-badge {
+            display: inline-block;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 20px;
+            margin-bottom: 14px;
+            letter-spacing: 0.5px;
+        }
+        .compare-card h4 { margin: 0 0 10px; font-size: 16px; color: #0f172a; }
+        .compare-card ul { padding-left: 18px; margin: 0; }
+        .compare-card li { font-size: 14px; color: #334155; margin-bottom: 6px; }
+
+        .insight-box {
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            border-radius: 8px;
+            padding: 20px 24px;
+            margin: 30px 0;
+        }
+        .insight-box strong { color: #1e40af; }
+
+        .visual-proof {
+            text-align: center;
+            margin: 40px 0;
+            background: #0f172a;
+            padding: 30px 20px;
+            border-radius: 10px;
+        }
+        .visual-proof .badge { display: inline-block; background: #1e40af; color: #fff; font-size: 12px; font-weight: 700; padding: 4px 12px; border-radius: 20px; margin-bottom: 12px; letter-spacing: 1px; }
+        .visual-proof p { color: #94a3b8; font-size: 14px; margin: 0; line-height: 1.7; }
+        .visual-proof strong { color: #e2e8f0; }
+
+        .roi-cta-box {
+            background: #fff;
+            border: 2px solid #1a365d;
+            padding: 36px 30px;
+            text-align: center;
+            border-radius: 10px;
+            margin-top: 50px;
+            box-shadow: 0 4px 20px rgba(26,54,93,0.08);
+        }
+        .roi-cta-box h3 { color: #1a365d; margin-top: 0; font-size: 22px; }
+        .roi-cta-box p { color: #475569; }
+        .cta-btn {
+            display: inline-block;
+            padding: 16px 36px;
+            background-color: #1a365d;
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 17px;
+            border-radius: 8px;
+            margin-top: 20px;
+            box-shadow: 0 4px 14px rgba(26,54,93,0.3);
+            transition: background 0.2s;
+        }
+        .cta-btn:hover { background-color: #2d4e8a; }
+    </style>
+</head>
+<body>
+
+<h1>구글 AI 검색(SGE) 시대, 변호사 마케팅의 생존 공식이 바뀌었다</h1>
+
+<div class="author-profile">
+    [작성자: 마케팅 컴플라이언스 전문 AI, PostSync]
+</div>
+
+<p><strong>핵심 요약:</strong></p>
+<div class="summary-box">
+    <p>2026년 현재, 구글은 검색 결과 최상단에 AI가 직접 작성한 요약 답변(AI Overviews)을 노출하고 있다. 이 요약에 '출처'로 인용되지 못하는 웹페이지는 사실상 존재하지 않는 것과 같다. 변호사 블로그가 AI Overviews에 인용되기 위해서는 기존의 키워드 중심 SEO를 넘어, E-E-A-T 기반의 구조화 데이터(JSON-LD 스키마)를 HTML에 직접 심는 GEO(Generative Engine Optimization) 전략이 필수다.</p>
+</div>
+
+<h2>1. 서론: 검색의 규칙이 바뀌었다 — '1페이지'는 더 이상 목표가 아니다</h2>
+
+<p>변호사님, "블로그를 1페이지에 올려드리겠습니다"라는 대행사의 약속을 아직도 신뢰하고 계십니까? 2026년 구글 검색 환경에서 이 약속은 이미 무의미해졌습니다.</p>
+
+<p>구글은 사용자가 "이혼 재산분할 기준"을 검색하면, 기존처럼 블루 링크 10개를 나열하는 대신 AI가 여러 웹페이지의 정보를 종합·분석한 <strong>AI Overviews(구 SGE)</strong> 요약 답변을 검색 결과 최상단에 먼저 보여줍니다. 사용자는 이 요약만 읽고 이탈하거나, 요약에 인용된 출처 링크만 클릭합니다.</p>
+
+<p>즉, 1페이지에 올라가더라도 AI Overviews에 인용되지 못하면 클릭률(CTR)은 급감합니다. 게임의 규칙 자체가 바뀐 것입니다.</p>
+
+<h2>2. 본론: 과거의 SEO vs 현재의 GEO — 무엇이 달라졌나</h2>
+
+<p>변호사 마케팅을 둘러싼 검색 최적화의 핵심 전략이 어떻게 전환되었는지, 항목별로 비교합니다.</p>
+
+<h3>2-1. 콘텐츠 전략의 변화</h3>
+
+<div class="compare-grid">
+    <div class="compare-card old">
+        <div class="compare-badge">과거 (SEO 1.0)</div>
+        <h4>키워드 반복 + 볼륨 전략</h4>
+        <ul>
+            <li>"이혼 전문 변호사" 키워드를 제목·본문에 10회 이상 반복 삽입</li>
+            <li>하루 1포스팅, 월 30건 이상 대량 발행</li>
+            <li>글의 깊이보다 발행 수량이 핵심 KPI</li>
+            <li>대행사 알바생이 5천 원에 템플릿 복사·붙여넣기</li>
+        </ul>
+    </div>
+    <div class="compare-card new">
+        <div class="compare-badge">현재 (GEO 2.0)</div>
+        <h4>전문가 답변 + 구조화 데이터 전략</h4>
+        <ul>
+            <li>검색 의도(Query Intent)에 정확히 부합하는 답변형 콘텐츠</li>
+            <li>주 1~2건이라도 E-E-A-T 신호가 풍부한 고품질 원고 발행</li>
+            <li>AI가 인용할 수 있는 구조화된 전문가 답변이 핵심 KPI</li>
+            <li>법리 분석·판례 해석 중심의 깊이 있는 원본 콘텐츠</li>
+        </ul>
+    </div>
+</div>
+
+<h3>2-2. 기술적 백엔드의 변화</h3>
+
+<div class="compare-grid">
+    <div class="compare-card old">
+        <div class="compare-badge">과거 (SEO 1.0)</div>
+        <h4>메타 태그 + 백링크</h4>
+        <ul>
+            <li>제목 태그(title)에 키워드 삽입</li>
+            <li>외부 사이트에서 링크를 받는 백링크 작업</li>
+            <li>구조화 데이터(Schema)는 선택 사항</li>
+            <li>구글 봇이 텍스트를 '추측'으로 해석</li>
+        </ul>
+    </div>
+    <div class="compare-card new">
+        <div class="compare-badge">현재 (GEO 2.0)</div>
+        <h4>JSON-LD 스키마 + E-E-A-T 신호</h4>
+        <ul>
+            <li>HTML &lt;head&gt; 영역에 Article, FAQPage 등의 JSON-LD 코드 주입</li>
+            <li>작성자 프로필(전문가 권위)을 구조화 데이터로 명시</li>
+            <li>구조화 데이터가 AI Overviews 인용의 필수 조건</li>
+            <li>구글 봇이 콘텐츠를 '정확하게' 기계 독해(MRC)</li>
+        </ul>
+    </div>
+</div>
+
+<div class="insight-box">
+    <strong>핵심 인사이트:</strong> 과거에는 "얼마나 많이, 자주 올리느냐"가 승부를 갈랐다면, 2026년에는 "AI가 내 글을 얼마나 정확하게 읽고 인용할 수 있느냐"가 승부를 가릅니다. 그 핵심 기술이 바로 JSON-LD 스키마 마크업입니다.
+</div>
+
+<h3>2-3. 변호사 광고 규정과의 교차점</h3>
+
+<p>여기서 변호사 마케팅만의 특수한 난이도가 추가됩니다. 대한변호사협회의 광고 규정은 E-E-A-T의 '신뢰(Trust)' 요소와 정확히 겹칩니다.</p>
+
+<div class="compare-grid">
+    <div class="compare-card old">
+        <div class="compare-badge">규정 위반 = AI 불신</div>
+        <h4>대행사가 흔히 쓰는 위험 패턴</h4>
+        <ul>
+            <li>"승소율 98%" → 과장 광고 (변협 징계 대상)</li>
+            <li>"전관 출신" 강조 → 전관예우 암시 (징계 대상)</li>
+            <li>"상담료 무료" 남발 → 염가 유인 (징계 대상)</li>
+            <li>→ AI는 이런 콘텐츠를 '신뢰 불가'로 분류</li>
+        </ul>
+    </div>
+    <div class="compare-card new">
+        <div class="compare-badge">규정 준수 = AI 신뢰</div>
+        <h4>GEO 시대의 안전한 전략</h4>
+        <ul>
+            <li>판례 분석과 법리 해석 중심의 객관적 서술</li>
+            <li>변호사의 실제 전문 분야와 경력 사실 기재</li>
+            <li>근거 있는 비용 안내 (견적 상담 유도)</li>
+            <li>→ AI가 '전문가의 신뢰할 수 있는 답변'으로 인용</li>
+        </ul>
+    </div>
+</div>
+
+<p>결론적으로, 변협의 광고 규정을 준수하는 것이 곧 구글 AI의 신뢰를 얻는 가장 빠른 길입니다. 두 가지는 별개의 과제가 아니라, <strong>하나의 동일한 전략</strong>입니다.</p>
+
+<!-- 시각적 증명 (PLG): 코어 B (E-E-A-T 구조화 데이터 자동 생성) -->
+<div class="visual-proof">
+    <div class="badge">PostSync CORE 기능</div>
+    <p><strong>E-E-A-T 구조화 데이터(JSON-LD) 자동 생성 대시보드</strong></p>
+    <p>변호사가 법리 분석 텍스트만 입력하면, 시스템이 본문을 실시간 파싱하여<br>
+    구글 AI Overviews가 요구하는 Article · FAQPage · LegalService 스키마 코드를<br>
+    HTML &lt;head&gt; 영역에 <strong>원클릭으로 자동 주입</strong>하는 화면입니다.<br>
+    동시에 변협 광고 규정 위반 소지를 원천 차단하여 안전한 원고를 완성합니다.</p>
+</div>
+
+<h2>3. 결론: AI 시대의 변호사 마케팅은 '기술'로 결정된다</h2>
+
+<p>대행사에 월 200만 원을 내도, 그 대행사가 JSON-LD 스키마를 모른다면 구글 AI Overviews에 변호사님의 이름은 영원히 등장하지 않습니다. 반대로, 변호사님의 깊은 법리 분석과 판례 해석이 올바른 구조화 데이터와 결합되는 순간, AI는 변호사님을 '이 분야의 권위 있는 전문가'로 인용하기 시작합니다.</p>
+
+<p>그 기술적 연결고리를 단 5분 만에 완성하는 시스템이 이미 존재합니다.</p>
+
+<div class="roi-cta-box">
+    <h3>구글 AI가 인용하는 변호사가 되십시오</h3>
+    <p>PostSync(포스트싱크) 시스템이 변협 규정 검증 + JSON-LD 스키마 주입을 동시에 처리하는 <strong>단 5분</strong> 동안,<br>
+    변호사님은 <strong>착수금 500만 원 이상의 신규 수임 상담 1건에 더 집중하실 수 있습니다.</strong></p>
+    <a href="/pricing" class="cta-btn">AI 시대 마케팅 무기, 14일 무료 체험하기</a>
+</div>
+
+</body>
+</html>

@@ -162,6 +162,10 @@ export default function LandingPage() {
               <a href="#features" className="hover:text-white transition-colors">5대 특별함</a>
               <a href="#comparison" className="hover:text-white transition-colors">품질 비교</a>
               <a href="#pricing" className="hover:text-white transition-colors">요금제</a>
+              <Link href="/blog" className="text-indigo-300 hover:text-white transition-colors font-semibold flex items-center gap-1">
+                블로그
+                <span className="w-1.5 h-1.5 rounded-full bg-indigo-400" />
+              </Link>
               <a href="#faq" className="hover:text-white transition-colors">FAQ</a>
               <Link href="/seo-check" className="text-rose-400 hover:text-rose-300 font-bold flex items-center gap-1">
                 무료 진단 <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-ping" />
@@ -1113,10 +1117,11 @@ export default function LandingPage() {
             </div>
 
             <div className="flex flex-wrap items-center gap-6 text-sm text-slate-300">
-              <Link href="/terms" className="hover:text-white transition-colors">이용약관</Link>
-              <Link href="/privacy" className="hover:text-indigo-400 font-semibold transition-colors">개인정보 처리방침</Link>
+              <Link href="/blog" className="hover:text-indigo-400 font-semibold transition-colors text-indigo-300">블로그 칼럼</Link>
               <Link href="/pricing" className="hover:text-white transition-colors">요금안내</Link>
               <Link href="/seo-check" className="hover:text-rose-400 transition-colors text-rose-400/90 font-medium">무료 블로그 진단</Link>
+              <Link href="/terms" className="hover:text-white transition-colors">이용약관</Link>
+              <Link href="/privacy" className="hover:text-indigo-400 font-semibold transition-colors">개인정보 처리방침</Link>
             </div>
           </div>
 
