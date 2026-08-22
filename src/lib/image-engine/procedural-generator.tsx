@@ -1123,8 +1123,8 @@ export function formatThumbnailTitle(
     return [fullStr]
   }
 
-  // 3-B. 16~34자 제목: 어절 손상 없이 2줄 황금비율 분할
-  if (fullStr.length <= 34) {
+  // 3-B. 16~28자 제목: 어절 손상 없이 2줄 황금비율 분할
+  if (fullStr.length <= 28) {
     let bestSplit = 1
     let minDiff = Infinity
     for (let i = 1; i < tokens.length; i++) {
@@ -1142,10 +1142,33 @@ export function formatThumbnailTitle(
     ]
   }
 
-  // 3-C. 35자 이상 초장문 제목: 최대 3줄 균형 분할
+  // 3-C. 29~38자 장문 제목: 2줄 또는 3줄 최적 균형 분할
+  if (fullStr.length <= 38) {
+    let bestSplit = 1
+    let minDiff = Infinity
+    for (let i = 1; i < tokens.length; i++) {
+      const line1 = tokens.slice(0, i).join(' ')
+      const line2 = tokens.slice(i).join(' ')
+      if (line1.length <= 19 && line2.length <= 19) {
+        const diff = Math.abs(line1.length - line2.length)
+        if (diff < minDiff) {
+          minDiff = diff
+          bestSplit = i
+        }
+      }
+    }
+    if (minDiff !== Infinity) {
+      return [
+        tokens.slice(0, bestSplit).join(' '),
+        tokens.slice(bestSplit).join(' '),
+      ]
+    }
+  }
+
+  // 3-D. 39자 이상 초장문 제목: 최대 3줄 균형 분할 (각 라인 13~15자 내외)
   const lines: string[] = []
   let cur = ''
-  const targetLineLen = Math.max(14, Math.ceil(fullStr.length / 3))
+  const targetLineLen = Math.max(13, Math.ceil(fullStr.length / 3))
   for (const t of tokens) {
     if (!cur) {
       cur = t
@@ -1157,29 +1180,61 @@ export function formatThumbnailTitle(
     }
   }
   if (cur) lines.push(cur)
-  return lines
+  return lines.slice(0, 3)
 }
 
 export interface ThumbnailTemplateProps extends TemplateProps {
   layout: ThumbLayout
-  tags: string[]
+  tags?: string[]
 }
 
-export function ThumbnailTemplate({ data, palette, layout, tags }: ThumbnailTemplateProps) {
+export function ThumbnailTemplate({ data, palette, layout }: ThumbnailTemplateProps) {
   const title = data.title || '2026 핵심 실무 가이드'
   const titleLines = formatThumbnailTitle(title)
+  const totalLen = title.length
   const maxLineLen = Math.max(...titleLines.map((l) => l.length), 0)
-  const titleSize =
-    titleLines.length >= 3 || maxLineLen > 18
-      ? 46
-      : title.length > 25 || maxLineLen > 14
-        ? 52
-        : 58
+
+  // 1080x1080 캔버스 및 920px Safe Zone 맞춤 볼드 폰트 스케일링
+  let titleSize = 68
+  let titleLineHeight = '1.26'
+
+  if (titleLines.length === 1) {
+    // 1줄 단문: 최대 78px 압도적 대형 볼드
+    titleSize = maxLineLen <= 12 ? 78 : 72
+    titleLineHeight = '1.2'
+  } else if (titleLines.length === 2) {
+    // 2줄 표준 및 장문: 64~72px 시원한 대형 폰트
+    if (maxLineLen <= 14) {
+      titleSize = 72
+      titleLineHeight = '1.24'
+    } else if (maxLineLen <= 17) {
+      titleSize = 68
+      titleLineHeight = '1.26'
+    } else {
+      titleSize = 62
+      titleLineHeight = '1.26'
+    }
+  } else {
+    // 3줄 초장문: 46~58px 균형 폰트
+    if (maxLineLen <= 14) {
+      titleSize = 58
+      titleLineHeight = '1.24'
+    } else if (maxLineLen <= 17) {
+      titleSize = 52
+      titleLineHeight = '1.24'
+    } else {
+      titleSize = 46
+      titleLineHeight = '1.22'
+    }
+  }
+
   const signature = data.signature || CARD_CONFIG.overrides.MAIN_THUMBNAIL.defaultSignature
   const category = data.category || CARD_CONFIG.overrides.MAIN_THUMBNAIL.defaultCategory
   const subContent = data.subText || data.subtitle || ''
 
-  // THUMB_A: 중앙 플로팅 카드형
+  // ─────────────────────────────────────────────────────────────────────────
+  // THUMB_A: 중앙 플로팅 화이트 박스형 (심플·고급·대형 폰트)
+  // ─────────────────────────────────────────────────────────────────────────
   if (layout === 'THUMB_A') {
     return (
       <div
@@ -1191,14 +1246,14 @@ export function ThumbnailTemplate({ data, palette, layout, tags }: ThumbnailTemp
           width: '1080px',
           height: '1080px',
           backgroundColor: palette.bg,
-          padding: CARD_CONFIG.base.safeZone.paddingThumb,
+          padding: '70px 80px',
           boxSizing: 'border-box',
           letterSpacing: CARD_CONFIG.base.typography.letterSpacing,
           wordBreak: 'break-word',
         }}
       >
         {/* 상단 뱃지 영역 (Safe Zone 920px) */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px', maxWidth: '920px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '920px' }}>
           <div
             style={{
               display: 'flex',
@@ -1229,48 +1284,29 @@ export function ThumbnailTemplate({ data, palette, layout, tags }: ThumbnailTemp
           </div>
         </div>
 
-        {/* 중앙 플로팅 화이트 박스 */}
+        {/* 중앙 플로팅 화이트 박스 (소음 제거 & 대형 타이포그래피) */}
         <div
           style={{
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
+            justifyContent: 'center',
             backgroundColor: palette.cardBg,
             border: `2px solid ${palette.border}`,
-            borderRadius: '32px',
-            padding: '50px 48px',
-            gap: '30px',
+            borderRadius: '36px',
+            padding: '54px 50px',
+            gap: '28px',
             width: '920px',
             boxSizing: 'border-box',
           }}
         >
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '14px', width: '100%' }}>
-            {tags.map((tag, idx) => (
-              <div
-                key={idx}
-                style={{
-                  display: 'flex',
-                  backgroundColor: palette.highlightBg,
-                  border: `1.5px solid ${palette.border}`,
-                  borderRadius: '14px',
-                  padding: '10px 20px',
-                  fontSize: '20px',
-                  fontWeight: 'bold',
-                  color: palette.accent,
-                }}
-              >
-                #{tag}
-              </div>
-            ))}
-          </div>
-
           <div
             style={{
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
               justifyContent: 'center',
-              gap: '6px',
+              gap: '8px',
               width: '100%',
             }}
           >
@@ -1280,7 +1316,7 @@ export function ThumbnailTemplate({ data, palette, layout, tags }: ThumbnailTemp
                 style={{
                   display: 'flex',
                   fontSize: `${titleSize}px`,
-                  lineHeight: CARD_CONFIG.base.typography.lineHeightTitle,
+                  lineHeight: titleLineHeight,
                   fontWeight: 'bold',
                   color: palette.text,
                   textAlign: 'center',
@@ -1298,8 +1334,8 @@ export function ThumbnailTemplate({ data, palette, layout, tags }: ThumbnailTemp
                 backgroundColor: palette.bg,
                 border: `1.5px solid ${palette.border}`,
                 borderRadius: CARD_CONFIG.base.borderRadius.inner,
-                padding: '14px 28px',
-                fontSize: '24px',
+                padding: '16px 32px',
+                fontSize: '26px',
                 fontWeight: 'bold',
                 color: palette.sub,
                 lineHeight: CARD_CONFIG.base.typography.lineHeightBody,
@@ -1336,7 +1372,9 @@ export function ThumbnailTemplate({ data, palette, layout, tags }: ThumbnailTemp
     )
   }
 
-  // THUMB_B: 상단 와이드 밴드형
+  // ─────────────────────────────────────────────────────────────────────────
+  // THUMB_B: 상단 와이드 컬러 밴드형 (프렌치 에디토리얼 스타일)
+  // ─────────────────────────────────────────────────────────────────────────
   if (layout === 'THUMB_B') {
     return (
       <div
@@ -1351,75 +1389,56 @@ export function ThumbnailTemplate({ data, palette, layout, tags }: ThumbnailTemp
           wordBreak: 'break-word',
         }}
       >
+        {/* 상단 슬림 컬러 밴드 */}
         <div
           style={{
             display: 'flex',
-            flexDirection: 'column',
             justifyContent: 'space-between',
+            alignItems: 'center',
             backgroundColor: palette.accent,
-            padding: '60px 80px',
-            height: '320px',
+            padding: '50px 80px',
+            height: '240px',
             width: '1080px',
             boxSizing: 'border-box',
           }}
         >
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <div
-              style={{
-                display: 'flex',
-                backgroundColor: 'rgba(255, 255, 255, 0.2)',
-                color: '#FFFFFF',
-                padding: '8px 20px',
-                borderRadius: CARD_CONFIG.base.borderRadius.inner,
-                fontSize: '20px',
-                fontWeight: 'bold',
-              }}
-            >
-              {category}
-            </div>
-            <div style={{ display: 'flex', fontSize: '22px', color: 'rgba(255, 255, 255, 0.85)', fontWeight: 'bold' }}>
-              {signature}
-            </div>
+          <div
+            style={{
+              display: 'flex',
+              backgroundColor: 'rgba(255, 255, 255, 0.22)',
+              color: '#FFFFFF',
+              padding: '10px 24px',
+              borderRadius: CARD_CONFIG.base.borderRadius.inner,
+              fontSize: '22px',
+              fontWeight: 'bold',
+            }}
+          >
+            {category}
           </div>
-
-          <div style={{ display: 'flex', gap: '12px' }}>
-            {tags.map((tag, idx) => (
-              <div
-                key={idx}
-                style={{
-                  display: 'flex',
-                  backgroundColor: '#FFFFFF',
-                  color: palette.accent,
-                  padding: '6px 16px',
-                  borderRadius: '10px',
-                  fontSize: '18px',
-                  fontWeight: 'bold',
-                }}
-              >
-                #{tag}
-              </div>
-            ))}
+          <div style={{ display: 'flex', fontSize: '24px', color: '#FFFFFF', fontWeight: 'bold' }}>
+            {signature}
           </div>
         </div>
 
+        {/* 하단 순백 캔버스 (대형 타이포그래피) */}
         <div
           style={{
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'space-between',
             flex: 1,
-            padding: '60px 80px 80px',
+            padding: '70px 80px 80px',
             boxSizing: 'border-box',
           }}
         >
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
             <div
               style={{
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'flex-start',
                 justifyContent: 'center',
-                gap: '6px',
+                gap: '8px',
                 width: '100%',
               }}
             >
@@ -1429,7 +1448,7 @@ export function ThumbnailTemplate({ data, palette, layout, tags }: ThumbnailTemp
                   style={{
                     display: 'flex',
                     fontSize: `${titleSize}px`,
-                    lineHeight: CARD_CONFIG.base.typography.lineHeightTitle,
+                    lineHeight: titleLineHeight,
                     fontWeight: 'bold',
                     color: palette.text,
                     textAlign: 'left',
@@ -1444,8 +1463,9 @@ export function ThumbnailTemplate({ data, palette, layout, tags }: ThumbnailTemp
               <div
                 style={{
                   display: 'flex',
-                  fontSize: '24px',
+                  fontSize: '26px',
                   color: palette.sub,
+                  fontWeight: 'bold',
                   lineHeight: CARD_CONFIG.base.typography.lineHeightBody,
                   wordBreak: 'break-word',
                 }}
@@ -1465,10 +1485,10 @@ export function ThumbnailTemplate({ data, palette, layout, tags }: ThumbnailTemp
               boxSizing: 'border-box',
             }}
           >
-            <div style={{ display: 'flex', fontSize: '22px', fontWeight: 'bold', color: palette.text }}>
+            <div style={{ display: 'flex', fontSize: '24px', fontWeight: 'bold', color: palette.accent }}>
               전문 자격사 1:1 맞춤 검토
             </div>
-            <div style={{ display: 'flex', fontSize: '20px', color: palette.sub }}>
+            <div style={{ display: 'flex', fontSize: '20px', color: palette.sub, fontWeight: 'bold' }}>
               철저한 비밀 보장 상담
             </div>
           </div>
@@ -1477,7 +1497,9 @@ export function ThumbnailTemplate({ data, palette, layout, tags }: ThumbnailTemp
     )
   }
 
-  // THUMB_C: 모던 미니멀형 (좌측 악센트 바)
+  // ─────────────────────────────────────────────────────────────────────────
+  // THUMB_C: 좌측 악센트 바 미니멀형 (로펌 에디토리얼 스타일)
+  // ─────────────────────────────────────────────────────────────────────────
   if (layout === 'THUMB_C') {
     return (
       <div
@@ -1494,7 +1516,7 @@ export function ThumbnailTemplate({ data, palette, layout, tags }: ThumbnailTemp
         <div
           style={{
             display: 'flex',
-            width: '28px',
+            width: '24px',
             height: '1080px',
             backgroundColor: palette.accent,
           }}
@@ -1506,7 +1528,7 @@ export function ThumbnailTemplate({ data, palette, layout, tags }: ThumbnailTemp
             flexDirection: 'column',
             justifyContent: 'space-between',
             flex: 1,
-            padding: CARD_CONFIG.base.safeZone.paddingThumb,
+            padding: '75px 80px',
             boxSizing: 'border-box',
           }}
         >
@@ -1516,47 +1538,28 @@ export function ThumbnailTemplate({ data, palette, layout, tags }: ThumbnailTemp
                 display: 'flex',
                 backgroundColor: palette.badgeBg,
                 color: palette.badgeText,
-                padding: '10px 24px',
+                padding: '12px 28px',
                 borderRadius: CARD_CONFIG.base.borderRadius.badge,
-                fontSize: '22px',
+                fontSize: '24px',
                 fontWeight: 'bold',
+                border: `1.5px solid ${palette.border}`,
               }}
             >
               {category}
             </div>
-            <div style={{ display: 'flex', fontSize: '24px', fontWeight: 'bold', color: palette.text }}>
+            <div style={{ display: 'flex', fontSize: '26px', fontWeight: 'bold', color: palette.text }}>
               {signature}
             </div>
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '30px' }}>
-            <div style={{ display: 'flex', gap: '12px' }}>
-              {tags.map((tag, idx) => (
-                <div
-                  key={idx}
-                  style={{
-                    display: 'flex',
-                    backgroundColor: palette.bg,
-                    color: palette.sub,
-                    border: `1.5px solid ${palette.border}`,
-                    padding: '8px 18px',
-                    borderRadius: CARD_CONFIG.base.borderRadius.tag,
-                    fontSize: '18px',
-                    fontWeight: 'bold',
-                  }}
-                >
-                  #{tag}
-                </div>
-              ))}
-            </div>
-
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
             <div
               style={{
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'flex-start',
                 justifyContent: 'center',
-                gap: '6px',
+                gap: '8px',
                 width: '100%',
               }}
             >
@@ -1565,8 +1568,8 @@ export function ThumbnailTemplate({ data, palette, layout, tags }: ThumbnailTemp
                   key={idx}
                   style={{
                     display: 'flex',
-                    fontSize: `${titleSize + 4}px`,
-                    lineHeight: '1.28',
+                    fontSize: `${titleSize}px`,
+                    lineHeight: titleLineHeight,
                     fontWeight: 'bold',
                     color: palette.text,
                     textAlign: 'left',
@@ -1583,6 +1586,7 @@ export function ThumbnailTemplate({ data, palette, layout, tags }: ThumbnailTemp
                   display: 'flex',
                   fontSize: '26px',
                   color: palette.sub,
+                  fontWeight: 'bold',
                   lineHeight: CARD_CONFIG.base.typography.lineHeightBody,
                   wordBreak: 'break-word',
                 }}
@@ -1605,8 +1609,8 @@ export function ThumbnailTemplate({ data, palette, layout, tags }: ThumbnailTemp
             <div style={{ display: 'flex', fontSize: '24px', fontWeight: 'bold', color: palette.accent }}>
               정확한 사실관계 분석
             </div>
-            <div style={{ display: 'flex', fontSize: '20px', color: palette.sub }}>
-              핵심 쟁점 1:1 법률 가이드
+            <div style={{ display: 'flex', fontSize: '20px', color: palette.sub, fontWeight: 'bold' }}>
+              핵심 쟁점 1:1 전문 가이드
             </div>
           </div>
         </div>
@@ -1614,7 +1618,9 @@ export function ThumbnailTemplate({ data, palette, layout, tags }: ThumbnailTemp
     )
   }
 
-  // THUMB_D: 다크 엠블럼형
+  // ─────────────────────────────────────────────────────────────────────────
+  // THUMB_D: 클린 럭셔리 보더형 (기존 다크톤 전면 폐기 -> 화사한 라이트톤 프리미엄)
+  // ─────────────────────────────────────────────────────────────────────────
   return (
     <div
       style={{
@@ -1624,8 +1630,8 @@ export function ThumbnailTemplate({ data, palette, layout, tags }: ThumbnailTemp
         alignItems: 'center',
         width: '1080px',
         height: '1080px',
-        backgroundColor: palette.text,
-        padding: CARD_CONFIG.base.safeZone.paddingThumb,
+        backgroundColor: palette.bg,
+        padding: '70px 80px',
         boxSizing: 'border-box',
         letterSpacing: CARD_CONFIG.base.typography.letterSpacing,
         wordBreak: 'break-word',
@@ -1639,57 +1645,37 @@ export function ThumbnailTemplate({ data, palette, layout, tags }: ThumbnailTemp
           alignItems: 'center',
           width: '920px',
           height: '920px',
-          border: `3px solid ${palette.accent}`,
-          borderRadius: '40px',
-          padding: '60px 50px',
-          backgroundColor: 'rgba(255, 255, 255, 0.03)',
+          border: `2.5px solid ${palette.accent}`,
+          borderRadius: '36px',
+          padding: '54px 50px',
+          backgroundColor: palette.cardBg,
           boxSizing: 'border-box',
         }}
       >
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '20px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <div
             style={{
               display: 'flex',
               backgroundColor: palette.accent,
               color: '#FFFFFF',
-              padding: '10px 28px',
+              padding: '12px 30px',
               borderRadius: '24px',
-              fontSize: '22px',
+              fontSize: '24px',
               fontWeight: 'bold',
             }}
           >
             {category}
           </div>
-
-          <div style={{ display: 'flex', gap: '12px' }}>
-            {tags.map((tag, idx) => (
-              <div
-                key={idx}
-                style={{
-                  display: 'flex',
-                  backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                  color: palette.badgeBg,
-                  padding: '8px 18px',
-                  borderRadius: CARD_CONFIG.base.borderRadius.tag,
-                  fontSize: '18px',
-                  fontWeight: 'bold',
-                  border: '1px solid rgba(255, 255, 255, 0.2)',
-                }}
-              >
-                #{tag}
-              </div>
-            ))}
-          </div>
         </div>
 
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '24px', maxWidth: '820px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '26px', maxWidth: '820px', width: '100%' }}>
           <div
             style={{
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
               justifyContent: 'center',
-              gap: '6px',
+              gap: '8px',
               maxWidth: '820px',
               width: '100%',
             }}
@@ -1700,9 +1686,9 @@ export function ThumbnailTemplate({ data, palette, layout, tags }: ThumbnailTemp
                 style={{
                   display: 'flex',
                   fontSize: `${titleSize}px`,
-                  lineHeight: CARD_CONFIG.base.typography.lineHeightTitle,
+                  lineHeight: titleLineHeight,
                   fontWeight: 'bold',
-                  color: '#FFFFFF',
+                  color: palette.text,
                   textAlign: 'center',
                 }}
               >
@@ -1715,9 +1701,13 @@ export function ThumbnailTemplate({ data, palette, layout, tags }: ThumbnailTemp
             <div
               style={{
                 display: 'flex',
-                fontSize: '26px',
+                backgroundColor: palette.highlightBg,
+                border: `1.5px solid ${palette.border}`,
+                borderRadius: '16px',
+                padding: '14px 28px',
+                fontSize: '24px',
                 fontWeight: 'bold',
-                color: palette.badgeBg,
+                color: palette.sub,
                 textAlign: 'center',
                 lineHeight: CARD_CONFIG.base.typography.lineHeightBody,
                 wordBreak: 'break-word',
@@ -1734,16 +1724,16 @@ export function ThumbnailTemplate({ data, palette, layout, tags }: ThumbnailTemp
             flexDirection: 'column',
             alignItems: 'center',
             gap: '8px',
-            borderTop: `1.5px solid rgba(255, 255, 255, 0.2)`,
-            paddingTop: '24px',
+            borderTop: `1.5px solid ${palette.border}`,
+            paddingTop: '20px',
             width: '800px',
             boxSizing: 'border-box',
           }}
         >
-          <div style={{ display: 'flex', fontSize: '28px', fontWeight: 'bold', color: '#FFFFFF', wordBreak: 'break-word' }}>
+          <div style={{ display: 'flex', fontSize: '28px', fontWeight: 'bold', color: palette.text, wordBreak: 'break-word' }}>
             {signature}
           </div>
-          <div style={{ display: 'flex', fontSize: '18px', color: '#94A3B8' }}>
+          <div style={{ display: 'flex', fontSize: '20px', color: palette.sub, fontWeight: 'bold' }}>
             {CARD_CONFIG.overrides.MAIN_THUMBNAIL.defaultSub}
           </div>
         </div>
@@ -1764,10 +1754,22 @@ export function CtaBannerTemplate({ data, palette, layout }: CtaBannerTemplatePr
   const cfg = CARD_CONFIG.overrides.CTA_FOOTER
   const phone = data.extra1 || cfg.defaultPhone
   const address = data.extra2 || cfg.defaultAddress
-  const title = data.title || cfg.defaultTitle
-  const sub = data.subText || data.subtitle || cfg.defaultSub
 
-  // BANNER_A: 좌우 2단 분할형
+  // 고객 사무소명이 메인 타이틀에 정확하고 크게 들어가도록 지능형 처리
+  const isGenericTitle = !data.title || data.title.includes('1:1 맞춤') || data.title.includes('상담 안내') || data.title.includes('진단 및 상담')
+  const officeName = (
+    !isGenericTitle && data.title
+      ? data.title
+      : data.signature || data.title || cfg.defaultTitle
+  ).trim()
+
+  // 사무소명 글자 수에 따른 폰트 크기 자동 조절 (12자 이하 52px, 13~18자 46px, 19자 이상 40px)
+  const officeNameSize = officeName.length <= 12 ? 52 : officeName.length <= 18 ? 46 : 40
+  const sub = data.subText || data.subtitle || (data.signature && isGenericTitle ? '1:1 전문 맞춤 상담 · 철저한 비밀 보장' : cfg.defaultSub)
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // BANNER_A: 좌우 2단 분할형 (외곽선 1.5px 슬림화 & 사무소명 대형화)
+  // ─────────────────────────────────────────────────────────────────────────
   if (layout === 'BANNER_A') {
     return (
       <div
@@ -1776,9 +1778,9 @@ export function CtaBannerTemplate({ data, palette, layout }: CtaBannerTemplatePr
           width: '1080px',
           height: '540px',
           backgroundColor: palette.bg,
-          border: `3px solid ${palette.border}`,
+          border: `1.5px solid ${palette.border}`,
           borderRadius: CARD_CONFIG.base.borderRadius.canvas,
-          padding: '40px 60px',
+          padding: '44px 56px',
           gap: '36px',
           boxSizing: 'border-box',
           letterSpacing: CARD_CONFIG.base.typography.letterSpacing,
@@ -1801,8 +1803,8 @@ export function CtaBannerTemplate({ data, palette, layout }: CtaBannerTemplatePr
             >
               공식 상담 창구
             </div>
-            <div style={{ display: 'flex', fontSize: '44px', fontWeight: 'bold', color: palette.text, lineHeight: '1.22', wordBreak: 'break-word' }}>
-              {title}
+            <div style={{ display: 'flex', fontSize: `${officeNameSize}px`, fontWeight: 'bold', color: palette.text, lineHeight: '1.22', wordBreak: 'break-word' }}>
+              {officeName}
             </div>
             <div style={{ display: 'flex', fontSize: '24px', color: palette.sub, lineHeight: '1.38', wordBreak: 'break-word' }}>
               {sub}
@@ -1820,28 +1822,28 @@ export function CtaBannerTemplate({ data, palette, layout }: CtaBannerTemplatePr
             flexDirection: 'column',
             justifyContent: 'center',
             backgroundColor: palette.cardBg,
-            border: `2.5px solid ${palette.border}`,
-            borderRadius: '24px',
-            padding: '36px 36px',
-            gap: '24px',
-            width: '460px',
+            border: `1.5px solid ${palette.border}`,
+            borderRadius: '20px',
+            padding: '30px 32px',
+            gap: '20px',
+            width: '480px',
             boxSizing: 'border-box',
           }}
         >
           <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-            <div style={{ display: 'flex', fontSize: '24px', fontWeight: 'bold', color: palette.accent }}>
+            <div style={{ display: 'flex', fontSize: '22px', fontWeight: 'bold', color: palette.accent }}>
               📞 직통 상담
             </div>
-            <div style={{ display: 'flex', fontSize: '40px', fontWeight: 'bold', color: palette.text, wordBreak: 'break-word' }}>
+            <div style={{ display: 'flex', fontSize: '44px', fontWeight: 'bold', color: palette.text, wordBreak: 'break-word' }}>
               {phone}
             </div>
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-            <div style={{ display: 'flex', fontSize: '22px', fontWeight: 'bold', color: palette.sub }}>
+            <div style={{ display: 'flex', fontSize: '20px', fontWeight: 'bold', color: palette.sub }}>
               🏢 오시는 길
             </div>
-            <div style={{ display: 'flex', fontSize: '28px', color: palette.text, fontWeight: 'bold', wordBreak: 'break-word' }}>
+            <div style={{ display: 'flex', fontSize: '26px', color: palette.text, fontWeight: 'bold', lineHeight: '1.3', wordBreak: 'break-word' }}>
               {address}
             </div>
           </div>
@@ -1850,7 +1852,9 @@ export function CtaBannerTemplate({ data, palette, layout }: CtaBannerTemplatePr
     )
   }
 
-  // BANNER_B: 중앙 집중 명함형
+  // ─────────────────────────────────────────────────────────────────────────
+  // BANNER_B: 중앙 집중 명함형 (외곽선 1.5px 슬림화 & 사무소명 대형화)
+  // ─────────────────────────────────────────────────────────────────────────
   if (layout === 'BANNER_B') {
     return (
       <div
@@ -1862,9 +1866,9 @@ export function CtaBannerTemplate({ data, palette, layout }: CtaBannerTemplatePr
           width: '1080px',
           height: '540px',
           backgroundColor: palette.cardBg,
-          border: `3px solid ${palette.accent}`,
+          border: `1.5px solid ${palette.accent}`,
           borderRadius: CARD_CONFIG.base.borderRadius.canvas,
-          padding: CARD_CONFIG.base.safeZone.paddingBanner,
+          padding: '36px 50px',
           gap: '22px',
           boxSizing: 'border-box',
           textAlign: 'center',
@@ -1886,10 +1890,10 @@ export function CtaBannerTemplate({ data, palette, layout }: CtaBannerTemplatePr
           >
             공식 1:1 심층 상담 창구
           </div>
-          <div style={{ display: 'flex', fontSize: '46px', fontWeight: 'bold', color: palette.text, wordBreak: 'break-word', lineHeight: '1.2' }}>
-            {title}
+          <div style={{ display: 'flex', fontSize: `${officeNameSize}px`, fontWeight: 'bold', color: palette.text, wordBreak: 'break-word', lineHeight: '1.2' }}>
+            {officeName}
           </div>
-          <div style={{ display: 'flex', fontSize: '26px', color: palette.sub, wordBreak: 'break-word', lineHeight: '1.35' }}>
+          <div style={{ display: 'flex', fontSize: '24px', color: palette.sub, wordBreak: 'break-word', lineHeight: '1.35' }}>
             {sub}
           </div>
         </div>
@@ -1902,15 +1906,15 @@ export function CtaBannerTemplate({ data, palette, layout }: CtaBannerTemplatePr
               alignItems: 'center',
               flex: 1,
               backgroundColor: palette.bg,
-              border: `2px solid ${palette.accent}`,
-              borderRadius: '22px',
+              border: `1.5px solid ${palette.accent}`,
+              borderRadius: '20px',
               padding: '24px 20px',
               gap: '6px',
               boxSizing: 'border-box',
             }}
           >
-            <div style={{ display: 'flex', fontSize: '24px', fontWeight: 'bold', color: palette.accent }}>📞 직통 전화 상담</div>
-            <div style={{ display: 'flex', fontSize: '38px', fontWeight: 'bold', color: palette.text, wordBreak: 'break-word' }}>{phone}</div>
+            <div style={{ display: 'flex', fontSize: '22px', fontWeight: 'bold', color: palette.accent }}>📞 직통 전화 상담</div>
+            <div style={{ display: 'flex', fontSize: '42px', fontWeight: 'bold', color: palette.text, wordBreak: 'break-word' }}>{phone}</div>
           </div>
 
           <div
@@ -1920,22 +1924,24 @@ export function CtaBannerTemplate({ data, palette, layout }: CtaBannerTemplatePr
               alignItems: 'center',
               flex: 1,
               backgroundColor: palette.bg,
-              border: `2px solid ${palette.border}`,
-              borderRadius: '22px',
+              border: `1.5px solid ${palette.border}`,
+              borderRadius: '20px',
               padding: '24px 20px',
               gap: '6px',
               boxSizing: 'border-box',
             }}
           >
-            <div style={{ display: 'flex', fontSize: '24px', fontWeight: 'bold', color: palette.sub }}>🏢 사무소 오시는 길</div>
-            <div style={{ display: 'flex', fontSize: '28px', fontWeight: 'bold', color: palette.text, textAlign: 'center', wordBreak: 'break-word' }}>{address}</div>
+            <div style={{ display: 'flex', fontSize: '22px', fontWeight: 'bold', color: palette.sub }}>🏢 사무소 오시는 길</div>
+            <div style={{ display: 'flex', fontSize: '26px', fontWeight: 'bold', color: palette.text, textAlign: 'center', lineHeight: '1.3', wordBreak: 'break-word' }}>{address}</div>
           </div>
         </div>
       </div>
     )
   }
 
-  // BANNER_C: 모던 아웃라인 박스형
+  // ─────────────────────────────────────────────────────────────────────────
+  // BANNER_C: 모던 아웃라인 박스형 (외곽선 1.5px 슬림화 & 사무소명 대형화)
+  // ─────────────────────────────────────────────────────────────────────────
   return (
     <div
       style={{
@@ -1945,9 +1951,9 @@ export function CtaBannerTemplate({ data, palette, layout }: CtaBannerTemplatePr
         width: '1080px',
         height: '540px',
         backgroundColor: palette.highlightBg,
-        border: `3px solid ${palette.accent}`,
+        border: `1.5px solid ${palette.accent}`,
         borderRadius: CARD_CONFIG.base.borderRadius.canvas,
-        padding: CARD_CONFIG.base.safeZone.paddingBanner,
+        padding: '40px 54px',
         gap: '22px',
         boxSizing: 'border-box',
         letterSpacing: CARD_CONFIG.base.typography.letterSpacing,
@@ -1956,10 +1962,10 @@ export function CtaBannerTemplate({ data, palette, layout }: CtaBannerTemplatePr
     >
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', maxWidth: '780px' }}>
-          <div style={{ display: 'flex', fontSize: '46px', fontWeight: 'bold', color: palette.text, lineHeight: '1.2', wordBreak: 'break-word' }}>
-            {title}
+          <div style={{ display: 'flex', fontSize: `${officeNameSize}px`, fontWeight: 'bold', color: palette.text, lineHeight: '1.2', wordBreak: 'break-word' }}>
+            {officeName}
           </div>
-          <div style={{ display: 'flex', fontSize: '26px', color: palette.sub, lineHeight: '1.35', wordBreak: 'break-word' }}>
+          <div style={{ display: 'flex', fontSize: '24px', color: palette.sub, lineHeight: '1.35', wordBreak: 'break-word' }}>
             {sub}
           </div>
         </div>
@@ -1968,9 +1974,9 @@ export function CtaBannerTemplate({ data, palette, layout }: CtaBannerTemplatePr
             display: 'flex',
             backgroundColor: palette.accent,
             color: '#FFFFFF',
-            padding: '14px 28px',
-            borderRadius: '18px',
-            fontSize: '24px',
+            padding: '12px 26px',
+            borderRadius: '16px',
+            fontSize: '22px',
             fontWeight: 'bold',
             whiteSpace: 'nowrap',
           }}
@@ -1984,20 +1990,20 @@ export function CtaBannerTemplate({ data, palette, layout }: CtaBannerTemplatePr
           display: 'flex',
           flexDirection: 'column',
           backgroundColor: palette.cardBg,
-          border: `2.5px solid ${palette.border}`,
-          borderRadius: '24px',
-          padding: '30px 38px',
-          gap: '18px',
+          border: `1.5px solid ${palette.border}`,
+          borderRadius: '20px',
+          padding: '24px 34px',
+          gap: '14px',
           boxSizing: 'border-box',
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', fontSize: '38px', fontWeight: 'bold', color: palette.text, gap: '16px' }}>
-          <span style={{ color: palette.accent, whiteSpace: 'nowrap', fontSize: '38px' }}>📞 직통 상담:</span>
-          <span style={{ fontSize: '40px', color: palette.text, wordBreak: 'break-word' }}>{phone}</span>
+          <span style={{ color: palette.accent, whiteSpace: 'nowrap', fontSize: '32px' }}>📞 직통 상담:</span>
+          <span style={{ fontSize: '44px', color: palette.text, wordBreak: 'break-word' }}>{phone}</span>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', fontSize: '30px', fontWeight: 'bold', color: palette.text, gap: '16px' }}>
-          <span style={{ color: palette.sub, whiteSpace: 'nowrap', fontSize: '30px' }}>🏢 오시는 길:</span>
-          <span style={{ fontSize: '30px', color: palette.text, fontWeight: 'bold', wordBreak: 'break-word' }}>{address}</span>
+        <div style={{ display: 'flex', alignItems: 'center', fontSize: '28px', fontWeight: 'bold', color: palette.text, gap: '16px' }}>
+          <span style={{ color: palette.sub, whiteSpace: 'nowrap', fontSize: '26px' }}>🏢 오시는 길:</span>
+          <span style={{ fontSize: '28px', color: palette.text, fontWeight: 'bold', lineHeight: '1.3', wordBreak: 'break-word' }}>{address}</span>
         </div>
       </div>
     </div>

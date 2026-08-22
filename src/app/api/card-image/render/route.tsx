@@ -171,13 +171,18 @@ export async function GET(req: NextRequest) {
           ]
         : undefined
 
+      const isDev = process.env.NODE_ENV === 'development'
+      const cacheControl = isDev
+        ? 'no-cache, no-store, must-revalidate'
+        : 'public, max-age=31536000, immutable'
+
       return new ImageResponse(element, {
         width,
         height,
         fonts,
         headers: {
           'Content-Type': 'image/png',
-          'Cache-Control': 'public, max-age=31536000, immutable',
+          'Cache-Control': cacheControl,
           'Access-Control-Allow-Origin': '*',
           'Access-Control-Allow-Methods': 'GET, OPTIONS',
         },
@@ -185,11 +190,16 @@ export async function GET(req: NextRequest) {
     } catch (innerError) {
       console.warn('ImageResponse inner error, serving SVG fallback:', innerError)
       const fallbackSvg = generateFailproofSvg(payload, width, height)
+      const isDev = process.env.NODE_ENV === 'development'
+      const cacheControl = isDev
+        ? 'no-cache, no-store, must-revalidate'
+        : 'public, max-age=31536000, immutable'
+
       return new Response(fallbackSvg, {
         status: 200,
         headers: {
           'Content-Type': 'image/svg+xml; charset=utf-8',
-          'Cache-Control': 'public, max-age=31536000, immutable',
+          'Cache-Control': cacheControl,
           'Access-Control-Allow-Origin': '*',
           'Access-Control-Allow-Methods': 'GET, OPTIONS',
         },

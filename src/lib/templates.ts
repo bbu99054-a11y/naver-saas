@@ -210,7 +210,7 @@ export function getFooterBannerTemplate(userId: string = '', targetKeyword: stri
   const kw = sanitizeKeyword(targetKeyword)
   return `
 [사진 9: 하단 상담 유도 및 찾아오시는 길 배너 인포그래픽 이미지 - 글 최하단 필수 삽입]
-<img src="/api/card-image/render?type=CTA_FOOTER${userParam}&category=EXPERT+CONSULTATION&title=1:1+맞춤+전문+상담+안내&extra1=(사무소+직통전화번호)&extra2=(사무소+상세주소)" alt="${kw} - 1:1 직통 상담 및 오시는 길 안내" style="display: block; width: 100%; max-width: 540px; margin: 35px auto 10px auto; border-radius: 14px; box-shadow: 0 10px 25px rgba(0,0,0,0.08);" />
+<img src="/api/card-image/render?type=CTA_FOOTER${userParam}&category=EXPERT+CONSULTATION&title=(전문가+사무소명)&sub=1:1+전문+상담+·+철저한+비밀+보장&extra1=(사무소+직통전화번호)&extra2=(사무소+상세주소)" alt="${kw} - 1:1 직통 상담 및 오시는 길 안내" style="display: block; width: 100%; max-width: 540px; margin: 35px auto 10px auto; border-radius: 14px; box-shadow: 0 10px 25px rgba(0,0,0,0.08);" />
 `.trim();
 }
 
