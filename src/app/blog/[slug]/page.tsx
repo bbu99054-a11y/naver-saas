@@ -1,6 +1,10 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import { Sparkles, Calendar, Clock, ChevronLeft, ArrowRight, Share2, CheckCircle2, ShieldCheck, Zap } from 'lucide-react'
+import { 
+  Sparkles, Calendar, Clock, ChevronLeft, ArrowRight, 
+  Share2, CheckCircle2, ShieldCheck, Zap, BookOpen, 
+  HelpCircle, AlertTriangle 
+} from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { blogPosts, getPostBySlug } from '@/lib/blogData'
 import ReactMarkdown from 'react-markdown'
@@ -69,7 +73,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans selection:bg-indigo-200">
+    <div className="min-h-screen bg-[#F8FAFC] text-slate-900 font-sans selection:bg-indigo-200">
       
       {/* JSON-LD for Google AI Overviews & SGE */}
       <script
@@ -78,7 +82,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
       />
 
       {/* Navbar */}
-      <header className="fixed top-0 w-full bg-white/80 backdrop-blur-md z-50 border-b border-slate-200/60 shadow-xs">
+      <header className="fixed top-0 w-full bg-white/90 backdrop-blur-md z-50 border-b border-slate-200 shadow-xs">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           <Link href="/" className="text-xl font-black tracking-tight text-slate-950 flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-xl bg-indigo-600 flex items-center justify-center text-white shadow-md shadow-indigo-200">
@@ -97,7 +101,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
               요금제
             </Link>
             <Link href="/login">
-              <Button className="bg-indigo-600 hover:bg-indigo-700 text-white rounded-full px-5 h-9 font-bold text-xs shadow-md shadow-indigo-100">
+              <Button className="bg-indigo-600 hover:bg-indigo-700 text-white rounded-full px-5 h-9 font-bold text-xs shadow-md shadow-indigo-100 cursor-pointer">
                 무료 시작하기
               </Button>
             </Link>
@@ -106,83 +110,182 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
       </header>
 
       {/* Content Area */}
-      <div className="pt-28 pb-20 px-6 max-w-7xl mx-auto flex flex-col lg:flex-row gap-12">
+      <div className="pt-28 pb-24 px-6 max-w-7xl mx-auto flex flex-col lg:flex-row gap-12">
         
-        {/* Main Article */}
-        <article className="flex-1 max-w-3xl">
-          <div className="flex items-center justify-between mb-6">
+        {/* Main Article Container */}
+        <article className="flex-1 max-w-3xl bg-white p-6 sm:p-10 md:p-12 rounded-3xl border border-slate-200/80 shadow-sm">
+          
+          {/* Top Category & Back Button */}
+          <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-100">
             <Link href="/blog" className="inline-flex items-center text-sm font-bold text-indigo-600 hover:text-indigo-800 transition-colors">
-              <ChevronLeft className="w-4 h-4 mr-1" /> 전체 칼럼 목록으로
+              <ChevronLeft className="w-4 h-4 mr-1" /> 전체 칼럼 목록
             </Link>
             <div className="flex items-center gap-2">
-              <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-indigo-50 text-indigo-700 border border-indigo-200">
+              <span className="px-3 py-1 rounded-full text-xs font-extrabold bg-indigo-50 text-indigo-700 border border-indigo-200/80">
                 {post.categoryLabel}
               </span>
               {post.badge && (
-                <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-800 border border-amber-200">
+                <span className="px-2.5 py-1 rounded-full text-xs font-black bg-amber-100 text-amber-900 border border-amber-300 uppercase">
                   {post.badge}
                 </span>
               )}
             </div>
           </div>
           
-          <h1 className="text-2xl sm:text-4xl font-extrabold text-slate-950 leading-tight mb-6">
+          {/* Main Title */}
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-950 leading-tight sm:leading-[1.25] mb-6 tracking-tight">
             {post.title}
           </h1>
           
-          <div className="flex flex-wrap items-center gap-4 text-xs sm:text-sm font-medium text-slate-500 mb-8 border-b border-slate-200 pb-6">
-            <span className="flex items-center gap-1"><Calendar className="w-4 h-4 text-slate-400" /> {post.date}</span>
+          {/* Meta Info */}
+          <div className="flex flex-wrap items-center gap-4 text-xs sm:text-sm font-medium text-slate-500 mb-8 pb-6 border-b border-slate-200">
+            <span className="flex items-center gap-1.5"><Calendar className="w-4 h-4 text-slate-400" /> {post.date}</span>
             <span>•</span>
-            <span className="flex items-center gap-1"><Clock className="w-4 h-4 text-slate-400" /> {post.readTime}</span>
+            <span className="flex items-center gap-1.5"><Clock className="w-4 h-4 text-slate-400" /> {post.readTime}</span>
             <span>•</span>
-            <span className="text-slate-700 font-semibold">{post.author}</span>
+            <span className="text-indigo-700 font-bold bg-indigo-50/70 px-2 py-0.5 rounded">{post.author}</span>
           </div>
 
           {/* Featured Image */}
           <div 
-            className="w-full h-[320px] sm:h-[420px] bg-slate-200 bg-cover bg-center rounded-2xl mb-10 shadow-md border border-slate-200/60"
+            className="w-full h-[280px] sm:h-[380px] bg-slate-200 bg-cover bg-center rounded-2xl mb-10 shadow-md border border-slate-200/80 overflow-hidden"
             style={{ backgroundImage: `url(${post.imageUrl})` }}
           />
 
-          {/* Markdown Content */}
-          <div className="prose prose-slate prose-lg max-w-none 
-            prose-headings:font-extrabold prose-headings:text-slate-900 
-            prose-h1:text-2xl sm:prose-h1:text-3xl prose-h1:mt-8 prose-h1:mb-4
-            prose-h2:text-xl sm:prose-h2:text-2xl prose-h2:mt-10 prose-h2:mb-4 prose-h2:border-b prose-h2:border-slate-200 prose-h2:pb-2
-            prose-h3:text-lg sm:prose-h3:text-xl prose-h3:mt-6 prose-h3:text-indigo-950
-            prose-p:text-slate-700 prose-p:leading-relaxed prose-p:text-base sm:prose-p:text-lg
-            prose-strong:text-slate-900 prose-strong:font-bold
-            prose-a:text-indigo-600 prose-a:font-bold prose-a:underline hover:prose-a:text-indigo-800
-            prose-blockquote:border-l-4 prose-blockquote:border-indigo-600 prose-blockquote:bg-indigo-50/70 prose-blockquote:py-3 prose-blockquote:px-5 prose-blockquote:rounded-r-xl prose-blockquote:not-italic prose-blockquote:text-slate-800 prose-blockquote:font-medium
-            prose-table:w-full prose-table:border-collapse prose-table:my-8
-            prose-th:bg-slate-100 prose-th:p-3 prose-th:text-slate-900 prose-th:border prose-th:border-slate-200 prose-th:text-sm prose-th:font-bold
-            prose-td:p-3 prose-td:border prose-td:border-slate-200 prose-td:text-sm prose-td:text-slate-700
-            prose-ul:list-disc prose-ul:pl-6 prose-li:my-1 prose-li:text-slate-700">
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+          {/* Rich Markdown Custom Component Rendered Area */}
+          <div className="blog-content">
+            <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
+              components={{
+                h1: ({ children }) => (
+                  <h1 className="text-2xl sm:text-3xl font-black text-slate-950 mt-10 mb-6 leading-tight tracking-tight border-b-2 border-slate-200 pb-3">
+                    {children}
+                  </h1>
+                ),
+                h2: ({ children }) => (
+                  <h2 className="text-xl sm:text-2xl font-black text-slate-900 mt-12 mb-5 pb-3 border-b-2 border-indigo-100 flex items-center gap-3">
+                    <span className="w-2.5 h-6 bg-gradient-to-b from-indigo-600 to-violet-600 rounded-full inline-block shrink-0" />
+                    <span>{children}</span>
+                  </h2>
+                ),
+                h3: ({ children }) => (
+                  <h3 className="text-lg sm:text-xl font-bold text-indigo-950 mt-8 mb-3 flex items-center gap-2">
+                    <span className="text-indigo-600 font-extrabold text-sm">▶</span>
+                    <span>{children}</span>
+                  </h3>
+                ),
+                h4: ({ children }) => (
+                  <h4 className="text-base sm:text-lg font-bold text-slate-900 mt-6 mb-2">
+                    {children}
+                  </h4>
+                ),
+                p: ({ children }) => (
+                  <p className="text-slate-700 leading-relaxed text-base sm:text-[17px] mb-5 font-normal">
+                    {children}
+                  </p>
+                ),
+                blockquote: ({ children }) => (
+                  <div className="my-8 p-6 rounded-2xl bg-gradient-to-r from-indigo-50/90 via-slate-50 to-blue-50/60 border-l-4 border-indigo-600 shadow-xs border border-indigo-100/70">
+                    <div className="text-slate-800 font-medium text-base sm:text-[17px] leading-relaxed">
+                      {children}
+                    </div>
+                  </div>
+                ),
+                table: ({ children }) => (
+                  <div className="my-8 overflow-x-auto rounded-2xl border border-slate-200 shadow-xs bg-white">
+                    <table className="w-full text-left border-collapse min-w-[500px]">
+                      {children}
+                    </table>
+                  </div>
+                ),
+                thead: ({ children }) => (
+                  <thead className="bg-slate-100/90 border-b border-slate-200 text-slate-900">
+                    {children}
+                  </thead>
+                ),
+                tbody: ({ children }) => (
+                  <tbody className="divide-y divide-slate-200/80 bg-white">
+                    {children}
+                  </tbody>
+                ),
+                tr: ({ children }) => (
+                  <tr className="hover:bg-slate-50/60 transition-colors">
+                    {children}
+                  </tr>
+                ),
+                th: ({ children }) => (
+                  <th className="py-3.5 px-4 text-xs sm:text-sm font-bold text-slate-800 border-r border-slate-200 last:border-r-0 tracking-tight">
+                    {children}
+                  </th>
+                ),
+                td: ({ children }) => (
+                  <td className="py-3.5 px-4 text-xs sm:text-sm text-slate-700 border-r border-slate-200/60 last:border-r-0 leading-relaxed">
+                    {children}
+                  </td>
+                ),
+                ul: ({ children }) => (
+                  <ul className="my-5 space-y-2.5 pl-2 text-slate-700 text-base sm:text-[17px]">
+                    {children}
+                  </ul>
+                ),
+                ol: ({ children }) => (
+                  <ol className="my-5 space-y-2.5 pl-6 list-decimal text-slate-700 text-base sm:text-[17px]">
+                    {children}
+                  </ol>
+                ),
+                li: ({ children }) => (
+                  <li className="flex items-start gap-2.5 text-slate-700 leading-relaxed">
+                    <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 mt-2.5 shrink-0 inline-block" />
+                    <span className="flex-1">{children}</span>
+                  </li>
+                ),
+                hr: () => (
+                  <hr className="my-10 border-0 h-px bg-gradient-to-r from-transparent via-slate-300 to-transparent" />
+                ),
+                strong: ({ children }) => (
+                  <strong className="font-extrabold text-slate-950 bg-amber-100/70 px-1.5 py-0.5 rounded text-[15px] sm:text-[16px]">
+                    {children}
+                  </strong>
+                ),
+                a: ({ href, children }) => (
+                  <a 
+                    href={href} 
+                    className="text-indigo-600 font-bold underline underline-offset-4 hover:text-indigo-800 transition-colors"
+                  >
+                    {children}
+                  </a>
+                ),
+                code: ({ children }) => (
+                  <code className="px-2 py-0.5 rounded-md bg-slate-100 text-indigo-700 text-sm font-mono font-semibold border border-slate-200/60">
+                    {children}
+                  </code>
+                ),
+              }}
+            >
               {post.content}
             </ReactMarkdown>
           </div>
 
           {/* Bottom Article CTA Card */}
-          <div className="mt-14 p-8 rounded-2xl bg-gradient-to-br from-indigo-900 to-slate-900 text-white shadow-xl">
-            <div className="flex items-center gap-2 text-xs font-bold text-indigo-300 mb-2">
+          <div className="mt-14 p-8 sm:p-10 rounded-2xl bg-gradient-to-br from-[#0F172A] via-[#1E1B4B] to-[#1E293B] text-white shadow-xl border border-indigo-500/20">
+            <div className="flex items-center gap-2 text-xs font-bold text-indigo-300 mb-3">
               <Zap className="w-4 h-4 text-amber-400" /> PostSync 실전 솔루션
             </div>
             <h3 className="text-xl sm:text-2xl font-black mb-3">
               대행사 리스크 없이 직접 5분 만에 해결하세요.
             </h3>
             <p className="text-sm text-slate-300 mb-6 leading-relaxed">
-              복잡한 2026 전문직 광고 규정 검증부터 네이버 C-Rank 알고리즘 대응까지.
+              복잡한 2026 전문직 광고 규정 검증부터 네이버 C-Rank 알고리즘 대응까지.<br className="hidden sm:inline" />
               AI가 대표님의 승소 및 상담 실무 사례를 완벽한 1인칭 원고로 완성합니다.
             </p>
             <div className="flex flex-col sm:flex-row gap-3">
               <Link href="/login">
-                <Button className="w-full sm:w-auto bg-indigo-500 hover:bg-indigo-600 text-white font-bold rounded-xl px-6 h-11 shadow-md">
+                <Button className="w-full sm:w-auto bg-indigo-500 hover:bg-indigo-600 text-white font-bold rounded-xl px-7 h-12 shadow-lg shadow-indigo-500/20 cursor-pointer">
                   3회 무료 체험 시작 &rarr;
                 </Button>
               </Link>
               <Link href="/seo-check">
-                <Button variant="outline" className="w-full sm:w-auto bg-white/10 hover:bg-white/20 text-white border-white/20 font-semibold rounded-xl px-5 h-11">
+                <Button variant="outline" className="w-full sm:w-auto bg-white/10 hover:bg-white/20 text-white border-white/20 font-semibold rounded-xl px-6 h-12 cursor-pointer">
                   내 블로그 무료 진단
                 </Button>
               </Link>
@@ -211,13 +314,13 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                 </p>
                 
                 <Link href="/login" className="block w-full">
-                  <Button className="w-full h-11 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-md shadow-indigo-200">
+                  <Button className="w-full h-11 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-md shadow-indigo-200 cursor-pointer">
                     PostSync 3회 무료 체험
                   </Button>
                 </Link>
                 
                 <Link href="/seo-check" className="block w-full mt-2.5">
-                  <Button variant="outline" className="w-full h-10 border-slate-200 text-slate-700 hover:bg-slate-50 font-bold rounded-xl text-xs">
+                  <Button variant="outline" className="w-full h-10 border-slate-200 text-slate-700 hover:bg-slate-50 font-bold rounded-xl text-xs cursor-pointer">
                     내 블로그 무료 SEO 진단
                   </Button>
                 </Link>
