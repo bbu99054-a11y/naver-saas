@@ -569,7 +569,7 @@ export function ChecklistTemplate({ data, palette }: TemplateProps) {
 }
 
 /**
- * 2) Before vs After 비교 템플릿 (1080 × 680 px)
+ * 2) Before vs After 비교 템플릿 (1080 × 680 px) - 명도 대비 극대화 & 1.5px 슬림 외곽선
  */
 export function ComparisonTemplate({ data, palette }: TemplateProps) {
   const cfg = CARD_CONFIG.overrides.COMPARISON
@@ -602,7 +602,7 @@ export function ComparisonTemplate({ data, palette }: TemplateProps) {
         width: '1080px',
         height: '680px',
         backgroundColor: palette.cardBg,
-        border: `2px solid ${palette.border}`,
+        border: `1.5px solid ${palette.border}`,
         borderRadius: CARD_CONFIG.base.borderRadius.canvas,
         padding: CARD_CONFIG.base.safeZone.paddingCompact,
         boxSizing: 'border-box',
@@ -617,25 +617,25 @@ export function ComparisonTemplate({ data, palette }: TemplateProps) {
           fontSize: '36px',
           fontWeight: 'bold',
           color: palette.text,
-          borderBottom: `2px solid ${palette.border}`,
-          paddingBottom: '18px',
+          borderBottom: `1.5px solid ${palette.border}`,
+          paddingBottom: '16px',
           wordBreak: 'break-word',
         }}
       >
         {cfg.icon} {title}
       </div>
 
-      <div style={{ display: 'flex', gap: '30px', height: '480px' }}>
-        {/* Left: Bad */}
+      <div style={{ display: 'flex', gap: '26px', height: '480px' }}>
+        {/* Left: Bad (선명한 로즈 레드 대비) */}
         <div
           style={{
             display: 'flex',
             flexDirection: 'column',
             flex: 1,
-            backgroundColor: cfg.left.bg,
-            border: `2px solid ${cfg.left.border}`,
+            backgroundColor: '#FFF1F2',
+            border: '1.5px solid #FECDD3',
             borderRadius: CARD_CONFIG.base.borderRadius.card,
-            padding: '30px 26px',
+            padding: '28px 24px',
             justifyContent: 'space-between',
             boxSizing: 'border-box',
           }}
@@ -643,10 +643,10 @@ export function ComparisonTemplate({ data, palette }: TemplateProps) {
           <div
             style={{
               display: 'flex',
-              backgroundColor: cfg.left.badgeBg,
-              color: cfg.left.badgeColor,
+              backgroundColor: '#E11D48',
+              color: '#FFFFFF',
               padding: '8px 18px',
-              borderRadius: '8px',
+              borderRadius: '10px',
               fontSize: '22px',
               fontWeight: 'bold',
               alignSelf: 'flex-start',
@@ -654,26 +654,26 @@ export function ComparisonTemplate({ data, palette }: TemplateProps) {
           >
             {cfg.left.badgeText}
           </div>
-          <div style={{ display: 'flex', fontSize: '28px', fontWeight: 'bold', color: cfg.left.titleColor, lineHeight: CARD_CONFIG.base.typography.lineHeightTitle, wordBreak: 'break-word' }}>
+          <div style={{ display: 'flex', fontSize: '28px', fontWeight: 'bold', color: '#881337', lineHeight: CARD_CONFIG.base.typography.lineHeightTitle, wordBreak: 'break-word' }}>
             {extra1Text}
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '22px', color: cfg.left.bulletColor, fontWeight: 'bold', lineHeight: CARD_CONFIG.base.typography.lineHeightBody }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', fontSize: '24px', color: '#4C0519', fontWeight: 'bold', lineHeight: CARD_CONFIG.base.typography.lineHeightBody }}>
             {badBullets.map((b, i) => (
               <div key={i} style={{ display: 'flex', wordBreak: 'break-word' }}>• {b}</div>
             ))}
           </div>
         </div>
 
-        {/* Right: Good */}
+        {/* Right: Good (선명한 에메랄드 그린 대비) */}
         <div
           style={{
             display: 'flex',
             flexDirection: 'column',
             flex: 1,
-            backgroundColor: cfg.right.bg,
-            border: `2px solid ${cfg.right.border}`,
+            backgroundColor: '#F0FDF4',
+            border: '1.5px solid #A7F3D0',
             borderRadius: CARD_CONFIG.base.borderRadius.card,
-            padding: '30px 26px',
+            padding: '28px 24px',
             justifyContent: 'space-between',
             boxSizing: 'border-box',
           }}
@@ -681,10 +681,10 @@ export function ComparisonTemplate({ data, palette }: TemplateProps) {
           <div
             style={{
               display: 'flex',
-              backgroundColor: cfg.right.badgeBg,
-              color: cfg.right.badgeColor,
+              backgroundColor: '#059669',
+              color: '#FFFFFF',
               padding: '8px 18px',
-              borderRadius: '8px',
+              borderRadius: '10px',
               fontSize: '22px',
               fontWeight: 'bold',
               alignSelf: 'flex-start',
@@ -692,10 +692,10 @@ export function ComparisonTemplate({ data, palette }: TemplateProps) {
           >
             {cfg.right.badgeText}
           </div>
-          <div style={{ display: 'flex', fontSize: '28px', fontWeight: 'bold', color: cfg.right.titleColor, lineHeight: CARD_CONFIG.base.typography.lineHeightTitle, wordBreak: 'break-word' }}>
+          <div style={{ display: 'flex', fontSize: '28px', fontWeight: 'bold', color: '#064E3B', lineHeight: CARD_CONFIG.base.typography.lineHeightTitle, wordBreak: 'break-word' }}>
             {extra2Text}
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '22px', color: cfg.right.bulletColor, fontWeight: 'bold', lineHeight: CARD_CONFIG.base.typography.lineHeightBody }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', fontSize: '24px', color: '#022C22', fontWeight: 'bold', lineHeight: CARD_CONFIG.base.typography.lineHeightBody }}>
             {goodBullets.map((b, i) => (
               <div key={i} style={{ display: 'flex', wordBreak: 'break-word' }}>• {b}</div>
             ))}
@@ -861,11 +861,12 @@ export function ProcessFlowTemplate({ data, palette }: TemplateProps) {
 }
 
 /**
- * 5) Q&A 문답 템플릿 (1080 × 680 px)
+ * 5) Q&A 문답 템플릿 (1080 × 680 px) - 공백 완전 제거 및 32px 대형 볼드 답변 구조
  */
 export function QnaTemplate({ data, palette }: TemplateProps) {
   const cfg = CARD_CONFIG.overrides.QNA
   const answerContent = sanitizeText(data.subText || data.subtitle || data.extra2 || cfg.defaultAnswer)
+  const answerSize = answerContent.length > 80 ? 28 : 32
 
   return (
     <div
@@ -876,21 +877,34 @@ export function QnaTemplate({ data, palette }: TemplateProps) {
         width: '1080px',
         height: '680px',
         backgroundColor: palette.bg,
-        border: `2px solid ${palette.border}`,
+        border: `1.5px solid ${palette.border}`,
         borderRadius: CARD_CONFIG.base.borderRadius.canvas,
-        padding: CARD_CONFIG.base.safeZone.paddingDefault,
+        padding: '36px 44px',
+        gap: '18px',
         boxSizing: 'border-box',
         letterSpacing: CARD_CONFIG.base.typography.letterSpacing,
         wordBreak: 'break-word',
       }}
     >
-      <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+      {/* 상단 Q 질문 카드 */}
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          backgroundColor: palette.cardBg,
+          border: `1.5px solid ${palette.border}`,
+          borderRadius: '20px',
+          padding: '20px 26px',
+          gap: '16px',
+          boxSizing: 'border-box',
+        }}
+      >
         <div
           style={{
             display: 'flex',
             backgroundColor: palette.accent,
             color: '#FFFFFF',
-            padding: '10px 22px',
+            padding: '8px 20px',
             borderRadius: '12px',
             fontSize: '24px',
             fontWeight: 'bold',
@@ -899,28 +913,68 @@ export function QnaTemplate({ data, palette }: TemplateProps) {
         >
           {cfg.qBadgeText}
         </div>
-        <div style={{ display: 'flex', fontSize: data.title.length > 24 ? '30px' : '36px', fontWeight: 'bold', color: palette.text, wordBreak: 'break-word', lineHeight: CARD_CONFIG.base.typography.lineHeightTitle }}>
+        <div
+          style={{
+            display: 'flex',
+            fontSize: data.title.length > 24 ? '30px' : '34px',
+            fontWeight: 'bold',
+            color: palette.text,
+            wordBreak: 'break-word',
+            lineHeight: '1.25',
+          }}
+        >
           {sanitizeText(data.title)}
         </div>
       </div>
 
+      {/* 하단 A 대형 답변 카드 (flex: 1로 공백 꽉 채움) */}
       <div
         style={{
           display: 'flex',
           flexDirection: 'column',
+          justifyContent: 'space-between',
+          flex: 1,
           backgroundColor: palette.cardBg,
-          border: `2px solid ${palette.border}`,
-          borderRadius: '24px',
-          padding: cfg.answerPadding,
-          gap: '18px',
+          border: `1.5px solid ${palette.border}`,
+          borderRadius: '22px',
+          padding: '30px 34px',
           boxSizing: 'border-box',
         }}
       >
-        <div style={{ display: 'flex', fontSize: '30px', fontWeight: 'bold', color: palette.accent }}>
-          {cfg.aTitleText}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '26px', fontWeight: 'bold', color: palette.accent }}>
+          <span>💡</span>
+          <span>{cfg.aTitleText}</span>
         </div>
-        <div style={{ display: 'flex', fontSize: '26px', fontWeight: 'bold', color: palette.text, lineHeight: CARD_CONFIG.base.typography.lineHeightRelaxed, wordBreak: 'break-word' }}>
+
+        <div
+          style={{
+            display: 'flex',
+            fontSize: `${answerSize}px`,
+            fontWeight: 'bold',
+            color: palette.text,
+            lineHeight: '1.45',
+            wordBreak: 'break-word',
+          }}
+        >
           {answerContent}
+        </div>
+
+        {/* 하단 실무 조언 서브 풋터 */}
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            backgroundColor: palette.highlightBg,
+            border: `1.5px solid ${palette.border}`,
+            borderRadius: '12px',
+            padding: '12px 20px',
+            gap: '8px',
+          }}
+        >
+          <span style={{ fontSize: '18px' }}>📌</span>
+          <span style={{ fontSize: '18px', fontWeight: 'bold', color: palette.sub }}>
+            개별 사실관계 및 구체적 입증자료에 따라 실무 결과가 달라질 수 있습니다.
+          </span>
         </div>
       </div>
     </div>
@@ -928,11 +982,12 @@ export function QnaTemplate({ data, palette }: TemplateProps) {
 }
 
 /**
- * 6) 골든타임 리스크 경고 템플릿 (1080 × 680 px)
+ * 6) 골든타임 리스크 경고 템플릿 (1080 × 680 px) - 3단 긴급 경고 시스템 & 공백 완전 제거
  */
 export function WarningTemplate({ data }: TemplateProps) {
   const cfg = CARD_CONFIG.overrides.WARNING_RISK
   const subContent = sanitizeText(data.subText || data.subtitle || cfg.defaultSub)
+  const riskSize = subContent.length > 70 ? 28 : 32
 
   return (
     <div
@@ -942,40 +997,103 @@ export function WarningTemplate({ data }: TemplateProps) {
         justifyContent: 'space-between',
         width: '1080px',
         height: '680px',
-        backgroundColor: cfg.bg,
-        border: cfg.border,
+        backgroundColor: '#FFF5F5',
+        border: '1.5px solid #FECDD3',
         borderRadius: CARD_CONFIG.base.borderRadius.canvas,
-        padding: CARD_CONFIG.base.safeZone.paddingDefault,
+        padding: '36px 44px',
+        gap: '18px',
         boxSizing: 'border-box',
         letterSpacing: CARD_CONFIG.base.typography.letterSpacing,
         wordBreak: 'break-word',
       }}
     >
-      <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-        <div style={{ display: 'flex', fontSize: '48px' }}>{cfg.icon}</div>
-        <div style={{ display: 'flex', fontSize: data.title.length > 24 ? '32px' : '38px', fontWeight: 'bold', color: cfg.titleColor, wordBreak: 'break-word', lineHeight: CARD_CONFIG.base.typography.lineHeightTitle }}>
-          {sanitizeText(data.title || cfg.defaultTitle)}
+      {/* 상단 긴급 경고 헤더 */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+          <div style={{ display: 'flex', fontSize: '38px' }}>{cfg.icon}</div>
+          <div
+            style={{
+              display: 'flex',
+              fontSize: data.title.length > 24 ? '32px' : '36px',
+              fontWeight: 'bold',
+              color: '#991B1B',
+              wordBreak: 'break-word',
+              lineHeight: '1.25',
+            }}
+          >
+            {sanitizeText(data.title || cfg.defaultTitle)}
+          </div>
+        </div>
+
+        <div
+          style={{
+            display: 'flex',
+            backgroundColor: '#DC2626',
+            color: '#FFFFFF',
+            padding: '8px 18px',
+            borderRadius: '10px',
+            fontSize: '20px',
+            fontWeight: 'bold',
+            whiteSpace: 'nowrap',
+          }}
+        >
+          골든타임 주의
         </div>
       </div>
 
+      {/* 중앙 핵심 불이익 대형 박스 (flex: 1로 공백 꽉 채움) */}
       <div
         style={{
           display: 'flex',
           flexDirection: 'column',
-          backgroundColor: cfg.innerBg,
-          border: cfg.innerBorder,
-          borderRadius: CARD_CONFIG.base.borderRadius.card,
-          padding: '36px',
-          gap: '16px',
+          justifyContent: 'space-between',
+          flex: 1,
+          backgroundColor: '#FFFFFF',
+          border: '1.5px solid #FECACA',
+          borderRadius: '22px',
+          padding: '28px 32px',
           boxSizing: 'border-box',
         }}
       >
-        <div style={{ display: 'flex', fontSize: '28px', fontWeight: 'bold', color: cfg.bulletColor, wordBreak: 'break-word', lineHeight: CARD_CONFIG.base.typography.lineHeightTitle }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '24px', fontWeight: 'bold', color: '#DC2626' }}>
+          <span>⚠️</span>
+          <span>발생 가능한 핵심 불이익 및 추징 리스크</span>
+        </div>
+
+        <div
+          style={{
+            display: 'flex',
+            fontSize: `${riskSize}px`,
+            fontWeight: 'bold',
+            color: '#1E293B',
+            lineHeight: '1.42',
+            wordBreak: 'break-word',
+          }}
+        >
           • {subContent}
         </div>
-        <div style={{ display: 'flex', fontSize: '24px', color: cfg.bodyColor, lineHeight: CARD_CONFIG.base.typography.lineHeightBody, wordBreak: 'break-word' }}>
-          {cfg.defaultDesc}
+
+        <div style={{ display: 'flex', fontSize: '20px', color: '#64748B', fontWeight: 'bold', lineHeight: '1.35', wordBreak: 'break-word' }}>
+          * {cfg.defaultDesc}
         </div>
+      </div>
+
+      {/* 하단 선제 방어 가이드 풋터 */}
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          backgroundColor: '#FEF2F2',
+          border: '1.5px solid #FECACA',
+          borderRadius: '12px',
+          padding: '12px 20px',
+          gap: '8px',
+        }}
+      >
+        <span style={{ fontSize: '20px' }}>🛡️</span>
+        <span style={{ fontSize: '18px', fontWeight: 'bold', color: '#991B1B' }}>
+          법정 기한 도과 전 공인 전문 자격사의 사전 검토 및 선제적 소명 조치 필수
+        </span>
       </div>
     </div>
   )
