@@ -28,7 +28,7 @@ const clusterSchema = z.object({
 
 export async function getCurationClusters(
   pillarKeyword: string,
-  model: string = 'gemini-3.7-flash',
+  model: string = 'gpt-5.6-luna',
   profileContext?: { address?: string; industry?: string }
 ) {
   try {
@@ -152,10 +152,10 @@ ${trendingContext}
 - category: 해당 카테고리 코드('SEASON', 'LOCAL', 'HIGH_VALUE')를 정확히 지정할 것
     `
 
-    // 4. 3단계 AI Fallback 체인 (Gemini 3.7 Flash 최우선 -> GPT-5.6 Luna -> Gemini 3.6 Flash)
+    // 4. 3단계 AI Fallback 체인 (1순위 GPT-5.6 Luna 초고속 -> 2순위 Gemini 2.5 Flash -> 3순위 Gemini 3.6 Flash)
     const candidateModels = [
-      { name: 'gemini-3.7-flash', getModel: () => ((process.env.GOOGLE_GENERATIVE_AI_API_KEY || process.env.GOOGLE_API_KEY) ? google('gemini-3.7-flash') : null) },
       { name: 'gpt-5.6-luna', getModel: () => (process.env.OPENAI_API_KEY ? openai('gpt-5.6-luna') : null) },
+      { name: 'gemini-2.5-flash', getModel: () => ((process.env.GOOGLE_GENERATIVE_AI_API_KEY || process.env.GOOGLE_API_KEY) ? google('gemini-2.5-flash') : null) },
       { name: 'gemini-3.6-flash', getModel: () => ((process.env.GOOGLE_GENERATIVE_AI_API_KEY || process.env.GOOGLE_API_KEY) ? google('gemini-3.6-flash') : null) },
     ]
 
@@ -171,6 +171,7 @@ ${trendingContext}
           model: modelInstance,
           schema: clusterSchema,
           prompt: curationPrompt,
+          abortSignal: AbortSignal.timeout(20000),
         })
 
         if (object && object.clusters && object.clusters.length > 0) {

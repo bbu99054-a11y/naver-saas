@@ -16,6 +16,8 @@ interface CurationCache {
 }
 
 const CACHE_TTL_MS = 24 * 60 * 60 * 1000 // 24시간
+const MAX_DAILY_CURATION = 5 // 1일 최대 키워드 발굴 횟수 (비용 과다 방지)
+const COOLDOWN_SECONDS = 60 // 연타 방지 쿨다운 (초)
 
 export function DashboardCuration({ profile }: { profile: any }) {
   const [clusters, setClusters] = useState<RecommendedKeyword[] | null>(null)
@@ -24,8 +26,17 @@ export function DashboardCuration({ profile }: { profile: any }) {
   const [selectedCategory, setSelectedCategory] = useState<CategoryFilter>('ALL')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [quotaNotice, setQuotaNotice] = useState<string | null>(null)
+  
+  // 연타 방지 쿨다운 & 일일 5회 쿼터 상태
+  const [dailyUsedCount, setDailyUsedCount] = useState<number>(0)
+  const [cooldownLeft, setCooldownLeft] = useState<number>(0)
 
-  const cacheKey = `postsynk_curation_cache_${profile?.id || profile?.user_id || 'default'}`
+  const userId = profile?.id || profile?.user_id || 'default'
+  const cacheKey = `postsynk_curation_cache_${userId}`
+  const todayKey = new Date().toISOString().split('T')[0] // 'YYYY-MM-DD'
+  const dailyQuotaKey = `postsynk_curation_daily_${userId}_${todayKey}`
+  const cooldownKey = `postsynk_curation_cooldown_${userId}`
 
   // 프로필 주소와 업종 기반 필러 키워드
   const address = profile?.address || ''
@@ -33,9 +44,10 @@ export function DashboardCuration({ profile }: { profile: any }) {
   const localRegion = address ? address.split(' ').slice(1, 3).join(' ') : ''
   const pillarKeyword = `${localRegion} ${industry}`.trim() || '전문직 블로그 마케팅'
 
-  // 1. 대시보드 마운트 시 24시간 유효 캐시 즉시 복원 (0.01초 렌더링)
+  // 1. 대시보드 마운트 시 24시간 캐시 및 일일 쿼터/쿨다운 복원
   useEffect(() => {
     try {
+      // 1) 24시간 캐시 로드
       const cachedRaw = localStorage.getItem(cacheKey)
       if (cachedRaw) {
         const cached: CurationCache = JSON.parse(cachedRaw)
@@ -44,12 +56,45 @@ export function DashboardCuration({ profile }: { profile: any }) {
           setLastUpdated(cached.timestamp)
         }
       }
+
+      // 2) 오늘 사용 횟수 로드
+      const savedCount = localStorage.getItem(dailyQuotaKey)
+      if (savedCount) {
+        setDailyUsedCount(parseInt(savedCount, 10) || 0)
+      }
+
+      // 3) 쿨다운 잔여 시간 로드
+      const savedCooldownTarget = localStorage.getItem(cooldownKey)
+      if (savedCooldownTarget) {
+        const targetMs = parseInt(savedCooldownTarget, 10) || 0
+        const remainingSec = Math.max(0, Math.ceil((targetMs - Date.now()) / 1000))
+        if (remainingSec > 0) {
+          setCooldownLeft(remainingSec)
+        }
+      }
     } catch (e) {
       console.warn('[Curation Cache] 캐시 로드 실패:', e)
     } finally {
       setIsCacheLoaded(true)
     }
-  }, [cacheKey])
+  }, [cacheKey, dailyQuotaKey, cooldownKey])
+
+  // 쿨다운 1초마다 카운트다운 타이머
+  useEffect(() => {
+    if (cooldownLeft <= 0) return
+
+    const timer = setInterval(() => {
+      setCooldownLeft((prev) => {
+        if (prev <= 1) {
+          clearInterval(timer)
+          return 0
+        }
+        return prev - 1
+      })
+    }, 1000)
+
+    return () => clearInterval(timer)
+  }, [cooldownLeft])
 
   const saveCache = (newClusters: RecommendedKeyword[]) => {
     try {
@@ -66,11 +111,23 @@ export function DashboardCuration({ profile }: { profile: any }) {
   }
 
   const handleGenerate = async () => {
+    // 1. 일일 5회 한도 체크
+    if (dailyUsedCount >= MAX_DAILY_CURATION) {
+      setQuotaNotice(`오늘의 맞춤 키워드 발굴 한도(${MAX_DAILY_CURATION}회)를 모두 사용하셨습니다. 발굴된 키워드로 원고를 작성해 보세요!`)
+      return
+    }
+
+    // 2. 60초 쿨다운 체크
+    if (cooldownLeft > 0) {
+      return
+    }
+
     setIsLoading(true)
     setError(null)
+    setQuotaNotice(null)
     
     try {
-      const result = await getCurationClusters(pillarKeyword, 'gemini-3.7-flash', {
+      const result = await getCurationClusters(pillarKeyword, 'gpt-5.6-luna', {
         address,
         industry,
       })
@@ -81,6 +138,15 @@ export function DashboardCuration({ profile }: { profile: any }) {
         const top10 = result.clusters.slice(0, 10)
         setClusters(top10)
         saveCache(top10)
+
+        // 일일 사용 횟수 증가 및 저장
+        const nextCount = dailyUsedCount + 1
+        setDailyUsedCount(nextCount)
+        localStorage.setItem(dailyQuotaKey, nextCount.toString())
+
+        // 60초 쿨다운 시작 및 타겟 시간 저장
+        setCooldownLeft(COOLDOWN_SECONDS)
+        localStorage.setItem(cooldownKey, (Date.now() + COOLDOWN_SECONDS * 1000).toString())
       }
     } catch (err: any) {
       setError(err.message || '알 수 없는 오류가 발생했습니다.')
@@ -91,6 +157,7 @@ export function DashboardCuration({ profile }: { profile: any }) {
 
   // 24시간 경과 여부 계산
   const isCacheExpired = lastUpdated ? Date.now() - lastUpdated > CACHE_TTL_MS : false
+  const remainingQuota = Math.max(0, MAX_DAILY_CURATION - dailyUsedCount)
 
   const formatTimeAgo = (ts: number | null) => {
     if (!ts) return ''
@@ -187,7 +254,16 @@ export function DashboardCuration({ profile }: { profile: any }) {
           </div>
           
           {clusters && (
-            <div className="flex items-center gap-2 self-start sm:self-auto shrink-0">
+            <div className="flex flex-wrap items-center gap-2 self-start sm:self-auto shrink-0">
+              {/* 일일 5회 발굴 한도 배지 */}
+              <span className={`inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-1 rounded-full border ${
+                remainingQuota === 0
+                  ? 'bg-rose-50 text-rose-700 border-rose-200'
+                  : 'bg-indigo-50 text-indigo-700 border-indigo-200'
+              }`}>
+                오늘 남은 발굴: {remainingQuota}/{MAX_DAILY_CURATION}회
+              </span>
+
               {lastUpdated && (
                 <span className={`inline-flex items-center gap-1 text-[11px] px-2.5 py-1 rounded-full border ${
                   isCacheExpired 
@@ -198,19 +274,41 @@ export function DashboardCuration({ profile }: { profile: any }) {
                   {isCacheExpired ? '24시간 경과됨' : `${formatTimeAgo(lastUpdated)} 분석 (24h 캐시)`}
                 </span>
               )}
+
               <Button
                 onClick={handleGenerate}
-                disabled={isLoading}
+                disabled={isLoading || cooldownLeft > 0 || remainingQuota === 0}
                 variant="outline"
                 size="sm"
-                className="bg-white hover:bg-indigo-50 text-indigo-700 border-indigo-200 shadow-sm"
+                className="bg-white hover:bg-indigo-50 text-indigo-700 border-indigo-200 shadow-sm disabled:opacity-60"
               >
                 <RefreshCw className={`w-3.5 h-3.5 mr-1.5 ${isLoading ? 'animate-spin' : ''}`} />
-                {isLoading ? '분석 중...' : '트렌드 새로고침'}
+                {isLoading ? (
+                  '분석 중...'
+                ) : cooldownLeft > 0 ? (
+                  `재발굴 대기 (${cooldownLeft}초)`
+                ) : remainingQuota === 0 ? (
+                  '오늘 한도 소진'
+                ) : (
+                  '트렌드 새로고침'
+                )}
               </Button>
             </div>
           )}
         </div>
+
+        {/* 일일 한도 소진 알림 배너 */}
+        {quotaNotice && (
+          <div className="mt-3 p-3 bg-amber-50 border border-amber-200 rounded-lg text-xs text-amber-900 flex items-center justify-between">
+            <span>💡 {quotaNotice}</span>
+            <button 
+              onClick={() => setQuotaNotice(null)} 
+              className="text-amber-700 font-bold ml-2 hover:underline cursor-pointer"
+            >
+              닫기
+            </button>
+          </div>
+        )}
 
         {/* 카테고리 탭 필터 (결과가 있을 때만 노출) */}
         {clusters && clusters.length > 0 && (
@@ -279,12 +377,16 @@ export function DashboardCuration({ profile }: { profile: any }) {
             </p>
             <Button 
               onClick={handleGenerate} 
-              disabled={isLoading}
+              disabled={isLoading || cooldownLeft > 0 || remainingQuota === 0}
               size="lg"
-              className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-full px-8 shadow-md cursor-pointer transition-transform active:scale-95"
+              className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-full px-8 shadow-md cursor-pointer transition-transform active:scale-95 disabled:opacity-60"
             >
               {isLoading ? (
                 <><Loader2 className="w-5 h-5 mr-2 animate-spin" /> 실시간 검색어 및 상권 트렌드 분석 중...</>
+              ) : cooldownLeft > 0 ? (
+                `재발굴 대기 중 (${cooldownLeft}초)`
+              ) : remainingQuota === 0 ? (
+                '오늘 발굴 한도 소진 (내일 초기화)'
               ) : (
                 <><Sparkles className="w-5 h-5 mr-2" /> ✨ 오늘의 맞춤형 로컬 키워드 발굴하기</>
               )}
