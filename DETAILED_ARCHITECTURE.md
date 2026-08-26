@@ -336,9 +336,9 @@ graph LR
 - **탈-양산형 다이내믹 디자인 결정 (AI-Native Dynamic Selection):**
   - 글의 성격, 긴급도, 길이에 맞춰 8종 중 최적의 2~4종 카드를 AI가 자율 선별하여 3~6장 규모로 유동 배치.
   - 네이버 블로그에 최적화된 2026 프리미엄 라이트 모드 팔레트(Classic Cream/Gold, Modern Ice Blue, Frosted Sage, Warm Oatmeal, Soft Lavender, Clean Modern Slate)로 화사하고 선명한 고대비 가독성 보장.
-- **모델 라우팅 (Model Tiering):**
-  - `pro` / `premium` 플랜 유저: `anthropic('claude-5-sonnet-latest')` (최고 수준의 자연스러운 한국어 문장력 및 전문성)
-  - `free` / `starter` 플랜 유저: `google('gemini-3.6-flash')` (초고속 스트리밍 및 가성비)
+- **모델 라우팅 및 폴백 체인 (Model Tiering & Fallback):**
+  - `pro` / `premium` 플랜: 1순위 `gpt-5.6-terra` ➔ 2순위 `gpt-5.6-luna` ➔ 3순위 `gemini-3.6-flash` (최고 수준의 한국어 문장력과 정밀 법리 분석)
+  - `free` / `basic` 플랜: 1순위 `gpt-5.6-luna` ➔ 2순위 `gemini-3.6-flash` ➔ 3순위 `gemini-3.7-flash` (15초 초고속 생성 및 완벽 스트리밍 보장)
 - **온도(Temperature):** `0.75` (동일한 키워드로 여러 번 생성하더라도 네이버의 '유사문서 공격'에 걸리지 않도록 문장 구조의 변동성 확보)
 - **동적 컴플라이언스 주입 (Dynamic Compliance):**
   - 유저 DB의 `profile.industry` 값을 확인하여 변호사, 세무사, 의사, 노무사, 행정사 등 해당 직군에 일치하는 단 1개의 광고법 규정만 주입하여 프롬프트 과부하 방지.

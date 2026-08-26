@@ -73,6 +73,19 @@ export async function saveProfile(data: {
       })
     }
 
+    // 기본 프로젝트 보관함이 없으면 사전 자동 생성 (신규 회원 원고 저장 보장)
+    const existingProject = await prisma.project.findFirst({
+      where: { user_id: user.id }
+    })
+    if (!existingProject) {
+      await prisma.project.create({
+        data: {
+          user_id: user.id,
+          project_name: '기본 프로젝트',
+        }
+      })
+    }
+
     revalidatePath('/dashboard')
     return { success: true, profile }
   } catch (error: any) {

@@ -160,7 +160,7 @@ export async function POST(req: Request) {
       }, { status: 403 })
     }
 
-    const [profile, pastArticles] = await Promise.all([
+    let [profile, pastArticles, userProject] = await Promise.all([
       prisma.profile.findUnique({
         where: { user_id: user.id },
       }),
@@ -170,7 +170,20 @@ export async function POST(req: Request) {
         take: 5,
         select: { id: true, title: true, target_keyword: true },
       }),
+      prisma.project.findFirst({
+        where: { user_id: user.id },
+        orderBy: { created_at: 'asc' },
+      }),
     ])
+
+    if (!userProject) {
+      userProject = await prisma.project.create({
+        data: {
+          user_id: user.id,
+          project_name: '기본 프로젝트',
+        },
+      })
+    }
 
     const deduction = await prisma.user.updateMany({
       where: { id: user.id, credits: { gt: 0 } },
@@ -487,13 +500,13 @@ ${profileFooterPrompt}
     const isProPlan = dbUser.plan_type === 'pro' || dbUser.plan_type === 'premium'
 
     // 대표님 지정 3단계 Fallback 모델 체인
-    // 유료/프리미엄: 1순위 gpt-5.6-terra -> 2순위 gpt-5.6-luna -> 3순위 gemini-3.7-flash
-    // 무료/베이직: 1순위 gemini-3.7-flash -> 2순위 gpt-5.6-luna -> 3순위 gemini-3.6-flash
+    // 유료/프리미엄: 1순위 gpt-5.6-terra -> 2순위 gpt-5.6-luna -> 3순위 gemini-3.6-flash
+    // 무료/베이직: 1순위 gpt-5.6-luna -> 2순위 gemini-3.6-flash -> 3순위 gemini-3.7-flash
     const candidateModels = isProPlan
       ? [
           { name: 'gpt-5.6-terra', getModel: () => (process.env.OPENAI_API_KEY ? openai('gpt-5.6-terra') : null) },
           { name: 'gpt-5.6-luna', getModel: () => (process.env.OPENAI_API_KEY ? openai('gpt-5.6-luna') : null) },
-          { name: 'gemini-3.7-flash', getModel: () => ((process.env.GOOGLE_GENERATIVE_AI_API_KEY || process.env.GOOGLE_API_KEY) ? google('gemini-3.7-flash') : null) },
+          { name: 'gemini-3.6-flash', getModel: () => ((process.env.GOOGLE_GENERATIVE_AI_API_KEY || process.env.GOOGLE_API_KEY) ? google('gemini-3.6-flash') : null) },
         ]
       : [
           { name: 'gpt-5.6-luna', getModel: () => (process.env.OPENAI_API_KEY ? openai('gpt-5.6-luna') : null) },
@@ -501,7 +514,9 @@ ${profileFooterPrompt}
           { name: 'gemini-3.7-flash', getModel: () => ((process.env.GOOGLE_GENERATIVE_AI_API_KEY || process.env.GOOGLE_API_KEY) ? google('gemini-3.7-flash') : null) },
         ]
 
-    let resultStream: any = null
+    let activeStream: any = null
+    let activeIterator: any = null
+    let firstChunkValue = ''
     let lastError: any = null
 
     for (const candidate of candidateModels) {
@@ -509,62 +524,93 @@ ${profileFooterPrompt}
         const modelInstance = candidate.getModel()
         if (!modelInstance) continue
 
-        resultStream = streamText({
+        const stream = streamText({
           model: modelInstance,
+          maxRetries: 0,
           temperature: 0.75,
           maxOutputTokens: 8192,
           system: systemPrompt + searchContext,
           prompt: `타겟 키워드: ${prompt}\n\n위 지침에 맞춰 완벽한 네이버 블로그용 HTML 본문을 작성해줘.`,
-          async onFinish({ text }) {
+        })
+
+        // 첫 번째 청크를 0.2초 내에 읽어 503/429/에러 즉시 포착
+        const iterator = stream.textStream[Symbol.asyncIterator]()
+        const firstResult = await iterator.next()
+
+        if (firstResult.done && !firstResult.value) {
+          throw new Error(`${candidate.name} returned an empty stream`)
+        }
+
+        activeStream = stream
+        activeIterator = iterator
+        firstChunkValue = firstResult.value || ''
+        break
+      } catch (err: any) {
+        console.warn(`[AI Fallback] Model ${candidate.name} failed (${err?.message || err}), switching to next fallback immediately...`)
+        lastError = err
+      }
+    }
+
+    if (!activeStream || !activeIterator) {
+      throw lastError || new Error('모든 AI 모델 연결에 실패했습니다. 잠시 후 다시 시도해 주세요.')
+    }
+
+    const encoder = new TextEncoder()
+    const readable = new ReadableStream({
+      async start(controller) {
+        let fullGeneratedText = firstChunkValue || ''
+        try {
+          if (firstChunkValue) {
+            controller.enqueue(encoder.encode(firstChunkValue))
+          }
+          while (true) {
+            const { done, value } = await activeIterator.next()
+            if (done) break
+            if (value) {
+              fullGeneratedText += value
+              controller.enqueue(encoder.encode(value))
+            }
+          }
+
+          // 100% 동기식 DB 저장 보장 (Vercel Serverless 연결 종료 전 실행)
+          if (fullGeneratedText && fullGeneratedText.length > 50) {
             try {
-              let project = await prisma.project.findFirst({
-                where: { user_id: user.id },
-                orderBy: { created_at: 'asc' },
-              })
-
-              if (!project) {
-                project = await prisma.project.create({
-                  data: {
-                    user_id: user.id,
-                    project_name: '기본 프로젝트',
-                  },
-                })
-              }
-
-              const titleMatch = text.match(/<post_title>([\s\S]*?)<\/post_title>/i)
+              const titleMatch = fullGeneratedText.match(/<post_title>([\s\S]*?)<\/post_title>/i)
               const generatedTitle = titleMatch && titleMatch[1] ? titleMatch[1].trim() : `${prompt} (SEO 최적화)`
-              const cleanHtml = stripInternalMetadata(text.replace(/<post_title>[\s\S]*?<\/post_title>/i, '').trim())
+              const cleanHtml = stripInternalMetadata(fullGeneratedText.replace(/<post_title>[\s\S]*?<\/post_title>/i, '').trim())
 
               await prisma.article.create({
                 data: {
                   user_id: user.id,
-                  project_id: project.id,
+                  project_id: userProject.id,
                   title: generatedTitle,
                   target_keyword: prompt,
                   content_html: cleanHtml,
                   status: 'DRAFT',
                 },
               })
-            } catch (error) {
-              console.error('Failed to update DB onFinish:', error)
-            } finally {
-              releaseConcurrentLock(user.id)
+              console.log(`[SEO Generation] Article successfully saved to DB for user ${user.id} (Project: ${userProject.id})`)
+            } catch (dbSaveErr) {
+              console.error('[SEO Generation] Failed to save article to DB in stream:', dbSaveErr)
             }
-          },
-        })
+          }
 
-        break
-      } catch (err: any) {
-        console.warn(`Model ${candidate.name} initialization failed, falling back:`, err?.message || err)
-        lastError = err
+          controller.close()
+        } catch (streamErr) {
+          console.error('Stream transmission error:', streamErr)
+          controller.error(streamErr)
+        } finally {
+          releaseConcurrentLock(user.id)
+        }
       }
-    }
+    })
 
-    if (!resultStream) {
-      throw lastError || new Error('모든 AI 모델 연결에 실패했습니다. 잠시 후 다시 시도해 주세요.')
-    }
-
-    return resultStream.toTextStreamResponse()
+    return new Response(readable, {
+      headers: {
+        'Content-Type': 'text/plain; charset=utf-8',
+        'Transfer-Encoding': 'chunked',
+      }
+    })
 
   } catch (error: any) {
     console.error('Generation API error:', error)
