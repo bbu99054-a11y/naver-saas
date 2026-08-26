@@ -219,9 +219,9 @@ export function getFooterBannerTemplate(userId: string = '', targetKeyword: stri
  */
 export function getInfoBoxTemplate(color: string = '#EAB308', bgColor: string = '#FEF9C3', textColor: string = '#854D0E'): string {
   return `
-[안내 및 리스크 정보 박스 서식 - 네이버 100% 호환 표준 인라인 CSS]
-<div style="background-color: #FEF9C3; border-left: 4px solid #EAB308; padding: 18px 20px; margin: 24px 0; border-radius: 4px; line-height: 1.6; text-align: left;">
-  <strong style="color: #854D0E; font-size: 16px; display: block; margin-bottom: 6px;">💡 (핵심 강조 제목 또는 주요 리스크)</strong>
+[안내 및 리스크 정보 박스 서식 - 네이버 100% 호환 인라인 CSS]
+<div style="background: ${bgColor}; border-left: 4px solid ${color}; padding: 16px 18px; margin: 20px 0; border-radius: 4px; line-height: 1.6;">
+  <strong style="color: ${textColor}; font-size: 16px; display: block; margin-bottom: 6px;">💡 (핵심 강조 제목 또는 주요 리스크)</strong>
   <p style="margin: 0; color: #1F2937; font-size: 15px; line-height: 1.6;">(여기에 구체적인 설명 및 사실관계 내용 작성)</p>
 </div>
   `.trim();
@@ -229,8 +229,8 @@ export function getInfoBoxTemplate(color: string = '#EAB308', bgColor: string = 
 
 export function getQuoteTemplate(color: string = '#2563EB'): string {
   return `
-[인용구 서식 - 네이버 100% 호환 표준 인라인 CSS]
-<blockquote style="background-color: #F8FAFC; border-left: 4px solid ${color}; padding: 16px 20px; margin: 24px 0; color: #1F2937; font-size: 15px; line-height: 1.6; border-radius: 4px; text-align: left;">
+[인용구 서식 - 네이버 100% 호환 인라인 CSS]
+<blockquote style="background: #F8FAFC; border-left: 4px solid ${color}; padding: 14px 18px; margin: 20px 0; color: #1F2937; font-size: 15px; line-height: 1.6; border-radius: 4px;">
   <strong style="color: #0F172A; font-size: 15.5px;">" (전문가 의뢰인 상담 사례나 강조 멘트 작성) "</strong>
 </blockquote>
   `.trim();
@@ -238,25 +238,25 @@ export function getQuoteTemplate(color: string = '#2563EB'): string {
 
 export function getTableTemplate(color: string = '#0F172A'): string {
   return `
-[비교 분석 및 준비 서류 표 서식 - 네이버 100% 호환 표준 인라인 HTML Table]
-<table style="width: 100%; border-collapse: collapse; margin: 24px 0; font-size: 15px; text-align: left; background-color: #FFFFFF;">
+[비교 분석 및 준비 서류 표 서식 - 네이버 100% 호환 HTML Table]
+<table style="width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14.5px; background: #FFF;">
   <thead>
-    <tr style="background-color: ${color}; color: #FFFFFF;">
-      <th style="padding: 12px 16px; border: 1px solid #334155; width: 25%; font-weight: bold;">(구분 / 항목)</th>
-      <th style="padding: 12px 16px; border: 1px solid #334155; width: 40%; font-weight: bold;">(주요 내용 및 준비 자료)</th>
-      <th style="padding: 12px 16px; border: 1px solid #334155; width: 35%; font-weight: bold;">(확인할 내용 및 실무 팁)</th>
+    <tr style="background: ${color}; color: #FFF;">
+      <th style="padding: 10px 14px; border: 1px solid #334155; width: 25%; font-weight: bold;">(구분 / 항목)</th>
+      <th style="padding: 10px 14px; border: 1px solid #334155; width: 40%; font-weight: bold;">(주요 내용 및 준비 자료)</th>
+      <th style="padding: 10px 14px; border: 1px solid #334155; width: 35%; font-weight: bold;">(확인할 내용 및 실무 팁)</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td style="padding: 12px 16px; border: 1px solid #E2E8F0; font-weight: bold; background-color: #F8FAFC; color: #0F172A;">(구분 1)</td>
-      <td style="padding: 12px 16px; border: 1px solid #E2E8F0; color: #334155;">(상세 내용 1)</td>
-      <td style="padding: 12px 16px; border: 1px solid #E2E8F0; color: #334155;">(실무 주의사항 1)</td>
+      <td style="padding: 10px 14px; border: 1px solid #E2E8F0; font-weight: bold; background: #F8FAFC; color: #0F172A;">(구분 1)</td>
+      <td style="padding: 10px 14px; border: 1px solid #E2E8F0; color: #334155;">(상세 내용 1)</td>
+      <td style="padding: 10px 14px; border: 1px solid #E2E8F0; color: #334155;">(실무 주의사항 1)</td>
     </tr>
     <tr>
-      <td style="padding: 12px 16px; border: 1px solid #E2E8F0; font-weight: bold; background-color: #F8FAFC; color: #0F172A;">(구분 2)</td>
-      <td style="padding: 12px 16px; border: 1px solid #E2E8F0; color: #334155;">(상세 내용 2)</td>
-      <td style="padding: 12px 16px; border: 1px solid #E2E8F0; color: #334155;">(실무 주의사항 2)</td>
+      <td style="padding: 10px 14px; border: 1px solid #E2E8F0; font-weight: bold; background: #F8FAFC; color: #0F172A;">(구분 2)</td>
+      <td style="padding: 10px 14px; border: 1px solid #E2E8F0; color: #334155;">(상세 내용 2)</td>
+      <td style="padding: 10px 14px; border: 1px solid #E2E8F0; color: #334155;">(실무 주의사항 2)</td>
     </tr>
   </tbody>
 </table>
@@ -266,23 +266,23 @@ export function getTableTemplate(color: string = '#0F172A'): string {
 export function getDividerTemplate(color: string = '#CBD5E1'): string {
   return `
 [구분선 서식]
-<hr style="border: none; border-top: 1px dashed ${color}; margin: 30px 0;" />
+<hr style="border: none; border-top: 1px dashed ${color}; margin: 25px 0;" />
   `.trim();
 }
 
 export function getStepByStepTemplate(color: string = '#2563EB'): string {
   return `
-[단계별 가이드 서식 - 네이버 100% 호환 표준 인라인 CSS]
-<div style="background-color: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 6px; padding: 20px; margin: 24px 0; text-align: left;">
-  <div style="background-color: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 4px; padding: 14px 16px; margin-bottom: 12px;">
-    <span style="background-color: ${color}; color: #FFFFFF; padding: 3px 8px; border-radius: 3px; font-weight: bold; margin-right: 8px; font-size: 12px; display: inline-block;">STEP 1</span>
+[단계별 가이드 서식 - 네이버 100% 호환 인라인 CSS]
+<div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 6px; padding: 16px; margin: 20px 0;">
+  <div style="background: #FFF; border: 1px solid #E2E8F0; border-radius: 4px; padding: 12px 14px; margin-bottom: 10px;">
+    <span style="background: ${color}; color: #FFF; padding: 2px 7px; border-radius: 3px; font-weight: bold; margin-right: 6px; font-size: 11.5px; display: inline-block;">STEP 1</span>
     <strong style="color: #0F172A; font-size: 15px;">(1단계 핵심 행동 지침)</strong>
-    <p style="margin: 8px 0 0 0; color: #334155; font-size: 14px; line-height: 1.6;">(1단계 상세 설명)</p>
+    <p style="margin: 6px 0 0 0; color: #334155; font-size: 14px; line-height: 1.6;">(1단계 상세 설명)</p>
   </div>
-  <div style="background-color: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 4px; padding: 14px 16px;">
-    <span style="background-color: ${color}; color: #FFFFFF; padding: 3px 8px; border-radius: 3px; font-weight: bold; margin-right: 8px; font-size: 12px; display: inline-block;">STEP 2</span>
+  <div style="background: #FFF; border: 1px solid #E2E8F0; border-radius: 4px; padding: 12px 14px;">
+    <span style="background: ${color}; color: #FFF; padding: 2px 7px; border-radius: 3px; font-weight: bold; margin-right: 6px; font-size: 11.5px; display: inline-block;">STEP 2</span>
     <strong style="color: #0F172A; font-size: 15px;">(2단계 핵심 행동 지침)</strong>
-    <p style="margin: 8px 0 0 0; color: #334155; font-size: 14px; line-height: 1.6;">(2단계 상세 설명)</p>
+    <p style="margin: 6px 0 0 0; color: #334155; font-size: 14px; line-height: 1.6;">(2단계 상세 설명)</p>
   </div>
 </div>
   `.trim();
@@ -295,11 +295,11 @@ export function getIntroSummaryBoxTemplate(accentColor: string = '#2563EB', targ
   const kw = sanitizeKeyword(targetKeyword)
   return `
 [서론 직후 스마트블록 스니펫용 3초 핵심 요약 박스 - 첫 번째 H2 바로 전에 필수 1회 삽입]
-<blockquote style="background-color: #F8FAFC; border-left: 4px solid ${accentColor}; padding: 18px 20px; margin: 24px 0; border-radius: 6px; line-height: 1.7; text-align: left;">
-  <strong style="color: #0F172A; font-size: 16px; display: block; margin-bottom: 10px;">💡 ${kw} 3초 핵심 요약</strong>
-  <p style="margin: 4px 0; color: #334155; font-size: 15px;">1. <strong>(핵심 포인트 1)</strong>: (1문장 구체적 설명)</p>
-  <p style="margin: 4px 0; color: #334155; font-size: 15px;">2. <strong>(핵심 포인트 2)</strong>: (1문장 구체적 설명)</p>
-  <p style="margin: 4px 0; color: #334155; font-size: 15px;">3. <strong>(핵심 포인트 3)</strong>: (1문장 구체적 설명)</p>
+<blockquote style="background: #F8FAFC; border-left: 4px solid ${accentColor}; padding: 16px 18px; margin: 20px 0; border-radius: 6px; line-height: 1.7;">
+  <strong style="color: #0F172A; font-size: 16px; display: block; margin-bottom: 8px;">💡 ${kw} 3초 핵심 요약</strong>
+  <p style="margin: 3px 0; color: #334155; font-size: 14.5px;">1. <strong>(핵심 포인트 1)</strong>: (1문장 구체적 설명)</p>
+  <p style="margin: 3px 0; color: #334155; font-size: 14.5px;">2. <strong>(핵심 포인트 2)</strong>: (1문장 구체적 설명)</p>
+  <p style="margin: 3px 0; color: #334155; font-size: 14.5px;">3. <strong>(핵심 포인트 3)</strong>: (1문장 구체적 설명)</p>
 </blockquote>
   `.trim();
 }

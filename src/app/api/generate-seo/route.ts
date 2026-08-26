@@ -476,6 +476,13 @@ ${profileFooterPrompt}
 3. [결론부 요약 카드]: 본론 마무리 후 결론부 직전에 내용에 따라 [사진 8: 핵심 3줄 결론 요약 카드]를 선택 배치.
 4. [글 최하단: 하단 상담 유도 (CTA) 배너 카드 필수 삽입]
    - 글의 맨 마지막(마무리 문단 후)에는 [사진 9: 하단 상담 유도 배너]를 삽입하여 직통 전화번호(${profile?.phone || ''})와 사무소 상세 주소(${profile?.address || ''})를 2단 집중 레이아웃으로 선명하게 안내할 것.
+5. [글 최하단 5단계 필수 완결 가드 (절대 생략 불가)]:
+   - 본문 분량이 길어지더라도 반드시 글의 맨 마지막(마무리 문단 후)에 다음 5개 요소를 100% 온전히 출력 완료하세요:
+     ① [소결 / 결론 마무리 문단] (전문직 브랜딩 신뢰 요약)
+     ② [필수 법적 면책 조항 문구] (<p style="font-size: 11px; color: #94a3b8; text-align: center; margin: 35px 0 15px 0; line-height: 1.6;">...</p>)
+     ③ [사진 9: 하단 상담 유도 배너 이미지] (직통 전화번호 & 주소 안내 카드)
+     ④ [📍 네이버 지도 바로가기 버튼] (등록된 경우 HTML 링크 필수 삽입)
+     ⑤ [추천 해시태그 5~8개] (#키워드1 #키워드2 ...)
 6. [문서 5단계 뼈대 구조화 (Skeleton-of-Thought)]
    - 1단계: <post_title> (타깃 키워드가 전방에 배치되고 전문직 5대 후킹 프레임워크가 적용된 25~32자 제목)
    - 2단계: Introduction (도입부 - 15%) ➔ [사진 1 썸네일] 바로 아래 APB 훅(Attention-Problem-Bridge) 프레임워크 적용 ➔ **도입부 문단 종료 직후, 첫 번째 <h2> 소제목이 시작되기 바로 전에 반드시 [서론 직후 스마트블록 스니펫용 3초 핵심 요약 박스]를 1회 의무 삽입할 것.**
@@ -528,7 +535,8 @@ ${profileFooterPrompt}
           model: modelInstance,
           maxRetries: 0,
           temperature: 0.75,
-          maxOutputTokens: 8192,
+          maxOutputTokens: 10500,
+          frequencyPenalty: 0.3,
           system: systemPrompt + searchContext,
           prompt: `타겟 키워드: ${prompt}\n\n위 지침에 맞춰 완벽한 네이버 블로그용 HTML 본문을 작성해줘.`,
         })
