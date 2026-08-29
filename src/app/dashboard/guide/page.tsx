@@ -52,7 +52,7 @@ export default function GuidePage() {
             <span className="w-2.5 h-2.5 rounded-full bg-[#03C75A]" />
             <span className="text-sm">네이버 블로그</span>
           </div>
-          <span className="text-[11px] font-normal opacity-80">복사 & 태그 발행</span>
+          <span className="text-[11px] font-normal opacity-80">원클릭 자동 발행</span>
         </button>
 
         <button
@@ -116,7 +116,7 @@ export default function GuidePage() {
         </button>
       </div>
 
-      {/* 탭 1: 네이버 블로그 스마트에디터 완벽 발행 가이드 */}
+      {/* 탭 1: 네이버 블로그 AI 다이렉트 엔진 원클릭 자동 발행 가이드 */}
       {activeTab === 'naver' && (
         <div className="space-y-6 animate-in fade-in duration-200">
           <div className="bg-emerald-50/80 border border-emerald-200/80 rounded-xl p-4 flex items-start gap-3">
@@ -124,128 +124,99 @@ export default function GuidePage() {
               <Sparkles className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="font-bold text-emerald-950 text-base">네이버 블로그 원클릭 복사 & 스마트에디터 ONE 발행 가이드</h3>
+              <h3 className="font-bold text-emerald-950 text-base">네이버 블로그 AI 다이렉트 엔진 원클릭 자동 발행 가이드 🚀</h3>
               <p className="text-emerald-800 text-xs sm:text-sm mt-0.5 leading-relaxed">
-                PostSynk는 1080px 고화질 1:1 맞춤 썸네일, 9종 인포그래픽 카드, 비교표, 인포박스 서식을 클립보드에 무손실로 담아냅니다. 
-                아래 4단계만 따라 하시면 1분 만에 최고급 전문 포스팅이 완료됩니다.
+                번거로운 수동 복사 붙여넣기 없이, <strong>[🚀 네이버 원클릭 자동 발행]</strong> 버튼 클릭 한 번으로 고화질 인포그래픽 카드뉴스 4장과 C-Rank 구조화 본문이 내 네이버 블로그에 10초 만에 자동으로 쏙 작성됩니다.
               </p>
             </div>
           </div>
 
-          <div className="grid gap-6">
-            {/* Step 1: 제목 복사 */}
+          <div className="grid gap-5">
+            {/* Step 1: 다이렉트 엔진 1초 다운로드 및 무음 등록 */}
             <Card className="border-slate-200 shadow-xs relative overflow-hidden">
-              <div className="absolute top-0 left-0 w-1.5 h-full bg-emerald-500" />
+              <div className="absolute top-0 left-0 w-1.5 h-full bg-[#03C75A]" />
               <CardHeader className="pb-3">
-                <div className="flex items-center gap-2">
-                  <span className="w-6 h-6 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center text-xs font-black">1</span>
-                  <CardTitle className="text-lg text-slate-800">제목 복사 및 네이버 스마트에디터 붙여넣기</CardTitle>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="w-6 h-6 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center text-xs font-black">1</span>
+                    <CardTitle className="text-base font-bold text-slate-800">다이렉트 엔진 1초 다운로드 및 무음 등록 (최초 1회만)</CardTitle>
+                  </div>
+                  <span className="text-[11px] bg-emerald-50 text-emerald-700 font-bold px-2 py-0.5 rounded border border-emerald-200">
+                    최초 1회 30초 완료
+                  </span>
                 </div>
               </CardHeader>
-              <CardContent className="space-y-3 text-sm text-slate-700">
+              <CardContent className="space-y-3 text-xs sm:text-sm text-slate-700">
                 <p>
-                  글 작성이 완료되면 우측 상단 제목창 우측의 <strong className="text-indigo-600 bg-indigo-50 px-1.5 py-0.5 rounded border border-indigo-200">[제목 복사]</strong> 버튼을 클릭합니다.
+                  네이버의 엄격한 보안 규정을 100% 안전하게 통과하기 위해, 내 컴퓨터에서 실행되는 초경량 무음 엔진을 다운로드합니다.
                 </p>
-                <div className="bg-slate-50 p-3 rounded-lg border border-slate-200 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <span className="font-bold text-slate-800">액션:</span>
-                    <span className="text-slate-600">네이버 블로그 스마트에디터 ONE의 [제목] 입력란에 커서를 두고</span>
-                    <kbd className="px-2 py-0.5 bg-white border border-slate-300 rounded font-mono font-bold text-slate-800 shadow-2xs">Ctrl + V</kbd>
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-3 bg-slate-50 border border-slate-200 rounded-xl">
+                  <div className="space-y-1 text-xs text-slate-600">
+                    <p className="font-bold text-slate-900">실행 순서:</p>
+                    <ol className="list-decimal list-inside space-y-0.5 pl-1">
+                      <li>우측 <strong>[다이렉트 엔진 다운로드]</strong> 클릭 후 압축 해제</li>
+                      <li><code>register-startup.bat</code> 1회 실행 (윈도우 부팅 시 무음 자동 대기)</li>
+                    </ol>
                   </div>
-                  <span className="text-emerald-600 font-bold hidden sm:inline">✓ 후킹형 25자 최적화 제목 입력 완료</span>
+                  <a
+                    href="/api/download/direct-engine"
+                    className="shrink-0 inline-flex items-center justify-center gap-1.5 bg-[#03C75A] hover:bg-[#02b350] text-white font-bold text-xs h-9 px-3.5 rounded-lg shadow-xs transition-colors cursor-pointer"
+                  >
+                    <span>📥 다이렉트 엔진 다운로드 (.zip)</span>
+                  </a>
+                </div>
+                <div className="p-3 bg-emerald-50/70 border border-emerald-200 rounded-lg text-xs text-emerald-950 leading-relaxed flex items-center gap-2">
+                  <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
+                  <span><strong>안심 보안 보장:</strong> 비밀번호는 절대 저장되지 않으며, 고객 PC 내에서만 안전하게 동작합니다.</span>
                 </div>
               </CardContent>
             </Card>
 
-            {/* Step 2: 본문 & 이미지 복사 */}
+            {/* Step 2: 원클릭 자동 발행 클릭 */}
             <Card className="border-slate-200 shadow-xs relative overflow-hidden">
-              <div className="absolute top-0 left-0 w-1.5 h-full bg-emerald-500" />
+              <div className="absolute top-0 left-0 w-1.5 h-full bg-[#03C75A]" />
               <CardHeader className="pb-3">
                 <div className="flex items-center gap-2">
                   <span className="w-6 h-6 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center text-xs font-black">2</span>
-                  <CardTitle className="text-lg text-slate-800">본문 원클릭 [블로그 복사] 및 본문 붙여넣기</CardTitle>
+                  <CardTitle className="text-base font-bold text-slate-800">글 생성 후 [🚀 네이버 원클릭 자동 발행] 클릭</CardTitle>
                 </div>
               </CardHeader>
-              <CardContent className="space-y-3 text-sm text-slate-700">
+              <CardContent className="space-y-3 text-xs sm:text-sm text-slate-700">
                 <p>
-                  우측 하단의 초록색 <strong className="text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">[블로그 복사]</strong> 버튼을 누릅니다.
+                  원고와 인포그래픽 카드뉴스가 생성되면, 에디터 하단의 <strong className="text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">[🚀 네이버 원클릭 자동 발행]</strong> 버튼을 누릅니다.
                 </p>
-                <div className="bg-slate-50 p-3 rounded-lg border border-slate-200 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <span className="font-bold text-slate-800">액션:</span>
-                    <span className="text-slate-600">네이버 스마트에디터 ONE의 [본문] 첫 줄에 커서를 두고</span>
-                    <kbd className="px-2 py-0.5 bg-white border border-slate-300 rounded font-mono font-bold text-slate-800 shadow-2xs">Ctrl + V</kbd>
+                <div className="bg-slate-900 text-slate-200 p-3.5 rounded-xl border border-slate-800 space-y-2 text-xs">
+                  <div className="flex items-center justify-between text-emerald-400 font-bold">
+                    <span>✨ PostSynk AI 다이렉트 엔진 관제창 (5단계 자동 수행)</span>
+                    <span className="text-[10px] bg-emerald-500/20 px-1.5 py-0.5 rounded border border-emerald-500/30">10초 완성</span>
                   </div>
-                  <span className="text-emerald-600 font-bold hidden sm:inline">✓ 이미지 3~6장 + 표 + 서식 자동 완벽 주입</span>
-                </div>
-                <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg text-xs text-blue-900 leading-relaxed">
-                  💡 <strong>알아두세요:</strong> 별도로 이미지를 다운로드 받아 하나씩 첨부할 필요가 없습니다. 클립보드에 고화질 사진(1080px)과 텍스트 서식이 함께 복사되므로, <kbd className="px-1.5 py-0.5 bg-white border rounded font-mono font-bold">Ctrl + V</kbd> 한 번으로 모든 사진과 표가 즉시 에디터에 배치됩니다.
+                  <ul className="space-y-1 text-[11px] text-slate-300 pl-1 font-mono">
+                    <li>✓ [1/5] 고화질 인포그래픽 이미지 무손실 패키징</li>
+                    <li>✓ [2/5] 네이버 보안 브라우저 세션 안전 연결</li>
+                    <li>✓ [3/5] 스마트에디터 ONE 제목 및 본문 구조화 타이핑</li>
+                    <li>✓ [4/5] 인포그래픽 카드뉴스 & CTA 배너 정밀 배치</li>
+                    <li>✓ [5/5] 네이버 블로그 안전 임시저장 완료 🎉</li>
+                  </ul>
                 </div>
               </CardContent>
             </Card>
 
-            {/* Step 3: 대표 썸네일 지정 */}
+            {/* Step 3: 네이버 블로그 글 확인 & 최종 발행 */}
             <Card className="border-slate-200 shadow-xs relative overflow-hidden">
-              <div className="absolute top-0 left-0 w-1.5 h-full bg-emerald-500" />
+              <div className="absolute top-0 left-0 w-1.5 h-full bg-[#03C75A]" />
               <CardHeader className="pb-3">
                 <div className="flex items-center gap-2">
                   <span className="w-6 h-6 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center text-xs font-black">3</span>
-                  <CardTitle className="text-lg text-slate-800">최상단 1:1 맞춤 썸네일 [대표] 이미지 체크</CardTitle>
+                  <CardTitle className="text-base font-bold text-slate-800">네이버 블로그 임시저장 확인 및 최종 발행</CardTitle>
                 </div>
               </CardHeader>
-              <CardContent className="space-y-3 text-sm text-slate-700">
+              <CardContent className="space-y-3 text-xs sm:text-sm text-slate-700">
                 <p>
-                  본문 최상단에 붙여넣어진 <strong>1:1 정방형 맞춤 썸네일 카드</strong>를 마우스로 한 번 클릭합니다.
+                  관제창 완료 화면에서 <strong>[🎉 내 네이버 블로그 글 확인하러 가기]</strong>를 누르시면 스마트에디터 글쓰기 창으로 즉시 이동합니다.
                 </p>
-                <div className="bg-slate-50 p-3 rounded-lg border border-slate-200 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <span className="font-bold text-slate-800">액션:</span>
-                    <span className="text-slate-600">이미지 상단 툴바에 나타나는</span>
-                    <span className="bg-[#03C75A] text-white px-2 py-0.5 rounded font-bold text-[11px]">[대표]</span>
-                    <span className="text-slate-600">체크박스를 클릭하여 대표 썸네일로 지정합니다.</span>
-                  </div>
-                  <span className="text-emerald-600 font-bold hidden sm:inline">✓ 모바일 검색결과 클릭률(CTR) 극대화</span>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Step 4: 네이버 스마트에디터 발행 설정 */}
-            <Card className="border-slate-200 shadow-xs relative overflow-hidden">
-              <div className="absolute top-0 left-0 w-1.5 h-full bg-emerald-500" />
-              <CardHeader className="pb-3">
-                <div className="flex items-center gap-2">
-                  <span className="w-6 h-6 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center text-xs font-black">4</span>
-                  <CardTitle className="text-lg text-slate-800">네이버 우측 상단 [발행] 설정 및 태그(Tag) 입력</CardTitle>
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-4 text-sm text-slate-700">
-                <p>
-                  네이버 에디터 우측 상단의 초록색 <strong>[발행]</strong> 버튼을 누르면 나타나는 발행 옵션창을 아래 기준에 맞춰 설정합니다:
-                </p>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  <div className="bg-slate-50 p-3.5 rounded-lg border border-slate-200 space-y-2">
-                    <div className="font-bold text-slate-900 flex items-center gap-1.5 text-xs">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-600" /> 1. 카테고리 & 공개 설정
-                    </div>
-                    <ul className="text-xs text-slate-600 space-y-1 pl-4 list-disc">
-                      <li><strong>카테고리:</strong> 본인의 전문직 주제에 맞는 카테고리 지정 (예: 법률, 비즈니스/경제, 건강/의학 등)</li>
-                      <li><strong>공개 설정:</strong> <span className="text-indigo-700 font-bold">전체공개</span> 필수</li>
-                      <li><strong>허용 옵션:</strong> 댓글 허용, 공감 허용, 검색 허용, 블로그/카페 공유 허용 모두 체크</li>
-                    </ul>
-                  </div>
-
-                  <div className="bg-slate-50 p-3.5 rounded-lg border border-slate-200 space-y-2">
-                    <div className="font-bold text-slate-900 flex items-center gap-1.5 text-xs">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-600" /> 2. 태그(Tag) 최적 입력 요령
-                    </div>
-                    <p className="text-xs text-slate-600 leading-relaxed">
-                      메인 타겟 키워드와 연관 롱테일 키워드를 <strong>5~10개</strong> 입력합니다.
-                    </p>
-                    <div className="bg-white p-2 rounded border border-slate-200 text-[11px] text-slate-500 font-mono">
-                      예: #서초상속전문변호사 #유류분반환청구소송 #상속재산분할 #기여분소송
-                    </div>
-                  </div>
+                <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs space-y-1.5 text-slate-600">
+                  <p className="font-bold text-slate-800">최종 확인 체크리스트:</p>
+                  <p>• 제목, 본문, 사진 4장, 하단 배너가 완벽히 들어가 있는지 확인 후 우측 상단 <strong>[발행]</strong>을 누르시면 포스팅이 끝납니다.</p>
                 </div>
 
                 <div className="pt-2 flex justify-end">

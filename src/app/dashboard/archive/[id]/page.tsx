@@ -85,10 +85,10 @@ export default async function ArchiveDetailPage({ params }: { params: Promise<{ 
           </CardTitle>
         </CardHeader>
         <CardContent className="p-4 flex-1 flex flex-col gap-4 justify-between">
-          <div className="bg-indigo-50 border border-indigo-100 rounded-xl p-3.5 text-xs text-indigo-900 leading-relaxed">
+          <div className="bg-emerald-50 border border-emerald-100 rounded-xl p-3.5 text-xs text-emerald-950 leading-relaxed">
             <p className="font-bold mb-1 flex items-center gap-1">💡 네이버 블로그에 다시 발행하시겠습니까?</p>
             <p className="opacity-90">
-              아래 <strong>복사 버튼</strong>을 누르면 원고 내용이 클립보드에 복사되며 네이버 블로그 스마트에디터 ONE 글쓰기 창이 열립니다. (이미지와 서식이 100% 유지됩니다)
+              아래 <strong>원클릭 자동 발행</strong> 버튼을 누르면 AI 다이렉트 엔진이 네이버 스마트에디터에 고화질 사진과 서식을 100% 무손실로 자동 작성해 드립니다.
             </p>
           </div>
 
@@ -97,9 +97,11 @@ export default async function ArchiveDetailPage({ params }: { params: Promise<{ 
               title={article.title}
               content={htmlContent}
               tags={[article.target_keyword]}
-              className="w-full h-9 text-xs font-bold shadow-md"
+              className="w-full h-9.5 text-xs font-bold shadow-md"
             />
+            {/* 수동 복사 버튼 (임시 비노출 보존)
             <CopyToNaverBtn content={htmlContent} className="w-full h-9 text-xs" />
+            */}
             <MultiPublishBtn articleId={article.id} />
           </div>
         </CardContent>

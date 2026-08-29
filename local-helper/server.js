@@ -10,6 +10,13 @@ function setCorsHeaders(res) {
 }
 
 let isPublishing = false;
+let currentProgress = {
+  stage: "idle",
+  step: 0,
+  totalSteps: 5,
+  message: "대기 중",
+  timestamp: Date.now()
+};
 
 function cleanHtmlToNaverArticle(html) {
   return String(html || "")
@@ -37,14 +44,15 @@ const server = http.createServer(async (req, res) => {
 
   const url = new URL(req.url, `http://${req.headers.host}`);
 
-  // 1. Health Check
-  if (req.method === "GET" && url.pathname === "/health") {
+  // 1. Health Check & Live Status
+  if (req.method === "GET" && (url.pathname === "/health" || url.pathname === "/publish/status")) {
     res.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
     res.end(JSON.stringify({
       status: "ok",
-      version: "1.0.0",
+      version: "2.0.0",
       isPublishing,
-      message: "PostSynk Local Helper is running smoothly."
+      progress: currentProgress,
+      message: "PostSynk AI 다이렉트 엔진이 정상 가동 중입니다."
     }));
     return;
   }
@@ -80,8 +88,16 @@ const server = http.createServer(async (req, res) => {
         }
 
         isPublishing = true;
+        currentProgress = {
+          stage: "packaging",
+          step: 1,
+          totalSteps: 5,
+          message: "인포그래픽 이미지 무손실 패키징 중...",
+          timestamp: Date.now()
+        };
+
         console.log(`\n========================================`);
-        console.log(`[PostSynk Helper] 네이버 원클릭 발행 시작: "${title}"`);
+        console.log(`[PostSynk AI Engine] 네이버 원클릭 발행 시작: "${title}"`);
         console.log(`========================================`);
 
         const articleText = cleanHtmlToNaverArticle(content);
@@ -97,8 +113,25 @@ const server = http.createServer(async (req, res) => {
           images: Array.isArray(images) ? images : [],
           blogId: blogId || naverId || "",
           runtimeRoot: __dirname,
-          log: (msg, level = "info") => console.log(`[Naver Engine][${level}] ${msg}`)
+          log: (msg, level = "info") => console.log(`[AI Engine][${level}] ${msg}`),
+          onProgress: (step, stage, message) => {
+            currentProgress = {
+              stage,
+              step,
+              totalSteps: 5,
+              message,
+              timestamp: Date.now()
+            };
+          }
         });
+
+        currentProgress = {
+          stage: "done",
+          step: 5,
+          totalSteps: 5,
+          message: "네이버 스마트에디터 안전 임시저장 완료! 🎉",
+          timestamp: Date.now()
+        };
 
         res.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
         res.end(JSON.stringify({
@@ -106,7 +139,14 @@ const server = http.createServer(async (req, res) => {
           result
         }));
       } catch (error) {
-        console.error("[PostSynk Helper Error]", error);
+        console.error("[PostSynk AI Engine Error]", error);
+        currentProgress = {
+          stage: "error",
+          step: 0,
+          totalSteps: 5,
+          message: error.message || "네이버 자동 발행 중 오류가 발생했습니다.",
+          timestamp: Date.now()
+        };
         res.writeHead(500, { "Content-Type": "application/json; charset=utf-8" });
         res.end(JSON.stringify({
           success: false,

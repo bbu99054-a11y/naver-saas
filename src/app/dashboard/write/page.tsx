@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { 
   Loader2, Sparkles, PenTool, Monitor, Smartphone, 
-  Copy, Check, FileText, Clock, BookOpen 
+  Copy, Check, FileText, Clock, BookOpen, ArrowRight, ShieldCheck 
 } from 'lucide-react'
 import { CopyToNaverBtn } from '@/components/CopyToNaverBtn'
 import { NaverAutoPublishBtn } from '@/components/NaverAutoPublishBtn'
@@ -39,9 +39,35 @@ export default function WritePage() {
   const [keyword, setKeyword] = useState(initialKeyword)
   const [tone, setTone] = useState('신뢰형 전문가 칼럼 (법리·판례 중심의 차분하고 명쾌한 분석)')
   const [experience, setExperience] = useState('')
+  const [isTitleCopied, setIsTitleCopied] = useState(false)
+  const [isEngineOnline, setIsEngineOnline] = useState<boolean | null>(null)
+
+  // AI 다이렉트 엔진 온라인 여부 주기적 감지
+  useEffect(() => {
+    const checkEngine = async () => {
+      try {
+        const controller = new AbortController()
+        const timeoutId = setTimeout(() => controller.abort(), 1200)
+        const res = await fetch('http://127.0.0.1:49152/health', {
+          method: 'GET',
+          signal: controller.signal
+        })
+        clearTimeout(timeoutId)
+        if (res.ok) {
+          setIsEngineOnline(true)
+          return
+        }
+      } catch {}
+      setIsEngineOnline(false)
+    }
+
+    checkEngine()
+    const interval = setInterval(checkEngine, 5000)
+    return () => clearInterval(interval)
+  }, [])
+
   const [postTitle, setPostTitle] = useState('')
   const [viewMode, setViewMode] = useState<'pc' | 'mobile'>('pc')
-  const [isTitleCopied, setIsTitleCopied] = useState(false)
   const [readyHtml, setReadyHtml] = useState('')
   const [isImagesReady, setIsImagesReady] = useState(false)
   const [showQuotaModal, setShowQuotaModal] = useState(false)
@@ -271,7 +297,55 @@ export default function WritePage() {
             <span>가이드</span>
           </Link>
         </CardHeader>
-        <CardContent className="p-4 flex-1 flex flex-col gap-3.5 overflow-auto">
+        <CardContent className="p-4 flex-1 flex flex-col gap-3 overflow-auto">
+          {/* 🚀 PostSynk AI 다이렉트 엔진 실시간 연동 상태 위젯 */}
+          {isEngineOnline === true ? (
+            <div className="bg-emerald-50/80 border border-emerald-200/90 rounded-xl p-2.5 flex items-center justify-between shadow-2xs">
+              <div className="flex items-center gap-2">
+                <span className="relative flex h-2.5 w-2.5">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#03C75A]"></span>
+                </span>
+                <div>
+                  <p className="text-xs font-extrabold text-emerald-950 flex items-center gap-1">
+                    AI 다이렉트 엔진 연동 중
+                  </p>
+                  <p className="text-[10px] text-emerald-700 font-medium">네이버 10초 원클릭 자동 발행 준비 완료</p>
+                </div>
+              </div>
+              <span className="text-[10px] font-bold text-emerald-700 bg-emerald-100/90 px-2 py-0.5 rounded-full border border-emerald-200">
+                Ready ✓
+              </span>
+            </div>
+          ) : (
+            <Link
+              href="/dashboard/guide"
+              target="_blank"
+              className="group block bg-gradient-to-r from-amber-50 via-orange-50/70 to-amber-50 border-2 border-amber-300/80 hover:border-amber-400 rounded-xl p-2.5 shadow-xs hover:shadow-md transition-all cursor-pointer animate-in fade-in"
+              title="클릭하여 AI 다이렉트 엔진 1초 연동 가이드 보기"
+            >
+              <div className="flex items-center justify-between gap-2">
+                <div className="flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 rounded-full bg-amber-400 shrink-0"></span>
+                  <div>
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-xs font-extrabold text-amber-950">AI 다이렉트 엔진 미연동</span>
+                      <span className="text-[9px] font-extrabold bg-amber-200 text-amber-900 px-1.5 py-0.5 rounded-full border border-amber-300">
+                        1초 연결 필요
+                      </span>
+                    </div>
+                    <p className="text-[10px] text-amber-900 font-bold mt-0.5 flex items-center gap-1">
+                      👉 <span className="underline underline-offset-2 decoration-amber-500">여기를 클릭</span>하여 1초 연동 가이드 보기
+                    </p>
+                  </div>
+                </div>
+                <div className="w-6 h-6 rounded-full bg-amber-200/70 group-hover:bg-amber-300 flex items-center justify-center text-amber-900 shrink-0 transition-colors">
+                  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+                </div>
+              </div>
+            </Link>
+          )}
+
           <div className="space-y-3">
             <div className="space-y-1">
               <label className="text-xs font-bold text-slate-700">타겟 키워드</label>
@@ -505,16 +579,18 @@ export default function WritePage() {
         <div className="p-2 bg-white border-t border-slate-200 shadow-2xs z-10 flex gap-2 items-stretch">
           <NaverAutoPublishBtn
             title={postTitle}
-            content={readyHtml || parsedHtml}
-            className="flex-[1.4] h-8.5 shadow-2xs font-bold text-xs"
+            content={parsedHtml}
+            className="flex-[1.6] h-8.5 shadow-2xs font-bold text-xs"
           />
+          {/* 수동 복사 버튼 (임시 비노출 보존)
           <CopyToNaverBtn 
             content={readyHtml || parsedHtml} 
             isImagesReady={isImagesReady}
             onEnsureReady={ensurePreUploadReady}
             className="flex-1 h-8.5 shadow-2xs font-bold text-xs" 
           />
-          <MultiPublishBtn title={postTitle} content={readyHtml || parsedHtml} className="flex-1" buttonClassName="h-8.5 text-xs font-bold" />
+          */}
+          <MultiPublishBtn title={postTitle} content={parsedHtml} className="flex-1" buttonClassName="h-8.5 text-xs font-bold" />
         </div>
 
       </Card>

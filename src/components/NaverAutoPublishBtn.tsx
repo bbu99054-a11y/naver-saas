@@ -1,8 +1,21 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Button } from '@/components/ui/button'
-import { Send, CheckCircle2, Loader2, AlertCircle, Laptop, ExternalLink, AtSign, Settings2 } from 'lucide-react'
+import {
+  Send,
+  CheckCircle2,
+  Loader2,
+  Laptop,
+  ExternalLink,
+  AtSign,
+  Settings2,
+  ShieldCheck,
+  Sparkles,
+  Layers,
+  FileCheck2,
+  X
+} from 'lucide-react'
 
 interface NaverAutoPublishBtnProps {
   title: string
@@ -11,6 +24,22 @@ interface NaverAutoPublishBtnProps {
   blogId?: string
   className?: string
 }
+
+interface PublishProgress {
+  stage: 'packaging' | 'connecting' | 'typing' | 'inserting_images' | 'saving' | 'done' | 'error' | 'idle'
+  step: number
+  totalSteps: number
+  message: string
+  percent: number
+}
+
+const STAGES = [
+  { step: 1, key: 'packaging', label: '인포그래픽 이미지 무손실 패키징', desc: '카드뉴스 4장 및 하단 CTA 배너 무손실 바이너리 추출' },
+  { step: 2, key: 'connecting', label: '네이버 공식 보안 세션 안전 연결', desc: '고객 PC 로컬 보안 브라우저 세션 안전 가동' },
+  { step: 3, key: 'typing', label: '스마트에디터 ONE 구조화 타이핑', desc: 'C-Rank SEO 최적화 제목 및 소제목/본문 자동 작성' },
+  { step: 4, key: 'inserting_images', label: '인포그래픽 카드뉴스 정밀 배치', desc: '본문 최적 문맥 위치에 정품 이미지 순차 삽입' },
+  { step: 5, key: 'saving', label: '네이버 블로그 안전 임시저장 & 검증', desc: '작성 데이터 무결성 검증 및 임시저장 최종 완료' }
+]
 
 export function NaverAutoPublishBtn({
   title,
@@ -24,8 +53,14 @@ export function NaverAutoPublishBtn({
   const [isHelperOnline, setIsHelperOnline] = useState<boolean | null>(null)
   const [showHelperModal, setShowHelperModal] = useState(false)
   const [showIdModal, setShowIdModal] = useState(false)
+  const [showCockpitModal, setShowCockpitModal] = useState(false)
   const [naverBlogId, setNaverBlogId] = useState('')
-  const [statusText, setStatusText] = useState('')
+  const [currentStep, setCurrentStep] = useState(1)
+  const [progressPercent, setProgressPercent] = useState(15)
+  const [statusMessage, setStatusMessage] = useState('인포그래픽 이미지 무손실 준비 중...')
+  const [errorMessage, setErrorMessage] = useState('')
+
+  const statusPollingRef = useRef<NodeJS.Timeout | null>(null)
 
   // 1. 저장된 네이버 블로그 ID 불러오기
   useEffect(() => {
@@ -67,10 +102,50 @@ export function NaverAutoPublishBtn({
     return () => clearInterval(interval)
   }, [])
 
-  // 3. 실제 발행 전송 실행 함수
+  // 3. 실시간 관제창 상태 폴링
+  const startStatusPolling = () => {
+    if (statusPollingRef.current) clearInterval(statusPollingRef.current)
+    statusPollingRef.current = setInterval(async () => {
+      try {
+        const res = await fetch('http://127.0.0.1:49152/publish/status')
+        if (res.ok) {
+          const data = await res.json()
+          if (data.progress) {
+            const stepNum = data.progress.step || 1
+            setCurrentStep(stepNum)
+            if (data.progress.message) {
+              setStatusMessage(data.progress.message)
+            }
+            if (stepNum === 1) setProgressPercent(20)
+            else if (stepNum === 2) setProgressPercent(40)
+            else if (stepNum === 3) setProgressPercent(65)
+            else if (stepNum === 4) setProgressPercent(85)
+            else if (stepNum === 5) {
+              if (data.progress.stage === 'done') setProgressPercent(100)
+              else setProgressPercent(95)
+            }
+          }
+        }
+      } catch {}
+    }, 600)
+  }
+
+  const stopStatusPolling = () => {
+    if (statusPollingRef.current) {
+      clearInterval(statusPollingRef.current)
+      statusPollingRef.current = null
+    }
+  }
+
+  // 4. 실제 발행 전송 실행 함수
   const executePublish = async (targetBlogId: string) => {
     setIsPublishing(true)
-    setStatusText('인포그래픽 이미지 무손실 준비 중...')
+    setShowCockpitModal(true)
+    setErrorMessage('')
+    setCurrentStep(1)
+    setProgressPercent(15)
+    setStatusMessage('고화질 인포그래픽 이미지 무손실 패키징 중...')
+    startStatusPolling()
 
     try {
       // 1. 본문 HTML 내의 모든 카드뉴스 및 하단 배너 이미지를 Base64 바이너리로 전수 추출
@@ -98,7 +173,9 @@ export function NaverAutoPublishBtn({
         console.warn('이미지 추출 오류:', e)
       }
 
-      setStatusText('네이버 전용 브라우저 실행 중...')
+      setCurrentStep(2)
+      setProgressPercent(35)
+      setStatusMessage('네이버 공식 보안 브라우저 세션 연결 중...')
 
       const response = await fetch('http://127.0.0.1:49152/publish/naver', {
         method: 'POST',
@@ -114,21 +191,23 @@ export function NaverAutoPublishBtn({
 
       const data = await response.json()
       if (data.success) {
+        setCurrentStep(5)
+        setProgressPercent(100)
+        setStatusMessage('네이버 스마트에디터 임시저장이 완벽하게 완료되었습니다! 🎉')
         setIsPublished(true)
-        setTimeout(() => setIsPublished(false), 5000)
       } else {
         throw new Error(data.error || '네이버 임시저장에 실패했습니다.')
       }
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : '로컬 헬퍼 통신 중 오류가 발생했습니다.'
-      alert(`⚠️ 네이버 발행 안내: ${msg}`)
+      const msg = err instanceof Error ? err.message : 'AI 다이렉트 엔진 통신 중 오류가 발생했습니다.'
+      setErrorMessage(msg)
     } finally {
       setIsPublishing(false)
-      setStatusText('')
+      stopStatusPolling()
     }
   }
 
-  // 4. 원클릭 버튼 클릭 핸들러
+  // 5. 원클릭 버튼 클릭 핸들러
   const handleAutoPublish = async () => {
     if (!title || !content) {
       alert('발행할 제목과 본문 내용이 없습니다. 먼저 글을 생성해 주세요.')
@@ -151,7 +230,7 @@ export function NaverAutoPublishBtn({
     await executePublish(currentId)
   }
 
-  // 5. 아이디 저장 및 즉시 발행 시작
+  // 6. 아이디 저장 및 즉시 발행 시작
   const handleSaveIdAndPublish = async (e: React.FormEvent) => {
     e.preventDefault()
     const cleanId = naverBlogId.trim().replace(/^@/, '')
@@ -180,7 +259,7 @@ export function NaverAutoPublishBtn({
           {isPublishing ? (
             <>
               <Loader2 className="w-4 h-4 mr-1.5 animate-spin" />
-              <span>{statusText || '네이버 자동 발행 중...'}</span>
+              <span>AI 다이렉트 발행 중 ({progressPercent}%)...</span>
             </>
           ) : isPublished ? (
             <>
@@ -192,7 +271,7 @@ export function NaverAutoPublishBtn({
               <Send className="w-4 h-4 mr-1.5" />
               <span>🚀 네이버 원클릭 자동 발행</span>
               {isHelperOnline === true && (
-                <span className="ml-1.5 w-2 h-2 rounded-full bg-emerald-300 animate-pulse" title="로컬 헬퍼 연결됨" />
+                <span className="ml-1.5 w-2 h-2 rounded-full bg-emerald-300 animate-pulse" title="PostSynk AI 다이렉트 엔진 연결됨" />
               )}
             </>
           )}
@@ -210,6 +289,165 @@ export function NaverAutoPublishBtn({
           </button>
         )}
       </div>
+
+      {/* 🚀 [핵심] 실시간 라이브 발행 관제 모달 (Live Cockpit HUD) */}
+      {showCockpitModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/75 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+          <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-5 text-white animate-in zoom-in-95 duration-200 relative overflow-hidden">
+            {/* 상단 엠블럼 헤더 */}
+            <div className="flex items-center justify-between border-b border-slate-800 pb-4">
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#03C75A] to-emerald-700 flex items-center justify-center shadow-lg shadow-emerald-950">
+                  <Sparkles className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-extrabold text-white flex items-center gap-1.5">
+                    PostSynk AI 다이렉트 엔진 관제창
+                    <span className="text-[10px] bg-emerald-500/20 text-emerald-400 font-mono px-1.5 py-0.5 rounded border border-emerald-500/30">
+                      LIVE
+                    </span>
+                  </h3>
+                  <p className="text-[11px] text-slate-400">
+                    발행 대상: <span className="text-emerald-400 font-mono font-bold">blog.naver.com/{naverBlogId || '내블로그'}</span>
+                  </p>
+                </div>
+              </div>
+
+              {!isPublishing && (
+                <button
+                  type="button"
+                  onClick={() => setShowCockpitModal(false)}
+                  className="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition-colors cursor-pointer"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              )}
+            </div>
+
+            {/* 프로그레스 바 영역 */}
+            <div className="space-y-1.5">
+              <div className="flex justify-between text-xs font-semibold">
+                <span className="text-slate-300 flex items-center gap-1.5">
+                  {isPublishing ? (
+                    <>
+                      <Loader2 className="w-3.5 h-3.5 animate-spin text-[#03C75A]" />
+                      <span>{statusMessage}</span>
+                    </>
+                  ) : errorMessage ? (
+                    <span className="text-rose-400">⚠️ {errorMessage}</span>
+                  ) : (
+                    <span className="text-emerald-400 font-bold">🎉 네이버 블로그 안전 임시저장 완료!</span>
+                  )}
+                </span>
+                <span className="text-emerald-400 font-mono font-extrabold">{progressPercent}%</span>
+              </div>
+              <div className="w-full bg-slate-800 rounded-full h-2 overflow-hidden">
+                <div
+                  className={`h-full transition-all duration-500 rounded-full ${
+                    errorMessage
+                      ? 'bg-rose-500'
+                      : progressPercent === 100
+                      ? 'bg-gradient-to-r from-emerald-500 to-[#03C75A]'
+                      : 'bg-gradient-to-r from-[#03C75A] to-teal-400 animate-pulse'
+                  }`}
+                  style={{ width: `${progressPercent}%` }}
+                />
+              </div>
+            </div>
+
+            {/* 5단계 실시간 체크리스트 */}
+            <div className="space-y-2 bg-slate-950/60 border border-slate-800/80 rounded-xl p-3.5">
+              {STAGES.map((s) => {
+                const isPassed = currentStep > s.step || (currentStep === s.step && progressPercent === 100)
+                const isCurrent = currentStep === s.step && isPublishing
+                const isPending = currentStep < s.step
+
+                return (
+                  <div
+                    key={s.key}
+                    className={`flex items-start gap-3 p-2 rounded-lg transition-all text-xs ${
+                      isCurrent
+                        ? 'bg-emerald-950/40 border border-emerald-500/30'
+                        : isPassed
+                        ? 'bg-slate-900/40 opacity-90'
+                        : 'opacity-40'
+                    }`}
+                  >
+                    <div className="mt-0.5 shrink-0">
+                      {isPassed ? (
+                        <CheckCircle2 className="w-4 h-4 text-[#03C75A]" />
+                      ) : isCurrent ? (
+                        <Loader2 className="w-4 h-4 text-emerald-400 animate-spin" />
+                      ) : (
+                        <div className="w-4 h-4 rounded-full border border-slate-600 flex items-center justify-center text-[10px] text-slate-500">
+                          {s.step}
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between">
+                        <span className={`font-bold ${isCurrent ? 'text-emerald-300' : isPassed ? 'text-slate-200' : 'text-slate-400'}`}>
+                          [{s.step}/5] {s.label}
+                        </span>
+                        {isPassed && <span className="text-[10px] text-emerald-500 font-mono">완료 ✓</span>}
+                        {isCurrent && <span className="text-[10px] text-emerald-400 font-mono animate-pulse">진행 중...</span>}
+                      </div>
+                      <p className="text-[11px] text-slate-500 mt-0.5 line-clamp-1">{s.desc}</p>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+
+            {/* 하단 버튼 및 결과 액션 */}
+            <div className="pt-1">
+              {progressPercent === 100 && !isPublishing ? (
+                <div className="space-y-2">
+                  <a
+                    href={`https://blog.naver.com/${naverBlogId || ''}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full flex items-center justify-center gap-2 bg-[#03C75A] hover:bg-[#02b350] text-white font-bold text-xs h-10 rounded-xl shadow-lg shadow-emerald-950 transition-all cursor-pointer"
+                  >
+                    <span>🎉 내 네이버 블로그 글 확인하러 가기</span>
+                    <ExternalLink className="w-4 h-4" />
+                  </a>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    onClick={() => setShowCockpitModal(false)}
+                    className="w-full text-xs text-slate-400 hover:text-white h-8 cursor-pointer"
+                  >
+                    관제창 닫기
+                  </Button>
+                </div>
+              ) : errorMessage ? (
+                <div className="flex gap-2">
+                  <Button
+                    type="button"
+                    onClick={() => executePublish(naverBlogId)}
+                    className="flex-1 bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs h-9 cursor-pointer"
+                  >
+                    다시 시도하기
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    onClick={() => setShowCockpitModal(false)}
+                    className="text-xs text-slate-400 hover:text-white h-9 cursor-pointer"
+                  >
+                    닫기
+                  </Button>
+                </div>
+              ) : (
+                <p className="text-center text-[11px] text-slate-500">
+                  🔒 네이버 공식 에디터 ONE 보안 규정에 맞춰 안전하게 작성 중입니다...
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* 1. 네이버 블로그 ID 최초 1회 등록 모달 */}
       {showIdModal && (
@@ -269,36 +507,48 @@ export function NaverAutoPublishBtn({
         </div>
       )}
 
-      {/* 2. 로컬 헬퍼 미실행 시 안내 모달 */}
+      {/* 2. 공식 보안 커넥터 미실행 시 안내 모달 (리브랜딩 완료) */}
       {showHelperModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4 animate-in fade-in duration-150">
           <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-100 space-y-4 text-center animate-in zoom-in-95 duration-150">
             <div className="w-12 h-12 bg-emerald-50 rounded-2xl border border-emerald-200 flex items-center justify-center mx-auto text-emerald-600 shadow-xs">
-              <Laptop className="w-6 h-6" />
+              <ShieldCheck className="w-6 h-6" />
             </div>
 
             <div className="space-y-1">
               <h3 className="text-base font-extrabold text-slate-900">
-                PostSynk 헬퍼 실행이 필요합니다 🖥️
+                PostSynk AI 다이렉트 엔진 연결 안내 🚀
               </h3>
               <p className="text-xs text-slate-600 leading-relaxed">
-                네이버의 강력한 보안 정책을 100% 안전하게 통과하기 위해, <br />
-                내 컴퓨터에서 실행되는 <strong>초경량 로컬 헬퍼 프로그램</strong>이 필요합니다.
+                네이버의 보안 정책을 100% 안전하게 통과하고 저품질을 방지하기 위해, <br />
+                내 컴퓨터에서 실행되는 <strong>공식 다이렉트 엔진(무음)</strong>이 필요합니다.
               </p>
             </div>
 
-            <div className="bg-slate-50 border border-slate-200 rounded-xl p-3.5 text-left text-xs space-y-2">
-              <p className="font-bold text-slate-800 flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-[#03C75A]" />
-                1초 실행 방법:
-              </p>
-              <ol className="list-decimal list-inside space-y-1 text-slate-600 pl-1 font-medium">
-                <li>프로젝트 폴더 내 <code>local-helper/start-helper.bat</code> 더블 클릭</li>
-                <li>까만 창이 뜨면 이 화면으로 돌아와 <strong>[다시 시도]</strong> 클릭</li>
-              </ol>
+            <div className="bg-slate-50 border border-slate-200 rounded-xl p-3.5 text-left text-xs space-y-2.5">
+              <a
+                href="/api/download/direct-engine"
+                className="w-full flex items-center justify-center gap-1.5 bg-[#03C75A] hover:bg-[#02b350] text-white font-bold text-xs h-9 rounded-lg shadow-xs transition-colors cursor-pointer"
+              >
+                <span>📥 PostSynk 다이렉트 엔진 1초 다운로드 (.zip)</span>
+              </a>
+
+              <div className="pt-1 space-y-1.5 text-slate-600 font-medium text-[11px]">
+                <p className="font-bold text-slate-800 flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-[#03C75A]" />
+                  초간단 실행 순서:
+                </p>
+                <ol className="list-decimal list-inside space-y-1 pl-1">
+                  <li>다운로드된 ZIP 압축 해제 후 <code>register-startup.bat</code> 1회 실행</li>
+                  <li>이 화면으로 돌아와 아래 <strong>[연결 확인 및 발행 시작]</strong> 클릭</li>
+                </ol>
+                <p className="text-[10px] text-emerald-600 font-bold">
+                  🔒 비밀번호는 절대 요구하지 않으며, 윈도우 시작 시 무음으로 자동 대기합니다.
+                </p>
+              </div>
             </div>
 
-            <div className="flex gap-2 pt-2">
+            <div className="flex gap-2 pt-1">
               <Button
                 onClick={() => {
                   checkHelperStatus().then(online => {
@@ -306,13 +556,13 @@ export function NaverAutoPublishBtn({
                       setShowHelperModal(false)
                       handleAutoPublish()
                     } else {
-                      alert('아직 헬퍼 프로그램이 실행되지 않았습니다. start-helper.bat 파일을 실행해 주세요.')
+                      alert('아직 엔진이 실행되지 않았습니다. 다운로드 후 register-startup.bat 또는 start-engine-silent.vbs를 실행해 주세요.')
                     }
                   })
                 }}
-                className="flex-1 bg-[#03C75A] hover:bg-[#02b350] text-white font-bold text-xs h-9 cursor-pointer"
+                className="flex-1 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs h-9 cursor-pointer"
               >
-                연결 확인 및 발행 시작
+                연결 확인 및 즉시 발행
               </Button>
               <Button
                 variant="ghost"

@@ -44,30 +44,45 @@ export default async function SettingsPage() {
         </Link>
       </div>
 
-      {/* 🟢 네이버 블로그 안전 복사 안내 카드 */}
+      {/* 🟢 네이버 블로그 AI 다이렉트 엔진 연동 카드 */}
       <Card className="border-emerald-200/80 bg-emerald-50/40 shadow-xs relative overflow-hidden">
         <div className="absolute top-0 left-0 w-1.5 h-full bg-[#03C75A]" />
         <CardHeader className="pb-2.5">
           <div className="flex items-center justify-between">
             <CardTitle className="flex items-center gap-2 text-base font-bold text-slate-900">
               <span className="w-3 h-3 rounded-full bg-[#03C75A]" />
-              네이버 블로그 (Naver Blog)
+              네이버 블로그 (PostSynk AI 다이렉트 엔진)
             </CardTitle>
             <span className="bg-emerald-100 text-emerald-800 text-[11px] font-extrabold px-2.5 py-0.5 rounded-full border border-emerald-200">
-              ✓ 기본 탑재 (API 키 불필요)
+              ✓ 원클릭 자동 발행 (API 키 불필요)
             </span>
           </div>
           <CardDescription className="text-xs text-slate-600">
-            네이버는 외부 API 연동 시 계정 보호조치나 캡차(CAPTCHA) 위험이 있어, <strong>100% 안전한 스마트에디터 ONE 서식 복사 방식</strong>을 지원합니다.
+            네이버 계정 저품질과 비정상 로그인을 100% 방지하기 위해, 내 컴퓨터에서 안전하게 가동되는 <strong>초경량 공식 보안 다이렉트 엔진</strong>을 제공합니다.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-3 pt-1">
-          <p className="text-xs text-slate-700 leading-relaxed">
-            글 작성 후 하단의 초록색 <strong>[블로그 복사]</strong> 버튼을 누르고 네이버 스마트에디터에 <kbd className="px-1.5 py-0.5 bg-white border border-slate-300 rounded font-mono font-bold">Ctrl + V</kbd>로 붙여넣기만 하시면 1080px 고화질 사진, 표, 강조 서식이 100% 무손실로 자동 주입됩니다.
-          </p>
-          <div className="flex justify-end">
+          <div className="bg-white/80 border border-emerald-200/60 rounded-xl p-3 text-xs text-slate-700 space-y-2">
+            <p className="font-bold text-slate-900 flex items-center gap-1.5">
+              <Sparkles className="w-3.5 h-3.5 text-[#03C75A]" />
+              1초 엔진 세팅 방법:
+            </p>
+            <ol className="list-decimal list-inside space-y-1 text-slate-600 pl-1 text-[11px]">
+              <li>아래 <strong>[다이렉트 엔진 다운로드]</strong> 버튼을 클릭하여 ZIP 파일을 받습니다.</li>
+              <li>압축 해제 후 <code>register-startup.bat</code>을 1회 실행하면 화면에 창 없이 백그라운드 무음 대기합니다.</li>
+              <li>글 작성 화면에서 <strong>[🚀 네이버 원클릭 자동 발행]</strong>을 누르시면 10초 만에 내 블로그에 글과 사진이 쏙 들어갑니다!</li>
+            </ol>
+          </div>
+
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-1">
+            <a
+              href="/api/download/direct-engine"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 bg-[#03C75A] hover:bg-[#02b350] text-white font-bold text-xs h-9 px-4 rounded-lg shadow-xs transition-colors cursor-pointer"
+            >
+              <span>📥 PostSynk 다이렉트 엔진 1초 다운로드 (.zip)</span>
+            </a>
             <Link href="/dashboard/guide" className="text-xs text-emerald-700 hover:text-emerald-900 font-bold inline-flex items-center gap-1 hover:underline">
-              네이버 블로그 복사 & 태그 발행 가이드 보기 <ArrowRight className="w-3 h-3" />
+              원클릭 자동 발행 전체 가이드 보기 <ArrowRight className="w-3 h-3" />
             </Link>
           </div>
         </CardContent>

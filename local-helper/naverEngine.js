@@ -353,7 +353,8 @@ async function publishToNaver(options = {}) {
     article,
     blogId = "",
     runtimeRoot = process.cwd(),
-    log = console.log
+    log = console.log,
+    onProgress = () => {}
   } = options;
 
   let playwright;
@@ -363,6 +364,7 @@ async function publishToNaver(options = {}) {
     throw new Error("playwright-core가 로컬에 설치되어 있지 않습니다.");
   }
 
+  onProgress(1, "packaging", "인포그래픽 이미지 무손실 패키징 중...");
   const rawHtml = content || article || "";
 
   // 1. Base64 카드뉴스 + 하단 배너 이미지 전수 실체화 (0바이트 방지)
@@ -421,6 +423,7 @@ async function publishToNaver(options = {}) {
   markChromeProfileClean(browserProfileDir);
 
   log("🌐 네이버 전용 브라우저 세션을 실행합니다...");
+  onProgress(2, "connecting", "네이버 전용 보안 세션 연결 중...");
   const context = await playwright.chromium.launchPersistentContext(
     browserProfileDir,
     chromeLaunchOptions()
@@ -441,6 +444,7 @@ async function publishToNaver(options = {}) {
 
     // 3. 제목 입력
     log(`✍️ 제목 입력 중: "${title}"`);
+    onProgress(3, "typing", "스마트에디터 ONE 제목 및 본문 구조화 작성 중...");
     await safeClickLocator(page, titleLocator, log, "제목 입력칸");
     await page.keyboard.press("Control+A");
     await page.keyboard.type(String(title || "").trim(), { delay: 25 });
@@ -487,6 +491,7 @@ async function publishToNaver(options = {}) {
       // 해당 위치의 정품 사진 첨부
       if (i < localImagePaths.length) {
         log(`🖼️ [정품 사진 ${i + 1}/${localImagePaths.length}] 파일 첨부 중 (${path.basename(localImagePaths[i])})...`);
+        onProgress(4, "inserting_images", `인포그래픽 카드뉴스 [${i + 1}/${localImagePaths.length}] 정밀 배치 중...`);
         try {
           const chooserPromise = page.waitForEvent("filechooser", { timeout: 15000 });
           const button = await findVisibleLocator(page, selectors.imageButton, 15000);
@@ -512,12 +517,14 @@ async function publishToNaver(options = {}) {
 
     // 7. 상단 우측 [저장] (임시저장) 버튼 클릭
     log("💾 [안전 임시저장] 상단 저장 버튼을 클릭합니다...");
+    onProgress(5, "saving", "네이버 블로그 안전 임시저장 및 검증 중...");
     const saved = await clickSaveDraftButton(page, log);
     if (saved) {
       log("🎉 네이버 스마트에디터에 안전하게 [임시저장] 되었습니다! (직접 확인 후 발행하실 수 있습니다)");
     }
 
     await sleep(3000);
+    onProgress(5, "done", "네이버 스마트에디터 안전 임시저장 완료! 🎉");
 
     return {
       success: true,
