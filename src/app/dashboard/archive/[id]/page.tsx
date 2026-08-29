@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { ArrowLeft, Clock } from 'lucide-react'
 import { CopyToNaverBtn } from '@/components/CopyToNaverBtn'
+import { NaverAutoPublishBtn } from '@/components/NaverAutoPublishBtn'
 import { MultiPublishBtn } from '@/components/MultiPublishBtn'
 import { stripInternalMetadata } from '@/lib/utils/postSanitizer'
 
@@ -92,7 +93,13 @@ export default async function ArchiveDetailPage({ params }: { params: Promise<{ 
           </div>
 
           <div className="space-y-2 mt-auto">
-            <CopyToNaverBtn content={htmlContent} />
+            <NaverAutoPublishBtn
+              title={article.title}
+              content={htmlContent}
+              tags={[article.target_keyword]}
+              className="w-full h-9 text-xs font-bold shadow-md"
+            />
+            <CopyToNaverBtn content={htmlContent} className="w-full h-9 text-xs" />
             <MultiPublishBtn articleId={article.id} />
           </div>
         </CardContent>

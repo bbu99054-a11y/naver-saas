@@ -13,6 +13,7 @@ import {
   Copy, Check, FileText, Clock, BookOpen 
 } from 'lucide-react'
 import { CopyToNaverBtn } from '@/components/CopyToNaverBtn'
+import { NaverAutoPublishBtn } from '@/components/NaverAutoPublishBtn'
 import { MultiPublishBtn } from '@/components/MultiPublishBtn'
 import { checkKeywordDuplicate } from '@/actions/articles'
 import { preUploadCardImages, processPostInfographics } from '@/lib/cardImageUploader'
@@ -502,11 +503,16 @@ export default function WritePage() {
         
         {/* 하단 고정 액션 버튼 툴바 (초슬림 & 컴팩트) */}
         <div className="p-2 bg-white border-t border-slate-200 shadow-2xs z-10 flex gap-2 items-stretch">
+          <NaverAutoPublishBtn
+            title={postTitle}
+            content={readyHtml || parsedHtml}
+            className="flex-[1.4] h-8.5 shadow-2xs font-bold text-xs"
+          />
           <CopyToNaverBtn 
             content={readyHtml || parsedHtml} 
             isImagesReady={isImagesReady}
             onEnsureReady={ensurePreUploadReady}
-            className="flex-[1.3] h-8.5 shadow-2xs font-bold text-xs" 
+            className="flex-1 h-8.5 shadow-2xs font-bold text-xs" 
           />
           <MultiPublishBtn title={postTitle} content={readyHtml || parsedHtml} className="flex-1" buttonClassName="h-8.5 text-xs font-bold" />
         </div>

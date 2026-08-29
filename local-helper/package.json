@@ -1,0 +1,12 @@
+{
+  "name": "postsynk-local-helper",
+  "version": "1.0.0",
+  "description": "PostSynk SaaS Local Chrome Bridge for 100% Reliable Naver Blog Publishing",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "playwright-core": "^1.45.0"
+  }
+}
