@@ -215,7 +215,7 @@ export async function POST(req: Request) {
 
       profileFooterPrompt = `
 <footer_cta>
-[사무소 프로필 정보: [사진 9: 하단 상담 유도 배너 이미지]에 직통 상담 및 오시는 길 2개 정보를 집중 반영할 것]
+[사무소 프로필 정보: [최하단 상담 유도 배너 카드]에 직통 상담 및 오시는 길 2개 정보를 집중 반영할 것]
 - 이름/상호: ${profile.store_name || ''}
 - 전문 분야: ${profile.industry || ''}
 - 주소: ${profile.address || ''}
@@ -225,7 +225,7 @@ ${profile.reservation_link ? `- 네이버 지도/예약 링크: ${profile.reserv
 [필수 면책 조항] 배너 바로 위에 다음 문구를 작고 흐린 글씨(<p style="font-size: 11px; color: #94a3b8; text-align: center; margin: 25px 0 10px 0;">)로 반드시 삽입해: 
 "본 포스팅은 일반적인 정보 제공을 목적으로 하며, 구체적인 사안에 따라 법적 판단이 달라질 수 있으므로 반드시 정식 상담을 받아보시기 바랍니다."
 
-${profile.reservation_link ? `[네이버 지도 바로가기 버튼]: [사진 9 배너 이미지] 바로 아래에 다음 HTML 링크 태그를 1회 정확히 삽입하여 고객이 터치 시 지도로 연결되도록 할 것:
+${profile.reservation_link ? `[네이버 지도 바로가기 버튼]: [최하단 상담 유도 배너 카드] 바로 아래에 다음 HTML 링크 태그를 1회 정확히 삽입하여 고객이 터치 시 지도로 연결되도록 할 것:
 '${mapLinkHtml}'` : ''}
 </footer_cta>
 `
@@ -264,11 +264,24 @@ ${profile.about_us}
     const { scrapeNaverSerpContext } = await import('@/lib/scraper')
     const { 
       getThemeByIndustry,
-      getTopThumbnailTemplate, getChecklistCardTemplate, getComparisonCardTemplate,
-      getHighlightStatCardTemplate, getProcessFlowCardTemplate, getQnACardTemplate,
-      getWarningRiskCardTemplate, getKeyTakeawaysTemplate, getFooterBannerTemplate,
-      getIntroSummaryBoxTemplate, getInfoBoxTemplate, getQuoteTemplate, 
-      getTableTemplate, getDividerTemplate, getStepByStepTemplate 
+      getTopThumbnailTemplate,
+      getRedFlagsCardTemplate,
+      getSelfDiagnosisCardTemplate,
+      getVsSimulationCardTemplate,
+      getCostOfInactionCardTemplate,
+      getActionTimelineCardTemplate,
+      getRequiredDossierCardTemplate,
+      getCriteriaTableCardTemplate,
+      getSuccessReceiptCardTemplate,
+      getExpertOpinionCardTemplate,
+      getFinalVerdictCardTemplate,
+      getFooterBannerTemplate,
+      getIntroSummaryBoxTemplate,
+      getInfoBoxTemplate,
+      getQuoteTemplate, 
+      getTableTemplate,
+      getDividerTemplate,
+      getStepByStepTemplate 
     } = await import('@/lib/templates')
 
     const [serpData, searchContext] = await Promise.all([
@@ -292,13 +305,16 @@ ${profile.about_us}
 
     const activeTemplates = [
       getTopThumbnailTemplate(currentUserId || '', prompt),
-      getChecklistCardTemplate(currentUserId || '', prompt),
-      getComparisonCardTemplate(currentUserId || '', prompt),
-      getHighlightStatCardTemplate(currentUserId || '', prompt),
-      getProcessFlowCardTemplate(currentUserId || '', prompt),
-      getQnACardTemplate(currentUserId || '', prompt),
-      getWarningRiskCardTemplate(currentUserId || '', prompt),
-      getKeyTakeawaysTemplate(currentUserId || '', prompt),
+      getRedFlagsCardTemplate(currentUserId || '', prompt),
+      getSelfDiagnosisCardTemplate(currentUserId || '', prompt),
+      getVsSimulationCardTemplate(currentUserId || '', prompt),
+      getCostOfInactionCardTemplate(currentUserId || '', prompt),
+      getActionTimelineCardTemplate(currentUserId || '', prompt),
+      getRequiredDossierCardTemplate(currentUserId || '', prompt),
+      getCriteriaTableCardTemplate(currentUserId || '', prompt),
+      getSuccessReceiptCardTemplate(currentUserId || '', prompt),
+      getExpertOpinionCardTemplate(currentUserId || '', prompt),
+      getFinalVerdictCardTemplate(currentUserId || '', prompt),
       getFooterBannerTemplate(currentUserId || '', prompt),
       getIntroSummaryBoxTemplate(matchedTheme.accentColor, prompt),
       getInfoBoxTemplate(matchedTheme.accentColor),
@@ -309,29 +325,22 @@ ${profile.about_us}
 
     const designInjection = `
 <visual_card_design_system>
-[네이버 블로그 2026 프리미엄 9종 시각 카드 및 안전 서식 시스템 (1080px 고해상도 & 고유 브랜드 킷 적용)]
-네이버 블로그의 화사한 본문 및 스마트에디터 ONE 붙여넣기에 100% 호환되는 프리미엄 시각 카드 디자인 시스템입니다.
-- 모든 시각 카드는 아래 제공된 9종의 <img src="/api/card-image/render?type=...&userId=..." alt="..." style="..." /> 템플릿 태그를 그대로 사용하되, URL 내부의 title, sub, tags, points, sig 등의 텍스트를 현재 주제에 맞게 변경하여 삽입하세요.
-- [네이버 이미지 검색 SEO 필수 규칙]: 모든 <img> 태그의 alt 속성은 반드시 템플릿에 명시된 대로 'alt="${prompt} - (카드유형한글명)"' 형태로 이번 글의 메인 타겟 키워드를 반드시 포함하여 작성하세요.
+[네이버 블로그 2026 전문직 본문 10종 3×3 정통 벤토 그리드(Bento Grid) 및 탈양산화 5대 원칙 시스템]
+네이버 블로그의 화이트 배경과 100% 조화를 이루며 전문 디자이너가 한 땀 한 땀 작업한 듯한 고품격 벤토 그리드 시각 카드 디자인 시스템입니다.
+- 모든 시각 카드는 아래 제공된 10종의 <img src="/api/card-image/render?type=...&userId=..." alt="..." style="..." /> 템플릿 태그를 그대로 사용하되, URL 내부의 title, sub, points, extra1, extra2 등의 텍스트를 현재 글의 전문 주제에 맞게 변경하여 삽입하세요.
+- [네이버 이미지 검색 SEO 필수 규칙]: 모든 <img> 태그의 alt 속성은 반드시 'alt="${prompt} - (카드유형한글명)"' 형태로 이번 글의 메인 타겟 키워드를 반드시 포함하여 작성하세요.
 - 마크다운 형식(![]())이나 빈 src=""를 절대 사용하지 말고, 반드시 제공된 <img src="/api/card-image/render?..." ...> 태그를 사용하세요.
-- [사진 1: 최상단 1:1 맞춤 썸네일]은 반드시 URL에 &tags=핵심키워드1|핵심키워드2|핵심키워드3 형태로 이번 글의 3개 핵심 뱃지 태그를 파이프(|)로 구분하여 주입하세요.
-- [사진 3: 비교 카드]는 반드시 URL에 &extra1=(잘못된 대처 요약)&extra2=(올바른 전문가 대응 요약) 파라미터를 정확히 분리하여 사용하세요 (절대 '|extra2='로 쓰지 마세요).
-- [사진 5: 3단계 로드맵 카드]는 &points=1단계 핵심제목:구체적 설명|2단계 핵심제목:구체적 설명|3단계 핵심제목:구체적 설명 형태로 파이프(|)로 3단계를 연결하세요.
 
-[탈 양산화 시각 카드 배치 원칙 (본문 중간 2~5장 유기적 가변 선별, 전체 총 4~7장)]:
-1. [사진 1: 최상단 1:1 맞춤 썸네일]: 본문 가장 첫머리에 필수 1장 배치.
-2. [본문 중간 맞춤형 시각 카드 (주제에 따라 2~5장 선별)]:
-   - 획일적으로 똑같은 카드를 반복하지 말고, 이번 글의 핵심 내용에 가장 적합한 카드를 9종 중에서 2~5장을 유기적으로 선택해 배치하세요:
-     • 잘못된 대처와 올바른 해결의 대비가 중요할 때 ➔ [사진 3: Before/After 비교 카드]
-     • 필수 준비 서류나 요건 나열이 필요할 때 ➔ [사진 2: 체크리스트 카드]
-     • 실무 처리 순서나 행동 로드맵이 필요할 때 ➔ [사진 5: 3단계 로드맵 카드]
-     • 핵심 수치, 감면율, 벌금 금액 강조 시 ➔ [사진 4: 핵심 수치 하이라이트 카드]
-     • 독자의 오해 해소나 빈출 질문 해설 시 ➔ [사진 6: Q&A 카드]
-     • 기한 만료 리스크나 가산세 경고 시 ➔ [사진 7: 골든타임 리스크 카드]
-3. [결론부 카드]: 내용에 따라 [사진 8: 핵심 3줄 요약 카드]를 선택 배치.
-4. [사진 9: 하단 상담 유도 배너]: 글 최하단에 필수 1장 배치.
-- 전체 글에 들어가는 카드 이미지의 총 개수는 [사진 1, 9]를 포함하여 주제에 맞춰 자연스럽게 총 4~7장 사이로 풍부하게 구성하세요.
-- 글의 문맥에 맞춰 7종의 카드(Checklist, Comparison, StatHighlight, ProcessFlow, Qna, Warning, Summary)가 중복되지 않게 최소 3~5가지 종류가 골고루 섞여서 출력되도록 type을 다양하게 배정해라.
+[탈양산화(Anti-Templatization) 5대 렌더링 및 배치 원칙]:
+1. 7:3 명도 대비의 법칙: 넓은 텍스트 영역(70%)은 화이트/미색, 시선 집중 타일(30%)에만 다크 포인트 컬러를 적용하여 눈의 피로도를 최소화하고 네이버 본문에 자연스럽게 녹아듭니다.
+2. 3×3 (총 9칸) 빈틈없는 테트리스 레이아웃: 모든 카드는 비대칭 모듈 타일(2×2, 1×2, 3×1 등)의 합이 정확히 9칸이 되도록 구성되어 있습니다.
+3. 정보 밀도(Density)의 극단적 완급 조절: 여백의 미(거대 숫자/아이콘)와 빽빽한 명조체 판례/법리가 대비를 이룹니다.
+4. 질감(Texture)과 모서리(Radius)의 동적 변화: 줄노트 질감, 마닐라 서류철, 붉은색 전문가 직인(도장) 그래픽이 권위를 부여합니다.
+5. 의도(Intent) 기반의 동적 카드 덱(Deck) 픽업:
+   - AI는 글의 목적과 톤에 맞춰 10종 중 최적의 2~3장을 자율 선별하여 본문 중간에 배치합니다:
+     • [수임/영업/위기 대응 목적의 글] ➔ 🚨 레드플래그(RED_FLAGS) ➔ 📉 손실 스노우볼(COST_OF_INACTION) ➔ 🆚 나홀로 vs 전문가(VS_SIMULATION) ➔ 🏆 성공 영수증(SUCCESS_RECEIPT) ➔ ✋ 최종 결단(FINAL_VERDICT)
+     • [정보/체류/절차 안내 목적의 글] ➔ 📊 자가진단표(SELF_DIAGNOSIS) ➔ ⚖️ 처벌/과세기준표(CRITERIA_TABLE) ➔ 📑 필수서류함(REQUIRED_DOSSIER) ➔ ⏳ D-Day타임라인(ACTION_TIMELINE) ➔ 💬 전문가소견서(EXPERT_OPINION)
+- 전체 글에 들어가는 카드 이미지의 총 개수는 [최상단 대표 썸네일 카드 1장, 최하단 상담 배너 카드 1장]을 포함하여 총 4~5장(본문 10종 벤토 카드 중 정확히 2~3장 선별)으로 군더더기 없이 임팩트 있게 구성하세요.
 
 - 안내/리스크 박스 서식은 네이버 에디터가 100% 보존하는 표준 인라인 CSS(<div style="background-color: #FEF9C3; border-left: 4px solid #EAB308; padding: 18px 20px; margin: 24px 0; border-radius: 4px; line-height: 1.6;">...</div>)를 사용하세요.
 - 복잡한 비교 표나 준비 서류 목록은 이미지 대신 아래 제공된 순수 인라인 HTML Table 서식(<table style="width: 100%; border-collapse: collapse; margin: 24px 0; font-size: 15px; text-align: left; background-color: #FFFFFF;">...</table>)으로 작성하여 한글이 100% 또렷하게 읽히도록 하세요.
@@ -430,9 +439,9 @@ ${toneGuideline}
 반드시 HTML 본문을 작성하기 전에, <internal_fact_check> 태그 안에 아래 3가지 설계 메모를 먼저 완벽히 작성해:
 - [팩트 체크]: 타겟 키워드 관련 핵심 전문 용어 정의 및 Tavily RAG 검색 팩트/출처 분리
 - [목표 분량]: SERP 분석 기반 목표 글자 수 (약 ${serpData?.recommendedTextLength || 2800}자)
-- [탈 양산화 설계도]: 이번 글의 맞춤형 H2 소제목 전개 계획 및 본문에 선별 배치할 2~5장의 시각 카드 종류 명시
+- [탈 양산화 설계도]: 이번 글의 맞춤형 H2 소제목 전개 계획 및 본문에 선별 배치할 2~3장의 시각 카드 종류 명시
 </internal_fact_check>
-이 기획 메모는 반드시 <internal_fact_check> 태그 안에만 작성하고, 닫는 태그(</internal_fact_check>) 이후의 실제 본문에는 [팩트 체크] 등의 텍스트를 절대 다시 노출하지 마. 본격적인 글은 바로 <post_title> 및 [사진 1 썸네일]부터 시작해.
+이 기획 메모는 반드시 <internal_fact_check> 태그 안에만 작성하고, 닫는 태그(</internal_fact_check>) 이후의 실제 본문에는 [팩트 체크] 등의 텍스트를 절대 다시 노출하지 마. 본격적인 글은 바로 <post_title> 및 [최상단 대표 썸네일 카드]부터 시작해.
 
 2. 수치 날조 절대 금지 (Strict Grounding):
 본문에 들어가는 수치(세율, 공제 한도 금액, 과태료 등)나 법조항 번호는 오직 제공된 [Tavily Search] 데이터에만 기반해야 해. 제공되지 않은 구체적 수치는 절대 LLM의 지식으로 임의 생성(날조)하지 말고 일반적인 개념 설명으로 대체해.
@@ -468,24 +477,24 @@ ${profileFooterPrompt}
      ⑤ [2026 최신 개정/판례 기준형 (최신 제도·개정법 시)]: [2026 최신] (키워드) 달라진 기준과 실무 대응법
         (예: "[2026 최신] 분양권 상속 시 주택수 포함 요건과 절세 가이드")
 1. [본문 최상단 1:1 맞춤 썸네일 카드 필수 삽입 (최우선)]
-   - <post_title> 태그 바로 다음 줄(본문 HTML의 가장 첫머리)에 반드시 [사진 1: 최상단 1:1 맞춤 썸네일 이미지]를 삽입해.
+   - <post_title> 태그 바로 다음 줄(본문 HTML의 가장 첫머리)에 반드시 [최상단 1:1 맞춤 대표 썸네일 카드]를 삽입해.
    - 썸네일은 화사한 웜 크림/골드 라이트 배경 위에 카테고리 뱃지, 메인 타이틀, 서브카피, 하단 브랜드 서명을 완성하여 모바일에서도 글씨가 100% 뚜렷하게 보이도록 할 것.
-2. [본문 중간 시각 인포그래픽 카드 2~5장 가변 선별 삽입 (탈 양산화)]
-   - Body 1 및 Body 2에서 각 소제목(H2)의 본문 설명 직후에, 이번 글의 주제에 가장 꼭 맞는 인포그래픽 카드([체크리스트], [Before/After 비교], [핵심 수치 강조], [3단계 로드맵], [Q&A 해설], [골든타임 리스크 경고])를 2~5장 자율 선별하여 풍부하게 배치할 것. (모든 글에 똑같은 카드를 반복하지 말 것)
+2. [본문 중간 3×3 정통 벤토 그리드 시각 카드 2~3장 가변 선별 삽입 (탈양산화)]
+   - Body 1 및 Body 2에서 각 소제목(H2)의 본문 설명 직후에, 이번 글의 주제/의도에 가장 꼭 맞는 인포그래픽 카드([레드플래그 경고], [위기징후 자가진단표], [나홀로vs전문가 비교], [손실 스노우볼], [D-Day 타임라인], [필수 준비 서류함], [처벌/과세 기준표], [성공 사례 영수증], [전문가 소견서], [최종 결단 촉구])를 2~3장 자율 선별하여 적절히 배치할 것. (모든 글에 똑같은 카드를 반복하지 말 것)
    - 소제목(H2)은 별도의 챕터 바 없이 네이버 스마트블록 검색에 강력한 문장형 제목으로 작성할 것.
-3. [결론부 요약 카드]: 본론 마무리 후 결론부 직전에 내용에 따라 [사진 8: 핵심 3줄 결론 요약 카드]를 선택 배치.
+3. [결론부 카드]: 본론 마무리 후 결론부 직전에 내용에 따라 [전문가 소견서 및 팩트체크] 또는 [최종 결단 촉구] 카드를 선택 배치.
 4. [글 최하단: 하단 상담 유도 (CTA) 배너 카드 필수 삽입]
-   - 글의 맨 마지막(마무리 문단 후)에는 [사진 9: 하단 상담 유도 배너]를 삽입하여 직통 전화번호(${profile?.phone || ''})와 사무소 상세 주소(${profile?.address || ''})를 2단 집중 레이아웃으로 선명하게 안내할 것.
+   - 글의 맨 마지막(마무리 문단 후)에는 [최하단 상담 유도 배너 카드]를 삽입하여 직통 전화번호(${profile?.phone || ''})와 사무소 상세 주소(${profile?.address || ''})를 2단 집중 레이아웃으로 선명하게 안내할 것.
 5. [글 최하단 5단계 필수 완결 가드 (절대 생략 불가)]:
    - 본문 분량이 길어지더라도 반드시 글의 맨 마지막(마무리 문단 후)에 다음 5개 요소를 100% 온전히 출력 완료하세요:
      ① [소결 / 결론 마무리 문단] (전문직 브랜딩 신뢰 요약)
      ② [필수 법적 면책 조항 문구] (<p style="font-size: 11px; color: #94a3b8; text-align: center; margin: 35px 0 15px 0; line-height: 1.6;">...</p>)
-     ③ [사진 9: 하단 상담 유도 배너 이미지] (직통 전화번호 & 주소 안내 카드)
+     ③ [최하단 상담 유도 배너 카드] (직통 전화번호 & 주소 안내 카드)
      ④ [📍 네이버 지도 바로가기 버튼] (등록된 경우 HTML 링크 필수 삽입)
      ⑤ [추천 해시태그 5~8개] (#키워드1 #키워드2 ...)
 6. [문서 5단계 뼈대 구조화 (Skeleton-of-Thought)]
    - 1단계: <post_title> (타깃 키워드가 전방에 배치되고 전문직 5대 후킹 프레임워크가 적용된 25~32자 제목)
-   - 2단계: Introduction (도입부 - 15%) ➔ [사진 1 썸네일] 바로 아래 APB 훅(Attention-Problem-Bridge) 프레임워크 적용 ➔ **도입부 문단 종료 직후, 첫 번째 <h2> 소제목이 시작되기 바로 전에 반드시 [서론 직후 스마트블록 스니펫용 3초 핵심 요약 박스]를 1회 의무 삽입할 것.**
+   - 2단계: Introduction (도입부 - 15%) ➔ [최상단 대표 썸네일 카드] 바로 아래 APB 훅(Attention-Problem-Bridge) 프레임워크 적용 ➔ **도입부 문단 종료 직후, 첫 번째 <h2> 소제목이 시작되기 바로 전에 반드시 [서론 직후 스마트블록 스니펫용 3초 핵심 요약 박스]를 1회 의무 삽입할 것.**
    - 3단계: Body 1 (핵심 법리 및 규정 - 40%) ➔ 복잡한 정보는 순수 HTML Table 서식 적극 활용
    - 4단계: Body 2 (실무 대응 전략 - 35%) ➔ 실무 행동 지침 및 단계별 가이드라인
    - 5단계: Conclusion & CTA (결론 및 상담 안내 - 10%) ➔ 전문가 조력 안내

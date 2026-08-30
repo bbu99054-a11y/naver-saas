@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PostSynk 2026 [최종 엄선] 전문직 10종 3×3 정통 벤토 그리드 (1.5x 대형 폰트 & 톤업 럭셔리)</title>
+  <style>
+    @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css');
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Malgun Gothic', sans-serif;
+      background-color: #0b111a;
+      color: #f1f5f9;
+      padding: 30px 20px 80px;
+      line-height: 1.6;
+      letter-spacing: -0.02em;
+    }
+    
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    
+    /* 헤더 */
+    .header {
+      text-align: center;
+      margin-bottom: 35px;
+      padding-bottom: 25px;
+      border-bottom: 1px solid #1e293b;
+    }
+    
+    .badge {
+      display: inline-block;
+      background: linear-gradient(135deg, #3b82f6, #6366f1);
+      color: #ffffff;
+      font-size: 13px;
+      font-weight: 800;
+      padding: 6px 18px;
+      border-radius: 30px;
+      margin-bottom: 14px;
+      letter-spacing: 0.5px;
+      box-shadow: 0 4px 14px rgba(59, 130, 246, 0.3);
+    }
+    
+    h1 {
+      font-size: 32px;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 12px;
+      letter-spacing: -0.03em;
+    }
+    
+    .desc {
+      font-size: 16px;
+      color: #94a3b8;
+      max-width: 900px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+    
+    /* 탭 컨트롤러 */
+    .tab-bar {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 40px;
+      flex-wrap: wrap;
+    }
+    
+    .tab-btn {
+      background: #1e293b;
+      border: 1px solid #334155;
+      color: #94a3b8;
+      font-size: 15px;
+      font-weight: 700;
+      padding: 12px 24px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .tab-btn:hover {
+      background: #27354a;
+      color: #f8fafc;
+      border-color: #475569;
+    }
+    
+    .tab-btn.active {
+      background: #2563eb;
+      color: #ffffff;
+      border-color: #3b82f6;
+      box-shadow: 0 4px 16px rgba(37, 99, 235, 0.4);
+    }
+    
+    /* 탭 패널 */
+    .tab-panel {
+      display: none;
+    }
+    .tab-panel.active {
+      display: block;
+    }
+    
+    /* 카드 그리드 */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(560px, 1fr));
+      gap: 36px;
+    }
+    
+    @media (max-width: 640px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    .card-preview {
+      background: #111a28;
+      border: 1px solid #243247;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.35);
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .card-header {
+      padding: 16px 20px;
+      background: #0b121e;
+      border-bottom: 1px solid #243247;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .card-header .type-tag {
+      font-size: 15px;
+      font-weight: 800;
+      color: #60a5fa;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    
+    .card-header .spec {
+      font-size: 12px;
+      color: #94a3b8;
+      font-weight: 600;
+      background: #1e293b;
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+    
+    .card-viewport {
+      padding: 24px;
+      background: #070d16;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    /* 1:1 정방형 벤토 캔버스 (1080x1080 축소 시뮬레이터 - 100% 정사각형) */
+    .bento-canvas {
+      width: 100%;
+      max-width: 520px;
+      aspect-ratio: 1 / 1;
+      border-radius: 24px;
+      background: #FFFFFF;
+      border: 1.5px solid #E2E8F0;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 24px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+      position: relative;
+      overflow: hidden;
+      color: #1E293B;
+    }
+    
+    .card-desc {
+      padding: 16px 20px;
+      font-size: 13.5px;
+      color: #94a3b8;
+      border-top: 1px solid #243247;
+      background: #111a28;
+      line-height: 1.6;
+    }
+    
+    .card-desc strong {
+      color: #38bdf8;
+    }
+    
+    /* 벤토 공통 유틸 */
+    .bento-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    
+    .badge-pill {
+      font-size: 13px;
+      font-weight: 800;
+      padding: 5px 12px;
+      border-radius: 20px;
+      letter-spacing: 0.5px;
+    }
+    
+    .bento-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1.5px solid #E2E8F0;
+      padding-top: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #64748B;
+    }
+    
+    /* 직인 도장 그래픽 */
+    .stamp-box {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      border: 2.5px solid #BE123C;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transform: rotate(-10deg);
+      box-shadow: inset 0 0 4px rgba(190, 18, 60, 0.2);
+    }
+    .stamp-text {
+      color: #BE123C;
+      font-size: 11px;
+      font-weight: 900;
+      line-height: 1.1;
+      letter-spacing: 0.5px;
+    }
+    
+    /* 라이브 블로그 시뮬레이터 */
+    .blog-mockup {
+      max-width: 800px;
+      margin: 0 auto;
+      background: #FFFFFF;
+      color: #1E293B;
+      border-radius: 24px;
+      padding: 50px 45px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+    }
+    
+    .blog-header {
+      border-bottom: 2px solid #F1F5F9;
+      padding-bottom: 25px;
+      margin-bottom: 30px;
+    }
+    
+    .blog-category {
+      color: #2563EB;
+      font-size: 15px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+    
+    .blog-title {
+      font-size: 28px;
+      font-weight: 800;
+      color: #1E293B;
+      line-height: 1.4;
+      margin-bottom: 14px;
+    }
+    
+    .blog-author {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 14px;
+      color: #64748B;
+    }
+    
+    .blog-content p {
+      font-size: 17px;
+      line-height: 1.85;
+      margin: 18px 0;
+      color: #334155;
+    }
+    
+    .blog-content h2 {
+      font-size: 24px;
+      font-weight: 800;
+      color: #1E293B;
+      margin: 36px 0 16px 0;
+      border-bottom: 2px solid #E2E8F0;
+      padding-bottom: 8px;
+    }
+
+    /* 블로그 본문 내 1:1 정사각형 카드 컨테이너 */
+    .blog-square-card {
+      width: 100%;
+      max-width: 500px;
+      aspect-ratio: 1 / 1;
+      margin: 32px auto;
+      border-radius: 22px;
+      box-shadow: 0 12px 28px rgba(0,0,0,0.08);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 26px;
+      box-sizing: border-box;
+      background: #FFFFFF;
+      border: 1.5px solid #E2E8F0;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="header">
+      <div class="badge">2026 1.5X LARGER FONT & NOBLE TONE-UP APPLIED</div>
+      <h1>전문직 블로그 본문 10종 3×3 정통 벤토 그리드 라이브 프리뷰</h1>
+      <p class="desc">
+        카드 내부 글씨 크기가 <strong>1.5배 대폭 확대</strong>되었으며, 다크 포인트 색상이 <strong>'화사한 미드나잇 슬레이트(#2C3E50)', '클래식 로즈 크림슨(#7A2838)', '노블 틸 그린(#1A535C)'</strong>으로 부드럽게 톤업되었습니다.
+      </p>
+    </div>
+
+    <!-- 탭 네비게이션 -->
+    <div class="tab-bar">
+      <button class="tab-btn active" onclick="switchTab('gallery')">🍱 10종 카드 10가지 고유 구조 갤러리 (1.5배 큰 글씨)</button>
+      <button class="tab-btn" onclick="switchTab('blog')">📱 네이버 블로그 본문 실제 적용 뷰 (정확히 2~3장 배치)</button>
+      <button class="tab-btn" onclick="switchTab('principles')">💎 1.5x 대형 폰트 & 색채 조화 해설</button>
+    </div>
+
+    <!-- 탭 1: 10종 카드 10가지 고유 구조 갤러리 -->
+    <div id="tab-gallery" class="tab-panel active">
+      <div class="grid">
+        
+        <!-- 1. 레드플래그: [상단 톤업 로즈 크림슨 배너] + [하단 3열 화이트 실수 컬럼] -->
+        <div class="card-preview">
+          <div class="card-header">
+            <span class="type-tag">🚨 1. 3대 레드플래그 경고 (RED_FLAGS)</span>
+            <span class="spec">색상: 로즈 크림슨 (#7A2838)</span>
+          </div>
+          <div class="card-viewport">
+            <div class="bento-canvas">
+              <div class="bento-header">
+                <span class="badge-pill" style="background: #FFE4E6; color: #9F1239; border: 1px solid #FECDD3;">CRITICAL WARNING</span>
+                <span style="font-size: 13px; font-weight: 700; color: #64748B;">골든타임 경보</span>
+              </div>
+              
+              <!-- 상단 3x1.2 톤업 로즈 크림슨 배너 -->
+              <div style="background: #7A2838; border: 2px solid #9F1239; border-radius: 14px; padding: 14px 18px; color: #FFF; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <div>
+                  <div style="font-size: 13px; color: #FDA4AF; font-weight: bold;">⚠️ 단독 대응 시 치명적 위험</div>
+                  <div style="font-size: 21px; font-weight: 800; line-height: 1.25;">절대 혼자 진행하면 안 되는 3대 실수</div>
+                </div>
+                <div style="text-align: center; background: rgba(0,0,0,0.2); padding: 8px 14px; border-radius: 12px;">
+                  <div style="font-size: 28px; font-weight: 900; color: #F43F5E; line-height: 1;">98%</div>
+                  <div style="font-size: 11px; color: #FDA4AF; margin-top: 2px;">패널티 위험</div>
+                </div>
+              </div>
+
+              <!-- 하단 3개 수직 컬럼 (01, 02, 03) - 1.5배 대형 글씨 -->
+              <div style="display: flex; gap: 8px; flex: 1; margin-bottom: 10px;">
+                <div style="flex: 1; background: #FFFFFF; border: 2px solid #FECDD3; border-radius: 12px; padding: 14px 12px; display: flex; flex-direction: column; justify-content: space-between;">
+                  <span style="background: #BE123C; color: #FFF; font-size: 12px; font-weight: 800; padding: 3px 8px; border-radius: 6px; align-self: flex-start;">실수 01</span>
+                  <div style="font-size: 15px; font-weight: 800; color: #1E293B; line-height: 1.35;">사실관계 불일치 진술 및 부실 소명</div>
+                  <div style="font-size: 12px; color: #BE123C; font-weight: bold; border-top: 1.5px solid #FFE4E6; padding-top: 6px;">* 번복 불가</div>
+                </div>
+                <div style="flex: 1; background: #FFFFFF; border: 2px solid #FECDD3; border-radius: 12px; padding: 14px 12px; display: flex; flex-direction: column; justify-content: space-between;">
+                  <span style="background: #BE123C; color: #FFF; font-size: 12px; font-weight: 800; padding: 3px 8px; border-radius: 6px; align-self: flex-start;">실수 02</span>
+                  <div style="font-size: 15px; font-weight: 800; color: #1E293B; line-height: 1.35;">법정 불복 기한(골든타임) 도과</div>
+                  <div style="font-size: 12px; color: #BE123C; font-weight: bold; border-top: 1.5px solid #FFE4E6; padding-top: 6px;">* 기회 박탈</div>
+                </div>
+                <div style="flex: 1; background: #FFFFFF; border: 2px solid #FECDD3; border-radius: 12px; padding: 14px 12px; display: flex; flex-direction: column; justify-content: space-between;">
+                  <span style="background: #BE123C; color: #FFF; font-size: 12px; font-weight: 800; padding: 3px 8px; border-radius: 6px; align-self: flex-start;">실수 03</span>
+                  <div style="font-size: 15px; font-weight: 800; color: #1E293B; line-height: 1.35;">핵심 증빙 누락 가산세 폭탄</div>
+                  <div style="font-size: 12px; color: #BE123C; font-weight: bold; border-top: 1.5px solid #FFE4E6; padding-top: 6px;">* 최대 40%</div>
+                </div>
+              </div>
+
+              <div class="bento-footer">
+                <span>PostSynk Verified Guide</span>
+                <span>💡 전문가 사전 검증 필수</span>
+              </div>
+            </div>
+          </div>
+          <div class="card-desc">
+            <strong>개선 사항:</strong> 글자 크기를 <strong>1.5배 확대</strong>하여 모바일에서도 시원하게 읽히며, 상단 배너를 밝고 세련된 <strong>로즈 크림슨(#7A2838)</strong>으로 톤업.
+          </div>
+        </div>
+
+        <!-- 2. 자가진단표: [4분면 2x2 매트릭스 그리드] -->
+        <div class="card-preview">
+          <div class="card-header">
+            <span class="type-tag">📊 2. 위기 징후 자가진단표 (SELF_DIAGNOSIS)</span>
+            <span class="spec">색상: 미드나잇 슬레이트 (#2C3E50)</span>
+          </div>
+          <div class="card-viewport">
+            <div class="bento-canvas">
+              <div class="bento-header">
+                <span class="badge-pill" style="background: #FEF3C7; color: #92400E; border: 1px solid #FDE68A;">SELF DIAGNOSIS</span>
+                <span style="font-size: 13px; font-weight: 700; color: #64748B;">4분면 위험도 진단</span>
+              </div>
+              <div style="font-size: 22px; font-weight: 800; color: #1E293B; margin-bottom: 10px;">
+                내 사건 위험도 자가진단 체크리스트
+              </div>
+              
+              <!-- 4분면 2x2 매트릭스 레이아웃 -->
+              <div style="display: flex; flex-direction: column; gap: 8px; flex: 1; margin-bottom: 10px;">
+                <div style="display: flex; gap: 8px; flex: 1;">
+                  <!-- 좌상: 레이더 판정 (톤업 미드나잇 슬레이트) -->
+                  <div style="flex: 1; background: #2C3E50; border-radius: 12px; padding: 12px 14px; color: #FFF; display: flex; flex-direction: column; justify-content: space-between;">
+                    <span style="font-size: 12px; color: #FCD34D; font-weight: bold;">📡 레이더 판정</span>
+                    <div style="display: flex; align-items: baseline; gap: 8px;">
+                      <span style="font-size: 32px; font-weight: 900; color: #F59E0B; line-height: 1;">2개+</span>
+                      <span style="font-size: 14px; color: #FFF; font-weight: bold;">'경고' 단계</span>
+                    </div>
+                    <span style="font-size: 11px; color: #CBD5E1;">* 즉시 소명 필요</span>
+                  </div>
+                  <!-- 우상: 체크 1 & 2 -->
+                  <div style="flex: 1; background: #F8FAFC; border: 1.5px solid #E2E8F0; border-radius: 12px; padding: 10px 12px; display: flex; flex-direction: column; justify-content: space-around; font-size: 13px; color: #334155; font-weight: bold;">
+                    <div>☑️ 관련 기관 출석 요구 접수</div>
+                    <div>☑️ 적격증빙/입증자료 누락</div>
+                  </div>
+                </div>
+                <div style="display: flex; gap: 8px; flex: 1;">
+                  <!-- 좌하: 체크 3 & 4 -->
+                  <div style="flex: 1; background: #F8FAFC; border: 1.5px solid #E2E8F0; border-radius: 12px; padding: 10px 12px; display: flex; flex-direction: column; justify-content: space-around; font-size: 13px; color: #334155; font-weight: bold;">
+                    <div>☑️ 기한 1개월 이내 임박</div>
+                    <div>☑️ 과거 유사 불이익 이력</div>
+                  </div>
+                  <!-- 우하: 전문가 조력 (미색 하이라이트) -->
+                  <div style="flex: 1; background: #EFF6FF; border: 2px solid #3B82F6; border-radius: 12px; padding: 12px 14px; display: flex; flex-direction: column; justify-content: space-between;">
+                    <span style="font-size: 13px; font-weight: bold; color: #1D4ED8;">🛡️ 전문가 진단 가이드</span>
+                    <div style="font-size: 13.5px; font-weight: bold; color: #1E293B;">1:1 비밀 보장 분석 신청</div>
+                    <span style="font-size: 11px; background: #2563EB; color: #FFF; padding: 4px 8px; border-radius: 6px; text-align: center; font-weight: bold;">정밀 검토</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="bento-footer">
+                <span>PostSynk Verified Guide</span>
+                <span>4대 핵심 징후 자가 점검</span>
+              </div>
+            </div>
+          </div>
+          <div class="card-desc">
+            <strong>개선 사항:</strong> 문항 폰트를 <strong>13~15px</strong>로 대폭 키우고, 좌상단 배경을 <strong>미드나잇 슬레이트(#2C3E50)</strong>로 톤업.
+          </div>
+        </div>
+
+        <!-- 3. 나홀로 vs 전문가: [50:50 좌우 대칭 듀얼 뷰] -->
+        <div class="card-preview">
+          <div class="card-header">
+            <span class="type-tag">🆚 3. 나홀로 vs 전문가 시뮬레이션 (VS_SIMULATION)</span>
+            <span class="spec">색상: 노블 틸 그린 (#1A535C)</span>
+          </div>
+          <div class="card-viewport">
+            <div class="bento-canvas">
+              <div class="bento-header">
+                <span class="badge-pill" style="background: #EDE9FE; color: #6D28D9; border: 1px solid #DDD6FE;">VS SIMULATION</span>
+                <span style="font-size: 13px; font-weight: 700; color: #64748B;">실익 & ROI 비교</span>
+              </div>
+              <div style="font-size: 22px; font-weight: 800; color: #1E293B; margin-bottom: 12px;">
+                혼자 대처 vs 공인 자격사 선임 결과 비교
+              </div>
+
+              <!-- 50:50 좌우 대칭 분할 -->
+              <div style="display: flex; gap: 10px; flex: 1; margin-bottom: 10px;">
+                <!-- 좌측: 나홀로 대처 (50%) -->
+                <div style="flex: 1; background: #FFF1F2; border: 2px solid #FECDD3; border-radius: 14px; padding: 14px; display: flex; flex-direction: column; justify-content: space-between;">
+                  <div>
+                    <span style="background: #BE123C; color: #FFF; font-size: 12px; font-weight: 800; padding: 4px 10px; border-radius: 6px;">❌ 나홀로 대처</span>
+                    <div style="font-size: 34px; font-weight: 900; color: #881337; margin: 8px 0 4px 0;">20%</div>
+                    <div style="font-size: 13px; color: #9F1239; font-weight: bold;">구제율 저조 & 가산세</div>
+                  </div>
+                  <div style="font-size: 13px; color: #4C0519; font-weight: 700; line-height: 1.45;">
+                    • 불리한 진술 입증 실패<br>• 과다 세액 부과<br>• 구제 기회 상실
+                  </div>
+                  <span style="font-size: 11px; background: rgba(190,18,60,0.12); color: #881337; padding: 6px; border-radius: 6px; text-align: center; font-weight: bold;">패소 위험</span>
+                </div>
+
+                <!-- 우측: 공인 자격사 선임 (노블 틸 그린) -->
+                <div style="flex: 1; background: #1A535C; border: 2px solid #0D9488; border-radius: 14px; padding: 14px; color: #FFF; display: flex; flex-direction: column; justify-content: space-between;">
+                  <div>
+                    <span style="background: #0D9488; color: #FFF; font-size: 12px; font-weight: 800; padding: 4px 10px; border-radius: 6px;">✅ 전문가 선임</span>
+                    <div style="font-size: 34px; font-weight: 900; color: #34D399; margin: 8px 0 4px 0;">95%</div>
+                    <div style="font-size: 13px; color: #A7F3D0; font-weight: bold;">구제율 및 최대 절세</div>
+                  </div>
+                  <div style="font-size: 13px; color: #D1FAE5; font-weight: 600; line-height: 1.45;">
+                    • 1:1 맞춤 법리 구성<br>• 합법 공제 최대 적용<br>• 전담 대리인 입회
+                  </div>
+                  <span style="font-size: 11px; background: #0D9488; color: #FFF; padding: 6px; border-radius: 6px; text-align: center; font-weight: bold;">🏆 승소 극대화</span>
+                </div>
+              </div>
+
+              <div class="bento-footer">
+                <span>PostSynk Verified Guide</span>
+                <span>수임료 대비 압도적 절세 실익</span>
+              </div>
+            </div>
+          </div>
+          <div class="card-desc">
+            <strong>개선 사항:</strong> 20%/95% 대형 수치와 리스트 폰트를 <strong>1.5배 확대</strong>하고, 우측 배경을 <strong>노블 틸 그린(#1A535C)</strong>으로 톤업.
+          </div>
+        </div>
+
+        <!-- 4. 손실 스노우볼: [3열 수직 게이지 (온도계)] -->
+        <div class="card-preview">
+          <div class="card-header">
+            <span class="type-tag">📉 4. 손실 스노우볼 (COST_OF_INACTION)</span>
+            <span class="spec">색상: 로즈 크림슨 (#7A2838)</span>
+          </div>
+          <div class="card-viewport">
+            <div class="bento-canvas">
+              <div class="bento-header">
+                <span class="badge-pill" style="background: #FFE4E6; color: #9F1239; border: 1px solid #FECDD3;">COST OF INACTION</span>
+                <span style="font-size: 13px; font-weight: 700; color: #64748B;">방치 리스크</span>
+              </div>
+              <div style="font-size: 22px; font-weight: 800; color: #1E293B; margin-bottom: 12px;">
+                방치할수록 눈덩이처럼 불어나는 손실 스노우볼
+              </div>
+
+              <!-- 3열 수직 게이지 -->
+              <div style="display: flex; gap: 8px; flex: 1; margin-bottom: 10px;">
+                <div style="flex: 1; background: #F8FAFC; border: 1.5px solid #CBD5E1; border-radius: 12px; padding: 12px 10px; display: flex; flex-direction: column; justify-content: space-between; text-align: center;">
+                  <span style="font-size: 12px; font-weight: 800; color: #64748B;">1일차 (골든타임)</span>
+                  <div>
+                    <div style="font-size: 32px;">🟢</div>
+                    <div style="font-size: 18px; font-weight: 800; color: #1E293B; margin-top: 4px;">원금 상태</div>
+                    <div style="font-size: 12px; color: #64748B;">소명 기회 100%</div>
+                  </div>
+                  <div style="height: 8px; background: #CBD5E1; border-radius: 4px;"></div>
+                </div>
+                <div style="flex: 1; background: #FFF7ED; border: 1.5px solid #FDBA74; border-radius: 12px; padding: 12px 10px; display: flex; flex-direction: column; justify-content: space-between; text-align: center;">
+                  <span style="font-size: 12px; font-weight: 800; color: #C2410C;">1개월 경과</span>
+                  <div>
+                    <div style="font-size: 32px;">🟠</div>
+                    <div style="font-size: 18px; font-weight: 800; color: #9A3412; margin-top: 4px;">+10~20% 가산</div>
+                    <div style="font-size: 12px; color: #C2410C;">납부지연이자 누적</div>
+                  </div>
+                  <div style="height: 8px; background: #F97316; border-radius: 4px;"></div>
+                </div>
+                <div style="flex: 1; background: #7A2838; border: 2px solid #9F1239; border-radius: 12px; padding: 12px 10px; display: flex; flex-direction: column; justify-content: space-between; text-align: center; color: #FFF;">
+                  <span style="font-size: 12px; font-weight: 800; color: #FDA4AF;">1년 이상 방치</span>
+                  <div>
+                    <div style="font-size: 32px;">🔴</div>
+                    <div style="font-size: 18px; font-weight: 900; color: #FFFFFF; margin-top: 4px;">최대 40% 폭탄</div>
+                    <div style="font-size: 12px; color: #FECDD3;">소명 기회 영구 박탈</div>
+                  </div>
+                  <div style="height: 8px; background: #EF4444; border-radius: 4px;"></div>
+                </div>
+              </div>
+
+              <div class="bento-footer">
+                <span>PostSynk Verified Guide</span>
+                <span>⏳ 지금 즉시 대처해야 하는 이유</span>
+              </div>
+            </div>
+          </div>
+          <div class="card-desc">
+            <strong>개선 사항:</strong> 단계별 수치와 텍스트를 <strong>1.5배 확대</strong>하고, 3단계를 <strong>로즈 크림슨(#7A2838)</strong>으로 톤업.
+          </div>
+        </div>
+
+        <!-- 5. D-Day 로드맵: [상단 미드나잇 슬레이트 배너 + 하단 3단 가로형 로드맵] -->
+        <div class="card-preview">
+          <div class="card-header">
+            <span class="type-tag">⏳ 5. D-Day 타임라인 로드맵 (ACTION_TIMELINE)</span>
+            <span class="spec">색상: 미드나잇 슬레이트 (#2C3E50)</span>
+          </div>
+          <div class="card-viewport">
+            <div class="bento-canvas">
+              <div class="bento-header">
+                <span class="badge-pill" style="background: #DBEAFE; color: #1E40AF; border: 1px solid #BFDBFE;">ACTION ROADMAP</span>
+                <span style="font-size: 13px; font-weight: 700; color: #64748B;">원스톱 3단계 로드맵</span>
+              </div>
+
+              <!-- 상단 3x1.2 골든타임 배너 (미드나잇 슬레이트) -->
+              <div style="background: #2C3E50; border-radius: 12px; padding: 14px 18px; color: #FFF; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <div>
+                  <div style="font-size: 12px; color: #93C5FD; font-weight: bold;">⏱️ 사건 종결 골든타임 로드맵</div>
+                  <div style="font-size: 18px; font-weight: 800;">단계별 기한 엄수 & 권리 구제</div>
+                </div>
+                <div style="background: rgba(255,255,255,0.15); padding: 6px 14px; border-radius: 10px; text-align: center;">
+                  <span style="font-size: 24px; font-weight: 900; color: #FCD34D;">D-30</span>
+                </div>
+              </div>
+
+              <!-- 하단 3단 가로형 로드맵 스택 (1.5x 큰 폰트) -->
+              <div style="display: flex; flex-direction: column; gap: 8px; flex: 1; margin-bottom: 10px;">
+                <div style="background: #F8FAFC; border: 1.5px solid #E2E8F0; border-radius: 12px; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between;">
+                  <div style="display: flex; align-items: center; gap: 12px;">
+                    <span style="background: #2563EB; color: #FFF; font-size: 11px; font-weight: 800; padding: 3px 8px; border-radius: 6px;">STEP 1</span>
+                    <span style="font-size: 15px; font-weight: bold; color: #1E293B;">사실관계 확정 및 적격증빙 선제 확보</span>
+                  </div>
+                  <span style="font-size: 16px;">➡️</span>
+                </div>
+                <div style="background: #F8FAFC; border: 1.5px solid #E2E8F0; border-radius: 12px; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between;">
+                  <div style="display: flex; align-items: center; gap: 12px;">
+                    <span style="background: #2563EB; color: #FFF; font-size: 11px; font-weight: 800; padding: 3px 8px; border-radius: 6px;">STEP 2</span>
+                    <span style="font-size: 15px; font-weight: bold; color: #1E293B;">법리 정밀 검토 및 1:1 맞춤 소명서 제출</span>
+                  </div>
+                  <span style="font-size: 16px;">➡️</span>
+                </div>
+                <div style="background: #EFF6FF; border: 2px solid #2563EB; border-radius: 12px; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between;">
+                  <div style="display: flex; align-items: center; gap: 12px;">
+                    <span style="background: #10B981; color: #FFF; font-size: 11px; font-weight: 800; padding: 3px 8px; border-radius: 6px;">STEP 3</span>
+                    <span style="font-size: 15px; font-weight: bold; color: #1E293B;">처분 취소 및 세액 감면 최종 확정</span>
+                  </div>
+                  <span style="font-size: 16px;">🏆</span>
+                </div>
+              </div>
+
+              <div class="bento-footer">
+                <span>PostSynk Verified Guide</span>
+                <span>전 과정 공인 자격사 1:1 직접 입회</span>
+              </div>
+            </div>
+          </div>
+          <div class="card-desc">
+            <strong>개선 사항:</strong> 각 스텝 문구를 <strong>15px</strong>로 키우고, 상단 배너를 <strong>미드나잇 슬레이트(#2C3E50)</strong>로 톤업.
+          </div>
+        </div>
+
+        <!-- 6. 필수 서류함: [상단 마닐라 탭 폴더 + 하단 2단 분할] -->
+        <div class="card-preview">
+          <div class="card-header">
+            <span class="type-tag">📑 6. 필수 준비 서류함 (REQUIRED_DOSSIER)</span>
+            <span class="spec">색상: 웜 마닐라 & 미드나잇 슬레이트</span>
+          </div>
+          <div class="card-viewport">
+            <div class="bento-canvas">
+              <div class="bento-header">
+                <span class="badge-pill" style="background: #FEF3C7; color: #92400E; border: 1px solid #FDE68A;">REQUIRED DOSSIER</span>
+                <span style="font-size: 13px; font-weight: 700; color: #64748B;">구비 서류함</span>
+              </div>
+
+              <!-- 상단 3x2 마닐라 서류철 폴더 (탭 스타일) -->
+              <div style="background: #FAF5EE; border: 2px solid #D8C3A5; border-radius: 14px; padding: 14px; margin-bottom: 10px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                  <span style="background: #E8D5B5; color: #5C4033; font-size: 12px; font-weight: 800; padding: 4px 10px; border-radius: 6px;">📁 DOSSIER FILE NO.2026</span>
+                  <span style="font-size: 12px; color: #8C6D46; font-weight: bold;">발급 3개월 이내</span>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                  <div style="background: #FFF; border: 1.5px solid #E4D4C0; border-radius: 10px; padding: 8px 12px; font-size: 13.5px; color: #3E2723; font-weight: bold; display: flex; justify-content: space-between;">
+                    <span>DOC 1. 신분증 및 가족관계증명서 (상세)</span>
+                    <span style="color: #8C6D46;">[정부24]</span>
+                  </div>
+                  <div style="background: #FFF; border: 1.5px solid #E4D4C0; border-radius: 10px; padding: 8px 12px; font-size: 13.5px; color: #3E2723; font-weight: bold; display: flex; justify-content: space-between;">
+                    <span>DOC 2. 최근 3개년 소득금액증명원 & 영수증</span>
+                    <span style="color: #8C6D46;">[홈택스]</span>
+                  </div>
+                  <div style="background: #FFF; border: 1.5px solid #E4D4C0; border-radius: 10px; padding: 8px 12px; font-size: 13.5px; color: #3E2723; font-weight: bold; display: flex; justify-content: space-between;">
+                    <span>DOC 3. 처분 통지서 및 계약서 원본</span>
+                    <span style="color: #8C6D46;">[보유서류]</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 하단 2단 분할 (캡처 보관 + 빠른 발급) -->
+              <div style="display: flex; gap: 8px; height: 60px; margin-bottom: 10px;">
+                <div style="flex: 1; background: #2C3E50; color: #FFF; border-radius: 10px; padding: 8px 12px; display: flex; align-items: center; gap: 10px;">
+                  <span style="font-size: 24px;">📸</span>
+                  <div>
+                    <div style="font-size: 13px; font-weight: bold; color: #FCD34D;">사진 캡처 보관</div>
+                    <div style="font-size: 11px; color: #CBD5E1;">상담 전 미리 지참</div>
+                  </div>
+                </div>
+                <div style="flex: 1; background: #EFF6FF; border: 1.5px solid #3B82F6; border-radius: 10px; padding: 8px 12px; display: flex; align-items: center; gap: 10px;">
+                  <span style="font-size: 24px;">⚡</span>
+                  <div>
+                    <div style="font-size: 13px; font-weight: bold; color: #1D4ED8;">온라인 즉시 발급</div>
+                    <div style="font-size: 11px; color: #475569;">정부24 · 홈택스 10분</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="bento-footer">
+                <span>PostSynk Verified Guide</span>
+                <span>서류 분실 시 대체 증빙 안내</span>
+              </div>
+            </div>
+          </div>
+          <div class="card-desc">
+            <strong>개선 사항:</strong> 서류 리스트 폰트를 <strong>13.5px</strong>로 키우고, 하단 캡처 버튼을 <strong>미드나잇 슬레이트(#2C3E50)</strong>로 편안하게 처리.
+          </div>
+        </div>
+
+        <!-- 7. 처벌 기준표: [L자형 비대칭 테트리스: 좌 테이블 + 우상/우하 2단] -->
+        <div class="card-preview">
+          <div class="card-header">
+            <span class="type-tag">⚖️ 7. 처벌/과세 기준표 (CRITERIA_TABLE)</span>
+            <span class="spec">색상: 미드나잇 슬레이트 (#2C3E50)</span>
+          </div>
+          <div class="card-viewport">
+            <div class="bento-canvas">
+              <div class="bento-header">
+                <span class="badge-pill" style="background: #F1F5F9; color: #334155; border: 1px solid #CBD5E1;">STATUTORY CRITERIA</span>
+                <span style="font-size: 13px; font-weight: 700; color: #64748B;">법률 기준표</span>
+              </div>
+              <div style="font-size: 22px; font-weight: 800; color: #1E293B; margin-bottom: 12px;">
+                법정 처벌 수위 및 과세 기준표
+              </div>
+
+              <!-- L자형 비대칭 분할: 좌측 2x3 테이블 + 우측 상하 2단 스택 -->
+              <div style="display: flex; gap: 10px; flex: 1; margin-bottom: 10px;">
+                <!-- 좌측 테이블 (2x3) -->
+                <div style="flex: 2; background: #F8FAFC; border: 1.5px solid #CBD5E1; border-radius: 14px; padding: 14px; display: flex; flex-direction: column; justify-content: space-around;">
+                  <div style="font-size: 13px; color: #1E293B; border-bottom: 1px dashed #CBD5E1; padding-bottom: 6px;">
+                    <strong>제1구간:</strong> 1년 이하 징역 / 500만원 벌금
+                  </div>
+                  <div style="font-size: 13px; color: #1E293B; border-bottom: 1px dashed #CBD5E1; padding-bottom: 6px;">
+                    <strong>제2구간:</strong> 3년 이하 징역 / 누진세율 40%
+                  </div>
+                  <div style="font-size: 13px; color: #BE123C; font-weight: bold;">
+                    <strong>제3구간:</strong> 면허 취소 및 가산세 최고 40%
+                  </div>
+                </div>
+
+                <!-- 우측 상하 2단 스택 (1x1.5 + 1x1.5) -->
+                <div style="flex: 1; display: flex; flex-direction: column; gap: 8px;">
+                  <!-- 우상: 최고 수치 하이라이트 (미드나잇 슬레이트) -->
+                  <div style="flex: 1.2; background: #2C3E50; border-radius: 12px; padding: 10px; color: #FFF; text-align: center; display: flex; flex-direction: column; justify-content: space-between;">
+                    <span style="font-size: 12px; color: #FCD34D; font-weight: bold;">법정 최고세율</span>
+                    <div style="font-size: 34px; font-weight: 900; color: #F87171; line-height: 1;">40%</div>
+                    <span style="font-size: 10px; color: #CBD5E1;">부당가산세</span>
+                  </div>
+                  <!-- 우하: 감경 요건 (미색) -->
+                  <div style="flex: 1; background: #EFF6FF; border: 1.5px solid #3B82F6; border-radius: 12px; padding: 8px; display: flex; flex-direction: column; justify-content: center; text-align: center;">
+                    <span style="font-size: 12px; font-weight: bold; color: #1D4ED8;">⚖️ 감경 요건</span>
+                    <span style="font-size: 11px; color: #334155; font-weight: bold;">정당사유 소명 시</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="bento-footer">
+                <span>PostSynk Verified Guide</span>
+                <span>대법원 최신 판례 양형 기준</span>
+              </div>
+            </div>
+          </div>
+          <div class="card-desc">
+            <strong>개선 사항:</strong> 기준표 글씨와 최고세율 수치를 <strong>1.5배 확대</strong>하고, 우상단을 <strong>미드나잇 슬레이트(#2C3E50)</strong>로 톤업.
+          </div>
+        </div>
+
+        <!-- 8. 성공 사례 요약: [좌측 영수증 티켓 + 우상/우하 2단 지표] -->
+        <div class="card-preview">
+          <div class="card-header">
+            <span class="type-tag">🏆 8. 실제 성공 사례 요약 (SUCCESS_RECEIPT)</span>
+            <span class="spec">색상: 노블 틸 그린 (#1A535C)</span>
+          </div>
+          <div class="card-viewport">
+            <div class="bento-canvas">
+              <div class="bento-header">
+                <span class="badge-pill" style="background: #DCFCE7; color: #166534; border: 1px solid #BBF7D0;">CASE STUDY</span>
+                <span style="font-size: 13px; font-weight: 700; color: #64748B;">권리 구제 영수증</span>
+              </div>
+              <div style="font-size: 22px; font-weight: 800; color: #1E293B; margin-bottom: 12px;">
+                실제 권리 구제 및 절세 성공 사례 요약
+              </div>
+
+              <!-- 좌측 영수증 티켓 + 우측 2단 스택 -->
+              <div style="display: flex; gap: 10px; flex: 1; margin-bottom: 10px;">
+                <!-- 좌측 영수증 티켓 (1.6x3) -->
+                <div style="flex: 1.6; background: #FFFFFF; border: 2px dashed #94A3B8; border-radius: 14px; padding: 14px; display: flex; flex-direction: column; justify-content: space-around;">
+                  <div style="font-size: 12px; font-weight: bold; color: #64748B; border-bottom: 1.5px solid #E2E8F0; padding-bottom: 4px;">
+                    🧾 SUCCESS RECEIPT
+                  </div>
+                  <div>
+                    <span style="font-size: 11px; color: #BE123C; font-weight: bold;">[BEFORE 과세 예고]</span>
+                    <div style="font-size: 16px; font-weight: 800; color: #881337; text-decoration: line-through;">500,000,000 원</div>
+                  </div>
+                  <div>
+                    <span style="font-size: 11px; color: #0D9488; font-weight: bold;">[AFTER 최종 결정]</span>
+                    <div style="font-size: 22px; font-weight: 900; color: #1A535C;">0 원 (전액 취소)</div>
+                  </div>
+                  <div style="font-size: 11px; color: #64748B; border-top: 1.5px solid #E2E8F0; padding-top: 4px;">
+                    * 사실관계 정밀 입증 완료
+                  </div>
+                </div>
+
+                <!-- 우측 2단 스택 (우상 승소율 98% + 우하 전략) -->
+                <div style="flex: 1.4; display: flex; flex-direction: column; gap: 8px;">
+                  <div style="flex: 1.3; background: #1A535C; border: 2px solid #0D9488; border-radius: 12px; padding: 10px; color: #FFF; text-align: center; display: flex; flex-direction: column; justify-content: space-between;">
+                    <span style="font-size: 12px; color: #A7F3D0; font-weight: bold;">사건 인용 확정</span>
+                    <div style="font-size: 36px; font-weight: 900; color: #34D399; line-height: 1;">98%</div>
+                    <span style="font-size: 11px; color: #D1FAE5;">구제 만족도</span>
+                  </div>
+                  <div style="flex: 1; background: #F0FDF4; border: 1.5px solid #86EFAC; border-radius: 12px; padding: 8px; display: flex; flex-direction: column; justify-content: center; text-align: center;">
+                    <span style="font-size: 12px; font-weight: bold; color: #166534;">🏆 1:1 맞춤 전략</span>
+                    <span style="font-size: 11px; color: #14532D; font-weight: bold;">유사 성공사례 적용</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="bento-footer">
+                <span>Receipt No. 2026-PS-0089</span>
+                <span>공인 자격사 직접 수행 성공</span>
+              </div>
+            </div>
+          </div>
+          <div class="card-desc">
+            <strong>개선 사항:</strong> 영수증 금액과 98% 지표를 <strong>1.5배 확대</strong>하고, 우상단을 <strong>노블 틸 그린(#1A535C)</strong>으로 톤업.
+          </div>
+        </div>
+
+        <!-- 9. 전문가 소견서: [상단 미색 줄노트 + 하단 우측 직인 도장] -->
+        <div class="card-preview">
+          <div class="card-header">
+            <span class="type-tag">💬 9. 전문가 소견서 & 직인 (EXPERT_OPINION)</span>
+            <span class="spec">색상: 미색 줄노트 & 매트 레드 직인</span>
+          </div>
+          <div class="card-viewport">
+            <div class="bento-canvas">
+              <div class="bento-header">
+                <span class="badge-pill" style="background: #F1F5F9; color: #334155; border: 1px solid #CBD5E1;">EXPERT OPINION</span>
+                <span style="font-size: 13px; font-weight: 700; color: #64748B;">공식 소견서</span>
+              </div>
+
+              <!-- 상단 3x2.3 미색 줄노트 소견서 (1.5x 큰 폰트) -->
+              <div style="background: #FCFAF6; border: 2px solid #E7E0D3; border-radius: 14px; padding: 16px 18px; margin-bottom: 10px;">
+                <div style="font-size: 14px; font-weight: bold; color: #2B2523; border-bottom: 1.5px solid #D6CCC2; padding-bottom: 6px; margin-bottom: 8px;">
+                  ✍️ 핵심 팩트체크 및 3줄 종합 코멘트
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                  <div style="font-size: 13.5px; color: #2B2523; font-weight: 700; border-bottom: 1px dashed #D6CCC2; padding-bottom: 6px;">
+                    1️⃣ 단순 정보만 믿고 진술 시 불리한 결과 초래
+                  </div>
+                  <div style="font-size: 13.5px; color: #2B2523; font-weight: 700; border-bottom: 1px dashed #D6CCC2; padding-bottom: 6px;">
+                    2️⃣ 적격증빙 선제 검증 시 합법적 권리 구제 가능
+                  </div>
+                  <div style="font-size: 13.5px; color: #2B2523; font-weight: 800;">
+                    3️⃣ 반드시 공인 자격사 1:1 맞춤 진단을 권장
+                  </div>
+                </div>
+              </div>
+
+              <!-- 하단 좌측 결론 바 + 우측 매트 붉은색 직인 도장 -->
+              <div style="display: flex; gap: 8px; height: 60px; margin-bottom: 10px;">
+                <div style="flex: 2; background: #F8FAFC; border: 1.5px solid #E2E8F0; border-radius: 10px; padding: 8px 12px; display: flex; flex-direction: column; justify-content: center;">
+                  <span style="font-size: 12px; font-weight: bold; color: #2563EB;">🔒 철저한 비밀 보장</span>
+                  <span style="font-size: 13px; font-weight: bold; color: #1E293B;">공인 자격사 1:1 직접 검토 완료</span>
+                </div>
+                <!-- 우하단 직인 도장 -->
+                <div style="flex: 1; background: #FFF; border: 1.5px solid #E2E8F0; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                  <div class="stamp-box">
+                    <span class="stamp-text">공인<br>자격사</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="bento-footer">
+                <span>PostSynk Verified Guide</span>
+                <span>공인 직인 자문 완료</span>
+              </div>
+            </div>
+          </div>
+          <div class="card-desc">
+            <strong>개선 사항:</strong> 소견서 본문 텍스트를 <strong>13.5px</strong>로 키워 또렷하게 읽히며, <strong>미색 줄노트(#FCFAF6)</strong>와 <strong>인감 직인 도장</strong>의 품격 극대화.
+          </div>
+        </div>
+
+        <!-- 10. 최종 결단 촉구: [상단 톤업 로즈 크림슨 히어로 + 하단 2단 CTA 버튼] -->
+        <div class="card-preview">
+          <div class="card-header">
+            <span class="type-tag">✋ 10. 최종 결단 촉구 (FINAL_VERDICT)</span>
+            <span class="spec">색상: 로즈 크림슨 (#7A2838) & 슬레이트 (#2C3E50)</span>
+          </div>
+          <div class="card-viewport">
+            <div class="bento-canvas">
+              <div class="bento-header">
+                <span class="badge-pill" style="background: #FFE4E6; color: #9F1239; border: 1px solid #FECDD3;">FINAL VERDICT</span>
+                <span style="font-size: 13px; font-weight: 700; color: #64748B;">골든타임 결단</span>
+              </div>
+
+              <!-- 상단 3x2 대형 긴급 결단 히어로 박스 (로즈 크림슨) -->
+              <div style="background: #7A2838; border: 2px solid #9F1239; border-radius: 14px; padding: 18px 20px; color: #FFF; margin-bottom: 10px; display: flex; flex-direction: column; justify-content: space-between; flex: 1;">
+                <div>
+                  <span style="background: #BE123C; color: #FFF; font-size: 12px; font-weight: 800; padding: 4px 10px; border-radius: 6px;">⚠️ 골든타임 임박</span>
+                  <div style="font-size: 22px; font-weight: 900; margin-top: 8px; line-height: 1.3;">
+                    골든타임이 지나면<br>소명 기회가 영구 박탈됩니다.
+                  </div>
+                </div>
+                <div style="font-size: 13px; color: #FECDD3; line-height: 1.4;">
+                  망설이는 지금 이 순간에도 법정 불복 기한 시계는 흘러가고 있습니다.
+                </div>
+                <div style="font-size: 11px; color: #FDA4AF;">* 처분 통지서 수령 시 24시간 내 대응 필수</div>
+              </div>
+
+              <!-- 하단 2단 CTA 버튼 (비밀상담 + 전화연결) -->
+              <div style="display: flex; gap: 8px; height: 60px; margin-bottom: 10px;">
+                <div style="flex: 1; background: #EFF6FF; border: 2px solid #2563EB; border-radius: 10px; padding: 8px 12px; display: flex; align-items: center; gap: 10px;">
+                  <span style="font-size: 24px;">🔒</span>
+                  <div>
+                    <div style="font-size: 13px; font-weight: bold; color: #1D4ED8;">1:1 비밀 보장 상담</div>
+                    <div style="font-size: 11px; color: #475569;">철저한 보안 유지</div>
+                  </div>
+                </div>
+                <div style="flex: 1; background: #2C3E50; color: #FFF; border-radius: 10px; padding: 8px 12px; display: flex; align-items: center; gap: 10px;">
+                  <span style="font-size: 24px;">📞</span>
+                  <div>
+                    <div style="font-size: 14px; font-weight: bold; color: #FCD34D;">02-1234-5678</div>
+                    <div style="font-size: 11px; color: #CBD5E1;">대표 직통 즉시 연결</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="bento-footer">
+                <span>PostSynk Verified Guide</span>
+                <span>골든타임 마지막 해결 기회</span>
+              </div>
+            </div>
+          </div>
+          <div class="card-desc">
+            <strong>개선 사항:</strong> 헤드라인 폰트를 <strong>22px</strong>로 키우고, 상단 히어로를 <strong>로즈 크림슨(#7A2838)</strong>, 하단 전화 버튼을 <strong>미드나잇 슬레이트(#2C3E50)</strong>로 톤업.
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 탭 2: 실제 네이버 블로그 원고 시뮬레이터 (본문 2~3장 황금 비율 반영) -->
+    <div id="tab-blog" class="tab-panel">
+      <div class="blog-mockup">
+        <div class="blog-header">
+          <div class="blog-category">세무/상속 실무 가이드</div>
+          <h1 class="blog-title">분양권 상속 주택수 포함, 놓치면 세금 폭탄 맞는 3가지 쟁점</h1>
+          <div class="blog-author">
+            <span>작성자: <strong>PostSynk 전문 자격사</strong></span>
+            <span>·</span>
+            <span>2026.08.30</span>
+            <span>·</span>
+            <span>조회수 1,248</span>
+          </div>
+        </div>
+
+        <div class="blog-content">
+          <!-- [사진 1] 최상단 1:1 맞춤 썸네일 이미지 (정방형 100%) -->
+          <div class="blog-square-card" style="background: #FDFBF7; border: 1.5px solid #E2E8F0; text-align: center;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="background: #FEF3C7; color: #92400E; font-size: 13px; font-weight: 800; padding: 5px 14px; border-radius: 20px;">2026 핵심 실무 가이드</span>
+              <span style="font-size: 13px; color: #64748B;">성실신고확인</span>
+            </div>
+            <div>
+              <h2 style="font-size: 28px; font-weight: 900; color: #1E293B; border: none; margin: 12px 0; padding: 0; line-height: 1.35;">
+                분양권 상속 주택수 산정 핵심 검토
+              </h2>
+              <p style="font-size: 16px; color: #64748B; margin: 0 0 16px 0;">놓치면 막대한 가산세가 부과되는 실무 기준 3가지</p>
+              <div style="display: flex; justify-content: center; gap: 8px;">
+                <span style="background: #EDE9FE; color: #6D28D9; font-size: 12px; font-weight: 700; padding: 4px 12px; border-radius: 6px;">절세전략</span>
+                <span style="background: #DBEAFE; color: #1E40AF; font-size: 12px; font-weight: 700; padding: 4px 12px; border-radius: 6px;">성실신고</span>
+                <span style="background: #FFE4E6; color: #9F1239; font-size: 12px; font-weight: 700; padding: 4px 12px; border-radius: 6px;">세무조사</span>
+              </div>
+            </div>
+            <div style="display: flex; justify-content: space-between; border-top: 1.5px solid #E2E8F0; padding-top: 12px; font-size: 13px; color: #64748B;">
+              <span>PostSynk Verified</span>
+              <span>1:1 맞춤 검토</span>
+            </div>
+          </div>
+
+          <p>
+            부동산 상속 과정에서 많은 의뢰인분들이 가장 많이 놓치시는 부분이 바로 <strong>'분양권의 주택수 포함 여부'</strong>입니다. 현행 세법상 분양권은 취득 시점과 관리처분인가일에 따라 주택수 산정 방식이 완전히 달라지기 때문에 한순간의 오판으로 막대한 가산세가 부과될 수 있습니다.
+          </p>
+
+          <!-- 3초 핵심 요약 박스 -->
+          <blockquote style="background: #F8FAFC; border-left: 4px solid #2563EB; padding: 18px 20px; margin: 24px 0; border-radius: 6px; line-height: 1.7;">
+            <strong style="color: #1E293B; font-size: 17px; display: block; margin-bottom: 8px;">💡 분양권 상속 주택수 3초 핵심 요약</strong>
+            <p style="margin: 3px 0; color: #334155; font-size: 15px;">1. <strong>2021년 이후 취득 분양권</strong>: 주택수에 원칙적으로 포함되어 1세대 1주택 비과세 특례 판단 시 주의 필요.</p>
+            <p style="margin: 3px 0; color: #334155; font-size: 15px;">2. <strong>상속 개시일 기준 평가</strong>: 분양권 프리미엄(P) 및 기납부 불입금 평가액을 정밀 산정해야 함.</p>
+            <p style="margin: 3px 0; color: #334155; font-size: 15px;">3. <strong>골든타임 6개월</strong>: 상속세 신고 기한 내에 공동상속인 간 지분 분할 협의를 완료해야 절세 극대화 가능.</p>
+          </blockquote>
+
+          <h2>🚨 1. 상속 분양권 처리 시 가장 빈번한 3대 레드플래그</h2>
+          <p>
+            실제 상담을 진행하다 보면 인터넷의 부정확한 카더라 정보만 믿고 스스로 신고서를 작성했다가 세무조사 대상으로 통보받는 안타까운 사례가 매우 많습니다.
+          </p>
+
+          <!-- [본문 카드 1 / 총 2장 중 1장] 1:1 정방형 벤토 카드: 레드플래그 (1.5x 큰 글씨) -->
+          <div class="blog-square-card">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="background: #FFE4E6; color: #9F1239; font-size: 13px; font-weight: 800; padding: 5px 12px; border-radius: 20px;">CRITICAL WARNING</span>
+              <span style="font-size: 13px; color: #64748B;">골든타임 경보</span>
+            </div>
+            
+            <div style="background: #7A2838; border: 2px solid #9F1239; border-radius: 12px; padding: 14px 16px; color: #FFF; display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <div style="font-size: 12px; color: #FDA4AF; font-weight: bold;">⚠️ 단독 대응 시 치명적 위험</div>
+                <div style="font-size: 20px; font-weight: 800;">절대 혼자 진행하면 안 되는 3대 실수</div>
+              </div>
+              <div style="text-align: center; background: rgba(0,0,0,0.2); padding: 6px 12px; border-radius: 10px;">
+                <div style="font-size: 24px; font-weight: 900; color: #F43F5E;">98%</div>
+                <div style="font-size: 10px; color: #FDA4AF;">패널티 위험</div>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 8px; flex: 1; margin: 10px 0;">
+              <div style="flex: 1; background: #FFFFFF; border: 2px solid #FECDD3; border-radius: 12px; padding: 12px 10px; display: flex; flex-direction: column; justify-content: space-between;">
+                <span style="background: #BE123C; color: #FFF; font-size: 11px; font-weight: 800; padding: 3px 6px; border-radius: 4px; align-self: flex-start;">실수 01</span>
+                <div style="font-size: 14px; font-weight: bold; color: #1E293B; line-height: 1.35;">사실관계 불일치 진술 및 부실 소명</div>
+                <div style="font-size: 11px; color: #BE123C; font-weight: bold; border-top: 1.5px solid #FFE4E6; padding-top: 4px;">* 번복 불가</div>
+              </div>
+              <div style="flex: 1; background: #FFFFFF; border: 2px solid #FECDD3; border-radius: 12px; padding: 12px 10px; display: flex; flex-direction: column; justify-content: space-between;">
+                <span style="background: #BE123C; color: #FFF; font-size: 11px; font-weight: 800; padding: 3px 6px; border-radius: 4px; align-self: flex-start;">실수 02</span>
+                <div style="font-size: 14px; font-weight: bold; color: #1E293B; line-height: 1.35;">법정 불복 기한(골든타임) 도과</div>
+                <div style="font-size: 11px; color: #BE123C; font-weight: bold; border-top: 1.5px solid #FFE4E6; padding-top: 4px;">* 기회 박탈</div>
+              </div>
+              <div style="flex: 1; background: #FFFFFF; border: 2px solid #FECDD3; border-radius: 12px; padding: 12px 10px; display: flex; flex-direction: column; justify-content: space-between;">
+                <span style="background: #BE123C; color: #FFF; font-size: 11px; font-weight: 800; padding: 3px 6px; border-radius: 4px; align-self: flex-start;">실수 03</span>
+                <div style="font-size: 14px; font-weight: bold; color: #1E293B; line-height: 1.35;">핵심 증빙 누락 가산세 폭탄</div>
+                <div style="font-size: 11px; color: #BE123C; font-weight: bold; border-top: 1.5px solid #FFE4E6; padding-top: 4px;">* 최대 40%</div>
+              </div>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; border-top: 1.5px solid #E2E8F0; padding-top: 10px; font-size: 13px; color: #64748B;">
+              <span>PostSynk Verified Guide</span>
+              <span>1:1 비밀 보장 진단</span>
+            </div>
+          </div>
+
+          <h2>⚖️ 2. 법정 과세 기준 및 주택수 산정 구간표</h2>
+          <p>
+            아래는 [소득세법 제89조 및 상속세및증여세법]에 따른 공식 산정 기준표입니다.
+          </p>
+
+          <!-- 네이버 100% 호환 인라인 테이블 -->
+          <table style="width: 100%; border-collapse: collapse; margin: 24px 0; font-size: 15px; background: #FFF;">
+            <thead>
+              <tr style="background: #2C3E50; color: #FFF;">
+                <th style="padding: 12px 14px; border: 1px solid #334155; width: 25%; font-weight: bold;">구분</th>
+                <th style="padding: 12px 14px; border: 1px solid #334155; width: 45%; font-weight: bold;">법적 판단 요건</th>
+                <th style="padding: 12px 14px; border: 1px solid #334155; width: 30%; font-weight: bold;">실무 절세 팁</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="padding: 12px 14px; border: 1px solid #E2E8F0; font-weight: bold; background: #F8FAFC; color: #1E293B;">2021년 이전 취득</td>
+                <td style="padding: 12px 14px; border: 1px solid #E2E8F0; color: #334155;">양도소득세 산정 시 주택수 미포함</td>
+                <td style="padding: 12px 14px; border: 1px solid #E2E8F0; color: #334155;">기존 주택 비과세 유지</td>
+              </tr>
+              <tr>
+                <td style="padding: 12px 14px; border: 1px solid #E2E8F0; font-weight: bold; background: #F8FAFC; color: #1E293B;">2021년 이후 취득</td>
+                <td style="padding: 12px 14px; border: 1px solid #E2E8F0; color: #334155;">분양권도 주택수에 정식 합산</td>
+                <td style="padding: 12px 14px; border: 1px solid #E2E8F0; color: #334155;">대체취득 특례 요건 검토</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- [본문 카드 2 / 총 2장 중 2장] 1:1 정방형 벤토 카드: 전문가 소견서 & 직인 -->
+          <div class="blog-square-card">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="background: #F1F5F9; color: #334155; font-size: 13px; font-weight: 800; padding: 5px 12px; border-radius: 20px;">EXPERT OPINION</span>
+              <span style="font-size: 13px; color: #64748B;">공식 실무 소견</span>
+            </div>
+
+            <div style="background: #FCFAF6; border: 2px solid #E7E0D3; border-radius: 12px; padding: 14px 16px; margin: 10px 0;">
+              <div style="font-size: 14px; font-weight: bold; color: #2B2523; border-bottom: 1.5px solid #D6CCC2; padding-bottom: 6px; margin-bottom: 8px;">
+                ✍️ 핵심 팩트체크 및 3줄 종합 코멘트
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 8px;">
+                <div style="font-size: 13.5px; color: #2B2523; font-weight: 700; border-bottom: 1px dashed #D6CCC2; padding-bottom: 6px;">
+                  1️⃣ 단순 정보만 믿고 진술 시 불리한 결과 초래
+                </div>
+                <div style="font-size: 13.5px; color: #2B2523; font-weight: 700; border-bottom: 1px dashed #D6CCC2; padding-bottom: 6px;">
+                  2️⃣ 적격증빙 선제 검증 시 합법적 권리 구제 가능
+                </div>
+                <div style="font-size: 13.5px; color: #2B2523; font-weight: 800;">
+                  3️⃣ 반드시 공인 자격사 1:1 맞춤 진단을 권장
+                </div>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 8px; height: 65px; margin-bottom: 10px;">
+              <div style="flex: 2; background: #F8FAFC; border: 1.5px solid #E2E8F0; border-radius: 10px; padding: 8px 12px; display: flex; flex-direction: column; justify-content: center;">
+                <span style="font-size: 12px; font-weight: bold; color: #2563EB;">🔒 철저한 비밀 보장</span>
+                <span style="font-size: 13.5px; font-weight: bold; color: #1E293B;">공인 자격사 1:1 직접 검토 완료</span>
+              </div>
+              <div style="flex: 1; background: #FFF; border: 1.5px solid #E2E8F0; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                <div class="stamp-box">
+                  <span class="stamp-text">공인<br>세무사</span>
+                </div>
+              </div>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; border-top: 1.5px solid #E2E8F0; padding-top: 10px; font-size: 13px; color: #64748B;">
+              <span>PostSynk Verified Guide</span>
+              <span>전문가 직인 공인 소견</span>
+            </div>
+          </div>
+
+          <!-- [사진 9] 최하단 상담 유도 배너 (미드나잇 슬레이트 버튼) -->
+          <div class="blog-square-card" style="text-align: center;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="background: #DBEAFE; color: #1E40AF; font-size: 13px; font-weight: 800; padding: 5px 12px; border-radius: 20px;">EXPERT CONSULTATION</span>
+              <span style="font-size: 13px; color: #64748B;">사전 예약 필수</span>
+            </div>
+            
+            <div>
+              <div style="font-size: 26px; font-weight: 900; color: #1E293B; margin: 12px 0 6px 0;">OO 세무회계법인</div>
+              <p style="font-size: 14.5px; color: #64748B; margin-bottom: 18px;">1:1 전문 맞춤 상담 · 철저한 비밀 보장</p>
+              
+              <div style="display: flex; gap: 8px;">
+                <div style="flex: 1; background: #2C3E50; color: #FFF; padding: 16px; border-radius: 12px; font-size: 15px; font-weight: bold;">
+                  📞 02-1234-5678
+                </div>
+                <div style="flex: 1; background: #F8FAFC; border: 1.5px solid #E2E8F0; color: #334155; padding: 16px; border-radius: 12px; font-size: 14px; font-weight: bold;">
+                  📍 서울시 서초구 서초대로 123
+                </div>
+              </div>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; border-top: 1.5px solid #E2E8F0; padding-top: 10px; font-size: 13px; color: #64748B;">
+              <span>PostSynk Verified Guide</span>
+              <span>1:1 맞춤 검토 상담실</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 탭 3: 1.5x 대형 폰트 & 색채 조화 해설 -->
+    <div id="tab-principles" class="tab-panel">
+      <div style="max-width: 960px; margin: 0 auto; background: #111a28; border: 1px solid #243247; border-radius: 20px; padding: 40px;">
+        <h2 style="font-size: 26px; font-weight: 800; color: #FFF; margin-bottom: 24px;">💎 1.5x 대형 폰트 & 톤업 럭셔리 색채 조화</h2>
+        
+        <div style="display: flex; flex-direction: column; gap: 20px;">
+          <div style="background: #0b121e; border: 1px solid #1e293b; border-radius: 14px; padding: 22px;">
+            <h3 style="font-size: 18px; font-weight: 800; color: #38bdf8; margin-bottom: 10px;">1. 모바일 돋보기 해방: 1.5배 대형 폰트 시스템</h3>
+            <p style="font-size: 14px; color: #cbd5e1; line-height: 1.7;">
+              스마트폰 모바일 화면에서 작은 글씨는 독자의 피로도를 높이고 이탈을 유발합니다.<br>
+              본 시스템은 제목(36~46px), 핵심 수치(72~96px), 본문 리스트(28~34px)로 글씨를 <strong>기존 대비 약 1.5배 대폭 확대</strong>하여 스크롤 중에도 1초 만에 핵심 정보가 머릿속에 각인됩니다.
+            </p>
+          </div>
+
+          <div style="background: #0b121e; border: 1px solid #1e293b; border-radius: 14px; padding: 22px;">
+            <h3 style="font-size: 18px; font-weight: 800; color: #38bdf8; margin-bottom: 10px;">2. 답답함 없는 톤업 럭셔리 컬러</h3>
+            <p style="font-size: 14px; color: #cbd5e1; line-height: 1.7;">
+              • <strong>로즈 크림슨 (#7A2838):</strong> 칠흑 같은 핏빛 대신 화사하고 지적인 와인 크림슨으로 경고력과 고급스러움 동시 확보.<br>
+              • <strong>미드나잇 슬레이트 (#2C3E50):</strong> 무거운 암흑 네이비 대신 품격 있는 슈트 네이비로 시인성 톤업.<br>
+              • <strong>노블 틸 그린 (#1A535C):</strong> 칙칙한 검초록 대신 영국 클래식 틸 그린으로 승소/절세 신뢰도 극대화.
+            </p>
+          </div>
+
+          <div style="background: #0b121e; border: 1px solid #1e293b; border-radius: 14px; padding: 22px;">
+            <h3 style="font-size: 18px; font-weight: 800; color: #38bdf8; margin-bottom: 10px;">3. 본문 2~3장 황금 비율 (총 4~5장 체제)</h3>
+            <p style="font-size: 14px; color: #cbd5e1; line-height: 1.7;">
+              <strong>[사진 1 썸네일] + [본문 벤토 카드 2~3장] + [사진 9 하단배너] = 총 4~5장</strong> 체제로 완벽 통제하여, 모바일 스크롤 호흡을 가볍게 유지하고 네이버 C-Rank/DIA+ 알고리즘에서 가장 높은 전문성 점수를 획득합니다.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      
+      if (tabId === 'gallery') {
+        document.querySelectorAll('.tab-btn')[0].classList.add('active');
+        document.getElementById('tab-gallery').classList.add('active');
+      } else if (tabId === 'blog') {
+        document.querySelectorAll('.tab-btn')[1].classList.add('active');
+        document.getElementById('tab-blog').classList.add('active');
+      } else if (tabId === 'principles') {
+        document.querySelectorAll('.tab-btn')[2].classList.add('active');
+        document.getElementById('tab-principles').classList.add('active');
+      }
+    }
+  </script>
+</body>
+</html>

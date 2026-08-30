@@ -48,20 +48,20 @@ function generateFailproofSvg(payload: CardPayload, width: number, height: numbe
     .replace(/&/g, '&amp;')
     .replace(/"/g, '&quot;')
 
-  const titleSize = cleanTitle.length > 25 ? 44 : 54
+  const titleSize = cleanTitle.length > 25 ? 42 : 52
 
   return `
 <svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">
-  <rect width="${width}" height="${height}" rx="28" fill="#FDFBF7" stroke="#E2E8F0" stroke-width="3"/>
-  <rect x="80" y="60" width="300" height="56" rx="28" fill="#FEF3C7" stroke="#FDE68A" stroke-width="2"/>
-  <text x="230" y="97" font-family="-apple-system, BlinkMacSystemFont, 'Pretendard', 'Malgun Gothic', sans-serif" font-size="24" font-weight="bold" fill="#92400E" text-anchor="middle">${cleanCat}</text>
+  <rect width="${width}" height="${height}" rx="32" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="3"/>
+  <rect x="80" y="80" width="320" height="56" rx="28" fill="#FEF3C7" stroke="#FDE68A" stroke-width="2"/>
+  <text x="240" y="117" font-family="-apple-system, BlinkMacSystemFont, 'Pretendard', 'Malgun Gothic', sans-serif" font-size="22" font-weight="bold" fill="#92400E" text-anchor="middle">${cleanCat}</text>
   
-  <text x="80" y="${height > 700 ? 460 : 260}" font-family="-apple-system, BlinkMacSystemFont, 'Pretendard', 'Malgun Gothic', sans-serif" font-size="${titleSize}" font-weight="bold" fill="#0F172A">${cleanTitle}</text>
-  ${cleanSub ? `<text x="80" y="${height > 700 ? 560 : 340}" font-family="-apple-system, BlinkMacSystemFont, 'Pretendard', 'Malgun Gothic', sans-serif" font-size="30" fill="#475569">${cleanSub}</text>` : ''}
+  <text x="80" y="480" font-family="-apple-system, BlinkMacSystemFont, 'Pretendard', 'Malgun Gothic', sans-serif" font-size="${titleSize}" font-weight="bold" fill="#0F172A">${cleanTitle}</text>
+  ${cleanSub ? `<text x="80" y="580" font-family="-apple-system, BlinkMacSystemFont, 'Pretendard', 'Malgun Gothic', sans-serif" font-size="28" fill="#475569">${cleanSub}</text>` : ''}
   
-  <line x1="80" y1="${height - 110}" x2="${width - 80}" y2="${height - 110}" stroke="#E2E8F0" stroke-width="2"/>
-  <text x="80" y="${height - 55}" font-family="-apple-system, BlinkMacSystemFont, 'Pretendard', sans-serif" font-size="24" font-weight="bold" fill="#64748B">${signature}</text>
-  <text x="${width - 80}" y="${height - 55}" font-family="-apple-system, BlinkMacSystemFont, 'Pretendard', sans-serif" font-size="22" fill="#94A3B8" text-anchor="end">1:1 맞춤 상담 · 비밀 보장</text>
+  <line x1="80" y1="${height - 120}" x2="${width - 80}" y2="${height - 120}" stroke="#E2E8F0" stroke-width="2"/>
+  <text x="80" y="${height - 65}" font-family="-apple-system, BlinkMacSystemFont, 'Pretendard', sans-serif" font-size="24" font-weight="bold" fill="#64748B">${signature}</text>
+  <text x="${width - 80}" y="${height - 65}" font-family="-apple-system, BlinkMacSystemFont, 'Pretendard', sans-serif" font-size="22" fill="#94A3B8" text-anchor="end">1:1 맞춤 검토 · 비밀 보장</text>
 </svg>
 `.trim()
 }
@@ -142,19 +142,9 @@ export async function GET(req: NextRequest) {
       bannerLayout,
     }
 
-    // 1080px 표준 캔버스 치수 (모바일 최적화)
-    let width = 1080
-    let height = 680
-    if (type === 'MAIN_THUMBNAIL') {
-      width = 1080
-      height = 1080
-    } else if (type === 'CTA_FOOTER') {
-      width = 1080
-      height = 540
-    } else {
-      width = 1080
-      height = 680
-    }
+    // 1080×1080px 1:1 정방형 벤토 그리드 표준 캔버스 치수 (모바일 최적화)
+    const width = 1080
+    const height = 1080
 
     // 1차 시도: ImageResponse (PNG 고화질)
     try {

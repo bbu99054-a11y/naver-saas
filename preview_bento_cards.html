@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PostSynk 2026 1:1 벤토 그리드 인포그래픽 실제 원고 적용 미리보기</title>
+  <style>
+    @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css');
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Malgun Gothic', sans-serif;
+      background-color: #0b1120;
+      color: #f8fafc;
+      padding: 40px 20px 80px;
+      line-height: 1.6;
+      letter-spacing: -0.02em;
+    }
+    
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+    
+    .header {
+      text-align: center;
+      margin-bottom: 50px;
+      padding-bottom: 30px;
+      border-bottom: 1px solid #1e293b;
+    }
+    
+    .badge {
+      display: inline-block;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      color: #ffffff;
+      font-size: 13px;
+      font-weight: 800;
+      padding: 6px 18px;
+      border-radius: 30px;
+      margin-bottom: 16px;
+      letter-spacing: 0.5px;
+      box-shadow: 0 4px 14px rgba(99, 102, 241, 0.4);
+    }
+    
+    h1 {
+      font-size: 34px;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 14px;
+      letter-spacing: -0.03em;
+    }
+    
+    .desc {
+      font-size: 16px;
+      color: #94a3b8;
+      max-width: 800px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+    
+    .article-meta {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 14px;
+      padding: 16px 24px;
+      margin-top: 26px;
+      display: inline-flex;
+      align-items: center;
+      gap: 16px;
+      text-align: left;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    
+    .article-meta .label {
+      background: #3b82f6;
+      color: #ffffff;
+      font-size: 12px;
+      font-weight: 800;
+      padding: 4px 12px;
+      border-radius: 6px;
+    }
+    
+    .article-meta .title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #f1f5f9;
+    }
+    
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(540px, 1fr));
+      gap: 40px;
+      margin-top: 40px;
+    }
+    
+    @media (max-width: 600px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    .card-preview {
+      background: #182234;
+      border: 1px solid #334155;
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.4);
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .card-header {
+      padding: 18px 24px;
+      background: #0f172a;
+      border-bottom: 1px solid #334155;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .card-header .type-tag {
+      font-size: 14px;
+      font-weight: 800;
+      color: #818cf8;
+    }
+    
+    .card-header .spec {
+      font-size: 12px;
+      color: #94a3b8;
+      font-weight: 600;
+      background: #1e293b;
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+    
+    .card-viewport {
+      padding: 24px;
+      background: #070d19;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    /* 1:1 정방형 캔버스 시뮬레이터 */
+    .bento-canvas {
+      width: 100%;
+      max-width: 500px;
+      aspect-ratio: 1 / 1;
+      border-radius: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 24px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      position: relative;
+    }
+    
+    .card-desc {
+      padding: 18px 24px;
+      font-size: 14px;
+      color: #cbd5e1;
+      border-top: 1px solid #334155;
+      background: #182234;
+    }
+    
+    .card-desc strong {
+      color: #38bdf8;
+    }
+
+    /* 테마별 스타일: NAVY_GOLD 팔레트 */
+    .theme-navy-gold {
+      background: #F8FAFC;
+      border: 1.5px solid #E2E8F0;
+      color: #0F172A;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="header">
+      <div class="badge">2026 BENTO GRID LIVE DESIGN</div>
+      <h1>최신 원고 기반 1:1 벤토 그리드 인포그래픽 실제 시각 디자인</h1>
+      <p class="desc">
+        원고 저장소의 최신 글 <strong>[AI 마케팅 자동화 SaaS 14일 도입 후기: 수임료 매출이 3배 뛴 비결]</strong>의 내용을 바탕으로 생성된 1080×1080px 1:1 정방형 벤토 카드 6종의 실제 비주얼입니다.
+      </p>
+      
+      <div class="article-meta">
+        <span class="label">최신 원고 10번</span>
+        <span class="title">AI 마케팅 자동화 SaaS 14일 도입 후기: 수임료 매출이 3배 뛴 비결</span>
+      </div>
+    </div>
+
+    <div class="grid">
+      
+      <!-- 1. 대표 썸네일 (MAIN_THUMBNAIL) -->
+      <div class="card-preview">
+        <div class="card-header">
+          <span class="type-tag">📸 [사진 1] 1:1 대표 썸네일</span>
+          <span class="spec">1080×1080px (THUMB_A 중앙 플로팅)</span>
+        </div>
+        <div class="card-viewport">
+          <div class="bento-canvas" style="background: #F8FAFC; border: 1.5px solid #E2E8F0; padding: 22px;">
+            <div style="background: #FFFFFF; border: 1.5px solid #E2E8F0; border-radius: 18px; padding: 26px 22px; height: 100%; display: flex; flex-direction: column; justify-content: space-between;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="background: #FEF3C7; color: #92400E; font-size: 13px; font-weight: 800; padding: 5px 14px; border-radius: 20px;">AI 마케팅 도입 성과</span>
+                <span style="color: #B45309; font-size: 13px; font-weight: 800;">PostSynk 공식 리포트</span>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 12px; margin: auto 0;">
+                <div style="font-size: 38px; font-weight: 900; color: #0F172A; line-height: 1.18; letter-spacing: -0.03em;">
+                  AI 마케팅 자동화 SaaS<br>14일 도입 후기
+                </div>
+                <div style="font-size: 15px; color: #475569; font-weight: 700; line-height: 1.4;">
+                  대행사 대비 비용 1/10 절감 및 수임료 매출 3배 상승 비결
+                </div>
+              </div>
+              <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1.5px solid #E2E8F0; padding-top: 14px;">
+                <div style="display: flex; gap: 6px;">
+                  <span style="background: #FFFBEB; color: #B45309; font-size: 11px; font-weight: 700; padding: 4px 8px; border-radius: 6px;">#AI자동화</span>
+                  <span style="background: #FFFBEB; color: #B45309; font-size: 11px; font-weight: 700; padding: 4px 8px; border-radius: 6px;">#전문직마케팅</span>
+                  <span style="background: #FFFBEB; color: #B45309; font-size: 11px; font-weight: 700; padding: 4px 8px; border-radius: 6px;">#수임전환</span>
+                </div>
+                <span style="font-size: 12px; color: #64748B; font-weight: 700;">1:1 심층 상담 접수</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-desc">
+          <strong>역할:</strong> 블로그 검색 탭 및 글 최상단에서 1초 만에 시선을 사로잡는 대형 썸네일
+        </div>
+      </div>
+
+      <!-- 2. 체크리스트 (CHECKLIST) -->
+      <div class="card-preview">
+        <div class="card-header">
+          <span class="type-tag">📋 [사진 2] 3대 필수 요건 체크리스트</span>
+          <span class="spec">1080×1080px (2×3 에디토리얼 타일)</span>
+        </div>
+        <div class="card-viewport">
+          <div class="bento-canvas theme-navy-gold">
+            <!-- 헤더 -->
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1.5px solid #E2E8F0; padding-bottom: 10px;">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="font-size: 20px;">📋</span>
+                <span style="font-size: 17px; font-weight: 800; color: #0F172A;">AI 마케팅 도입 전 3대 필수 체크리스트</span>
+              </div>
+              <span style="background: #FEF3C7; color: #92400E; font-size: 11px; font-weight: 800; padding: 3px 10px; border-radius: 10px;">필수 검토</span>
+            </div>
+            
+            <!-- 중앙 벤토: 좌측 2x3 메인 + 우측 1x1 3단 스택 -->
+            <div style="display: flex; gap: 12px; margin: 12px 0; height: 260px;">
+              <!-- 좌측 2x3 에디토리얼 -->
+              <div style="flex: 1; background: #FFFFFF; border: 1.5px solid #E2E8F0; border-radius: 14px; padding: 16px; display: flex; flex-direction: column; justify-content: space-between;">
+                <div>
+                  <span style="background: #FFFBEB; color: #B45309; font-size: 11px; font-weight: 800; padding: 3px 8px; border-radius: 6px;">⚖️ 사전 정밀 검증</span>
+                  <div style="font-size: 16px; font-weight: 800; color: #0F172A; margin: 8px 0 4px;">도입 전 법령 및 품질 기준 검토</div>
+                  <div style="font-size: 12px; color: #475569; line-height: 1.4;">사람 의존 모델의 리스크를 원천 방어하기 위한 필수 검증 단계입니다.</div>
+                </div>
+                <div style="background: #FFFBEB; border: 1px solid #FED7AA; border-radius: 8px; padding: 8px; font-size: 11px; color: #9A3412; font-weight: 700;">
+                  ✅ 3대 항목 사전 검증 완료
+                </div>
+              </div>
+
+              <!-- 우측 1x1 3단 스택 -->
+              <div style="flex: 1.1; display: flex; flex-direction: column; gap: 8px;">
+                <div style="background: #FFFFFF; border: 1.5px solid #E2E8F0; border-radius: 10px; padding: 8px 12px; flex: 1; display: flex; flex-direction: column; justify-content: center;">
+                  <div style="font-size: 13px; font-weight: 800; color: #0F172A;">☑️ 01. 광고법 사전 검증</div>
+                  <div style="font-size: 11px; color: #64748B;">변호사/세무사법 금칙어 원천 차단</div>
+                </div>
+                <div style="background: #FFFFFF; border: 1.5px solid #E2E8F0; border-radius: 10px; padding: 8px 12px; flex: 1; display: flex; flex-direction: column; justify-content: center;">
+                  <div style="font-size: 13px; font-weight: 800; color: #0F172A;">☑️ 02. 시스템 품질 관리</div>
+                  <div style="font-size: 11px; color: #64748B;">담당자 퇴사 시 품질 리셋 방지</div>
+                </div>
+                <div style="background: #FFFFFF; border: 1.5px solid #E2E8F0; border-radius: 10px; padding: 8px 12px; flex: 1; display: flex; flex-direction: column; justify-content: center;">
+                  <div style="font-size: 13px; font-weight: 800; color: #0F172A;">☑️ 03. 실제 수임 전환</div>
+                  <div style="font-size: 11px; color: #64748B;">단순 조회수보다 의뢰인 유입 중심</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 하단 바 -->
+            <div style="background: #FFFBEB; border: 1px solid #E2E8F0; border-radius: 8px; padding: 8px 12px; font-size: 11px; font-weight: 700; color: #0F172A; display: flex; align-items: center; gap: 6px;">
+              <span>💡</span>
+              <span>전문가 실무 팁: 각 항목의 요건을 선제적으로 검토해야 불이익을 방지할 수 있습니다.</span>
+            </div>
+          </div>
+        </div>
+        <div class="card-desc">
+          <strong>역할:</strong> 좌측 2×3 메인 에디토리얼 + 우측 1×1 3단 체크리스트로 신뢰도 극대화
+        </div>
+      </div>
+
+      <!-- 3. Before vs After 비교 (COMPARISON) -->
+      <div class="card-preview">
+        <div class="card-header">
+          <span class="type-tag">⚖️ [사진 3] Before vs After 비교</span>
+          <span class="spec">1080×1080px (3×2 좌우 대비)</span>
+        </div>
+        <div class="card-viewport">
+          <div class="bento-canvas theme-navy-gold">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1.5px solid #E2E8F0; padding-bottom: 10px;">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="font-size: 20px;">⚖️</span>
+                <span style="font-size: 17px; font-weight: 800; color: #0F172A;">기존 마케팅 대행사 vs AI SaaS 비교</span>
+              </div>
+              <span style="background: #FEF3C7; color: #92400E; font-size: 11px; font-weight: 800; padding: 3px 10px; border-radius: 10px;">방식 비교</span>
+            </div>
+
+            <div style="display: flex; gap: 12px; margin: 12px 0; height: 260px;">
+              <!-- Left: Bad (Rose) -->
+              <div style="flex: 1; background: #FFF1F2; border: 1.5px solid #FECDD3; border-radius: 14px; padding: 14px; display: flex; flex-direction: column; justify-content: space-between;">
+                <div>
+                  <span style="background: #E11D48; color: #FFFFFF; font-size: 11px; font-weight: 800; padding: 3px 8px; border-radius: 6px;">❌ 기존 대행사</span>
+                  <div style="font-size: 14px; font-weight: 800; color: #881337; margin: 8px 0;">월 200만 원 과다 비용</div>
+                  <div style="font-size: 11.5px; color: #4C0519; font-weight: 700; line-height: 1.5;">
+                    • 담당자 퇴사 시 품질 리셋<br>
+                    • 과장 광고로 징계 리스크<br>
+                    • 조회수 대비 수임 전환 0건
+                  </div>
+                </div>
+                <div style="background: rgba(225,29,72,0.1); padding: 6px; border-radius: 6px; font-size: 10.5px; color: #881337; font-weight: 800;">
+                  ⚠️ 실질 손실 및 법적 위험 발생
+                </div>
+              </div>
+
+              <!-- Right: Good (Emerald) -->
+              <div style="flex: 1; background: #F0FDF4; border: 1.5px solid #A7F3D0; border-radius: 14px; padding: 14px; display: flex; flex-direction: column; justify-content: space-between;">
+                <div>
+                  <span style="background: #059669; color: #FFFFFF; font-size: 11px; font-weight: 800; padding: 3px 8px; border-radius: 6px;">✅ AI SaaS PostSynk</span>
+                  <div style="font-size: 14px; font-weight: 800; color: #064E3B; margin: 8px 0;">월 수십만 원 합리적 비용</div>
+                  <div style="font-size: 11.5px; color: #022C22; font-weight: 700; line-height: 1.5;">
+                    • 100% 일관된 고품질 원고<br>
+                    • 전문직법 광고 규정 준수<br>
+                    • 14일 만에 검색 1위 및 수임
+                  </div>
+                </div>
+                <div style="background: rgba(5,150,105,0.12); padding: 6px; border-radius: 6px; font-size: 10.5px; color: #064E3B; font-weight: 800;">
+                  🛡️ 체계적 시스템 및 수임 보장
+                </div>
+              </div>
+            </div>
+
+            <div style="background: #FFFBEB; border: 1px solid #E2E8F0; border-radius: 8px; padding: 8px 12px; font-size: 11px; font-weight: 700; color: #0F172A; text-align: center;">
+              🔍 핵심 차이: 사람 의존 모델의 리스크를 '시스템 보장'으로 완벽 대체
+            </div>
+          </div>
+        </div>
+        <div class="card-desc">
+          <strong>역할:</strong> 기존 대행사의 한계(Red) vs SaaS 시스템 보장(Emerald)의 극명한 대비
+        </div>
+      </div>
+
+      <!-- 4. 핵심 수치 하이라이트 (STAT_HIGHLIGHT) -->
+      <div class="card-preview">
+        <div class="card-header">
+          <span class="type-tag">📊 [사진 4] 핵심 수치 하이라이트</span>
+          <span class="spec">1080×1080px (3×2 초대형 수치)</span>
+        </div>
+        <div class="card-viewport">
+          <div class="bento-canvas theme-navy-gold">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1.5px solid #E2E8F0; padding-bottom: 10px;">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="font-size: 20px;">📊</span>
+                <span style="font-size: 17px; font-weight: 800; color: #0F172A;">핵심 성과 지표 분석</span>
+              </div>
+              <span style="background: #FEF3C7; color: #92400E; font-size: 11px; font-weight: 800; padding: 3px 10px; border-radius: 10px;">ROI 성과</span>
+            </div>
+
+            <!-- 상단 3x2 대형 히어로 -->
+            <div style="background: #FFFFFF; border: 1.5px solid #E2E8F0; border-radius: 14px; padding: 24px 16px; margin: 12px 0; text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 10px; height: 180px;">
+              <span style="background: #FFFBEB; color: #B45309; font-size: 11px; font-weight: 800; padding: 3px 10px; border-radius: 10px;">ROI 핵심 성과</span>
+              <div style="font-size: 32px; font-weight: 900; color: #0F172A; letter-spacing: -0.03em;">수임료 매출 300% 달성</div>
+              <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px; padding: 6px 14px; font-size: 12px; font-weight: 700; color: #475569;">
+                도입 14일 만에 기존 대행사 대비 비용 90% 절감
+              </div>
+            </div>
+
+            <!-- 하단 3개 1x1 마이크로 타일 -->
+            <div style="display: flex; gap: 8px; height: 80px;">
+              <div style="flex: 1; background: #FFFFFF; border: 1.5px solid #E2E8F0; border-radius: 10px; padding: 10px; display: flex; flex-direction: column; justify-content: space-between;">
+                <span style="font-size: 10px; font-weight: 800; color: #B45309;">⚖️ 광고법 준수</span>
+                <span style="font-size: 12px; font-weight: 800; color: #0F172A;">위반율 0건 (100%)</span>
+              </div>
+              <div style="flex: 1; background: #FFFFFF; border: 1.5px solid #E2E8F0; border-radius: 10px; padding: 10px; display: flex; flex-direction: column; justify-content: space-between;">
+                <span style="font-size: 10px; font-weight: 800; color: #B45309;">💰 비용 절감</span>
+                <span style="font-size: 12px; font-weight: 800; color: #0F172A;">월 180만 원 절약</span>
+              </div>
+              <div style="flex: 1; background: #FFFFFF; border: 1.5px solid #E2E8F0; border-radius: 10px; padding: 10px; display: flex; flex-direction: column; justify-content: space-between;">
+                <span style="font-size: 10px; font-weight: 800; color: #B45309;">⏱️ 소요 기간</span>
+                <span style="font-size: 12px; font-weight: 800; color: #0F172A;">14일 만에 확정</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-desc">
+          <strong>역할:</strong> 68px 초대형 수치와 3개 마이크로 슬롯으로 도입 성과를 즉각적으로 각인
+        </div>
+      </div>
+
+      <!-- 5. 3단계 행동 로드맵 (PROCESS_FLOW) -->
+      <div class="card-preview">
+        <div class="card-header">
+          <span class="type-tag">🚀 [사진 5] 3단계 실천 로드맵</span>
+          <span class="spec">1080×1080px (3단계 수평 컬럼)</span>
+        </div>
+        <div class="card-viewport">
+          <div class="bento-canvas theme-navy-gold">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1.5px solid #E2E8F0; padding-bottom: 10px;">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="font-size: 20px;">🚀</span>
+                <span style="font-size: 17px; font-weight: 800; color: #0F172A;">PostSynk 14일 도입 3단계 절차</span>
+              </div>
+              <span style="background: #FEF3C7; color: #92400E; font-size: 11px; font-weight: 800; padding: 3px 10px; border-radius: 10px;">3-STEP ROADMAP</span>
+            </div>
+
+            <!-- 3개 수평 컬럼 -->
+            <div style="display: flex; gap: 8px; margin: 12px 0; height: 260px;">
+              <div style="flex: 1; background: #FFFFFF; border: 1.5px solid #E2E8F0; border-radius: 12px; padding: 12px; display: flex; flex-direction: column; justify-content: space-between;">
+                <div>
+                  <span style="background: #FEF3C7; color: #92400E; font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 4px;">STEP 01</span>
+                  <div style="font-size: 14px; font-weight: 800; color: #0F172A; margin: 8px 0 4px;">프로필 입력</div>
+                  <div style="font-size: 11px; color: #64748B; line-height: 1.35;">광고법 프로필 세팅<br>(소요 시간: 10분)</div>
+                </div>
+                <div style="background: #F8FAFC; padding: 4px; font-size: 10px; color: #64748B; font-weight: 700; border-radius: 4px;">초기 진단</div>
+              </div>
+
+              <div style="flex: 1; background: #FFFFFF; border: 1.5px solid #E2E8F0; border-radius: 12px; padding: 12px; display: flex; flex-direction: column; justify-content: space-between;">
+                <div>
+                  <span style="background: #FEF3C7; color: #92400E; font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 4px;">STEP 02</span>
+                  <div style="font-size: 14px; font-weight: 800; color: #0F172A; margin: 8px 0 4px;">기둥포스팅 발행</div>
+                  <div style="font-size: 11px; color: #64748B; line-height: 1.35;">30분 만에 고품질<br>원고 및 카드 완성</div>
+                </div>
+                <div style="background: #F8FAFC; padding: 4px; font-size: 10px; color: #64748B; font-weight: 700; border-radius: 4px;">포스팅 생성</div>
+              </div>
+
+              <div style="flex: 1; background: #FFFBEB; border: 1.5px solid #B45309; border-radius: 12px; padding: 12px; display: flex; flex-direction: column; justify-content: space-between;">
+                <div>
+                  <span style="background: #B45309; color: #FFFFFF; font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 4px;">STEP 03</span>
+                  <div style="font-size: 14px; font-weight: 800; color: #0F172A; margin: 8px 0 4px;">상위 노출 & 수임</div>
+                  <div style="font-size: 11px; color: #64748B; line-height: 1.35;">14일 만에 검색 1위<br>및 전화 상담 폭증</div>
+                </div>
+                <div style="background: #FFFFFF; padding: 4px; font-size: 10px; color: #B45309; font-weight: 800; border-radius: 4px;">🎯 수임 확정</div>
+              </div>
+            </div>
+
+            <div style="background: #FFFBEB; border: 1px solid #E2E8F0; border-radius: 8px; padding: 8px 12px; font-size: 11px; font-weight: 700; color: #0F172A; text-align: center;">
+              🛡️ 전 과정 전문직법 광고 규정 100% 자동 검증 시스템 적용
+            </div>
+          </div>
+        </div>
+        <div class="card-desc">
+          <strong>역할:</strong> 3단계 수평 벤토 컬럼으로 14일 도입 절차를 독자에게 명쾌하게 도식화
+        </div>
+      </div>
+
+      <!-- 6. 하단 상담 명함 배너 (CTA_FOOTER) -->
+      <div class="card-preview">
+        <div class="card-header">
+          <span class="type-tag">📞 [사진 6] 1:1 상담 유도 명함 배너</span>
+          <span class="spec">1080×1080px (1:1 벤토 명함 배너)</span>
+        </div>
+        <div class="card-viewport">
+          <div class="bento-canvas theme-navy-gold">
+            <!-- 상단 히어로 배너 -->
+            <div style="background: #FFFFFF; border: 1.5px solid #B45309; border-radius: 14px; padding: 18px 16px; display: flex; flex-direction: column; justify-content: space-between; height: 160px;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="background: #B45309; color: #FFFFFF; font-size: 11px; font-weight: 800; padding: 3px 10px; border-radius: 6px;">🏛️ 공식 1:1 심층 상담 창구</span>
+                <span style="color: #B45309; font-size: 11px; font-weight: 800;">14일 무료 체험</span>
+              </div>
+              <div>
+                <div style="font-size: 22px; font-weight: 900; color: #0F172A;">PostSynk AI 마케팅 센터</div>
+                <div style="font-size: 12.5px; color: #475569; font-weight: 700; margin-top: 2px;">
+                  14일 무료 도입 체험 · 전문직법 광고 규정 100% 원천 준수
+                </div>
+              </div>
+              <div style="font-size: 10px; color: #94A3B8; font-weight: 600;">
+                * 풍부한 실무 데이터를 바탕으로 의뢰인의 전환율을 극대화합니다.
+              </div>
+            </div>
+
+            <!-- 하단 2단 분할 타일 (전화 & 오시는 길) -->
+            <div style="display: flex; gap: 10px; margin: 10px 0; height: 110px;">
+              <div style="flex: 1; background: #FFFBEB; border: 1.5px solid #B45309; border-radius: 12px; padding: 12px; display: flex; flex-direction: column; justify-content: space-between;">
+                <span style="font-size: 11px; font-weight: 800; color: #B45309;">📞 직통 전화 상담</span>
+                <span style="font-size: 18px; font-weight: 900; color: #0F172A;">02-1588-0000</span>
+                <span style="font-size: 9.5px; color: #475569; font-weight: 700;">14일 무료 체험 즉시 접수</span>
+              </div>
+
+              <div style="flex: 1; background: #FFFFFF; border: 1.5px solid #E2E8F0; border-radius: 12px; padding: 12px; display: flex; flex-direction: column; justify-content: space-between;">
+                <span style="font-size: 11px; font-weight: 800; color: #64748B;">🏢 공식 접수 센터</span>
+                <span style="font-size: 12px; font-weight: 800; color: #0F172A; line-height: 1.3;">서울시 서초구 서초대로 전문직법조타운</span>
+                <span style="font-size: 9.5px; color: #94A3B8; font-weight: 600;">사전 접수 시 대기 없이 상담</span>
+              </div>
+            </div>
+
+            <!-- 하단 보증 바 -->
+            <div style="background: #FFFBEB; border: 1px solid #E2E8F0; border-radius: 8px; padding: 6px 10px; font-size: 10.5px; font-weight: 700; color: #0F172A; text-align: center;">
+              🔒 의뢰인의 비밀은 100% 철저히 보호되며, 14일간 무료 체험이 보장됩니다.
+            </div>
+          </div>
+        </div>
+        <div class="card-desc">
+          <strong>역할:</strong> 글의 마지막에서 무료체험 및 전화 상담으로 100% 연결시키는 1:1 정방형 배너
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>

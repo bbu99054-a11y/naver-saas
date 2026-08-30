@@ -4,6 +4,19 @@
 
 export type CardType =
   | 'MAIN_THUMBNAIL'
+  | 'CTA_FOOTER'
+  // [10종 본문 벤토 카드]
+  | 'RED_FLAGS'
+  | 'SELF_DIAGNOSIS'
+  | 'VS_SIMULATION'
+  | 'COST_OF_INACTION'
+  | 'ACTION_TIMELINE'
+  | 'REQUIRED_DOSSIER'
+  | 'CRITERIA_TABLE'
+  | 'SUCCESS_RECEIPT'
+  | 'EXPERT_OPINION'
+  | 'FINAL_VERDICT'
+  // 레거시 호환
   | 'CHECKLIST'
   | 'COMPARISON'
   | 'STAT_HIGHLIGHT'
@@ -11,18 +24,28 @@ export type CardType =
   | 'QNA'
   | 'WARNING_RISK'
   | 'KEY_TAKEAWAYS'
-  | 'CTA_FOOTER'
 
 export const CARD_TYPE_KOREAN_NAMES: Record<CardType, string> = {
   MAIN_THUMBNAIL: '대표 썸네일',
-  CHECKLIST: '필수 준비 서류 체크리스트',
-  COMPARISON: '잘못된 대처 vs 올바른 해결 비교',
-  STAT_HIGHLIGHT: '핵심 수치 및 공제 기준 하이라이트',
-  PROCESS_FLOW: '3단계 진행 절차 로드맵',
-  QNA: '자주 묻는 질문과 전문가 팩트 해설',
-  WARNING_RISK: '골든타임 및 패널티 리스크 주의 경고',
-  KEY_TAKEAWAYS: '오늘 포스팅 핵심 3줄 요약',
   CTA_FOOTER: '1:1 전문 상담 및 예약 안내',
+  RED_FLAGS: '3대 레드플래그 경고',
+  SELF_DIAGNOSIS: '위기 징후 자가진단표',
+  VS_SIMULATION: '나홀로 vs 전문가 시뮬레이션',
+  COST_OF_INACTION: '방치 시 손실 스노우볼',
+  ACTION_TIMELINE: 'D-Day 진행 절차 로드맵',
+  REQUIRED_DOSSIER: '필수 준비 서류함 도감',
+  CRITERIA_TABLE: '법정 처벌 및 과세 기준표',
+  SUCCESS_RECEIPT: '실제 권리 구제 성공 영수증',
+  EXPERT_OPINION: '전문가 종합 소견서 및 팩트체크',
+  FINAL_VERDICT: '최종 결단 촉구 및 즉시 상담 안내',
+  // 레거시 매핑
+  CHECKLIST: '위기 징후 자가진단표',
+  COMPARISON: '나홀로 vs 전문가 시뮬레이션',
+  STAT_HIGHLIGHT: '법정 처벌 및 과세 기준표',
+  PROCESS_FLOW: 'D-Day 진행 절차 로드맵',
+  QNA: '전문가 종합 소견서 및 팩트체크',
+  WARNING_RISK: '3대 레드플래그 경고',
+  KEY_TAKEAWAYS: '전문가 종합 소견서 및 팩트체크',
 }
 
 /**
@@ -31,15 +54,18 @@ export const CARD_TYPE_KOREAN_NAMES: Record<CardType, string> = {
 export function determineCardType(altText: string): CardType {
   const t = altText.toLowerCase()
   if (t.includes('썸네일') || t.includes('대표')) return 'MAIN_THUMBNAIL'
-  if (t.includes('체크리스트') || t.includes('요건') || t.includes('점검')) return 'CHECKLIST'
-  if (t.includes('비교') || t.includes('대비') || t.includes('before') || t.includes('versus') || t.includes('vs')) return 'COMPARISON'
-  if (t.includes('수치') || t.includes('통계') || t.includes('감면율') || t.includes('금액') || t.includes('세율')) return 'STAT_HIGHLIGHT'
-  if (t.includes('로드맵') || t.includes('절차') || t.includes('단계') || t.includes('행동') || t.includes('step')) return 'PROCESS_FLOW'
-  if (t.includes('질문') || t.includes('qna') || t.includes('q&a') || t.includes('해설') || t.includes('자주')) return 'QNA'
-  if (t.includes('주의') || t.includes('경고') || t.includes('골든타임') || t.includes('리스크') || t.includes('위험')) return 'WARNING_RISK'
-  if (t.includes('요약') || t.includes('결론') || t.includes('3줄') || t.includes('핵심')) return 'KEY_TAKEAWAYS'
+  if (t.includes('레드플래그') || t.includes('실수') || t.includes('fatal') || t.includes('red_flag')) return 'RED_FLAGS'
+  if (t.includes('자가진단') || t.includes('진단') || t.includes('레이더') || t.includes('체크리스트')) return 'SELF_DIAGNOSIS'
+  if (t.includes('시뮬레이션') || t.includes('비교') || t.includes('대비') || t.includes('vs') || t.includes('나홀로')) return 'VS_SIMULATION'
+  if (t.includes('스노우볼') || t.includes('손실') || t.includes('방치') || t.includes('inaction')) return 'COST_OF_INACTION'
+  if (t.includes('타임라인') || t.includes('로드맵') || t.includes('절차') || t.includes('d-day') || t.includes('단계')) return 'ACTION_TIMELINE'
+  if (t.includes('서류') || t.includes('도감') || t.includes('준비물') || t.includes('dossier')) return 'REQUIRED_DOSSIER'
+  if (t.includes('기준표') || t.includes('처벌') || t.includes('과세') || t.includes('세율') || t.includes('수치')) return 'CRITERIA_TABLE'
+  if (t.includes('영수증') || t.includes('성공') || t.includes('사례') || t.includes('receipt') || t.includes('승소')) return 'SUCCESS_RECEIPT'
+  if (t.includes('소견서') || t.includes('팩트체크') || t.includes('3줄') || t.includes('요약') || t.includes('opinion')) return 'EXPERT_OPINION'
+  if (t.includes('결단') || t.includes('verdict') || t.includes('촉구') || t.includes('통화') || t.includes('직통')) return 'FINAL_VERDICT'
   if (t.includes('상담') || t.includes('배너') || t.includes('안내') || t.includes('위치') || t.includes('문의') || t.includes('cta')) return 'CTA_FOOTER'
-  return 'CHECKLIST'
+  return 'SELF_DIAGNOSIS'
 }
 
 /**
