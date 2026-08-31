@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import { 
   Globe, FileText, CheckCircle2, AlertTriangle, Sparkles, 
-  HelpCircle, ArrowRight, Copy, ExternalLink, ShieldCheck, 
+  HelpCircle, ArrowRight, ExternalLink, ShieldCheck, 
   Layers, Key, RefreshCw, Send, 
   Check, Image as ImageIcon, MapPin, Phone, Award, Flame
 } from 'lucide-react'
@@ -15,16 +15,9 @@ type TabType = 'naver' | 'wordpress' | 'tistory' | 'ai' | 'seo'
 
 export default function GuidePage() {
   const [activeTab, setActiveTab] = useState<TabType>('naver')
-  const [copiedText, setCopiedText] = useState<string | null>(null)
-
-  const handleCopySample = (text: string, id: string) => {
-    navigator.clipboard.writeText(text)
-    setCopiedText(id)
-    setTimeout(() => setCopiedText(null), 2000)
-  }
 
   return (
-    <div className="max-w-5xl mx-auto space-y-8 pb-16">
+    <div className="max-w-5xl mx-auto space-y-8 pb-16 break-keep">
       {/* 상단 메인 헤더 */}
       <div className="space-y-2 text-center sm:text-left">
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-50 border border-indigo-100 text-indigo-700 text-xs font-bold mb-1">
@@ -34,7 +27,7 @@ export default function GuidePage() {
           📖 PostSynk 완벽 사용 가이드
         </h1>
         <p className="text-slate-600 text-base leading-relaxed">
-          네이버 블로그 복사 발행부터 워드프레스·티스토리 원클릭 자동 연동, C-Rank 상위 노출 비법까지 모두 확인하세요.
+          네이버 블로그 10초 원클릭 자동 발행부터 워드프레스·티스토리 자동 연동, 10종 벤토 카드뉴스 상위 노출 비법까지 모두 확인하세요.
         </p>
       </div>
 
@@ -112,7 +105,7 @@ export default function GuidePage() {
             <Flame className="w-4 h-4 text-indigo-600" />
             <span className="text-sm">상위 노출 비법</span>
           </div>
-          <span className="text-[11px] font-normal opacity-80">C-Rank / DIA+ FAQ</span>
+          <span className="text-[11px] font-normal opacity-80">10종 벤토 & C-Rank</span>
         </button>
       </div>
 
@@ -126,7 +119,7 @@ export default function GuidePage() {
             <div>
               <h3 className="font-bold text-emerald-950 text-base">네이버 블로그 AI 다이렉트 엔진 원클릭 자동 발행 가이드 🚀</h3>
               <p className="text-emerald-800 text-xs sm:text-sm mt-0.5 leading-relaxed">
-                번거로운 수동 복사 붙여넣기 없이, <strong>[🚀 네이버 원클릭 자동 발행]</strong> 버튼 클릭 한 번으로 고화질 인포그래픽 카드뉴스 4장과 C-Rank 구조화 본문이 내 네이버 블로그에 10초 만에 자동으로 쏙 작성됩니다.
+                번거로운 수동 작업 없이, <strong>[🚀 네이버 원클릭 자동 발행]</strong> 버튼 클릭 한 번으로 고화질 10종 벤토 카드뉴스 4장과 C-Rank 구조화 본문이 내 네이버 블로그 스마트에디터 ONE에 10초 만에 자동으로 작성(임시저장)됩니다.
               </p>
             </div>
           </div>
@@ -183,7 +176,7 @@ export default function GuidePage() {
               </CardHeader>
               <CardContent className="space-y-3 text-xs sm:text-sm text-slate-700">
                 <p>
-                  원고와 인포그래픽 카드뉴스가 생성되면, 에디터 하단의 <strong className="text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">[🚀 네이버 원클릭 자동 발행]</strong> 버튼을 누릅니다.
+                  원고와 10종 벤토 카드뉴스가 생성되면, 에디터 하단의 <strong className="text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">[🚀 네이버 원클릭 자동 발행]</strong> 버튼을 누릅니다.
                 </p>
                 <div className="bg-slate-900 text-slate-200 p-3.5 rounded-xl border border-slate-800 space-y-2 text-xs">
                   <div className="flex items-center justify-between text-emerald-400 font-bold">
@@ -191,10 +184,10 @@ export default function GuidePage() {
                     <span className="text-[10px] bg-emerald-500/20 px-1.5 py-0.5 rounded border border-emerald-500/30">10초 완성</span>
                   </div>
                   <ul className="space-y-1 text-[11px] text-slate-300 pl-1 font-mono">
-                    <li>✓ [1/5] 고화질 인포그래픽 이미지 무손실 패키징</li>
+                    <li>✓ [1/5] 2배 대형 썸네일 & 10종 벤토 카드 무손실 패키징</li>
                     <li>✓ [2/5] 네이버 보안 브라우저 세션 안전 연결</li>
                     <li>✓ [3/5] 스마트에디터 ONE 제목 및 본문 구조화 타이핑</li>
-                    <li>✓ [4/5] 인포그래픽 카드뉴스 & CTA 배너 정밀 배치</li>
+                    <li>✓ [4/5] 1080px 고화질 카드뉴스 & 하단 CTA 배너 정밀 배치</li>
                     <li>✓ [5/5] 네이버 블로그 안전 임시저장 완료 🎉</li>
                   </ul>
                 </div>
@@ -216,7 +209,7 @@ export default function GuidePage() {
                 </p>
                 <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs space-y-1.5 text-slate-600">
                   <p className="font-bold text-slate-800">최종 확인 체크리스트:</p>
-                  <p>• 제목, 본문, 사진 4장, 하단 배너가 완벽히 들어가 있는지 확인 후 우측 상단 <strong>[발행]</strong>을 누르시면 포스팅이 끝납니다.</p>
+                  <p>• 제목, 본문, 벤토 카드뉴스 4장, 하단 배너가 완벽히 들어가 있는지 확인 후 우측 상단 <strong>[발행]</strong>을 누르시면 포스팅이 끝납니다.</p>
                 </div>
 
                 <div className="pt-2 flex justify-end">
@@ -255,25 +248,17 @@ export default function GuidePage() {
               <CardHeader className="pb-3">
                 <div className="flex items-center gap-2">
                   <span className="w-6 h-6 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center text-xs font-black">1</span>
-                  <CardTitle className="text-lg text-slate-800">워드프레스 관리자에서 '응용 프로그램 비밀번호' 발급받기</CardTitle>
+                  <CardTitle className="text-lg text-slate-800">워드프레스 관리자에서 Application Password 생성</CardTitle>
                 </div>
               </CardHeader>
               <CardContent className="space-y-3 text-sm text-slate-700">
                 <ol className="list-decimal pl-5 space-y-2 text-xs sm:text-sm">
-                  <li>워드프레스 관리자 화면(<code className="bg-slate-100 px-1 py-0.5 rounded text-blue-700">https://내도메인.com/wp-admin</code>)에 로그인합니다.</li>
-                  <li>좌측 메뉴에서 <strong>[사용자] ➔ [프로필]</strong>(또는 [나의 프로필]) 메뉴로 이동합니다.</li>
-                  <li>페이지를 맨 아래로 스크롤하여 <strong>'응용 프로그램 비밀번호(Application Passwords)'</strong> 항목을 찾습니다.</li>
-                  <li>
-                    <strong>'새 응용 프로그램 비밀번호 이름'</strong> 입력란에 <code className="bg-slate-100 px-1 py-0.5 rounded font-mono">PostSynk</code> 입력 후 
-                    <strong className="text-blue-600"> [새 응용 프로그램 비밀번호 추가]</strong> 버튼을 누릅니다.
-                  </li>
-                  <li>
-                    화면에 발급된 <strong>4자리씩 띄어진 24자리 비밀번호</strong>(예: <code className="bg-blue-50 text-blue-800 px-1.5 py-0.5 rounded font-mono font-bold">abcd efgh ijkl mnop qrst uvwx</code>)를 복사합니다.
-                  </li>
+                  <li>워드프레스 관리자(WP Admin)에 로그인합니다.</li>
+                  <li>좌측 메뉴 <strong>[사용자] ➔ [프로필]</strong>로 이동합니다.</li>
+                  <li>페이지 맨 아래로 스크롤하여 <strong>[애플리케이션 비밀번호]</strong> 섹션을 찾습니다.</li>
+                  <li>새 애플리케이션 비밀번호 이름에 <code className="bg-slate-100 text-indigo-700 px-1.5 py-0.5 rounded font-mono">PostSync</code> 를 입력하고 <strong>[새 애플리케이션 비밀번호 추가]</strong>를 클릭합니다.</li>
+                  <li>생성된 4자리씩 띄어쓰기된 비밀번호(예: <code className="bg-slate-100 text-slate-800 px-1.5 py-0.5 rounded font-mono">xxxx xxxx xxxx xxxx</code>)를 복사합니다.</li>
                 </ol>
-                <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg text-xs text-amber-900">
-                  ⚠️ <strong>주의:</strong> 이 비밀번호는 기존 워드프레스 로그인 암호가 아니며, REST API 전용 보안 키입니다. 화면을 벗어나면 다시 확인할 수 없으니 복사해 두세요.
-                </div>
               </CardContent>
             </Card>
 
@@ -287,22 +272,19 @@ export default function GuidePage() {
                 </div>
               </CardHeader>
               <CardContent className="space-y-3 text-sm text-slate-700">
-                <p>PostSynk 대시보드의 <strong>[API 설정]</strong> 메뉴로 이동하여 3개 정보를 입력하고 저장합니다:</p>
+                <p>PostSynk 대시보드의 <strong>[API 설정]</strong> 메뉴로 이동하여 3가지 정보를 입력합니다:</p>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   <div className="bg-slate-50 p-3 rounded-lg border border-slate-200 text-xs">
-                    <div className="font-bold text-slate-900 mb-1">1. 사이트 주소 (URL)</div>
-                    <div className="text-slate-600 font-mono">https://myblog.com</div>
-                    <div className="text-[10px] text-slate-400 mt-1">(끝의 슬래시 자동 정제)</div>
+                    <div className="font-bold text-slate-900 mb-1">1. 사이트 URL</div>
+                    <div className="text-slate-600 font-mono">https://mywebsite.com</div>
                   </div>
                   <div className="bg-slate-50 p-3 rounded-lg border border-slate-200 text-xs">
-                    <div className="font-bold text-slate-900 mb-1">2. 사용자명 (Username)</div>
-                    <div className="text-slate-600 font-mono">admin (워드프레스 ID)</div>
-                    <div className="text-[10px] text-slate-400 mt-1">로그인 시 사용하는 아이디</div>
+                    <div className="font-bold text-slate-900 mb-1">2. 워드프레스 계정명</div>
+                    <div className="text-slate-600 font-mono">admin (로그인 ID)</div>
                   </div>
                   <div className="bg-slate-50 p-3 rounded-lg border border-slate-200 text-xs">
                     <div className="font-bold text-slate-900 mb-1">3. Application Password</div>
-                    <div className="text-slate-600 font-mono">xxxx xxxx xxxx xxxx</div>
-                    <div className="text-[10px] text-slate-400 mt-1">AES-256 군사등급 암호화 보관</div>
+                    <div className="text-slate-600 font-mono">생성한 16자리 암호</div>
                   </div>
                 </div>
 
@@ -332,9 +314,9 @@ export default function GuidePage() {
                 <div className="bg-slate-50 p-3 rounded-lg border border-slate-200 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                   <div className="flex items-center gap-2">
                     <span className="font-bold text-slate-800">발행 결과:</span>
-                    <span className="text-slate-600">발행 성공 알림과 함께 즉시 새 탭으로 내 워드프레스 글 주소가 열립니다.</span>
+                    <span className="text-slate-600">성공 알림과 함께 즉시 새 탭으로 내 워드프레스 포스팅 주소가 열립니다.</span>
                   </div>
-                  <span className="text-blue-600 font-bold hidden sm:inline">✓ 즉시 공개(Publish) 상태로 포스팅 완료</span>
+                  <span className="text-emerald-600 font-bold hidden sm:inline">✓ 즉시 발행(status: publish) 완료</span>
                 </div>
               </CardContent>
             </Card>
@@ -342,7 +324,7 @@ export default function GuidePage() {
         </div>
       )}
 
-      {/* 탭 3: 티스토리 자동 연동 & 원클릭 발행 */}
+      {/* 탭 3: 티스토리 자동 연동 */}
       {activeTab === 'tistory' && (
         <div className="space-y-6 animate-in fade-in duration-200">
           <div className="bg-orange-50/80 border border-orange-200/80 rounded-xl p-4 flex items-start gap-3">
@@ -561,7 +543,7 @@ export default function GuidePage() {
         </div>
       )}
 
-      {/* 탭 5: 상위 노출 비법 & FAQ */}
+      {/* 탭 5: 상위 노출 비법 & 2026 10종 벤토 카드 시스템 */}
       {activeTab === 'seo' && (
         <div className="space-y-6 animate-in fade-in duration-200">
           <div className="bg-indigo-50/80 border border-indigo-200/80 rounded-xl p-4 flex items-start gap-3">
@@ -569,19 +551,22 @@ export default function GuidePage() {
               <Flame className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="font-bold text-indigo-950 text-base">네이버 C-Rank & DIA+ 상위 노출 핵심 메커니즘</h3>
+              <h3 className="font-bold text-indigo-950 text-base">2026 네이버 C-Rank & DIA+ 상위 노출 핵심 메커니즘</h3>
               <p className="text-indigo-800 text-xs sm:text-sm mt-0.5 leading-relaxed">
-                PostSynk의 AI는 네이버 실시간 SERP 역설계와 9종 인포그래픽 시각 카드, 중복 방어 시스템으로 상위 노출 점수를 극대화합니다.
+                PostSynk의 AI는 네이버 실시간 SERP 역설계와 2026 최신 10종 반응형 벤토 카드뉴스, 500+가지 결정론적 브랜드 키트 탈양산화 엔진으로 상위 노출 점수를 극대화합니다.
               </p>
             </div>
           </div>
 
           <div className="grid gap-6">
-            {/* SERP 역설계 & 9종 카드 */}
+            {/* SERP 역설계 & 10종 벤토 카드 시스템 */}
             <Card className="border-slate-200 shadow-xs relative overflow-hidden">
               <div className="absolute top-0 left-0 w-1.5 h-full bg-indigo-600" />
               <CardHeader className="pb-3">
-                <CardTitle className="text-lg text-slate-800">1. 실시간 SERP 역설계 & 9종 인포그래픽 카드 시스템</CardTitle>
+                <CardTitle className="text-lg text-slate-800">1. 실시간 SERP 역설계 & 2026 최신 10종 벤토 카드뉴스</CardTitle>
+                <CardDescription>
+                  단순한 텍스트 나열을 넘어 독자의 체류시간과 스크롤 완독률을 3배 끌어올리는 하이엔드 시각 에셋입니다.
+                </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4 text-sm text-slate-700">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
@@ -590,17 +575,36 @@ export default function GuidePage() {
                       <RefreshCw className="w-4 h-4 text-indigo-600" /> 실시간 상위 5개 블로그 분석
                     </div>
                     <p className="text-slate-600 leading-relaxed">
-                      키워드를 입력하면 네이버 1~5위 상위 블로그의 평균 글자수, 공통 H2 목차 구조, 표/인용구 사용 패턴을 실시간 역설계하여 경쟁사보다 300자 더 풍부한 완성형 원고를 작성합니다.
+                      키워드를 입력하면 네이버 1~5위 상위 블로그의 평균 글자수, 공통 H2 목차 구조, 표/인용구 패턴을 실시간 역설계하여 경쟁사보다 300자 더 풍부한 완성형 원고를 작성합니다.
                     </p>
                   </div>
 
                   <div className="bg-slate-50 p-3.5 rounded-lg border border-slate-200 space-y-1.5">
                     <div className="font-bold text-slate-900 flex items-center gap-1.5">
-                      <ImageIcon className="w-4 h-4 text-emerald-600" /> 1080px 고화질 시각 카드 (DIA+ 만점)
+                      <ImageIcon className="w-4 h-4 text-emerald-600" /> 1080px 고화질 10종 벤토 카드 (DIA+ 만점)
                     </div>
                     <p className="text-slate-600 leading-relaxed">
-                      저작권 없는 1080px 고화질 시각 카드(체크리스트, Before/After 비교표, 3단계 로드맵, 핵심 수치 요약 등)가 글마다 3~6장 자동 첨부되어 체류시간과 DIA+ 점수를 대폭 향상시킵니다.
+                      3대 레드플래그 경고, 자가진단표, 나홀로 vs 전문가 비교, 손실 스노우볼, D-Day 로드맵, 필수 서류함, 처벌/과세기준표, 성공 영수증, 전문가 소견서, 최종 결단 촉구 등 10종 카드가 글마다 4장씩 자동 배치됩니다.
                     </p>
+                  </div>
+                </div>
+
+                {/* 10종 벤토 카드 목록 요약표 */}
+                <div className="p-3.5 bg-indigo-50/50 rounded-xl border border-indigo-100 text-xs space-y-2">
+                  <div className="font-bold text-indigo-950 flex items-center gap-1.5">
+                    <span>✨</span> 2026 엄선 10종 벤토 카드뉴스 라인업
+                  </div>
+                  <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 text-[11px]">
+                    <div className="bg-white p-2 rounded border border-indigo-200/60 font-medium text-slate-800">1. 🚨 3대 레드플래그</div>
+                    <div className="bg-white p-2 rounded border border-indigo-200/60 font-medium text-slate-800">2. 📊 위기 자가진단표</div>
+                    <div className="bg-white p-2 rounded border border-indigo-200/60 font-medium text-slate-800">3. 🆚 나홀로 vs 전문가</div>
+                    <div className="bg-white p-2 rounded border border-indigo-200/60 font-medium text-slate-800">4. 📉 손실 스노우볼</div>
+                    <div className="bg-white p-2 rounded border border-indigo-200/60 font-medium text-slate-800">5. ⏳ D-Day 로드맵</div>
+                    <div className="bg-white p-2 rounded border border-indigo-200/60 font-medium text-slate-800">6. 📑 필수 구비 서류함</div>
+                    <div className="bg-white p-2 rounded border border-indigo-200/60 font-medium text-slate-800">7. ⚖️ 처벌/과세 기준표</div>
+                    <div className="bg-white p-2 rounded border border-indigo-200/60 font-medium text-slate-800">8. 🏆 실제 성공 영수증</div>
+                    <div className="bg-white p-2 rounded border border-indigo-200/60 font-medium text-slate-800">9. 💬 전문가 소견서</div>
+                    <div className="bg-white p-2 rounded border border-indigo-200/60 font-medium text-slate-800">10. ✋ 최종 결단 촉구</div>
                   </div>
                 </div>
               </CardContent>

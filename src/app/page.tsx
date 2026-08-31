@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { 
-  ArrowRight, Sparkles, Zap, Search, LayoutTemplate, Copy, Scale, 
+  ArrowRight, Sparkles, Zap, Search, LayoutTemplate, Scale, 
   FileText, Send, CheckCircle2, ShieldCheck, Cpu, Link2, Image as ImageIcon, 
   Clock, Monitor, Smartphone, Check, Building2, Stethoscope, 
   Briefcase, Calculator, ChevronDown, HelpCircle, ArrowUpRight,
@@ -29,7 +29,7 @@ const DEMO_PRESETS = {
     infoboxTitle: '2026 개정 세법 & 국세청 감정평가 사업 핵심 포인트',
     infoboxDesc: '최근 국세청의 비주거용 부동산 및 고가 아파트 감정평가 사업이 확대되고 있습니다. 사전 감정평가를 전략적으로 활용하면 양도세 이월과세 및 상속세 과세표준을 합법적으로 대폭 낮출 수 있습니다.',
     introText: '안녕하세요. 15년 차 상속·증여 전문 세무사입니다. 최근 송파구 소재 아파트를 상속받으신 의뢰인께서 세금 고민으로 찾아오셨습니다. 기준시가와 시가 인정액의 차이로 인해 자칫 2억 원이 넘는 상속세를 납부할 뻔했던 사례였는데요...',
-    cardTitle: '[실전 가이드] 2026 상속세 감정평가 3대 필수 체크리스트',
+    cardTitle: '🚨 절대 혼자 진행하면 안 되는 3대 레드플래그',
     tableRows: [
       { col1: '구분', col2: '일반 기준시가 적용', col3: '전략적 감정평가 적용' },
       { col1: '과세표준 산정', col2: '국세청 일방 추계 시가', col3: '공인 감정평가 2개 기관 평균' },
@@ -50,7 +50,7 @@ const DEMO_PRESETS = {
     infoboxTitle: '대법원 양형기준 & 도로교통법 제148조의2 적용 법리',
     infoboxDesc: '음주운전 재범은 징역 1년 이상 5년 이하 또는 벌금형에 처해집니다. 초기 경찰 조사 단계부터 일관된 진술과 객관적 양형 자료(차량 처분, 치료 의지, 생계형 가장)의 신속한 입증이 핵심입니다.',
     introText: '안녕하십니까. 형사 전문 대표 변호사입니다. 최근 음주운전 처벌 수위가 대폭 강화되면서 단순 2회 적발이라 하더라도 정식 재판에 회부되어 실형(구속)이 선고되는 비율이 급증하고 있습니다...',
-    cardTitle: '[승소 로드맵] 음주운전 재판 단계별 골든타임 대응 4단계',
+    cardTitle: '⏳ 사건 발생부터 최종 종결까지 D-Day 타임라인',
     tableRows: [
       { col1: '수사 단계', col2: '일반적 대응 (위험)', col3: '변호인 동행 전문 조력' },
       { col1: '경찰 조사', col2: '감정적 호소 및 번복', col3: '양형 입증 서류 1차 제출' },
@@ -71,7 +71,7 @@ const DEMO_PRESETS = {
     infoboxTitle: '근로기준법 제27조 (해고사유 등의 서면통지) 필수 요건',
     infoboxDesc: '수습기간이라 할지라도 근로계약이 체결된 이상 합리적 이유 없는 본채용 거부는 부당해고에 해당합니다. 특히 구두 통보나 카카오톡 통보는 서면통지 위반으로 절대적 무효 사유입니다.',
     introText: '안녕하세요. 노동 사건 전문 공인노무사입니다. "수습기간 3개월이 끝났으니 내일부터 출근하지 마세요."라는 청천벽력 같은 통보를 받고 억울함을 호소하시는 분들이 많습니다...',
-    cardTitle: '[노무 실무] 부당해고 입증을 위한 결정적 증거 체크리스트',
+    cardTitle: '📑 상담 전 준비해야 할 필수 구비 서류함',
     tableRows: [
       { col1: '증거 유형', col2: '불완전한 증거', col3: '결정적 법적 증거' },
       { col1: '해고 통보', col2: '구두 대화 기억', col3: '녹취록, 메신저 캡처, 서면' },
@@ -92,7 +92,7 @@ const DEMO_PRESETS = {
     infoboxTitle: '의료법 제56조 준수 및 치료 원리 안내',
     infoboxDesc: '본 칼럼은 의료법을 철저히 준수하여 특정 효과를 과장하지 않으며, 전문의로서 환자분들의 이해를 돕기 위한 객관적 의학 정보 전달을 목적으로 작성되었습니다.',
     introText: '안녕하세요. 척추관절 중점 진료 원장입니다. 아침에 일어날 때마다 허리가 뻐근하고 다리까지 저릿한 통증으로 일상이 무너진 분들을 매일 진료실에서 마주합니다...',
-    cardTitle: '[의학 칼럼] 디스크 단계별 맞춤 치료법 및 생활 습관 5원칙',
+    cardTitle: '📊 내 사건 위험도 자가진단 체크리스트',
     tableRows: [
       { col1: '통증 단계', col2: '초기 팽윤 / 돌출', col3: '파열 및 신경 압박' },
       { col1: '권장 치료', col2: '물리치료 & 체형 교정', col3: '신경차단술 & 정밀 도수치료' },
@@ -104,8 +104,7 @@ const DEMO_PRESETS = {
 export default function LandingPage() {
   const [selectedPresetKey, setSelectedPresetKey] = useState<keyof typeof DEMO_PRESETS>('tax')
   const [viewMode, setViewMode] = useState<'pc' | 'mobile'>('pc')
-  const [isTitleCopied, setIsTitleCopied] = useState(false)
-  const [isCopiedToNaver, setIsCopiedToNaver] = useState(false)
+  const [isPublishedToNaver, setIsPublishedToNaver] = useState(false)
   const [faqOpenIndex, setFaqOpenIndex] = useState<number | null>(0)
 
   const currentPreset = DEMO_PRESETS[selectedPresetKey]
@@ -124,7 +123,7 @@ export default function LandingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0A0D14] text-slate-100 font-sans selection:bg-indigo-500/30 selection:text-indigo-200 overflow-x-hidden">
+    <div className="min-h-screen bg-[#0A0D14] text-slate-100 font-sans selection:bg-indigo-500/30 selection:text-indigo-200 overflow-x-hidden break-keep">
       
       {/* 2026 Modern Ambient Background Glow */}
       <div className="fixed inset-0 pointer-events-none z-0">
@@ -137,7 +136,7 @@ export default function LandingPage() {
       {/* 2026 Glassmorphism Navbar */}
       <header className="fixed top-0 w-full z-50">
         {/* 🔥 최상단 얼리버드 50% 평생 할인 긴급 띠배너 */}
-        <div className="bg-gradient-to-r from-amber-600 via-indigo-600 to-violet-600 text-white text-[11px] sm:text-xs py-1.5 px-4 text-center font-bold tracking-tight flex items-center justify-center gap-2 shadow-md">
+        <div className="bg-gradient-to-r from-amber-600 via-indigo-600 to-violet-600 text-white text-[11px] sm:text-xs py-1.5 px-4 text-center font-bold tracking-tight flex items-center justify-center gap-2 shadow-md break-keep">
           <span className="bg-white text-slate-900 px-2 py-0.2 rounded-full text-[10px] font-black uppercase">얼리버드 론칭 특가</span>
           <span>⚡ 선착순 10명 한정 Pro 플랜 <strong>평생 50% 할인</strong> (현재 7명 마감 / 잔여 3자리!)</span>
           <a href="#pricing" className="underline underline-offset-2 hover:text-amber-200 ml-1 hidden sm:inline">특가 확인하기 &rarr;</a>
@@ -195,54 +194,55 @@ export default function LandingPage() {
           variants={containerVariants}
         >
           {/* Top Pill Badge */}
-          <motion.div variants={itemVariants} className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-indigo-500/20 via-violet-500/20 to-purple-500/20 text-indigo-300 font-semibold text-xs mb-8 border border-indigo-500/30 shadow-inner">
+          <motion.div variants={itemVariants} className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-indigo-500/20 via-violet-500/20 to-purple-500/20 text-indigo-300 font-semibold text-xs mb-8 border border-indigo-500/30 shadow-inner break-keep">
             <Scale className="w-3.5 h-3.5 text-indigo-400" /> 변호사 · 세무사 · 노무사 · 의사 전문직 특화 AI
           </motion.div>
           
-          {/* Main Title */}
-          <motion.h1 variants={itemVariants} className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight mb-8 leading-[1.15] text-white">
-            나의 승소 · 상담 실무 사례가<br/>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-violet-300 to-emerald-400">
-              단 1분 만에 완벽한 전문가 칼럼
+          {/* Main Title (단어 쪼개짐 완벽 방지: whitespace-nowrap 어절 묶음) */}
+          <motion.h1 variants={itemVariants} className="text-3xl sm:text-5xl md:text-7xl font-extrabold tracking-tight mb-8 leading-[1.3] text-white break-keep">
+            <span className="inline-block whitespace-nowrap">나의 승소 · 상담 실무 사례가</span><br className="hidden sm:inline" />{' '}
+            <span className="inline-block text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-violet-300 to-emerald-400">
+              <span className="inline-block whitespace-nowrap">단 1분 만에</span>{' '}
+              <span className="inline-block whitespace-nowrap">완벽한 전문가 칼럼으로.</span>
             </span>
-            으로.
           </motion.h1>
           
           {/* Subtitle */}
-          <motion.p variants={itemVariants} className="text-base md:text-xl text-slate-400 mb-10 max-w-3xl mx-auto leading-relaxed">
-            일반 양산형 AI의 뻔한 지어내기(환각)는 이제 그만. 대표님의 실무 지식(RAG)과 최신 판례를 결합하여, 
-            <strong className="text-slate-200 font-semibold"> 광고법 위반 제로 · 스마트에디터 ONE 서식 100% 호환</strong> 고품질 글을 완성합니다.
+          <motion.p variants={itemVariants} className="text-sm sm:text-base md:text-xl text-slate-400 mb-10 max-w-3xl mx-auto leading-relaxed break-keep">
+            <span className="inline-block">일반 양산형 AI의 뻔한 지어내기(환각)는 이제 그만.</span>{' '}
+            <span className="inline-block">대표님의 실무 지식(RAG)과 최신 판례를 결합하여,</span>{' '}
+            <span className="inline-block"><strong className="text-slate-200 font-semibold">광고법 위반 제로 · 스마트에디터 ONE 10초 원클릭 자동 발행</strong> 고품질 글을 완성합니다.</span>
           </motion.p>
           
           {/* 3 Core Trust Badges */}
           <motion.div variants={itemVariants} className="flex flex-wrap items-center justify-center gap-3 mb-10">
-            <div className="flex items-center gap-2 text-xs font-bold text-slate-200 bg-white/5 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 shadow-sm">
+            <div className="flex items-center gap-2 text-xs font-bold text-slate-200 bg-white/5 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 shadow-sm break-keep">
               <ShieldCheck className="w-4 h-4 text-emerald-400" /> 광고법 위반 제로 (100% 합법)
             </div>
-            <div className="flex items-center gap-2 text-xs font-bold text-slate-200 bg-white/5 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 shadow-sm">
+            <div className="flex items-center gap-2 text-xs font-bold text-slate-200 bg-white/5 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 shadow-sm break-keep">
               <Cpu className="w-4 h-4 text-indigo-400" /> 실무 판례 · 행정해석 강제 RAG
             </div>
-            <div className="flex items-center gap-2 text-xs font-bold text-slate-200 bg-white/5 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 shadow-sm">
-              <ImageIcon className="w-4 h-4 text-amber-400" /> 실사 인포그래픽 카드 자동 생성
+            <div className="flex items-center gap-2 text-xs font-bold text-slate-200 bg-white/5 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 shadow-sm break-keep">
+              <ImageIcon className="w-4 h-4 text-amber-400" /> 10종 반응형 벤토 카드 자동 생성
             </div>
           </motion.div>
           
           {/* Main Action Buttons */}
           <motion.div variants={itemVariants} className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link href="/login">
-              <Button size="lg" className="h-13 px-8 text-base rounded-full bg-gradient-to-r from-indigo-600 via-indigo-500 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white shadow-xl shadow-indigo-600/30 transition-all hover:scale-105 font-bold border border-indigo-400/40">
+              <Button size="lg" className="h-13 px-8 text-base rounded-full bg-gradient-to-r from-indigo-600 via-indigo-500 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white shadow-xl shadow-indigo-600/30 transition-all hover:scale-105 font-bold border border-indigo-400/40 cursor-pointer break-keep">
                 3회 무료 생성 시작하기 <ArrowRight className="ml-2 w-5 h-5" />
               </Button>
             </Link>
             <a href="#demo">
-              <Button size="lg" variant="outline" className="h-13 px-7 text-base rounded-full bg-white/5 hover:bg-white/10 text-slate-200 border-white/15 font-semibold transition-all">
+              <Button size="lg" variant="outline" className="h-13 px-7 text-base rounded-full bg-white/5 hover:bg-white/10 text-slate-200 border-white/15 font-semibold transition-all break-keep">
                 실제 글쓰기 화면 체험하기
               </Button>
             </a>
           </motion.div>
 
           {/* Social Proof Counter */}
-          <motion.div variants={itemVariants} className="mt-14 pt-8 border-t border-white/10 grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto text-left">
+          <motion.div variants={itemVariants} className="mt-14 pt-8 border-t border-white/10 grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto text-left break-keep">
             <div className="bg-white/5 rounded-2xl p-4 border border-white/5">
               <div className="text-2xl font-black text-white">15,000+</div>
               <div className="text-xs text-slate-400 mt-1">전문직 발행 원고 수</div>
@@ -270,14 +270,15 @@ export default function LandingPage() {
         <div className="max-w-6xl mx-auto">
           
           <div className="text-center mb-10">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-500/10 text-indigo-300 text-xs font-bold mb-3 border border-indigo-500/20">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-500/10 text-indigo-300 text-xs font-bold mb-3 border border-indigo-500/20 break-keep">
               <Sparkles className="w-3.5 h-3.5 text-indigo-400" /> LIVE INTERACTIVE STUDIO
             </div>
-            <h2 className="text-3xl md:text-4xl font-extrabold text-white mb-3">
-              실제 글쓰기 화면을 <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-violet-400">직접 조작</span>해보세요
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white mb-3 break-keep">
+              <span className="inline-block whitespace-nowrap">실제 글쓰기 화면을</span>{' '}
+              <span className="inline-block whitespace-nowrap text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-violet-400">직접 조작해보세요</span>
             </h2>
-            <p className="text-slate-400 text-sm md:text-base max-w-2xl mx-auto">
-              직종별 탭을 클릭하거나 PC/모바일 뷰를 전환하여 실제 PostSync 에디터의 막강한 서식과 디테일을 확인하세요.
+            <p className="text-slate-400 text-sm md:text-base max-w-2xl mx-auto break-keep">
+              직종별 탭을 클릭하거나 PC/모바일 뷰를 전환하여 실제 PostSync 에디터의 막강한 서식과 10종 벤토 카드를 확인하세요.
             </p>
 
             {/* Profession Presets Switcher Bar */}
@@ -290,7 +291,7 @@ export default function LandingPage() {
                   <button
                     key={key}
                     onClick={() => setSelectedPresetKey(key)}
-                    className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+                    className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer break-keep ${
                       isSelected
                         ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30 scale-105 border border-indigo-400/40'
                         : 'bg-white/5 text-slate-400 hover:text-white hover:bg-white/10 border border-white/5'
@@ -370,27 +371,27 @@ export default function LandingPage() {
                       <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
                       오늘의 핵심 상담 · 판례 포인트 (RAG)
                     </label>
-                    <p className="text-[10px] text-indigo-300/80 leading-snug">
+                    <p className="text-[10px] text-indigo-300/80 leading-snug break-keep">
                       나만의 승소/상담 특이 케이스를 1줄만 적어도 1인칭 후킹에 자동 반영됩니다.
                     </p>
-                    <div className="w-full bg-[#101424] border border-indigo-500/30 rounded-lg p-2.5 text-[11px] text-slate-200 leading-relaxed min-h-[70px]">
+                    <div className="w-full bg-[#101424] border border-indigo-500/30 rounded-lg p-2.5 text-[11px] text-slate-200 leading-relaxed min-h-[70px] break-keep">
                       {currentPreset.experience}
                     </div>
                   </div>
 
                   {/* Action Button */}
-                  <Button className="w-full bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-bold h-10 text-xs shadow-lg shadow-indigo-600/30 rounded-xl border border-indigo-400/30">
+                  <Button className="w-full bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-bold h-10 text-xs shadow-lg shadow-indigo-600/30 rounded-xl border border-indigo-400/30 cursor-pointer break-keep">
                     <Sparkles className="w-3.5 h-3.5 mr-1.5" /> AI 블로그 생성하기 (단 1분 소요)
                   </Button>
                 </div>
 
                 {/* Left Bottom Tips */}
-                <div className="bg-white/5 p-3 rounded-xl border border-white/5 mt-4 text-[11px] text-slate-400 space-y-1">
+                <div className="bg-white/5 p-3 rounded-xl border border-white/5 mt-4 text-[11px] text-slate-400 space-y-1 break-keep">
                   <div className="font-bold text-slate-300 flex items-center gap-1 text-[11px]">
                     💡 2026 최신 로직 적용 완료
                   </div>
-                  <p>• 네이버 스마트에디터 ONE 전용 HTML 자동 서식화</p>
-                  <p>• 광고법 금지어 실시간 필터링 가드레일 활성화</p>
+                  <p>• 네이버 스마트에디터 ONE 10초 원클릭 자동 발행</p>
+                  <p>• 10종 반응형 벤토 카드뉴스 & 2배 대형 썸네일 탑재</p>
                 </div>
               </div>
 
@@ -401,9 +402,9 @@ export default function LandingPage() {
                 <div className="bg-white border-b border-slate-200 px-4 py-2.5 flex items-center justify-between gap-2 shadow-xs">
                   <div className="flex items-center gap-2">
                     <span className="w-2.5 h-2.5 rounded-full bg-[#03C75A]" />
-                    <span className="text-xs font-bold text-slate-800">스마트에디터 ONE 미리보기</span>
+                    <span className="text-xs font-bold text-slate-800">스마트에디터 ONE 실시간 프리뷰</span>
                     <span className="text-[10px] text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-md font-semibold border border-indigo-100 hidden sm:inline">
-                      ● 실시간 스트리밍 완료
+                      ● 스트리밍 생성 완료
                     </span>
                   </div>
 
@@ -421,7 +422,7 @@ export default function LandingPage() {
                     <div className="flex items-center bg-slate-100 p-0.5 rounded-lg border border-slate-200 text-[11px] font-bold">
                       <button
                         onClick={() => setViewMode('pc')}
-                        className={`flex items-center gap-1 px-2.5 py-1 rounded-md transition-all ${
+                        className={`flex items-center gap-1 px-2.5 py-1 rounded-md transition-all cursor-pointer ${
                           viewMode === 'pc' ? 'bg-white text-indigo-700 shadow-xs' : 'text-slate-500 hover:text-slate-900'
                         }`}
                       >
@@ -429,7 +430,7 @@ export default function LandingPage() {
                       </button>
                       <button
                         onClick={() => setViewMode('mobile')}
-                        className={`flex items-center gap-1 px-2.5 py-1 rounded-md transition-all ${
+                        className={`flex items-center gap-1 px-2.5 py-1 rounded-md transition-all cursor-pointer ${
                           viewMode === 'mobile' ? 'bg-white text-indigo-700 shadow-xs' : 'text-slate-500 hover:text-slate-900'
                         }`}
                       >
@@ -447,18 +448,6 @@ export default function LandingPage() {
                   <div className="text-xs font-bold text-slate-900 bg-white border border-slate-200 rounded-md px-3 py-1.5 flex-1 truncate">
                     {currentPreset.title}
                   </div>
-                  <Button 
-                    variant="outline" 
-                    size="sm"
-                    className="h-7 text-xs border-indigo-200 text-indigo-700 hover:bg-indigo-50 font-bold shrink-0"
-                    onClick={() => {
-                      setIsTitleCopied(true)
-                      setTimeout(() => setIsTitleCopied(false), 1500)
-                    }}
-                  >
-                    {isTitleCopied ? <Check className="w-3 h-3 text-emerald-600 mr-1" /> : <Copy className="w-3 h-3 mr-1" />}
-                    {isTitleCopied ? '복사됨' : '제목 복사'}
-                  </Button>
                 </div>
 
                 {/* Editor Content Area (PC Wide vs Mobile Phone Frame) */}
@@ -480,7 +469,7 @@ export default function LandingPage() {
                           <span className="text-[9px] bg-white/20 px-1.5 py-0.5 rounded">스마트에디터 ONE</span>
                         </div>
                         {/* Mobile Article Content */}
-                        <div className="p-3.5 text-xs space-y-3">
+                        <div className="p-3.5 text-xs space-y-3 break-keep">
                           {/* Infobox */}
                           <div className="p-2.5 rounded-lg bg-slate-50 border-l-4 border-indigo-500 shadow-2xs">
                             <div className="font-bold text-[11px] text-indigo-950 flex items-center gap-1 mb-1">
@@ -491,13 +480,13 @@ export default function LandingPage() {
                           {/* Body Text */}
                           <p className="text-slate-800 leading-relaxed text-[11px]">{currentPreset.introText}</p>
                           {/* Infographic Card Thumbnail */}
-                          <div className="rounded-xl overflow-hidden border border-slate-200 shadow-sm bg-gradient-to-br from-indigo-900 to-slate-900 text-white p-3 text-center">
-                            <div className="text-[9px] font-bold text-indigo-300 uppercase tracking-wider mb-0.5">PostSync Verified Info</div>
-                            <div className="font-extrabold text-xs text-amber-300">{currentPreset.cardTitle}</div>
-                            <div className="mt-2 grid grid-cols-3 gap-1 text-[9px] bg-white/10 p-1.5 rounded-lg">
+                          <div className="rounded-xl overflow-hidden border border-rose-200 shadow-sm bg-[#FFF1F2] text-slate-900 p-3 text-center">
+                            <div className="text-[9px] font-bold text-rose-600 uppercase tracking-wider mb-0.5">PostSync 2026 Bento Card</div>
+                            <div className="font-extrabold text-xs text-rose-950">{currentPreset.cardTitle}</div>
+                            <div className="mt-2 grid grid-cols-3 gap-1 text-[9px] bg-white p-1.5 rounded-lg border border-rose-100">
                               <div>{currentPreset.tableRows[1].col1}</div>
-                              <div className="text-slate-300">{currentPreset.tableRows[1].col2}</div>
-                              <div className="font-bold text-emerald-300">{currentPreset.tableRows[1].col3}</div>
+                              <div className="text-slate-500">{currentPreset.tableRows[1].col2}</div>
+                              <div className="font-bold text-rose-600">{currentPreset.tableRows[1].col3}</div>
                             </div>
                           </div>
                         </div>
@@ -505,7 +494,7 @@ export default function LandingPage() {
                     </div>
                   ) : (
                     /* PC Desktop Wide View */
-                    <div className="max-w-2xl mx-auto bg-white p-6 rounded-xl border border-slate-200 shadow-xs text-left space-y-4">
+                    <div className="max-w-2xl mx-auto bg-white p-6 rounded-xl border border-slate-200 shadow-xs text-left space-y-4 break-keep">
                       {/* 1. Official Law / Point Infobox */}
                       <div className="p-4 rounded-xl bg-slate-50 border-l-4 border-indigo-600 shadow-2xs">
                         <div className="font-bold text-sm text-indigo-950 flex items-center gap-1.5 mb-1.5">
@@ -518,22 +507,22 @@ export default function LandingPage() {
                       {/* 2. Intro Text */}
                       <p className="text-sm text-slate-800 leading-relaxed">{currentPreset.introText}</p>
 
-                      {/* 3. Auto Generated Card Infographic */}
-                      <div className="rounded-2xl overflow-hidden border border-slate-200 shadow-md bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-white p-5 text-center my-4">
-                        <div className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 text-[10px] font-bold mb-2 border border-indigo-500/30">
-                          <Award className="w-3 h-3 text-amber-400" /> C-Rank High Quality Card
+                      {/* 3. 2026 Bento Grid Card Infographic */}
+                      <div className="rounded-2xl overflow-hidden border border-rose-200 shadow-md bg-[#FFF1F2] text-slate-900 p-5 text-center my-4">
+                        <div className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-rose-100 text-rose-700 text-[10px] font-bold mb-2 border border-rose-200">
+                          <Award className="w-3 h-3 text-rose-600" /> 2026 반응형 벤토 카드뉴스
                         </div>
-                        <h4 className="font-extrabold text-sm md:text-base text-yellow-300 mb-3">{currentPreset.cardTitle}</h4>
-                        <div className="grid grid-cols-3 gap-2 text-xs bg-white/10 p-3 rounded-xl border border-white/10 text-left">
-                          <div className="font-bold text-slate-200">{currentPreset.tableRows[0].col1}</div>
-                          <div className="font-bold text-slate-200">{currentPreset.tableRows[0].col2}</div>
-                          <div className="font-bold text-emerald-300">{currentPreset.tableRows[0].col3}</div>
-                          <div className="text-slate-300 text-[11px]">{currentPreset.tableRows[1].col1}</div>
-                          <div className="text-slate-400 text-[11px]">{currentPreset.tableRows[1].col2}</div>
-                          <div className="text-emerald-400 font-bold text-[11px]">{currentPreset.tableRows[1].col3}</div>
-                          <div className="text-slate-300 text-[11px]">{currentPreset.tableRows[2].col1}</div>
-                          <div className="text-slate-400 text-[11px]">{currentPreset.tableRows[2].col2}</div>
-                          <div className="text-emerald-400 font-bold text-[11px]">{currentPreset.tableRows[2].col3}</div>
+                        <h4 className="font-extrabold text-sm md:text-base text-rose-950 mb-3">{currentPreset.cardTitle}</h4>
+                        <div className="grid grid-cols-3 gap-2 text-xs bg-white p-3 rounded-xl border border-rose-100 text-left">
+                          <div className="font-bold text-slate-800">{currentPreset.tableRows[0].col1}</div>
+                          <div className="font-bold text-slate-800">{currentPreset.tableRows[0].col2}</div>
+                          <div className="font-bold text-rose-600">{currentPreset.tableRows[0].col3}</div>
+                          <div className="text-slate-600 text-[11px]">{currentPreset.tableRows[1].col1}</div>
+                          <div className="text-slate-500 text-[11px]">{currentPreset.tableRows[1].col2}</div>
+                          <div className="text-rose-600 font-bold text-[11px]">{currentPreset.tableRows[1].col3}</div>
+                          <div className="text-slate-600 text-[11px]">{currentPreset.tableRows[2].col1}</div>
+                          <div className="text-slate-500 text-[11px]">{currentPreset.tableRows[2].col2}</div>
+                          <div className="text-rose-600 font-bold text-[11px]">{currentPreset.tableRows[2].col3}</div>
                         </div>
                       </div>
 
@@ -550,25 +539,25 @@ export default function LandingPage() {
 
                 {/* Bottom Action Bar */}
                 <div className="p-3 bg-white border-t border-slate-200 flex items-center justify-between gap-2 shadow-xs">
-                  <div className="text-[11px] text-slate-500 hidden sm:block">
-                    서식 깨짐 제로: <strong className="text-slate-800">클립보드 HTML 무손실 복사</strong>
+                  <div className="text-[11px] text-slate-500 hidden sm:block break-keep">
+                    네이버 블로그: <strong className="text-slate-800">10초 원클릭 자동 발행 (임시저장)</strong>
                   </div>
                   <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
                     <Button 
-                      className={`h-9 px-4 text-xs font-bold transition-all ${
-                        isCopiedToNaver
+                      className={`h-9 px-4 text-xs font-bold transition-all cursor-pointer break-keep ${
+                        isPublishedToNaver
                           ? 'bg-emerald-600 text-white'
                           : 'bg-[#03C75A] hover:bg-[#02B350] text-white shadow-md shadow-emerald-600/20'
                       }`}
                       onClick={() => {
-                        setIsCopiedToNaver(true)
-                        setTimeout(() => setIsCopiedToNaver(false), 2000)
+                        setIsPublishedToNaver(true)
+                        setTimeout(() => setIsPublishedToNaver(false), 2500)
                       }}
                     >
-                      {isCopiedToNaver ? (
-                        <><Check className="w-3.5 h-3.5 mr-1" /> 네이버 스마트에디터 복사 완료!</>
+                      {isPublishedToNaver ? (
+                        <><Check className="w-3.5 h-3.5 mr-1" /> 네이버 블로그 자동 발행 완료!</>
                       ) : (
-                        <><span className="font-black mr-1">N</span> 네이버 블로그 원클릭 복사</>
+                        <><span className="font-black mr-1">🚀</span> 네이버 원클릭 자동 발행</>
                       )}
                     </Button>
                     <div className="hidden md:flex items-center gap-1.5">
@@ -592,19 +581,20 @@ export default function LandingPage() {
       </section>
 
       {/* ========================================================================= */}
-      {/* 🌟 5 CORE UNFAIR ADVANTAGES (PostSync만의 독보적인 5대 특별함) */}
+      {/* 🌟 [5 UNFAIR ADVANTAGES] 5대 차별점 */}
       {/* ========================================================================= */}
-      <section id="features" className="py-24 px-6 relative z-10 border-t border-white/10 bg-[#0E121E]">
-        <div className="max-w-7xl mx-auto">
+      <section id="features" className="py-24 px-6 relative z-10 border-t border-white/10 bg-[#0A0D14]">
+        <div className="max-w-6xl mx-auto">
           
           <div className="text-center mb-16">
-            <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-indigo-500/10 text-indigo-400 text-xs font-bold mb-3 border border-indigo-500/20">
+            <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-indigo-500/10 text-indigo-400 text-xs font-bold mb-3 border border-indigo-500/20 break-keep">
               <Award className="w-3.5 h-3.5" /> UNFAIR ADVANTAGES
             </div>
-            <h2 className="text-3xl md:text-5xl font-extrabold text-white mb-4 tracking-tight">
-              전문직 대표님들이 <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-emerald-400">PostSync만 고집하는 5가지 이유</span>
+            <h2 className="text-2xl sm:text-3xl md:text-5xl font-extrabold text-white mb-4 tracking-tight break-keep">
+              <span className="inline-block whitespace-nowrap">전문직 대표님들이</span>{' '}
+              <span className="inline-block whitespace-nowrap text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-emerald-400">PostSync만 고집하는 5가지 이유</span>
             </h2>
-            <p className="text-slate-400 text-base max-w-2xl mx-auto">
+            <p className="text-slate-400 text-base max-w-2xl mx-auto break-keep">
               일반 블로그 AI와는 차원이 다른, 전문직만을 위해 설계된 기술적 차별점을 확인하세요.
             </p>
           </div>
@@ -613,7 +603,7 @@ export default function LandingPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             
             {/* 1. RAG & Precedents */}
-            <div className="bg-white/5 p-8 rounded-3xl border border-white/10 hover:border-indigo-500/40 hover:bg-white/[0.07] transition-all group flex flex-col justify-between">
+            <div className="bg-white/5 p-8 rounded-3xl border border-white/10 hover:border-indigo-500/40 hover:bg-white/[0.07] transition-all group flex flex-col justify-between break-keep">
               <div>
                 <div className="w-14 h-14 rounded-2xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform border border-indigo-500/30">
                   <Cpu className="w-7 h-7" />
@@ -621,7 +611,7 @@ export default function LandingPage() {
                 <div className="text-xs font-bold text-indigo-400 mb-1">01 / RAG & SILO SEARCH</div>
                 <h3 className="text-xl font-bold text-white mb-3">실무 판례 · 지식베이스 강제 결합</h3>
                 <p className="text-slate-400 text-sm leading-relaxed">
-                  대표님의 사무소 소개, 전문 분야, 승소 사례를 사전 학습(RAG)하고, 글 작성 시 실시간 판례 및 행정해석(Tavily API)을 강제로 주입하여 100% 진짜 전문가가 쓴 깊이 있는 원고를 생성합니다.
+                  대표님의 사무소 소개, 전문 분야, 승소 사례를 사전 학습(RAG)하고, 글 작성 시 실시간 판례 및 행정해석을 강제로 주입하여 100% 진짜 전문가가 쓴 깊이 있는 원고를 생성합니다.
                 </p>
               </div>
               <div className="mt-6 pt-4 border-t border-white/5 flex items-center gap-2 text-xs text-indigo-300 font-semibold">
@@ -630,7 +620,7 @@ export default function LandingPage() {
             </div>
 
             {/* 2. Legal Compliance */}
-            <div className="bg-white/5 p-8 rounded-3xl border border-white/10 hover:border-emerald-500/40 hover:bg-white/[0.07] transition-all group flex flex-col justify-between">
+            <div className="bg-white/5 p-8 rounded-3xl border border-white/10 hover:border-emerald-500/40 hover:bg-white/[0.07] transition-all group flex flex-col justify-between break-keep">
               <div>
                 <div className="w-14 h-14 rounded-2xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform border border-emerald-500/30">
                   <ShieldCheck className="w-7 h-7" />
@@ -647,7 +637,7 @@ export default function LandingPage() {
             </div>
 
             {/* 3. Topical Authority Internal Links */}
-            <div className="bg-white/5 p-8 rounded-3xl border border-white/10 hover:border-violet-500/40 hover:bg-white/[0.07] transition-all group flex flex-col justify-between">
+            <div className="bg-white/5 p-8 rounded-3xl border border-white/10 hover:border-violet-500/40 hover:bg-white/[0.07] transition-all group flex flex-col justify-between break-keep">
               <div>
                 <div className="w-14 h-14 rounded-2xl bg-violet-500/20 text-violet-400 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform border border-violet-500/30">
                   <Link2 className="w-7 h-7" />
@@ -663,44 +653,44 @@ export default function LandingPage() {
               </div>
             </div>
 
-            {/* 4. Infographics & Card News */}
-            <div className="bg-white/5 p-8 rounded-3xl border border-white/10 hover:border-amber-500/40 hover:bg-white/[0.07] transition-all group flex flex-col justify-between">
+            {/* 4. 2026 10 Bento Cards & 탈양산화 */}
+            <div className="bg-white/5 p-8 rounded-3xl border border-white/10 hover:border-amber-500/40 hover:bg-white/[0.07] transition-all group flex flex-col justify-between break-keep">
               <div>
                 <div className="w-14 h-14 rounded-2xl bg-amber-500/20 text-amber-400 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform border border-amber-500/30">
                   <ImageIcon className="w-7 h-7" />
                 </div>
-                <div className="text-xs font-bold text-amber-400 mb-1">04 / VISUAL CONTENT</div>
-                <h3 className="text-xl font-bold text-white mb-3">초고화질 실사 인포그래픽 자동 생성</h3>
+                <div className="text-xs font-bold text-amber-400 mb-1">04 / 2026 BENTO ENGINE</div>
+                <h3 className="text-xl font-bold text-white mb-3">10종 벤토 카드뉴스 & 500종 탈양산화</h3>
                 <p className="text-slate-400 text-sm leading-relaxed">
-                  텍스트만 빽빽한 지루한 글은 독자가 바로 이탈합니다. 본문 맥락에 맞는 1:1 맞춤형 고화질 카드뉴스 이미지, 인포박스, 비교 요약표를 자동으로 생성하여 모바일 가독성을 3배 끌어올립니다.
+                  3대 레드플래그 경고, 자가진단표, 손실스노우볼, D-Day로드맵 등 10종 벤토 카드뉴스와 2배 대형 썸네일을 5대 3×3 프레임과 10대 브랜드 컬러로 매번 새롭게 자동 렌더링합니다.
                 </p>
               </div>
               <div className="mt-6 pt-4 border-t border-white/5 flex items-center gap-2 text-xs text-amber-300 font-semibold">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400" /> 저작권 걱정 없는 100% 안전 에셋
+                <CheckCircle2 className="w-4 h-4 text-emerald-400" /> 1080px 고화질 Satori 무결점 렌더링
               </div>
             </div>
 
-            {/* 5. SmartEditor Copy & Multi-Publish (Wide 2-col on large screens) */}
-            <div className="md:col-span-2 lg:col-span-2 bg-gradient-to-br from-indigo-900/40 via-purple-900/20 to-white/5 p-8 rounded-3xl border border-indigo-500/30 hover:border-indigo-400/50 transition-all flex flex-col justify-between">
+            {/* 5. SmartEditor ONE 원클릭 자동 발행 & 동시 배포 */}
+            <div className="md:col-span-2 lg:col-span-2 bg-gradient-to-br from-indigo-900/40 via-purple-900/20 to-white/5 p-8 rounded-3xl border border-indigo-500/30 hover:border-indigo-400/50 transition-all flex flex-col justify-between break-keep">
               <div>
                 <div className="flex items-center gap-3 mb-6">
                   <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#03C75A] to-emerald-600 text-white flex items-center justify-center font-black text-xl shadow-lg shadow-emerald-600/30">
                     N
                   </div>
                   <div>
-                    <div className="text-xs font-bold text-emerald-400 mb-0.5">05 / 0.01s ZERO-LOSS CLIPBOARD</div>
-                    <h3 className="text-xl md:text-2xl font-bold text-white">스마트에디터 ONE 서식 100% 무손실 복사 & 동시 발행</h3>
+                    <div className="text-xs font-bold text-emerald-400 mb-0.5">05 / 10s DIRECT AUTO-PUBLISH</div>
+                    <h3 className="text-xl md:text-2xl font-bold text-white">스마트에디터 ONE 10초 원클릭 자동 발행 & 멀티 배포</h3>
                   </div>
                 </div>
                 <p className="text-slate-300 text-sm md:text-base leading-relaxed mb-6">
-                  기존 AI 도구처럼 서식이 깨져서 일일이 폰트 크기와 표를 다시 수정할 필요가 없습니다. 
-                  버튼 클릭 한 번으로 네이버 스마트에디터 전용 서식(제목, 22px 대제목, 인포박스, 이미지)을 
-                  완벽하게 클립보드에 복사하며, 워드프레스와 티스토리에도 동시 자동 배포됩니다.
+                  번거로운 수동 작업 없이, 버튼 클릭 한 번으로 내 네이버 블로그 스마트에디터 ONE에 
+                  제목, 본문 서식, 고화질 벤토 카드뉴스 4장이 10초 만에 완벽하게 자동 작성(임시저장)되며, 
+                  워드프레스와 티스토리에도 원클릭 동시 자동 배포됩니다.
                 </p>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-4 border-t border-white/10">
                 <div className="bg-white/10 p-3 rounded-xl text-center text-xs font-bold text-white border border-white/10">
-                  🟢 네이버 스마트에디터 ONE
+                  🟢 네이버 원클릭 자동 발행
                 </div>
                 <div className="bg-white/10 p-3 rounded-xl text-center text-xs font-bold text-white border border-white/10">
                   🔵 워드프레스 REST API
@@ -723,13 +713,14 @@ export default function LandingPage() {
         <div className="max-w-6xl mx-auto">
           
           <div className="text-center mb-16">
-            <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-rose-500/10 text-rose-400 text-xs font-bold mb-3 border border-rose-500/20">
+            <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-rose-500/10 text-rose-400 text-xs font-bold mb-3 border border-rose-500/20 break-keep">
               <TrendingUp className="w-3.5 h-3.5" /> QUALITY COMPARISON
             </div>
-            <h2 className="text-3xl md:text-5xl font-extrabold text-white mb-4 tracking-tight">
-              왜 흔한 챗GPT 글로는 <span className="text-rose-400">수임 · 상담 전환이 안 될까요?</span>
+            <h2 className="text-2xl sm:text-3xl md:text-5xl font-extrabold text-white mb-4 tracking-tight break-keep">
+              <span className="inline-block whitespace-nowrap">왜 흔한 챗GPT 글로는</span>{' '}
+              <span className="inline-block whitespace-nowrap text-rose-400">수임 · 상담 전환이 안 될까요?</span>
             </h2>
-            <p className="text-slate-400 text-base max-w-2xl mx-auto">
+            <p className="text-slate-400 text-base max-w-2xl mx-auto break-keep">
               일반 양산형 AI와 PostSync 전문직 엔진의 압도적인 퀄리티 차이를 직접 확인하세요.
             </p>
           </div>
@@ -737,7 +728,7 @@ export default function LandingPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             
             {/* ❌ General ChatGPT / Copy AI */}
-            <div className="bg-rose-950/20 rounded-3xl p-8 border border-rose-500/30 relative">
+            <div className="bg-rose-950/20 rounded-3xl p-8 border border-rose-500/30 relative break-keep">
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-10 h-10 rounded-xl bg-rose-500/20 flex items-center justify-center text-rose-400 border border-rose-500/30">
                   <XCircle className="w-6 h-6" />
@@ -773,15 +764,15 @@ export default function LandingPage() {
                 <li className="flex items-start gap-3 bg-white/5 p-3.5 rounded-xl border border-white/5">
                   <XCircle className="w-5 h-5 text-rose-400 shrink-0 mt-0.5" />
                   <div>
-                    <strong className="text-white block mb-0.5">서식 깨짐 & 이미지 전무</strong>
-                    스마트에디터에 붙여넣으면 서식이 다 깨져서 1시간 이상 재편집 필요
+                    <strong className="text-white block mb-0.5">수동 작업 & 이미지 전무</strong>
+                    에디터에 일일이 복사하고 이미지 제작하느라 1시간 이상 재편집 필요
                   </div>
                 </li>
               </ul>
             </div>
 
             {/* ✅ PostSync Professional Engine */}
-            <div className="bg-gradient-to-b from-indigo-950/40 to-slate-900/60 rounded-3xl p-8 border border-indigo-500/40 relative shadow-xl shadow-indigo-950/50">
+            <div className="bg-gradient-to-b from-indigo-950/40 to-slate-900/60 rounded-3xl p-8 border border-indigo-500/40 relative shadow-xl shadow-indigo-950/50 break-keep">
               <div className="absolute -top-3.5 right-6 bg-gradient-to-r from-indigo-500 to-emerald-500 text-white text-[11px] font-extrabold px-3 py-1 rounded-full shadow-md">
                 POSTSYNC PREMIER
               </div>
@@ -808,7 +799,7 @@ export default function LandingPage() {
                   <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
                   <div>
                     <strong className="text-white block mb-0.5">실제 판례 및 법률 조문 강제 결합</strong>
-                    Tavily 실시간 검색과 대표님 RAG 지식 결합으로 100% 팩트 기반 신뢰도 구축
+                    실시간 검색과 대표님 RAG 지식 결합으로 100% 팩트 기반 신뢰도 구축
                   </div>
                 </li>
                 <li className="flex items-start gap-3 bg-indigo-500/10 p-3.5 rounded-xl border border-indigo-500/20">
@@ -821,8 +812,8 @@ export default function LandingPage() {
                 <li className="flex items-start gap-3 bg-indigo-500/10 p-3.5 rounded-xl border border-indigo-500/20">
                   <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
                   <div>
-                    <strong className="text-white block mb-0.5">스마트에디터 ONE 서식 0.01초 복사</strong>
-                    인포박스, 목차, 1:1 고화질 카드뉴스까지 복사 버튼 한 번으로 즉시 포스팅
+                    <strong className="text-white block mb-0.5">스마트에디터 ONE 10초 원클릭 자동 발행</strong>
+                    제목, 본문, 10종 고화질 벤토 카드뉴스까지 버튼 한 번으로 10초 만에 자동 작성 완료
                   </div>
                 </li>
               </ul>
@@ -840,18 +831,20 @@ export default function LandingPage() {
         <div className="max-w-5xl mx-auto">
           
           <div className="text-center mb-16">
-            <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-bold mb-3 border border-emerald-500/20">
+            <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-bold mb-3 border border-emerald-500/20 break-keep">
               <Calculator className="w-3.5 h-3.5" /> COST EFFICIENCY
             </div>
-            <h2 className="text-3xl md:text-5xl font-extrabold text-white mb-4 tracking-tight">
-              매달 나가던 <span className="text-emerald-400">대행사 외주비 300만 원</span>, 이제 아끼세요
+            <h2 className="text-2xl sm:text-3xl md:text-5xl font-extrabold text-white mb-4 tracking-tight break-keep">
+              <span className="inline-block whitespace-nowrap">매달 나가던</span>{' '}
+              <span className="inline-block whitespace-nowrap text-emerald-400">대행사 외주비 300만 원,</span>{' '}
+              <span className="inline-block whitespace-nowrap">이제 아끼세요</span>
             </h2>
-            <p className="text-slate-400 text-base max-w-2xl mx-auto">
+            <p className="text-slate-400 text-base max-w-2xl mx-auto break-keep">
               전문 지식 없는 대행사 작가에게 맡기고 일일이 수정하느라 지치셨나요?
             </p>
           </div>
 
-          <div className="bg-gradient-to-br from-white/10 to-white/5 rounded-3xl p-8 md:p-10 border border-white/15 shadow-2xl">
+          <div className="bg-gradient-to-br from-white/10 to-white/5 rounded-3xl p-8 md:p-10 border border-white/15 shadow-2xl break-keep">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 divide-y md:divide-y-0 md:divide-x divide-white/10">
               
               {/* Marketing Agency */}
@@ -900,18 +893,18 @@ export default function LandingPage() {
       <section id="pricing" className="py-24 px-6 relative z-10 border-t border-white/10 bg-[#0A0D14]">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16 space-y-3">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-black">
+            <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-black break-keep">
               🔥 얼리버드 론칭 기념 프로모션 진행 중
             </div>
-            <h2 className="text-3xl md:text-5xl font-extrabold text-white">합리적인 전문직 요금제</h2>
-            <p className="text-slate-400 text-sm md:text-base max-w-2xl mx-auto">
+            <h2 className="text-3xl md:text-5xl font-extrabold text-white break-keep">합리적인 전문직 요금제</h2>
+            <p className="text-slate-400 text-sm md:text-base max-w-2xl mx-auto break-keep">
               마케팅 외주 대행사 비용(월 250만 원)을 1/10 이하로 줄이고, 검증된 1위 노출 전문 칼럼을 직접 발행하세요.
             </p>
           </div>
           
           <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto items-stretch">
             {/* Basic Plan */}
-            <div className="bg-white/5 p-8 rounded-3xl border border-white/10 flex flex-col hover:border-white/20 transition-all justify-between">
+            <div className="bg-white/5 p-8 rounded-3xl border border-white/10 flex flex-col hover:border-white/20 transition-all justify-between break-keep">
               <div>
                 <h3 className="text-2xl font-bold text-white mb-1.5">Basic</h3>
                 <p className="text-slate-400 text-xs mb-6">1인 사무소 및 개업 초기 전문가 필수 포스팅</p>
@@ -923,19 +916,19 @@ export default function LandingPage() {
                 <ul className="space-y-3.5 mb-8 text-sm text-slate-300">
                   <li className="flex items-center gap-3"><CheckCircle2 className="w-4 h-4 text-indigo-400 shrink-0" /> <span><strong>월 10건</strong> 전문 원고 생성 (주 2회)</span></li>
                   <li className="flex items-center gap-3"><CheckCircle2 className="w-4 h-4 text-indigo-400 shrink-0" /> <span>판례·세법 실시간 검색 RAG 탑재</span></li>
-                  <li className="flex items-center gap-3"><CheckCircle2 className="w-4 h-4 text-indigo-400 shrink-0" /> <span>네이버 스마트에디터 ONE 서식 복사</span></li>
+                  <li className="flex items-center gap-3"><CheckCircle2 className="w-4 h-4 text-indigo-400 shrink-0" /> <span>네이버 블로그 원클릭 자동 발행</span></li>
                   <li className="flex items-center gap-3"><CheckCircle2 className="w-4 h-4 text-indigo-400 shrink-0" /> <span>의료·변호사 광고법 기본 가드레일</span></li>
                 </ul>
               </div>
               <Link href="/login">
-                <Button className="w-full bg-white/10 hover:bg-white/20 text-white font-bold h-11 rounded-xl cursor-pointer" variant="outline">
+                <Button className="w-full bg-white/10 hover:bg-white/20 text-white font-bold h-11 rounded-xl cursor-pointer break-keep" variant="outline">
                   Basic 시작하기
                 </Button>
               </Link>
             </div>
 
             {/* Pro Plan (Best + 50% Lifetime Discount) */}
-            <div className="bg-gradient-to-b from-indigo-900/80 via-indigo-950/90 to-violet-950/80 text-white p-8 rounded-3xl border-2 border-indigo-400 shadow-2xl flex flex-col relative transform md:-translate-y-4 justify-between">
+            <div className="bg-gradient-to-b from-indigo-900/80 via-indigo-950/90 to-violet-950/80 text-white p-8 rounded-3xl border-2 border-indigo-400 shadow-2xl flex flex-col relative transform md:-translate-y-4 justify-between break-keep">
               <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-gradient-to-r from-amber-400 via-amber-300 to-emerald-400 text-slate-950 px-4 py-1 rounded-full text-xs font-black shadow-lg flex items-center gap-1.5 whitespace-nowrap">
                 <span>🔥 선착순 10명 한정 (잔여 3자리)</span>
               </div>
@@ -959,22 +952,22 @@ export default function LandingPage() {
 
                 <ul className="space-y-3 mb-8 text-xs sm:text-sm text-slate-100">
                   <li className="flex items-center gap-2.5"><CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" /> <span><strong>월 30건</strong> 전문 원고 생성 (월 30편 독점)</span></li>
-                  <li className="flex items-center gap-2.5"><CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" /> <span><strong>1080px 실사 인포그래픽 카드</strong> 자동 생성</span></li>
-                  <li className="flex items-center gap-2.5"><CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" /> <span><strong>2026 스마트블록 1위 DIA+ & C-Rank 듀얼 최적화 엔진</strong></span></li>
-                  <li className="flex items-center gap-2.5"><CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" /> <span>과거 글 자동 내부 링크 & 앵커링</span></li>
-                  <li className="flex items-center gap-2.5"><CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" /> <span>워드프레스 · 티스토리 <strong>원클릭 동시 발행</strong></span></li>
+                  <li className="flex items-center gap-2.5"><CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" /> <span><strong>10종 벤토 카드뉴스 & 2배 썸네일</strong> 자동 생성</span></li>
+                  <li className="flex items-center gap-2.5"><CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" /> <span><strong>2026 스마트블록 1위 DIA+ & C-Rank 듀얼 엔진</strong></span></li>
+                  <li className="flex items-center gap-2.5"><CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" /> <span>네이버 스마트에디터 ONE <strong>원클릭 자동 발행</strong></span></li>
+                  <li className="flex items-center gap-2.5"><CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" /> <span>워드프레스 · 티스토리 <strong>동시 자동 배포</strong></span></li>
                 </ul>
               </div>
 
               <Link href="/login">
-                <Button className="w-full bg-gradient-to-r from-indigo-500 to-violet-600 hover:from-indigo-600 hover:to-violet-700 text-white font-extrabold h-12 rounded-xl shadow-lg shadow-indigo-500/40 border border-indigo-300/40 cursor-pointer">
+                <Button className="w-full bg-gradient-to-r from-indigo-500 to-violet-600 hover:from-indigo-600 hover:to-violet-700 text-white font-extrabold h-12 rounded-xl shadow-lg shadow-indigo-500/40 border border-indigo-300/40 cursor-pointer break-keep">
                   3회 무료 체험 시작하기
                 </Button>
               </Link>
             </div>
 
             {/* Premium Plan */}
-            <div className="bg-white/5 p-8 rounded-3xl border border-white/10 flex flex-col hover:border-white/20 transition-all justify-between">
+            <div className="bg-white/5 p-8 rounded-3xl border border-white/10 flex flex-col hover:border-white/20 transition-all justify-between break-keep">
               <div>
                 <h3 className="text-2xl font-bold text-white mb-1.5">Premium</h3>
                 <p className="text-slate-400 text-xs mb-6">다채널 운영 및 대형 전문직 법인 전용</p>
@@ -986,12 +979,12 @@ export default function LandingPage() {
                 <ul className="space-y-3.5 mb-8 text-sm text-slate-300">
                   <li className="flex items-center gap-3"><CheckCircle2 className="w-4 h-4 text-indigo-400 shrink-0" /> <span><strong>월 100건</strong> 원고 대량 생성 (다계정 분기)</span></li>
                   <li className="flex items-center gap-3"><CheckCircle2 className="w-4 h-4 text-indigo-400 shrink-0" /> <span>전용 커스텀 페르소나 3개 맞춤 학습</span></li>
-                  <li className="flex items-center gap-3"><CheckCircle2 className="w-4 h-4 text-indigo-400 shrink-0" /> <span>고화질 스톡 이미지 & 멀티 채널 무제한</span></li>
+                  <li className="flex items-center gap-3"><CheckCircle2 className="w-4 h-4 text-indigo-400 shrink-0" /> <span>10종 벤토 카드 무제한 & 전 채널 배포</span></li>
                   <li className="flex items-center gap-3"><CheckCircle2 className="w-4 h-4 text-indigo-400 shrink-0" /> <span>1:1 전담 매니저 우선 기술 지원</span></li>
                 </ul>
               </div>
               <Link href="/login">
-                <Button className="w-full bg-white/10 hover:bg-white/20 text-white font-bold h-11 rounded-xl cursor-pointer" variant="outline">
+                <Button className="w-full bg-white/10 hover:bg-white/20 text-white font-bold h-11 rounded-xl cursor-pointer break-keep" variant="outline">
                   도입 문의하기
                 </Button>
               </Link>
@@ -1007,13 +1000,13 @@ export default function LandingPage() {
         <div className="max-w-4xl mx-auto">
           
           <div className="text-center mb-16">
-            <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-indigo-500/10 text-indigo-400 text-xs font-bold mb-3 border border-indigo-500/20">
+            <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-indigo-500/10 text-indigo-400 text-xs font-bold mb-3 border border-indigo-500/20 break-keep">
               <HelpCircle className="w-3.5 h-3.5" /> FREQUENTLY ASKED QUESTIONS
             </div>
-            <h2 className="text-3xl md:text-5xl font-extrabold text-white mb-4 tracking-tight">
+            <h2 className="text-3xl md:text-5xl font-extrabold text-white mb-4 tracking-tight break-keep">
               자주 묻는 질문
             </h2>
-            <p className="text-slate-400 text-base">
+            <p className="text-slate-400 text-base break-keep">
               PostSync 도입 전 가장 궁금해하시는 질문들을 정리했습니다.
             </p>
           </div>
@@ -1022,19 +1015,19 @@ export default function LandingPage() {
             {[
               {
                 q: "네이버에서 AI가 쓴 글이라고 저품질(유사문서) 제재를 가하지 않나요?",
-                a: "결코 그렇지 않습니다. 네이버 C-Rank 및 DIA+ 알고리즘의 핵심은 '누가 썼는가'가 아니라 '문서의 독창성과 실제 전문 지식, 체류시간'입니다. PostSync는 대표님의 프로필/경험(RAG)과 실제 판례를 1인칭 서사로 녹여내며, 마크다운/HTML 서식을 최적화하여 네이버 로직상 가장 우수한 C-Rank 고품질 문서로 판정받도록 설계되었습니다."
+                a: "결코 그렇지 않습니다. 네이버 C-Rank 및 DIA+ 알고리즘의 핵심은 '누가 썼는가'가 아니라 '문서의 독창성과 실제 전문 지식, 체류시간'입니다. PostSync는 대표님의 프로필/경험(RAG)과 실제 판례를 1인칭 서사로 녹여내며, 10종 반응형 벤토 카드와 체계적인 목차 구조를 통해 네이버 로직상 가장 우수한 C-Rank 고품질 문서로 판정받도록 설계되었습니다."
               },
               {
                 q: "변호사법, 의료법, 세무사법 등 전문직 광고법에 걸리지 않나요?",
                 a: "PostSync는 전문직 법률 가드레일이 기본 탑재되어 있습니다. '100% 승소', '최고의 전문의', '무조건 환급' 등 법적 제재 대상이 되는 금지어를 실시간으로 사전 검증하고, 합법적이고 신뢰감을 주는 전문 용어로 자동 순화하여 영업정지 및 협회 징계 리스크를 원천 차단합니다."
               },
               {
-                q: "생성된 글을 네이버 블로그에 옮길 때 서식이 깨지지 않나요?",
-                a: "PostSync의 [네이버 스마트에디터 복사] 기능은 단순 텍스트가 아닌 '네이버 스마트에디터 ONE 전용 클립보드 서식'을 0.01초 만에 복사합니다. 제목, 소제목(22px), 인포박스, 표, 정렬, 카드뉴스 이미지가 네이버 블로그 에디터에 원본 그대로 완벽하게 붙여넣어집니다."
+                q: "네이버 블로그에 글이 어떻게 자동으로 등록되나요?",
+                a: "PostSync의 [🚀 네이버 원클릭 자동 발행] 버튼을 누르시면, 초경량 다이렉트 엔진이 내 컴퓨터의 보안 브라우저 세션을 통해 네이버 스마트에디터 ONE에 접속하여 제목, 본문, 10종 고화질 벤토 카드뉴스 4장, 하단 지도 배너를 10초 만에 완벽하게 자동 작성하고 안전하게 임시저장합니다."
               },
               {
                 q: "다른 플랫폼(워드프레스, 티스토리)에도 동시에 올릴 수 있나요?",
-                a: "네, 가능합니다. 대시보드 설정에서 워드프레스 Application Password 또는 티스토리 OpenAPI를 연동해 두시면, 원고 생성 후 버튼 클릭 한 번으로 네이버 블로그뿐만 아니라 워드프레스와 티스토리에도 즉시 자동 발행됩니다."
+                a: "네, 가능합니다. 대시보드 설정에서 워드프레스 Application Password 또는 티스토리 OpenAPI를 연동해 두시면, 원고 생성 후 버튼 클릭 한 번으로 네이버 블로그뿐만 아니라 워드프레스와 티스토리에도 즉시 자동 배포됩니다."
               },
               {
                 q: "무료 체험 시 결제 카드를 등록해야 하나요?",
@@ -1045,11 +1038,11 @@ export default function LandingPage() {
               return (
                 <div 
                   key={idx} 
-                  className="bg-white/5 rounded-2xl border border-white/10 overflow-hidden transition-colors hover:border-white/20"
+                  className="bg-white/5 rounded-2xl border border-white/10 overflow-hidden transition-colors hover:border-white/20 break-keep"
                 >
                   <button
                     onClick={() => setFaqOpenIndex(isOpen ? null : idx)}
-                    className="w-full p-5 text-left flex items-center justify-between gap-4 font-bold text-white text-base"
+                    className="w-full p-5 text-left flex items-center justify-between gap-4 font-bold text-white text-base cursor-pointer"
                   >
                     <span>{faq.q}</span>
                     <ChevronDown className={`w-5 h-5 text-slate-400 shrink-0 transition-transform ${isOpen ? 'rotate-180 text-indigo-400' : ''}`} />
@@ -1084,18 +1077,18 @@ export default function LandingPage() {
           <div className="w-16 h-16 rounded-2xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center mx-auto mb-6 border border-indigo-500/30 shadow-lg shadow-indigo-500/20">
             <Zap className="w-8 h-8 text-yellow-400" />
           </div>
-          <h2 className="text-3xl md:text-5xl font-extrabold text-white mb-6 tracking-tight">
-            전문가의 시간은 비쌉니다.<br/>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-violet-300 to-emerald-400">
+          <h2 className="text-2xl sm:text-3xl md:text-5xl font-extrabold text-white mb-6 tracking-tight break-keep">
+            <span className="inline-block whitespace-nowrap">전문가의 시간은 비쌉니다.</span><br className="hidden sm:inline" />{' '}
+            <span className="inline-block whitespace-nowrap text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-violet-300 to-emerald-400">
               마케팅은 PostSync에게 맡기세요.
             </span>
           </h2>
-          <p className="text-base md:text-xl text-slate-300 mb-10 max-w-2xl mx-auto leading-relaxed">
-            지금 가입하시면 <strong className="text-white">3회 무료 체험 크레딧이 즉시 지급</strong>됩니다.<br className="hidden sm:inline" />
-            단 1분 만에 대표님의 첫 번째 C-Rank 전문 칼럼을 완성해보세요.
+          <p className="text-base md:text-xl text-slate-300 mb-10 max-w-2xl mx-auto leading-relaxed break-keep">
+            <span className="inline-block">지금 가입하시면 <strong className="text-white">3회 무료 체험 크레딧이 즉시 지급</strong>됩니다.</span><br className="hidden sm:inline" />{' '}
+            <span className="inline-block">단 1분 만에 대표님의 첫 번째 C-Rank 전문 칼럼을 완성해보세요.</span>
           </p>
           <Link href="/login">
-            <Button size="lg" className="h-14 px-10 text-lg rounded-full bg-gradient-to-r from-indigo-600 via-indigo-500 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white shadow-2xl shadow-indigo-600/40 transition-transform hover:scale-105 font-extrabold border border-indigo-400/40 cursor-pointer">
+            <Button size="lg" className="h-14 px-10 text-lg rounded-full bg-gradient-to-r from-indigo-600 via-indigo-500 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white shadow-2xl shadow-indigo-600/40 transition-transform hover:scale-105 font-extrabold border border-indigo-400/40 cursor-pointer break-keep">
               지금 무료 3회 체험 시작하기 <ArrowRight className="ml-2 w-5 h-5" />
             </Button>
           </Link>
@@ -1103,7 +1096,7 @@ export default function LandingPage() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-[#070A0F] text-slate-400 py-16 text-xs border-t border-white/10 relative z-10">
+      <footer className="bg-[#070A0F] text-slate-400 py-16 text-xs border-t border-white/10 relative z-10 break-keep">
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 pb-8 border-b border-white/5">
             <div className="flex items-center gap-3">
