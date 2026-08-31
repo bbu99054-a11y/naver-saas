@@ -545,7 +545,6 @@ ${profileFooterPrompt}
           maxRetries: 0,
           temperature: 0.75,
           maxOutputTokens: 10500,
-          frequencyPenalty: 0.3,
           system: systemPrompt + searchContext,
           prompt: `타겟 키워드: ${prompt}\n\n위 지침에 맞춰 완벽한 네이버 블로그용 HTML 본문을 작성해줘.`,
         })
