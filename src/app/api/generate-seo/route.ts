@@ -265,16 +265,14 @@ ${profile.about_us}
     const { 
       getThemeByIndustry,
       getTopThumbnailTemplate,
-      getRedFlagsCardTemplate,
-      getSelfDiagnosisCardTemplate,
-      getVsSimulationCardTemplate,
-      getCostOfInactionCardTemplate,
-      getActionTimelineCardTemplate,
-      getRequiredDossierCardTemplate,
-      getCriteriaTableCardTemplate,
-      getSuccessReceiptCardTemplate,
-      getExpertOpinionCardTemplate,
-      getFinalVerdictCardTemplate,
+      getCriticalChecklistCardTemplate,
+      getRoiComparisonCardTemplate,
+      getLossGaugeCardTemplate,
+      getProcessRoadmapCardTemplate,
+      getDossierIndexCardTemplate,
+      getStatutoryCriteriaCardTemplate,
+      getFactQnaCardTemplate,
+      getExecutiveSummaryCardTemplate,
       getFooterBannerTemplate,
       getIntroSummaryBoxTemplate,
       getInfoBoxTemplate,
@@ -305,16 +303,15 @@ ${profile.about_us}
 
     const activeTemplates = [
       getTopThumbnailTemplate(currentUserId || '', prompt),
-      getRedFlagsCardTemplate(currentUserId || '', prompt),
-      getSelfDiagnosisCardTemplate(currentUserId || '', prompt),
-      getVsSimulationCardTemplate(currentUserId || '', prompt),
-      getCostOfInactionCardTemplate(currentUserId || '', prompt),
-      getActionTimelineCardTemplate(currentUserId || '', prompt),
-      getRequiredDossierCardTemplate(currentUserId || '', prompt),
-      getCriteriaTableCardTemplate(currentUserId || '', prompt),
-      getSuccessReceiptCardTemplate(currentUserId || '', prompt),
-      getExpertOpinionCardTemplate(currentUserId || '', prompt),
-      getFinalVerdictCardTemplate(currentUserId || '', prompt),
+      // [2026 방향 A] 전문직 특화 정예 8종 벤토 그리드 카드
+      getCriticalChecklistCardTemplate(currentUserId || '', prompt),
+      getRoiComparisonCardTemplate(currentUserId || '', prompt),
+      getLossGaugeCardTemplate(currentUserId || '', prompt),
+      getProcessRoadmapCardTemplate(currentUserId || '', prompt),
+      getDossierIndexCardTemplate(currentUserId || '', prompt),
+      getStatutoryCriteriaCardTemplate(currentUserId || '', prompt),
+      getFactQnaCardTemplate(currentUserId || '', prompt),
+      getExecutiveSummaryCardTemplate(currentUserId || '', prompt),
       getFooterBannerTemplate(currentUserId || '', prompt),
       getIntroSummaryBoxTemplate(matchedTheme.accentColor, prompt),
       getInfoBoxTemplate(matchedTheme.accentColor),
@@ -325,22 +322,21 @@ ${profile.about_us}
 
     const designInjection = `
 <visual_card_design_system>
-[네이버 블로그 2026 전문직 본문 10종 3×3 정통 벤토 그리드(Bento Grid) 및 탈양산화 5대 원칙 시스템]
+[네이버 블로그 2026 전문직 본문 정예 8종 3×3 정통 벤토 그리드(Bento Grid) 및 탈양산화 시스템]
 네이버 블로그의 화이트 배경과 100% 조화를 이루며 전문 디자이너가 한 땀 한 땀 작업한 듯한 고품격 벤토 그리드 시각 카드 디자인 시스템입니다.
-- 모든 시각 카드는 아래 제공된 10종의 <img src="/api/card-image/render?type=...&userId=..." alt="..." style="..." /> 템플릿 태그를 그대로 사용하되, URL 내부의 title, sub, points, extra1, extra2 등의 텍스트를 현재 글의 전문 주제에 맞게 변경하여 삽입하세요.
+- 모든 시각 카드는 아래 제공된 정예 8종의 <img src="/api/card-image/render?type=...&userId=..." alt="..." style="..." /> 템플릿 태그를 그대로 사용하되, URL 내부의 title, sub, points, extra1, extra2 등의 텍스트를 현재 글의 전문 주제에 맞게 변경하여 삽입하세요.
 - [네이버 이미지 검색 SEO 필수 규칙]: 모든 <img> 태그의 alt 속성은 반드시 'alt="${prompt} - (카드유형한글명)"' 형태로 이번 글의 메인 타겟 키워드를 반드시 포함하여 작성하세요.
 - 마크다운 형식(![]())이나 빈 src=""를 절대 사용하지 말고, 반드시 제공된 <img src="/api/card-image/render?..." ...> 태그를 사용하세요.
 
-[탈양산화(Anti-Templatization) 5대 렌더링 및 배치 원칙]:
+[탈양산화(Anti-Templatization) 및 정예 8종 카드 덱(Deck) 선별 지침]:
 1. 7:3 명도 대비의 법칙: 넓은 텍스트 영역(70%)은 화이트/미색, 시선 집중 타일(30%)에만 다크 포인트 컬러를 적용하여 눈의 피로도를 최소화하고 네이버 본문에 자연스럽게 녹아듭니다.
-2. 3×3 (총 9칸) 빈틈없는 테트리스 레이아웃: 모든 카드는 비대칭 모듈 타일(2×2, 1×2, 3×1 등)의 합이 정확히 9칸이 되도록 구성되어 있습니다.
-3. 정보 밀도(Density)의 극단적 완급 조절: 여백의 미(거대 숫자/아이콘)와 빽빽한 명조체 판례/법리가 대비를 이룹니다.
-4. 질감(Texture)과 모서리(Radius)의 동적 변화: 줄노트 질감, 마닐라 서류철, 붉은색 전문가 직인(도장) 그래픽이 권위를 부여합니다.
-5. 의도(Intent) 기반의 동적 카드 덱(Deck) 픽업:
-   - AI는 글의 목적과 톤에 맞춰 10종 중 최적의 2~3장을 자율 선별하여 본문 중간에 배치합니다:
-     • [수임/영업/위기 대응 목적의 글] ➔ 🚨 레드플래그(RED_FLAGS) ➔ 📉 손실 스노우볼(COST_OF_INACTION) ➔ 🆚 나홀로 vs 전문가(VS_SIMULATION) ➔ 🏆 성공 영수증(SUCCESS_RECEIPT) ➔ ✋ 최종 결단(FINAL_VERDICT)
-     • [정보/체류/절차 안내 목적의 글] ➔ 📊 자가진단표(SELF_DIAGNOSIS) ➔ ⚖️ 처벌/과세기준표(CRITERIA_TABLE) ➔ 📑 필수서류함(REQUIRED_DOSSIER) ➔ ⏳ D-Day타임라인(ACTION_TIMELINE) ➔ 💬 전문가소견서(EXPERT_OPINION)
-- 전체 글에 들어가는 카드 이미지의 총 개수는 [최상단 대표 썸네일 카드 1장, 최하단 상담 배너 카드 1장]을 포함하여 총 4~5장(본문 10종 벤토 카드 중 정확히 2~3장 선별)으로 군더더기 없이 임팩트 있게 구성하세요.
+2. 정보 밀도(Density)의 극단적 완급 조절: 여백의 미(거대 숫자/아이콘)와 빽빽한 명조체 판례/법리가 대비를 이룹니다.
+3. 질감(Texture)과 모서리(Radius)의 동적 변화: 줄노트 질감, 마닐라 서류철, 붉은색 전문가 직인(도장) 그래픽이 권위를 부여합니다.
+4. 의도(Intent) 기반의 동적 카드 덱(Deck) 픽업:
+   - AI는 글의 목적과 톤에 맞춰 정예 8종 중 최적의 2~3장을 자율 선별하여 본문 중간에 배치합니다:
+     • [수임/영업/위기 대응 목적의 글] ➔ 💡 3초 실무 요약(EXECUTIVE_SUMMARY) ➔ 🚨 위기 경고 체크리스트(CRITICAL_CHECKLIST) ➔ 📉 골든타임 손실 게이지(LOSS_GAUGE) ➔ 🆚 비포/애프터 실익 대비표(ROI_COMPARISON)
+     • [정보/체류/절차 안내 목적의 글] ➔ 💬 빈출 Q&A 팩트체크(FACT_QNA) ➔ ⚖️ 법정 처벌/과세기준표(STATUTORY_CRITERIA) ➔ 📑 필수 구비 서류함(DOSSIER_INDEX) ➔ ⏳ 사건 해결 3단계 로드맵(PROCESS_ROADMAP)
+- 전체 글에 들어가는 카드 이미지의 총 개수는 [최상단 대표 썸네일 카드 1장, 최하단 상담 배너 카드 1장]을 포함하여 총 4~5장(본문 8종 벤토 카드 중 정확히 2~3장 선별)으로 군더더기 없이 임팩트 있게 구성하세요.
 
 - 안내/리스크 박스 서식은 네이버 에디터가 100% 보존하는 표준 인라인 CSS(<div style="background-color: #FEF9C3; border-left: 4px solid #EAB308; padding: 18px 20px; margin: 24px 0; border-radius: 4px; line-height: 1.6;">...</div>)를 사용하세요.
 - 복잡한 비교 표나 준비 서류 목록은 이미지 대신 아래 제공된 순수 인라인 HTML Table 서식(<table style="width: 100%; border-collapse: collapse; margin: 24px 0; font-size: 15px; text-align: left; background-color: #FFFFFF;">...</table>)으로 작성하여 한글이 100% 또렷하게 읽히도록 하세요.

@@ -5,6 +5,15 @@
 export type CardType =
   | 'MAIN_THUMBNAIL'
   | 'CTA_FOOTER'
+  // [2026 방향 A] 전문직 특화 정예 8종 벤토 카드
+  | 'CRITICAL_CHECKLIST'
+  | 'ROI_COMPARISON'
+  | 'LOSS_GAUGE'
+  | 'PROCESS_ROADMAP'
+  | 'DOSSIER_INDEX'
+  | 'STATUTORY_CRITERIA'
+  | 'FACT_QNA'
+  | 'EXECUTIVE_SUMMARY'
   // [10종 본문 벤토 카드]
   | 'RED_FLAGS'
   | 'SELF_DIAGNOSIS'
@@ -28,6 +37,16 @@ export type CardType =
 export const CARD_TYPE_KOREAN_NAMES: Record<CardType, string> = {
   MAIN_THUMBNAIL: '대표 썸네일',
   CTA_FOOTER: '1:1 전문 상담 및 예약 안내',
+  // 정예 8종 벤토 카드
+  CRITICAL_CHECKLIST: '위기 경고 체크리스트',
+  ROI_COMPARISON: '비포/애프터 실익 대비표',
+  LOSS_GAUGE: '골든타임 손실 게이지',
+  PROCESS_ROADMAP: '사건 해결 3단계 로드맵',
+  DOSSIER_INDEX: '필수 구비 서류함 도감',
+  STATUTORY_CRITERIA: '법정 처벌 및 과세 기준표',
+  FACT_QNA: '빈출 Q&A 팩트체크',
+  EXECUTIVE_SUMMARY: '3초 핵심 실무 요약',
+  // 기존 10종 매핑
   RED_FLAGS: '3대 레드플래그 경고',
   SELF_DIAGNOSIS: '위기 징후 자가진단표',
   VS_SIMULATION: '나홀로 vs 전문가 시뮬레이션',
@@ -54,18 +73,18 @@ export const CARD_TYPE_KOREAN_NAMES: Record<CardType, string> = {
 export function determineCardType(altText: string): CardType {
   const t = altText.toLowerCase()
   if (t.includes('썸네일') || t.includes('대표')) return 'MAIN_THUMBNAIL'
-  if (t.includes('레드플래그') || t.includes('실수') || t.includes('fatal') || t.includes('red_flag')) return 'RED_FLAGS'
-  if (t.includes('자가진단') || t.includes('진단') || t.includes('레이더') || t.includes('체크리스트')) return 'SELF_DIAGNOSIS'
-  if (t.includes('시뮬레이션') || t.includes('비교') || t.includes('대비') || t.includes('vs') || t.includes('나홀로')) return 'VS_SIMULATION'
-  if (t.includes('스노우볼') || t.includes('손실') || t.includes('방치') || t.includes('inaction')) return 'COST_OF_INACTION'
-  if (t.includes('타임라인') || t.includes('로드맵') || t.includes('절차') || t.includes('d-day') || t.includes('단계')) return 'ACTION_TIMELINE'
-  if (t.includes('서류') || t.includes('도감') || t.includes('준비물') || t.includes('dossier')) return 'REQUIRED_DOSSIER'
-  if (t.includes('기준표') || t.includes('처벌') || t.includes('과세') || t.includes('세율') || t.includes('수치')) return 'CRITERIA_TABLE'
-  if (t.includes('영수증') || t.includes('성공') || t.includes('사례') || t.includes('receipt') || t.includes('승소')) return 'SUCCESS_RECEIPT'
-  if (t.includes('소견서') || t.includes('팩트체크') || t.includes('3줄') || t.includes('요약') || t.includes('opinion')) return 'EXPERT_OPINION'
-  if (t.includes('결단') || t.includes('verdict') || t.includes('촉구') || t.includes('통화') || t.includes('직통')) return 'FINAL_VERDICT'
+  if (t.includes('qna') || t.includes('q&a') || t.includes('문답') || t.includes('팩트체크')) return 'FACT_QNA'
+  if (t.includes('3초') || t.includes('요약') || t.includes('브리핑') || t.includes('summary')) return 'EXECUTIVE_SUMMARY'
+  if (t.includes('체크리스트') || t.includes('위기') || t.includes('자가진단') || t.includes('레드플래그') || t.includes('실수')) return 'CRITICAL_CHECKLIST'
+  if (t.includes('시뮬레이션') || t.includes('비교') || t.includes('대비') || t.includes('vs') || t.includes('나홀로') || t.includes('영수증') || t.includes('roi')) return 'ROI_COMPARISON'
+  if (t.includes('스노우볼') || t.includes('손실') || t.includes('방치') || t.includes('inaction') || t.includes('게이지')) return 'LOSS_GAUGE'
+  if (t.includes('타임라인') || t.includes('로드맵') || t.includes('절차') || t.includes('d-day') || t.includes('단계')) return 'PROCESS_ROADMAP'
+  if (t.includes('서류') || t.includes('도감') || t.includes('준비물') || t.includes('dossier')) return 'DOSSIER_INDEX'
+  if (t.includes('기준표') || t.includes('처벌') || t.includes('과세') || t.includes('세율') || t.includes('수치')) return 'STATUTORY_CRITERIA'
+  if (t.includes('소견서') || t.includes('opinion')) return 'FACT_QNA'
+  if (t.includes('결단') || t.includes('verdict') || t.includes('촉구') || t.includes('통화') || t.includes('직통')) return 'EXECUTIVE_SUMMARY'
   if (t.includes('상담') || t.includes('배너') || t.includes('안내') || t.includes('위치') || t.includes('문의') || t.includes('cta')) return 'CTA_FOOTER'
-  return 'SELF_DIAGNOSIS'
+  return 'CRITICAL_CHECKLIST'
 }
 
 /**

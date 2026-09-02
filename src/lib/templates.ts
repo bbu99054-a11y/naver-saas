@@ -135,139 +135,126 @@ export function getFooterBannerTemplate(userId: string = '', targetKeyword: stri
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// 2. [최종 엄선 Top 10] 전문직 본문 3x3 정통 벤토 그리드 카드 템플릿
+// 2. [2026 방향 A] 전문직 특화 정예 8종 벤토 그리드 카드 템플릿
 // ─────────────────────────────────────────────────────────────────────────────
 
 /**
- * 1. 🚨 3대 레드플래그 경고 (RED_FLAGS)
+ * 1. 🚨 위기 경고 체크리스트 (CRITICAL_CHECKLIST)
  */
-export function getRedFlagsCardTemplate(userId: string = '', targetKeyword: string = ''): string {
+export function getCriticalChecklistCardTemplate(userId: string = '', targetKeyword: string = ''): string {
   const userParam = userId ? `&userId=${userId}` : ''
   const kw = sanitizeKeyword(targetKeyword)
   return `
-[시각 카드: 3대 레드플래그 경고 벤토 그리드 - 글 초반 독자 스크롤 정지 및 공포/경각심 자극 시 삽입]
-<img src="/api/card-image/render?type=RED_FLAGS${userParam}&title=절대+혼자+진행하면+안+되는+3대+레드플래그&points=01.+사실관계+불일치+진술+및+부실+소명서+제출|02.+법정+불복+기한(골든타임)+도과+및+소명+실기|03.+유리한+핵심+증빙+누락으로+인한+가산세+및+패소+위험" alt="${kw} - 치명적 실수 및 3대 레드플래그 경고" style="display: block; width: 100%; max-width: 480px; margin: 25px auto; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.08);" />
+[시각 카드: 위기 경고 체크리스트 벤토 그리드 - 글 초반 독자 스크롤 정지 및 자가진단 훅 시 삽입]
+<img src="/api/card-image/render?type=CRITICAL_CHECKLIST${userParam}&title=내+사건+위험도+및+위기+징후+체크리스트&points=최근+관련+기관으로부터+사전+통지/출석을+요구받았다|필수+적격증빙이나+객관적+입증+자료가+일부+누락되었다|법정+신청+기한이+1개월+이내로+임박하여+조치가+시급하다|유사+사안으로+과거+불이익+처분+또는+과태료+이력이+있다" alt="${kw} - 위기 경고 체크리스트" style="display: block; width: 100%; max-width: 480px; margin: 25px auto; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.08);" />
 `.trim();
 }
 
 /**
- * 2. 📊 위기 징후 자가진단표 (SELF_DIAGNOSIS)
+ * 2. 🆚 비포/애프터 실익 대비표 (ROI_COMPARISON)
  */
-export function getSelfDiagnosisCardTemplate(userId: string = '', targetKeyword: string = ''): string {
+export function getRoiComparisonCardTemplate(userId: string = '', targetKeyword: string = ''): string {
   const userParam = userId ? `&userId=${userId}` : ''
   const kw = sanitizeKeyword(targetKeyword)
   return `
-[시각 카드: 위기 징후 자가진단표 벤토 그리드 - 독자 몰입 훅(Hook) 및 심각성 자가 진단 시 삽입]
-<img src="/api/card-image/render?type=SELF_DIAGNOSIS${userParam}&title=내+사건+위험도+자가진단+체크리스트&points=최근+관련+기관으로부터+사전+통지/출석을+요구받았다|필수+적격증빙이나+객관적+입증+자료가+일부+누락되었다|법정+신청+기한이+1개월+이내로+임박하여+조치가+시급하다|유사+사안으로+과거+불이익+처분+또는+과태료+이력이+있다" alt="${kw} - 위기 징후 자가진단표" style="display: block; width: 100%; max-width: 480px; margin: 25px auto; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.08);" />
+[시각 카드: 비포/애프터 실익 대비표 벤토 그리드 - 수임료 저항감 해소 및 전문가 개입 실익 증명 시 삽입]
+<img src="/api/card-image/render?type=ROI_COMPARISON${userParam}&title=혼자+대처+vs+공인+자격사+선임+결과+비교&extra1=나홀로+진행:+구제율+20%+및+가산세+위험&extra2=전문가+선임:+구제율+95%+및+최대+절세+확보" alt="${kw} - 나홀로 대처 vs 전문가 선임 비교" style="display: block; width: 100%; max-width: 480px; margin: 25px auto; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.08);" />
 `.trim();
 }
 
 /**
- * 3. 🆚 나홀로 vs 전문가 시뮬레이션 (VS_SIMULATION)
+ * 3. 📉 골든타임 손실 게이지 (LOSS_GAUGE)
  */
-export function getVsSimulationCardTemplate(userId: string = '', targetKeyword: string = ''): string {
+export function getLossGaugeCardTemplate(userId: string = '', targetKeyword: string = ''): string {
   const userParam = userId ? `&userId=${userId}` : ''
   const kw = sanitizeKeyword(targetKeyword)
   return `
-[시각 카드: 나홀로 vs 전문가 시뮬레이션 벤토 그리드 - 수임료 저항감 해소 및 전문가 개입 실익 증명 시 삽입]
-<img src="/api/card-image/render?type=VS_SIMULATION${userParam}&title=혼자+대처+vs+공인+자격사+선임+결과+비교&extra1=나홀로+진행:+구제율+20%+및+가산세+위험&extra2=전문가+선임:+구제율+95%+및+최대+절세+확보" alt="${kw} - 나홀로 대처 vs 전문가 선임 비교" style="display: block; width: 100%; max-width: 480px; margin: 25px auto; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.08);" />
+[시각 카드: 골든타임 손실 게이지 벤토 그리드 - 방치 시 눈덩이처럼 불어나는 손실 경각심 및 시간적 압박 시 삽입]
+<img src="/api/card-image/render?type=LOSS_GAUGE${userParam}&title=방치할수록+눈덩이처럼+불어나는+손실+스노우볼" alt="${kw} - 방치 시 손실 스노우볼 분석" style="display: block; width: 100%; max-width: 480px; margin: 25px auto; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.08);" />
 `.trim();
 }
 
 /**
- * 4. 📉 손실 스노우볼 (COST_OF_INACTION)
+ * 4. ⏳ 사건 해결 3단계 로드맵 (PROCESS_ROADMAP)
  */
-export function getCostOfInactionCardTemplate(userId: string = '', targetKeyword: string = ''): string {
+export function getProcessRoadmapCardTemplate(userId: string = '', targetKeyword: string = ''): string {
   const userParam = userId ? `&userId=${userId}` : ''
   const kw = sanitizeKeyword(targetKeyword)
   return `
-[시각 카드: 손실 스노우볼 벤토 그리드 - 방치 시 눈덩이처럼 불어나는 손실 경각심 및 시간적 압박 시 삽입]
-<img src="/api/card-image/render?type=COST_OF_INACTION${userParam}&title=방치할수록+눈덩이처럼+불어나는+손실+스노우볼" alt="${kw} - 방치 시 손실 스노우볼 분석" style="display: block; width: 100%; max-width: 480px; margin: 25px auto; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.08);" />
+[시각 카드: 사건 해결 3단계 로드맵 벤토 그리드 - 앞으로 벌어질 절차 한눈에 정리 및 불안 해소 시 삽입]
+<img src="/api/card-image/render?type=PROCESS_ROADMAP${userParam}&title=사건+발생부터+최종+종결까지+3단계+로드맵&points=초기+대응(골든타임):사실관계+확정+및+증빙+선제+확보|심사+및+소명(D-30):법리+검토+및+1:1+맞춤+소명서+제출|최종+권리+구제(D-Day):처분+취소+및+세액+감면+확정" alt="${kw} - 사건 해결 3단계 로드맵" style="display: block; width: 100%; max-width: 480px; margin: 25px auto; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.08);" />
 `.trim();
 }
 
 /**
- * 5. ⏳ D-Day 타임라인 / 로드맵 (ACTION_TIMELINE)
+ * 5. 📑 필수 구비 서류함 도감 (DOSSIER_INDEX)
  */
-export function getActionTimelineCardTemplate(userId: string = '', targetKeyword: string = ''): string {
+export function getDossierIndexCardTemplate(userId: string = '', targetKeyword: string = ''): string {
   const userParam = userId ? `&userId=${userId}` : ''
   const kw = sanitizeKeyword(targetKeyword)
   return `
-[시각 카드: D-Day 타임라인 로드맵 벤토 그리드 - 앞으로 벌어질 절차 한눈에 정리 및 불안 해소 시 삽입]
-<img src="/api/card-image/render?type=ACTION_TIMELINE${userParam}&title=사건+발생부터+최종+종결까지+D-Day+타임라인&points=초기+대응(골든타임):사실관계+확정+및+증빙+선제+확보|심사+및+소명(D-30):법리+검토+및+1:1+맞춤+소명서+제출|최종+권리+구제(D-Day):처분+취소+및+세액+감면+확정" alt="${kw} - D-Day 진행 절차 로드맵" style="display: block; width: 100%; max-width: 480px; margin: 25px auto; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.08);" />
+[시각 카드: 필수 구비 서류함 도감 벤토 그리드 - 실무 구비 서류 및 이미지 캡처/저장 유도 시 삽입]
+<img src="/api/card-image/render?type=DOSSIER_INDEX${userParam}&title=상담+전+준비해야+할+필수+구비+서류함&points=신분증+및+가족관계증명서(상세)+[정부24]|최근+3개년+소득금액증명원+및+원천징수영수증+[홈택스]|사건+관련+처분+통지서+및+계약서+원본+[보유서류]" alt="${kw} - 필수 구비 서류함 도감" style="display: block; width: 100%; max-width: 480px; margin: 25px auto; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.08);" />
 `.trim();
 }
 
 /**
- * 6. 📑 필수 준비 서류함 (REQUIRED_DOSSIER)
+ * 6. ⚖️ 법정 처벌/과세 기준표 (STATUTORY_CRITERIA)
  */
-export function getRequiredDossierCardTemplate(userId: string = '', targetKeyword: string = ''): string {
+export function getStatutoryCriteriaCardTemplate(userId: string = '', targetKeyword: string = ''): string {
   const userParam = userId ? `&userId=${userId}` : ''
   const kw = sanitizeKeyword(targetKeyword)
   return `
-[시각 카드: 필수 준비 서류함 벤토 그리드 - 실무 구비 서류 및 이미지 캡처/저장 유도 시 삽입]
-<img src="/api/card-image/render?type=REQUIRED_DOSSIER${userParam}&title=상담+전+준비해야+할+필수+구비+서류함&points=신분증+및+가족관계증명서(상세)+[정부24]|최근+3개년+소득금액증명원+및+원천징수영수증+[홈택스]|사건+관련+처분+통지서+및+계약서+원본+[보유서류]" alt="${kw} - 필수 구비 서류함 도감" style="display: block; width: 100%; max-width: 480px; margin: 25px auto; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.08);" />
+[시각 카드: 법정 처벌/과세 기준표 벤토 그리드 - 공문서 느낌의 수치적 기준 및 법조항 팩트체크 시 삽입]
+<img src="/api/card-image/render?type=STATUTORY_CRITERIA${userParam}&title=법정+처벌+수위+및+과세+기준표&points=1구간(기본):1년+이하+징역+또는+500만원+이하+벌금|2구간(가중):2년~5년+이하+징역+(누진세율+40%적용)|3구간(중과):면허+취소+및+징역형+가중+(가산세+최고+40%)" alt="${kw} - 법정 처벌 및 과세 기준표" style="display: block; width: 100%; max-width: 480px; margin: 25px auto; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.08);" />
 `.trim();
 }
 
 /**
- * 7. ⚖️ 처벌/과세 기준표 (CRITERIA_TABLE)
+ * 7. 💬 빈출 Q&A 팩트체크 & 전문가 직인 (FACT_QNA)
  */
-export function getCriteriaTableCardTemplate(userId: string = '', targetKeyword: string = ''): string {
+export function getFactQnaCardTemplate(userId: string = '', targetKeyword: string = ''): string {
   const userParam = userId ? `&userId=${userId}` : ''
   const kw = sanitizeKeyword(targetKeyword)
   return `
-[시각 카드: 처벌/과세 기준표 벤토 그리드 - 공문서 느낌의 수치적 기준 및 법조항 팩트체크 시 삽입]
-<img src="/api/card-image/render?type=CRITERIA_TABLE${userParam}&title=법정+처벌+수위+및+과세+기준표&points=1구간(기본):1년+이하+징역+또는+500만원+이하+벌금|2구간(가중):2년~5년+이하+징역+(누진세율+40%적용)|3구간(중과):면허+취소+및+징역형+가중+(가산세+최고+40%)" alt="${kw} - 법정 처벌 및 과세 기준표" style="display: block; width: 100%; max-width: 480px; margin: 25px auto; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.08);" />
+[시각 카드: 빈출 Q&A 팩트체크 벤토 그리드 - 스마트블록 인용 1순위 핵심 문답 및 전문가 직인 삽입]
+<img src="/api/card-image/render?type=FACT_QNA${userParam}&title=의뢰인이+가장+많이+묻는+핵심+Q%26A+팩트체크&extra1=소명서나+진술서를+혼자+작성해서+제출해도+될까요%3F|초기+진술은+사후+번복이+불가능하므로+적격증빙+선제+검증이+필수입니다.&extra2=법정+불복+기한(골든타임)을+넘기면+어떻게+되나요%3F|법정+기한이+도과하면+구제+기회가+영구+박탈되므로+즉시+조치가+필요합니다." alt="${kw} - 빈출 Q&A 팩트체크" style="display: block; width: 100%; max-width: 480px; margin: 30px auto; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.08);" />
 `.trim();
 }
 
 /**
- * 8. 🏆 실제 성공 사례 요약 (SUCCESS_RECEIPT)
+ * 8. 💡 3초 실무 요약 카드 (EXECUTIVE_SUMMARY)
  */
-export function getSuccessReceiptCardTemplate(userId: string = '', targetKeyword: string = ''): string {
+export function getExecutiveSummaryCardTemplate(userId: string = '', targetKeyword: string = ''): string {
   const userParam = userId ? `&userId=${userId}` : ''
   const kw = sanitizeKeyword(targetKeyword)
   return `
-[시각 카드: 실제 성공 사례 요약(영수증) 벤토 그리드 - 강력한 수임 동기 및 비포/애프터 입증 시 삽입]
-<img src="/api/card-image/render?type=SUCCESS_RECEIPT${userParam}&title=실제+권리+구제+및+절세+성공+사례+요약&extra1=세금+5억+원+과세+예고+통지&extra2=0원+전액+취소+및+승소+종결" alt="${kw} - 실제 권리 구제 성공 영수증" style="display: block; width: 100%; max-width: 480px; margin: 25px auto; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.08);" />
-`.trim();
-}
-
-/**
- * 9. 💬 전문가 소견서 및 팩트체크 (EXPERT_OPINION)
- */
-export function getExpertOpinionCardTemplate(userId: string = '', targetKeyword: string = ''): string {
-  const userParam = userId ? `&userId=${userId}` : ''
-  const kw = sanitizeKeyword(targetKeyword)
-  return `
-[시각 카드: 전문가 소견서 및 팩트체크 벤토 그리드 - 줄노트 질감 + 직인 도장으로 글 마무리 권위 부여 시 삽입]
-<img src="/api/card-image/render?type=EXPERT_OPINION${userParam}&title=공인+자격사+종합+소견서+및+팩트체크&points=인터넷의+단순+정보만+믿고+대응하다가는+불리한+진술이+될+수+있습니다|적격증빙과+법정+요건을+선제+검증하면+합법적+권리+구제가+가능합니다|사안별로+적용+법리가+다르므로+반드시+전문가+1:1+진단을+권장합니다" alt="${kw} - 전문가 종합 소견서 및 팩트체크" style="display: block; width: 100%; max-width: 480px; margin: 30px auto; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.08);" />
-`.trim();
-}
-
-/**
- * 10. ✋ 최종 결단 촉구 (FINAL_VERDICT)
- */
-export function getFinalVerdictCardTemplate(userId: string = '', targetKeyword: string = ''): string {
-  const userParam = userId ? `&userId=${userId}` : ''
-  const kw = sanitizeKeyword(targetKeyword)
-  return `
-[시각 카드: 최종 결단 촉구 벤토 그리드 - 글 끝에서 이탈 방지 및 즉각 전화/상담 유도 시 삽입]
-<img src="/api/card-image/render?type=FINAL_VERDICT${userParam}&title=더+늦기+전에+결단하세요&extra1=(사무소+직통전화번호)" alt="${kw} - 최종 결단 촉구 및 즉시 상담 안내" style="display: block; width: 100%; max-width: 480px; margin: 30px auto; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.08);" />
+[시각 카드: 3초 실무 요약 벤토 그리드 - 서론 직후 바쁜 독자를 사로잡는 3대 핵심 쟁점 브리핑 시 삽입]
+<img src="/api/card-image/render?type=EXECUTIVE_SUMMARY${userParam}&title=놓치면+불이익이+발생하는+3대+핵심+쟁점&points=사실관계+불일치+방지를+위한+객관적+적격증빙+선제+확보+필수|사안별+맞춤+법리+구성을+통해+법정+불복+기한+내+정밀+소명|유사+판례+및+행정심판+인용+사례를+적용한+합법적+최대+권리+구제" alt="${kw} - 3초 핵심 실무 요약" style="display: block; width: 100%; max-width: 480px; margin: 25px auto; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.08);" />
 `.trim();
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// 3. 레거시 별칭 호환 템플릿 함수
+// 3. 레거시 10종 및 초기 호환 별칭 템플릿 함수 (1줄 초슬림화)
 // ─────────────────────────────────────────────────────────────────────────────
-export const getChecklistCardTemplate = getSelfDiagnosisCardTemplate;
-export const getComparisonCardTemplate = getVsSimulationCardTemplate;
-export const getHighlightStatCardTemplate = getCriteriaTableCardTemplate;
-export const getProcessFlowCardTemplate = getActionTimelineCardTemplate;
-export const getQnACardTemplate = getExpertOpinionCardTemplate;
-export const getWarningRiskCardTemplate = getRedFlagsCardTemplate;
-export const getKeyTakeawaysTemplate = getExpertOpinionCardTemplate;
+export const getRedFlagsCardTemplate = getCriticalChecklistCardTemplate;
+export const getSelfDiagnosisCardTemplate = getCriticalChecklistCardTemplate;
+export const getVsSimulationCardTemplate = getRoiComparisonCardTemplate;
+export const getCostOfInactionCardTemplate = getLossGaugeCardTemplate;
+export const getActionTimelineCardTemplate = getProcessRoadmapCardTemplate;
+export const getRequiredDossierCardTemplate = getDossierIndexCardTemplate;
+export const getCriteriaTableCardTemplate = getStatutoryCriteriaCardTemplate;
+export const getSuccessReceiptCardTemplate = getRoiComparisonCardTemplate;
+export const getExpertOpinionCardTemplate = getFactQnaCardTemplate;
+export const getFinalVerdictCardTemplate = getExecutiveSummaryCardTemplate;
+
+export const getChecklistCardTemplate = getCriticalChecklistCardTemplate;
+export const getComparisonCardTemplate = getRoiComparisonCardTemplate;
+export const getHighlightStatCardTemplate = getStatutoryCriteriaCardTemplate;
+export const getProcessFlowCardTemplate = getProcessRoadmapCardTemplate;
+export const getQnACardTemplate = getFactQnaCardTemplate;
+export const getWarningRiskCardTemplate = getCriticalChecklistCardTemplate;
+export const getKeyTakeawaysTemplate = getExecutiveSummaryCardTemplate;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // 4. 기본 서식 템플릿 (네이버 스마트에디터 ONE 100% 보존 표준 인라인 CSS 준수)

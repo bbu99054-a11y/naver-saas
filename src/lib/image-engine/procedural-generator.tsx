@@ -8,7 +8,16 @@ import { cleanSummaryText } from '@/lib/utils/textCleaner'
 export type CardType =
   | 'MAIN_THUMBNAIL'
   | 'CTA_FOOTER'
-  // [2026 최종 엄선] 전문직 블로그 본문 10종 벤토 그리드 카드
+  // [2026 방향 A] 전문직 특화 정예 8종 벤토 카드
+  | 'CRITICAL_CHECKLIST'
+  | 'ROI_COMPARISON'
+  | 'LOSS_GAUGE'
+  | 'PROCESS_ROADMAP'
+  | 'DOSSIER_INDEX'
+  | 'STATUTORY_CRITERIA'
+  | 'FACT_QNA'
+  | 'EXECUTIVE_SUMMARY'
+  // 10종 기존 명칭 완벽 호환
   | 'RED_FLAGS'
   | 'SELF_DIAGNOSIS'
   | 'VS_SIMULATION'
@@ -392,9 +401,15 @@ interface BentoContainerProps {
   palette: Palette
   children: React.ReactNode
   bgOverride?: string
+  seed?: string
 }
 
-function BentoContainer({ palette, children, bgOverride }: BentoContainerProps) {
+function BentoContainer({ palette, children, bgOverride, seed }: BentoContainerProps) {
+  const seedNum = getSeedHashNumber(seed || 'postsynk_bento_seed')
+  const dynamicRadius = `${24 + (seedNum % 10)}px`
+  const gradX = seedNum % 100
+  const gradY = (seedNum >> 2) % 100
+
   return (
     <div
       style={{
@@ -404,11 +419,14 @@ function BentoContainer({ palette, children, bgOverride }: BentoContainerProps) 
         width: '1080px',
         height: '1080px',
         backgroundColor: bgOverride || palette.bg,
+        backgroundImage: `radial-gradient(circle at ${gradX}% ${gradY}%, rgba(255, 255, 255, 0.08), transparent)`,
         border: `1.5px solid ${palette.border}`,
-        borderRadius: CARD_CONFIG.base.borderRadius.canvas,
+        borderRadius: dynamicRadius,
         padding: CARD_CONFIG.base.safeZone.paddingDefault,
         boxSizing: 'border-box',
         letterSpacing: CARD_CONFIG.base.typography.letterSpacing,
+        wordBreak: 'keep-all',
+        whiteSpace: 'pre-wrap',
       }}
     >
       {children}
@@ -451,7 +469,7 @@ function BentoHeader({ palette, icon, title, badgeText, category }: BentoHeaderP
           color: palette.badgeText,
           padding: '10px 22px',
           borderRadius: CARD_CONFIG.base.borderRadius.badge,
-          fontSize: '24px',
+          fontSize: '28px',
           fontWeight: 'bold',
           whiteSpace: 'nowrap',
         }}
@@ -463,7 +481,7 @@ function BentoHeader({ palette, icon, title, badgeText, category }: BentoHeaderP
 }
 
 function BentoFooterTip({ palette, tipText }: { palette: Palette; tipText: string }) {
-  const tipSize = getDynamicFontSize(tipText, 26, 20, 42)
+  const tipSize = getDynamicFontSize(tipText, 32, 26, 42)
   return (
     <div
       style={{
@@ -478,8 +496,8 @@ function BentoFooterTip({ palette, tipText }: { palette: Palette; tipText: strin
         height: '64px',
       }}
     >
-      <div style={{ display: 'flex', fontSize: '28px' }}>💡</div>
-      <div style={{ display: 'flex', fontSize: `${tipSize}px`, fontWeight: 'bold', color: palette.text }}>
+      <div style={{ display: 'flex', fontSize: '32px' }}>💡</div>
+      <div style={{ display: 'flex', fontSize: `${tipSize}px`, fontWeight: 'bold', color: palette.text, wordBreak: 'keep-all' }}>
         {tipText}
       </div>
     </div>
@@ -492,119 +510,8 @@ export interface TemplateProps {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// 7. 10종 100% 반응형 벤토 카드 템플릿 컴포넌트 (1.5x 폰트 & 50% 소프트 톤다운)
+// 7. 정예 8종 기반 100% 반응형 벤토 카드 템플릿 컴포넌트
 // ─────────────────────────────────────────────────────────────────────────────
-
-/**
- * 1. 🚨 3대 레드플래그 경고 (RED_FLAGS)
- * 색상: 소프트 로즈 파스텔 톤온톤 + 1.5x 대형 타이포
- */
-export function RedFlagsTemplate({ data, palette }: TemplateProps) {
-  const title = sanitizeText(data.title || '절대 혼자 진행하면 안 되는 3대 레드플래그')
-  const rawPoints = data.points && data.points.length > 0
-    ? data.points
-    : [
-        '사실관계 불일치 진술 및 부실 소명서 제출',
-        '법정 불복 기한(골든타임) 도과 및 소명 실기',
-        '유리한 핵심 증빙 누락으로 인한 가산세 및 패소 위험',
-      ]
-
-  const seed = data.seed || title
-  const points = shuffleArrayDeterministic(rawPoints.slice(0, 3), seed)
-
-  return (
-    <BentoContainer palette={palette}>
-      <BentoHeader palette={palette} icon="🚨" title={title} badgeText="CRITICAL WARNING" category={data.category} />
-
-      {/* 메인 716px 반응형 바디 */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', height: '716px', justifyContent: 'space-between' }}>
-        {/* 상단 소프트 로즈 배너 (50% 톤다운 완화) */}
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            backgroundColor: '#FFF1F2',
-            border: '2.5px solid #FECDD3',
-            borderRadius: CARD_CONFIG.base.borderRadius.tileHero,
-            padding: '24px 32px',
-            boxSizing: 'border-box',
-            height: '180px',
-            width: '100%',
-          }}
-        >
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            <div style={{ display: 'flex', fontSize: '26px', color: '#E11D48', fontWeight: 'bold' }}>
-              ⚠️ 비전문가 단독 대응 시 치명적 위험
-            </div>
-            <div style={{ display: 'flex', fontSize: '44px', fontWeight: 'bold', color: '#881337', lineHeight: '1.2' }}>
-              초기 진술 번복 불가 · 패널티 최고조
-            </div>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px', backgroundColor: '#FFE4E6', border: '1.5px solid #FDA4AF', padding: '14px 22px', borderRadius: '18px' }}>
-            <div style={{ display: 'flex', fontSize: '52px' }}>🚨</div>
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-              <div style={{ display: 'flex', fontSize: '54px', fontWeight: 'bold', color: '#BE123C', lineHeight: '1' }}>98%</div>
-              <div style={{ display: 'flex', fontSize: '18px', color: '#9F1239', marginTop: '2px', fontWeight: 'bold' }}>패소 및 추징율</div>
-            </div>
-          </div>
-        </div>
-
-        {/* 하단 3개 수직 화이트 컬럼 */}
-        <div style={{ display: 'flex', gap: '16px', height: '520px', width: '100%' }}>
-          {points.map((pt, idx) => {
-            const clean = cleanItemText(pt)
-            const fontSize = getDynamicFontSize(clean, 36, 26, 20)
-            return (
-              <div
-                key={idx}
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'space-between',
-                  flex: 1,
-                  backgroundColor: '#FFFFFF',
-                  border: '2.5px solid #FECDD3',
-                  borderRadius: CARD_CONFIG.base.borderRadius.tileHero,
-                  padding: '28px 22px',
-                  boxSizing: 'border-box',
-                  height: '100%',
-                }}
-              >
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <div
-                    style={{
-                      display: 'flex',
-                      backgroundColor: '#BE123C',
-                      color: '#FFFFFF',
-                      borderRadius: '10px',
-                      padding: '8px 14px',
-                      fontSize: '24px',
-                      fontWeight: 'bold',
-                    }}
-                  >
-                    실수 0{idx + 1}
-                  </div>
-                  <div style={{ display: 'flex', fontSize: '28px' }}>❌</div>
-                </div>
-
-                <div style={{ display: 'flex', fontSize: `${fontSize}px`, fontWeight: 'bold', color: '#1E293B', lineHeight: '1.3' }}>
-                  {clean}
-                </div>
-
-                <div style={{ display: 'flex', fontSize: '24px', color: '#BE123C', fontWeight: 'bold', borderTop: '2px solid #FFE4E6', paddingTop: '12px' }}>
-                  * 적격증빙 선제 검증 필수
-                </div>
-              </div>
-            )
-          })}
-        </div>
-      </div>
-
-      <BentoFooterTip palette={palette} tipText="전문가 실무 팁: 의심스러운 통보를 받으셨다면, 임의로 답변하지 마시고 즉시 사실관계를 점검하세요." />
-    </BentoContainer>
-  )
-}
 
 /**
  * 2. 📊 위기 징후 자가진단표 (SELF_DIAGNOSIS)
@@ -612,144 +519,252 @@ export function RedFlagsTemplate({ data, palette }: TemplateProps) {
  */
 export function SelfDiagnosisTemplate({ data, palette }: TemplateProps) {
   const title = sanitizeText(data.title || '내 사건 위험도 자가진단 체크리스트')
-  const rawPoints = data.points && data.points.length >= 4
-    ? data.points
-    : [
-        '최근 3개월 이내 관련 기관으로부터 사전 통지/출석 요구를 받았다',
-        '필수 적격증빙이나 객관적 계약서/입증 자료가 일부 누락되어 있다',
-        '법정 기한이 1개월 이내로 임박하여 빠른 조치가 시급하다',
-        '유사한 사안으로 과거 불이익 처분을 받았거나 과태료 이력이 있다',
-      ]
+  const defaultQuestions = [
+    '최근 3개월 이내 관련 기관으로부터 사전 통지나 출석 요구를 받았다',
+    '필수 적격증빙이나 객관적 계약서/입증 자료가 일부 누락되어 있다',
+    '법정 신청 기한이 1개월 이내로 임박하여 빠른 조치가 시급하다',
+    '유사한 사안으로 과거 불이익 처분을 받았거나 과태료 이력이 있다',
+  ]
 
-  const seed = data.seed || title
-  const questions = shuffleArrayDeterministic(rawPoints.slice(0, 3), seed)
+  const rawPoints = data.points && data.points.length > 0 ? data.points : defaultQuestions
+  const filledPoints = [...rawPoints]
+  while (filledPoints.length < 4) {
+    filledPoints.push(defaultQuestions[filledPoints.length % defaultQuestions.length])
+  }
+  const questions = filledPoints.slice(0, 4)
+
+  const seed = data.seed || title || data.userId || 'self_diag_seed'
+  // extra1이 ASYMMETRIC이면 B형 강제, WIDE면 A형 강제, 그 외에는 결정론적 시드 해시로 자동 50:50 교차 배정
+  const isAsymmetric = data.extra1 === 'ASYMMETRIC' || (data.extra1 !== 'WIDE' && getSeedDeterministicIndex(seed, 2, 'diag_variant') === 1)
 
   return (
     <BentoContainer palette={palette}>
       <BentoHeader palette={palette} icon="📊" title={title} badgeText="자가진단 레이더" category={data.category} />
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', height: '716px', justifyContent: 'space-between' }}>
-        {/* 상단 2분면 */}
-        <div style={{ display: 'flex', gap: '16px', flex: 1, width: '100%' }}>
-          {/* 좌상단: 레이더 판정 (50% 소프트 슬레이트) */}
+      {isAsymmetric ? (
+        /* ──────── [타입 B: 좌우 3:7 비대칭 기둥형 벤토] ──────── */
+        <div style={{ display: 'flex', gap: '18px', height: '716px', width: '100%' }}>
+          {/* 좌측 1/3 기둥 타일 (위험도 판정 센터) */}
           <div
             style={{
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'space-between',
-              flex: 1,
+              width: '320px',
+              height: '100%',
               backgroundColor: '#F8FAFC',
               border: `2.5px solid ${palette.accent}`,
               borderRadius: CARD_CONFIG.base.borderRadius.tileHero,
-              padding: '28px',
-              color: palette.text,
+              padding: '30px 24px',
               boxSizing: 'border-box',
-              height: '100%',
             }}
           >
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
               <div style={{ display: 'flex', fontSize: '26px', color: palette.accent, fontWeight: 'bold' }}>📡 레이더 진단 기준</div>
-              <div style={{ display: 'flex', fontSize: '20px', backgroundColor: palette.badgeBg, color: palette.badgeText, padding: '6px 12px', borderRadius: '10px', fontWeight: 'bold' }}>위험도 판정</div>
+              <div style={{ display: 'flex', fontSize: '24px', color: palette.sub, fontWeight: 'bold' }}>위험도 단계 판정</div>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '18px' }}>
-              <div style={{ display: 'flex', fontSize: '72px', fontWeight: 'bold', color: palette.accent, lineHeight: '1' }}>2개+</div>
-              <div style={{ display: 'flex', fontSize: '32px', fontWeight: 'bold', color: palette.text, lineHeight: '1.25' }}>
-                해당 시 즉시<br />‘경고’ 단계 돌입
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              <div style={{ display: 'flex', fontSize: '70px', fontWeight: '900', color: palette.accent, lineHeight: '1' }}>2개+</div>
+              <div style={{ display: 'flex', fontSize: '32px', fontWeight: 'bold', color: palette.text, lineHeight: '1.3' }}>
+                해당 시 즉시<br />‘경고’ 단계
+              </div>
+              <div style={{ display: 'flex', fontSize: '24px', color: palette.sub, fontWeight: 'bold', borderTop: `1.5px solid ${palette.border}`, paddingTop: '10px' }}>
+                * 단독 소명 시 위험 급증
               </div>
             </div>
-            <div style={{ display: 'flex', fontSize: '22px', color: palette.sub, fontWeight: 'bold' }}>* 단독 소명 시 패소/추징 위험 급증</div>
-          </div>
 
-          {/* 우상단: 문항 1 & 2 */}
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-around',
-              flex: 1,
-              backgroundColor: '#FFFFFF',
-              border: `2.5px solid ${palette.border}`,
-              borderRadius: CARD_CONFIG.base.borderRadius.tileHero,
-              padding: '24px',
-              boxSizing: 'border-box',
-              height: '100%',
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
-              <div style={{ display: 'flex', backgroundColor: palette.accent, color: '#FFF', borderRadius: '10px', padding: '6px 12px', fontSize: '24px', fontWeight: 'bold' }}>Q1</div>
-              <div style={{ display: 'flex', fontSize: '30px', fontWeight: 'bold', color: palette.text, lineHeight: '1.3' }}>{cleanItemText(questions[0] || '')}</div>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
-              <div style={{ display: 'flex', backgroundColor: palette.accent, color: '#FFF', borderRadius: '10px', padding: '6px 12px', fontSize: '24px', fontWeight: 'bold' }}>Q2</div>
-              <div style={{ display: 'flex', fontSize: '30px', fontWeight: 'bold', color: palette.text, lineHeight: '1.3' }}>{cleanItemText(questions[1] || '')}</div>
-            </div>
-          </div>
-        </div>
-
-        {/* 하단 2분면 */}
-        <div style={{ display: 'flex', gap: '16px', flex: 1, width: '100%' }}>
-          {/* 좌하단: 문항 3 */}
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-around',
-              flex: 1,
-              backgroundColor: '#FFFFFF',
-              border: `2.5px solid ${palette.border}`,
-              borderRadius: CARD_CONFIG.base.borderRadius.tileHero,
-              padding: '24px',
-              boxSizing: 'border-box',
-              height: '100%',
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
-              <div style={{ display: 'flex', backgroundColor: palette.accent, color: '#FFF', borderRadius: '10px', padding: '6px 12px', fontSize: '24px', fontWeight: 'bold' }}>Q3</div>
-              <div style={{ display: 'flex', fontSize: '30px', fontWeight: 'bold', color: palette.text, lineHeight: '1.3' }}>{cleanItemText(questions[2] || '')}</div>
-            </div>
-            <div style={{ display: 'flex', fontSize: '24px', color: palette.sub, fontWeight: 'bold' }}>* 3개 이상 해당 시 법정 기한 경과 주의</div>
-          </div>
-
-          {/* 우하단: 솔루션 안내 */}
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-              flex: 1,
-              backgroundColor: palette.highlightBg,
-              border: `2.5px solid ${palette.accent}`,
-              borderRadius: CARD_CONFIG.base.borderRadius.tileHero,
-              padding: '28px',
-              boxSizing: 'border-box',
-              height: '100%',
-            }}
-          >
-            <div style={{ display: 'flex', fontSize: '28px', fontWeight: 'bold', color: palette.accent }}>
-              🛡️ 전문가 1:1 진단 솔루션
-            </div>
-            <div style={{ display: 'flex', fontSize: '32px', fontWeight: 'bold', color: palette.text, lineHeight: '1.25' }}>
-              자가진단 결과 2개 이상 해당 시, 즉시 기록 분석 권고
-            </div>
             <div
               style={{
                 display: 'flex',
-                backgroundColor: palette.accent,
-                color: '#FFFFFF',
-                borderRadius: '14px',
-                padding: '12px',
-                fontSize: '26px',
-                fontWeight: 'bold',
+                alignItems: 'center',
                 justifyContent: 'center',
+                backgroundColor: palette.badgeBg,
+                border: `1.5px solid ${palette.border}`,
+                borderRadius: '14px',
+                padding: '14px 10px',
+                fontSize: '24px',
+                fontWeight: 'bold',
+                color: palette.badgeText,
               }}
             >
-              🔍 1:1 비밀 보장 분석 신청
+              🛡️ 1:1 비밀 보장 진단
             </div>
           </div>
-        </div>
-      </div>
 
-      <BentoFooterTip palette={palette} tipText="자가진단 결과 2개 이상 해당된다면, 이미 골든타임이 진행 중이므로 즉시 전문가 분석을 권장합니다." />
+          {/* 우측 2/3 영역: 4개 체크리스트 카드 수직 정렬 */}
+          <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', flex: 1, height: '100%' }}>
+            {questions.map((q, idx) => {
+              const clean = cleanItemText(q)
+              const lines = splitBalancedLines(clean, 16)
+              const fontSize = lines.length > 1 ? 28 : 34
+
+              return (
+                <div
+                  key={idx}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    backgroundColor: '#FFFFFF',
+                    border: `2px solid ${palette.border}`,
+                    borderRadius: '18px',
+                    padding: '16px 20px',
+                    boxSizing: 'border-box',
+                    height: '166px',
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '16px', maxWidth: '520px', flex: 1 }}>
+                    <div
+                      style={{
+                        display: 'flex',
+                        backgroundColor: palette.accent,
+                        color: '#FFFFFF',
+                        borderRadius: '10px',
+                        padding: '8px 14px',
+                        fontSize: '26px',
+                        fontWeight: 'bold',
+                        flexShrink: 0,
+                        lineHeight: '1',
+                      }}
+                    >
+                      Q{idx + 1}
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', flex: 1 }}>
+                      {lines.map((l, lIdx) => (
+                        <div key={lIdx} style={{ display: 'flex', fontSize: `${fontSize}px`, fontWeight: 'bold', color: palette.text, lineHeight: '1.25', wordBreak: 'keep-all' }}>
+                          {l}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  <div style={{ display: 'flex', fontSize: '32px', flexShrink: 0 }}>☑️</div>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      ) : (
+        /* ──────── [타입 A: 상하 와이드 도감형 벤토] ──────── */
+        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '716px', width: '100%' }}>
+          {/* 상단 100% 와이드 판정 배너 */}
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              backgroundColor: palette.highlightBg,
+              border: `2.5px solid ${palette.border}`,
+              borderRadius: CARD_CONFIG.base.borderRadius.tileHero,
+              padding: '20px 28px',
+              boxSizing: 'border-box',
+              height: '138px',
+              width: '100%',
+            }}
+          >
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              <div style={{ display: 'flex', fontSize: '26px', color: palette.accent, fontWeight: 'bold' }}>
+                📡 자가진단 위험도 판정 기준
+              </div>
+              <div style={{ display: 'flex', fontSize: '36px', fontWeight: 'bold', color: palette.text, lineHeight: '1.2' }}>
+                4개 문항 중 2개 이상 해당 시 ‘정밀 검토’ 단계
+              </div>
+            </div>
+
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '14px',
+                backgroundColor: palette.badgeBg,
+                border: `1.5px solid ${palette.border}`,
+                padding: '12px 22px',
+                borderRadius: '18px',
+              }}
+            >
+              <div style={{ display: 'flex', fontSize: '42px' }}>⚠️</div>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                <div style={{ display: 'flex', fontSize: '36px', fontWeight: '900', color: palette.accent, lineHeight: '1' }}>2개+</div>
+                <div style={{ display: 'flex', fontSize: '22px', color: palette.badgeText, fontWeight: 'bold', marginTop: '2px' }}>경고 판정</div>
+              </div>
+            </div>
+          </div>
+
+          {/* 하단 전폭 4단 체크리스트 스택 */}
+          <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '562px', width: '100%' }}>
+            {questions.map((q, idx) => {
+              const clean = cleanItemText(q)
+              const lines = splitBalancedLines(clean, 24)
+              const fontSize = lines.length > 1 ? 30 : 36
+
+              return (
+                <div
+                  key={idx}
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    backgroundColor: '#FFFFFF',
+                    border: `2px solid ${palette.border}`,
+                    borderRadius: '18px',
+                    padding: '14px 24px',
+                    boxSizing: 'border-box',
+                    height: '128px',
+                    width: '100%',
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '18px', maxWidth: '820px', flex: 1 }}>
+                    <div
+                      style={{
+                        display: 'flex',
+                        backgroundColor: palette.accent,
+                        color: '#FFFFFF',
+                        borderRadius: '10px',
+                        padding: '8px 14px',
+                        fontSize: '26px',
+                        fontWeight: 'bold',
+                        flexShrink: 0,
+                        lineHeight: '1',
+                      }}
+                    >
+                      Q{idx + 1}
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', flex: 1 }}>
+                      {lines.map((l, lIdx) => (
+                        <div key={lIdx} style={{ display: 'flex', fontSize: `${fontSize}px`, fontWeight: 'bold', color: palette.text, lineHeight: '1.25', wordBreak: 'keep-all' }}>
+                          {l}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '8px',
+                      backgroundColor: palette.highlightBg,
+                      border: `1.5px solid ${palette.border}`,
+                      padding: '8px 16px',
+                      borderRadius: '12px',
+                      fontSize: '20px',
+                      fontWeight: 'bold',
+                      color: palette.sub,
+                      flexShrink: 0,
+                    }}
+                  >
+                    <span>☑️</span>
+                    <span>점검</span>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      )}
+
+      <BentoFooterTip palette={palette} tipText="전문가 실무 팁: 자가진단 2개 이상 해당 시, 초기 진술서 작성 전 1:1 법리 점검을 권장합니다." />
     </BentoContainer>
   )
 }
@@ -1584,107 +1599,340 @@ export function ExpertOpinionTemplate({ data, palette }: TemplateProps) {
   )
 }
 
+
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 8. [2026 방향 A] 전문직 특화 정예 8종 벤토 카드 템플릿
+// ─────────────────────────────────────────────────────────────────────────────
+
 /**
- * 10. ✋ 최종 결단 촉구 (FINAL_VERDICT)
- * 색상: 소프트 로즈 톤다운 + 1.5x 대형 타이포
+ * 1. 🚨 위기 경고 체크리스트 (CRITICAL_CHECKLIST)
+ * 기존 RED_FLAGS + SELF_DIAGNOSIS 통합 발전
  */
-export function FinalVerdictTemplate({ data, palette }: TemplateProps) {
-  const title = sanitizeText(data.title || '더 이상 미룰 수 없는 최종 결단의 순간')
+export const CriticalChecklistTemplate = SelfDiagnosisTemplate
+
+/**
+ * 2. 🆚 비포/애프터 실익 대비표 (ROI_COMPARISON)
+ * 기존 VS_SIMULATION + SUCCESS_RECEIPT 통합 발전
+ * 글 제목(시드)에 따라 50:50 듀얼 대비형과 성공 영수증 티켓형이 자율 교차 생성
+ */
+export function RoiComparisonTemplate({ data, palette }: TemplateProps) {
+  const seed = data.seed || data.title || data.userId || 'roi_comparison_seed'
+  const isReceipt = data.extra3 === 'RECEIPT' || (data.extra3 !== 'DUAL' && getSeedDeterministicIndex(seed, 2, 'roi_variant') === 1)
+
+  if (isReceipt) {
+    return <SuccessReceiptTemplate data={data} palette={palette} />
+  }
+  return <VsSimulationTemplate data={data} palette={palette} />
+}
+
+/**
+ * 3. 📉 골든타임 손실 게이지 (LOSS_GAUGE)
+ * 기존 COST_OF_INACTION 계승 발전
+ */
+export const LossGaugeTemplate = CostOfInactionTemplate
+
+/**
+ * 4. ⏳ 사건 해결 3단계 로드맵 (PROCESS_ROADMAP)
+ * 기존 ACTION_TIMELINE 계승 발전
+ */
+export const ProcessRoadmapTemplate = ActionTimelineTemplate
+
+/**
+ * 5. 📑 필수 구비 서류함 도감 (DOSSIER_INDEX)
+ * 기존 REQUIRED_DOSSIER 계승 발전
+ */
+export const DossierIndexTemplate = RequiredDossierTemplate
+
+/**
+ * 6. ⚖️ 법정 처벌/과세 기준표 (STATUTORY_CRITERIA)
+ * 기존 CRITERIA_TABLE 계승 발전
+ */
+export const StatutoryCriteriaTemplate = CriteriaTableTemplate
+
+/**
+ * 7. 💬 빈출 Q&A 팩트체크 & 전문가 직인 (FACT_QNA)
+ * 네이버 2026 스마트블록/AI브리핑 인용 최우선 킬러 카드
+ */
+export function FactQnaTemplate({ data, palette }: TemplateProps) {
+  const title = sanitizeText(data.title || '의뢰인이 가장 많이 묻는 핵심 Q&A 팩트체크')
+  const seed = data.seed || title || data.userId || 'fact_qna_seed'
+  const isLinedNote = data.extra3 === 'NOTE' || (data.extra3 !== 'CARDS' && getSeedDeterministicIndex(seed, 2, 'qna_variant') === 1)
+
+  if (isLinedNote) {
+    return <ExpertOpinionTemplate data={data} palette={palette} />
+  }
+
+  const q1 = data.extra1 && data.extra1.includes('|')
+    ? sanitizeText(data.extra1.split('|')[0])
+    : '소명서나 진술서를 혼자 작성해서 제출해도 될까요?'
+  const a1 = data.extra1 && data.extra1.includes('|')
+    ? sanitizeText(data.extra1.split('|')[1])
+    : '초기 진술은 사후 번복이 불가능하므로, 유리한 적격증빙을 선제 검증한 후 법리에 맞춰 제출해야 합니다.'
+
+  const q2 = data.extra2 && data.extra2.includes('|')
+    ? sanitizeText(data.extra2.split('|')[0])
+    : '법정 불복 기한(골든타임)을 넘기면 어떻게 되나요?'
+  const a2 = data.extra2 && data.extra2.includes('|')
+    ? sanitizeText(data.extra2.split('|')[1])
+    : '법정 기한이 도과하면 구제 기회가 영구 박탈되므로 통지서 수령 즉시 전담 자격사 검토를 권장합니다.'
 
   return (
-    <BentoContainer palette={palette}>
-      <BentoHeader palette={palette} icon="✋" title={title} badgeText="FINAL VERDICT" category={data.category} />
+    <BentoContainer palette={palette} seed={seed}>
+      <BentoHeader palette={palette} icon="💬" title={title} badgeText="Q&A 팩트체크" category={data.category} />
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', height: '716px', justifyContent: 'space-between' }}>
-        {/* 상단 소프트 로즈 히어로 */}
+        {/* Q1 카드 */}
         <div
           style={{
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'space-between',
-            backgroundColor: '#FFF1F2',
-            border: '2.5px solid #FECDD3',
+            backgroundColor: '#FFFFFF',
+            border: `2.5px solid ${palette.border}`,
             borderRadius: CARD_CONFIG.base.borderRadius.tileHero,
-            padding: '34px 30px',
+            padding: '24px 28px',
             boxSizing: 'border-box',
-            height: '390px',
+            height: '240px',
             width: '100%',
           }}
         >
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <div
-              style={{
-                display: 'flex',
-                backgroundColor: '#DC2626',
-                color: '#FFFFFF',
-                padding: '8px 16px',
-                borderRadius: '10px',
-                fontSize: '24px',
-                fontWeight: 'bold',
-              }}
-            >
-              🚨 기회 상실 경고
+          <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+            <div style={{ display: 'flex', backgroundColor: '#BE123C', color: '#FFF', borderRadius: '10px', padding: '8px 16px', fontSize: '26px', fontWeight: 'bold' }}>
+              Q1
             </div>
-            <div style={{ display: 'flex', fontSize: '24px', color: '#BE123C', fontWeight: 'bold' }}>골든타임 종료 임박</div>
-          </div>
-
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            <div style={{ display: 'flex', fontSize: '46px', fontWeight: 'bold', color: '#881337', lineHeight: '1.2' }}>
-              혼자 고민하는 동안<br />법정 불복 기한은 지나갑니다
-            </div>
-            <div style={{ display: 'flex', fontSize: '28px', color: '#9F1239', fontWeight: 'bold' }}>
-              한 번 지나간 소명 기회는 다시 돌아오지 않습니다.
+            <div style={{ display: 'flex', fontSize: '34px', fontWeight: 'bold', color: '#1E293B', lineHeight: '1.25' }}>
+              {q1}
             </div>
           </div>
-
-          <div style={{ display: 'flex', fontSize: '22px', color: '#BE123C', borderTop: '1.5px solid #FECDD3', paddingTop: '12px', fontWeight: 'bold' }}>
-            * 지금 즉시 전문가와 1:1 상담을 통해 구제 가능성을 확인하세요.
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '14px', backgroundColor: '#F8FAFC', border: '1.5px solid #E2E8F0', padding: '14px 18px', borderRadius: '14px' }}>
+            <div style={{ display: 'flex', fontSize: '28px', fontWeight: '900', color: palette.accent }}>A.</div>
+            <div style={{ display: 'flex', fontSize: '32px', fontWeight: 'bold', color: '#334155', lineHeight: '1.28', flex: 1, wordBreak: 'keep-all' }}>
+              {a1}
+            </div>
           </div>
         </div>
 
-        {/* 하단 직통 연결 배너 */}
+        {/* Q2 카드 */}
         <div
           style={{
             display: 'flex',
-            alignItems: 'center',
+            flexDirection: 'column',
             justifyContent: 'space-between',
-            backgroundColor: palette.highlightBg,
-            border: `2.5px solid ${palette.accent}`,
+            backgroundColor: '#FFFFFF',
+            border: `2.5px solid ${palette.border}`,
             borderRadius: CARD_CONFIG.base.borderRadius.tileHero,
-            padding: '28px 32px',
+            padding: '24px 28px',
             boxSizing: 'border-box',
-            height: '310px',
+            height: '240px',
             width: '100%',
           }}
         >
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            <div style={{ display: 'flex', fontSize: '26px', color: palette.accent, fontWeight: 'bold' }}>📞 비밀 보장 직통 상담</div>
-            <div style={{ display: 'flex', fontSize: '40px', fontWeight: 'bold', color: palette.text }}>1:1 맞춤 법리 진단 신청</div>
-            <div style={{ display: 'flex', fontSize: '24px', color: palette.sub, fontWeight: 'bold' }}>예약 접수 시 전담 자격사 직접 검토</div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+            <div style={{ display: 'flex', backgroundColor: palette.accent, color: '#FFF', borderRadius: '10px', padding: '8px 16px', fontSize: '26px', fontWeight: 'bold' }}>
+              Q2
+            </div>
+            <div style={{ display: 'flex', fontSize: '34px', fontWeight: 'bold', color: '#1E293B', lineHeight: '1.25' }}>
+              {q2}
+            </div>
           </div>
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '14px', backgroundColor: palette.highlightBg, border: `1.5px solid ${palette.border}`, padding: '14px 18px', borderRadius: '14px' }}>
+            <div style={{ display: 'flex', fontSize: '28px', fontWeight: '900', color: palette.accent }}>A.</div>
+            <div style={{ display: 'flex', fontSize: '32px', fontWeight: 'bold', color: palette.text, lineHeight: '1.28', flex: 1, wordBreak: 'keep-all' }}>
+              {a2}
+            </div>
+          </div>
+        </div>
+
+        {/* 하단 보증 & 직인 날인 바 */}
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            backgroundColor: '#FCFAF6',
+            border: `2px solid ${palette.border}`,
+            borderRadius: CARD_CONFIG.base.borderRadius.tileCard,
+            padding: '16px 28px',
+            height: '190px',
+            boxSizing: 'border-box',
+          }}
+        >
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <span style={{ fontSize: '30px' }}>⚖️</span>
+              <span style={{ fontSize: '32px', fontWeight: 'bold', color: palette.text }}>공인 자격사 직접 사실관계 검토 완료</span>
+            </div>
+            <div style={{ display: 'flex', fontSize: '24px', color: palette.sub, fontWeight: 'bold' }}>
+              * 본 답변은 최신 법령 및 실무 심사 기준에 근거하여 작성되었습니다.
+            </div>
+          </div>
+
+          {/* 붉은색 공식 인감 직인 도장 */}
           <div
             style={{
               display: 'flex',
-              backgroundColor: palette.accent,
-              color: '#FFFFFF',
-              padding: '20px 34px',
-              borderRadius: '16px',
-              fontSize: '30px',
-              fontWeight: 'bold',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '120px',
+              height: '120px',
+              borderRadius: '50%',
+              border: '3.5px solid #BE123C',
+              color: '#BE123C',
+              transform: 'rotate(-6deg)',
+              backgroundColor: 'rgba(254, 226, 226, 0.4)',
+              boxSizing: 'border-box',
+              padding: '6px',
+              textAlign: 'center',
+              flexShrink: 0,
             }}
           >
-            지금 상담 신청 ➔
+            <div style={{ display: 'flex', fontSize: '11px', fontWeight: 'bold' }}>★ VERIFIED ★</div>
+            <div style={{ display: 'flex', fontSize: '18px', fontWeight: 'bold', margin: '2px 0' }}>공인검토필</div>
+            <div style={{ display: 'flex', fontSize: '11px', borderTop: '1px solid #BE123C', paddingTop: '2px' }}>POSTSYNK</div>
           </div>
         </div>
       </div>
 
-      <BentoFooterTip palette={palette} tipText="조기 상담을 통해 불필요한 분쟁과 가산세 부과를 선제적으로 방어하세요." />
+      <BentoFooterTip palette={palette} tipText="전문가 실무 팁: 개별 사안에 따라 적용 법리가 달라지므로 사전 1:1 진단을 권장합니다." />
+    </BentoContainer>
+  )
+}
+
+/**
+ * 8. 💡 3초 실무 요약 카드 (EXECUTIVE_SUMMARY)
+ * 서론 직후 바쁜 현대인의 시선을 3초 만에 사로잡는 핵심 마이크로 요약 카드
+ */
+export function ExecutiveSummaryTemplate({ data, palette }: TemplateProps) {
+  const title = sanitizeText(data.title || '핵심 쟁점 3초 실무 요약')
+  const seed = data.seed || title || data.userId || 'exec_summary_seed'
+  const rawPoints = data.points && data.points.length > 0
+    ? data.points
+    : [
+        '사실관계 불일치 방지를 위한 객관적 적격증빙 선제 확보 필수',
+        '사안별 맞춤 법리 구성을 통해 법정 불복 기한 내 정밀 소명',
+        '유사 판례 및 행정심판 인용 사례를 적용한 합법적 최대 권리 구제',
+      ]
+
+  return (
+    <BentoContainer palette={palette} seed={seed}>
+      <BentoHeader palette={palette} icon="💡" title={title} badgeText="3초 핵심 요약" category={data.category} />
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', height: '716px', justifyContent: 'space-between' }}>
+        {/* 상단 100% 헤드라인 요약 배너 */}
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            backgroundColor: palette.highlightBg,
+            border: `2.5px solid ${palette.border}`,
+            borderRadius: CARD_CONFIG.base.borderRadius.tileHero,
+            padding: '20px 28px',
+            boxSizing: 'border-box',
+            height: '144px',
+            width: '100%',
+          }}
+        >
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+            <div style={{ display: 'flex', fontSize: '26px', color: palette.accent, fontWeight: 'bold' }}>
+              📌 EXECUTIVE BRIEFING
+            </div>
+            <div style={{ display: 'flex', fontSize: '38px', fontWeight: 'bold', color: palette.text, lineHeight: '1.25' }}>
+              놓치면 불이익이 발생하는 3대 핵심 쟁점
+            </div>
+          </div>
+
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px',
+              backgroundColor: palette.badgeBg,
+              border: `1.5px solid ${palette.border}`,
+              padding: '12px 20px',
+              borderRadius: '16px',
+            }}
+          >
+            <span style={{ fontSize: '36px' }}>⚡</span>
+            <span style={{ fontSize: '26px', fontWeight: 'bold', color: palette.badgeText }}>3초 완성</span>
+          </div>
+        </div>
+
+        {/* 3대 핵심 요약 카드 스택 */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', flex: 1, justifyContent: 'space-between' }}>
+          {rawPoints.slice(0, 3).map((pt, idx) => {
+            const clean = cleanItemText(pt)
+            // 22자 이하이면 1줄로 시원하게 배치, 22자 초과 시에만 균형 2줄 분할
+            const lines = clean.length <= 22 ? [clean] : splitBalancedLines(clean, 16)
+            const fontSize = lines.length > 1 ? 38 : 44
+
+            return (
+              <div
+                key={idx}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  backgroundColor: '#FFFFFF',
+                  border: `2px solid ${palette.border}`,
+                  borderRadius: CARD_CONFIG.base.borderRadius.tileHero,
+                  padding: '16px 24px',
+                  boxSizing: 'border-box',
+                  height: '160px',
+                  width: '100%',
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '20px', flex: 1, maxWidth: '820px' }}>
+                  <div
+                    style={{
+                      display: 'flex',
+                      backgroundColor: palette.accent,
+                      color: '#FFFFFF',
+                      borderRadius: '12px',
+                      padding: '10px 18px',
+                      fontSize: '26px',
+                      fontWeight: 'bold',
+                      flexShrink: 0,
+                    }}
+                  >
+                    POINT 0{idx + 1}
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', flex: 1 }}>
+                    {lines.map((l, lIdx) => (
+                      <div
+                        key={lIdx}
+                        style={{
+                          display: 'flex',
+                          fontSize: `${fontSize}px`,
+                          fontWeight: 'bold',
+                          color: palette.text,
+                          lineHeight: '1.24',
+                          wordBreak: 'keep-all',
+                        }}
+                      >
+                        {l}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div style={{ display: 'flex', fontSize: '36px', flexShrink: 0 }}>
+                  {idx === 0 ? '🎯' : idx === 1 ? '⚖️' : '🏆'}
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      </div>
+
+      <BentoFooterTip palette={palette} tipText="공인 자격사 검증: 본 요약은 의뢰인의 골든타임 보존 및 권리 구제를 위해 작성되었습니다." />
     </BentoContainer>
   )
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// 8. 최상단 썸네일 & 최하단 CTA 배너 (1.5x 대형 타이포)
+// 9. 최상단 썸네일 & 최하단 CTA 배너 (1.5x 대형 타이포)
 // ─────────────────────────────────────────────────────────────────────────────
 
 export function ThumbnailTemplate({
@@ -1984,43 +2232,47 @@ export function generateProceduralImage(data: InfographicData): React.ReactEleme
     case 'CTA_FOOTER':
       return <CtaBannerTemplate data={data} palette={palette} layout={bannerLayout} />
 
-    // [10종 본문 벤토 카드]
+    // ─── [2026 방향 A: 정예 8종 벤토 카드 라인업] ───
+    case 'CRITICAL_CHECKLIST':
     case 'RED_FLAGS':
-      return <RedFlagsTemplate data={data} palette={palette} />
     case 'SELF_DIAGNOSIS':
-      return <SelfDiagnosisTemplate data={data} palette={palette} />
-    case 'VS_SIMULATION':
-      return <VsSimulationTemplate data={data} palette={palette} />
-    case 'COST_OF_INACTION':
-      return <CostOfInactionTemplate data={data} palette={palette} />
-    case 'ACTION_TIMELINE':
-      return <ActionTimelineTemplate data={data} palette={palette} />
-    case 'REQUIRED_DOSSIER':
-      return <RequiredDossierTemplate data={data} palette={palette} />
-    case 'CRITERIA_TABLE':
-      return <CriteriaTableTemplate data={data} palette={palette} />
-    case 'SUCCESS_RECEIPT':
-      return <SuccessReceiptTemplate data={data} palette={palette} />
-    case 'EXPERT_OPINION':
-      return <ExpertOpinionTemplate data={data} palette={palette} />
-    case 'FINAL_VERDICT':
-      return <FinalVerdictTemplate data={data} palette={palette} />
-
-    // 레거시 타입 호환
     case 'CHECKLIST':
-      return <SelfDiagnosisTemplate data={data} palette={palette} />
-    case 'COMPARISON':
-      return <VsSimulationTemplate data={data} palette={palette} />
-    case 'STAT_HIGHLIGHT':
-      return <CriteriaTableTemplate data={data} palette={palette} />
-    case 'PROCESS_FLOW':
-      return <ActionTimelineTemplate data={data} palette={palette} />
-    case 'QNA':
-      return <ExpertOpinionTemplate data={data} palette={palette} />
     case 'WARNING_RISK':
-      return <RedFlagsTemplate data={data} palette={palette} />
+      return <CriticalChecklistTemplate data={data} palette={palette} />
+
+    case 'ROI_COMPARISON':
+    case 'VS_SIMULATION':
+    case 'SUCCESS_RECEIPT':
+    case 'COMPARISON':
+      return <RoiComparisonTemplate data={data} palette={palette} />
+
+    case 'LOSS_GAUGE':
+    case 'COST_OF_INACTION':
+      return <LossGaugeTemplate data={data} palette={palette} />
+
+    case 'PROCESS_ROADMAP':
+    case 'ACTION_TIMELINE':
+    case 'PROCESS_FLOW':
+      return <ProcessRoadmapTemplate data={data} palette={palette} />
+
+    case 'DOSSIER_INDEX':
+    case 'REQUIRED_DOSSIER':
+      return <DossierIndexTemplate data={data} palette={palette} />
+
+    case 'STATUTORY_CRITERIA':
+    case 'CRITERIA_TABLE':
+    case 'STAT_HIGHLIGHT':
+      return <StatutoryCriteriaTemplate data={data} palette={palette} />
+
+    case 'FACT_QNA':
+    case 'EXPERT_OPINION':
+    case 'QNA':
+      return <FactQnaTemplate data={data} palette={palette} />
+
+    case 'EXECUTIVE_SUMMARY':
+    case 'FINAL_VERDICT':
     case 'KEY_TAKEAWAYS':
-      return <ExpertOpinionTemplate data={data} palette={palette} />
+      return <ExecutiveSummaryTemplate data={data} palette={palette} />
 
     default:
       return <ThumbnailTemplate data={data} palette={palette} layout={thumbLayout} tags={tags} />
