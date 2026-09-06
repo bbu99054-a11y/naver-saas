@@ -32,7 +32,7 @@ export async function POST(req: Request) {
                 [
                   {
                     text: '🚀 리포트 생성 & 자동 발송 승인',
-                    callback_data: `approve:${cleanName}:${targetIndustry}:${cleanEmail}`
+                    callback_data: 'approve:live_req'
                   }
                 ]
               ]
