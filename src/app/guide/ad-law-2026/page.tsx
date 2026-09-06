@@ -2,6 +2,7 @@
 
 import React, { useState, useMemo } from 'react'
 import Link from 'next/link'
+import PlaceAuditLeadSection from '@/components/PlaceAuditLeadSection'
 import {
   BookOpen,
   Copy,
@@ -546,6 +547,9 @@ export default function AdLaw2026Page() {
             </div>
           </div>
         </section>
+
+        {/* 반경 2km 플레이스 경쟁사 분석 무마찰 신청 섹션 */}
+        <PlaceAuditLeadSection />
 
         {/* 챕터 1. 2026년 네이버 검색 알고리즘의 다층적 구조와 AI SEO 대응 */}
         <section
@@ -1488,6 +1492,9 @@ export default function AdLaw2026Page() {
               </div>
             ))}
           </div>
+
+          {/* 하단 2차 무마찰 신청 섹션 */}
+          <div className="pt-4"><PlaceAuditLeadSection /></div>
 
           {/* 거부감 없는 소프트 CTA 배너 (요금표 없음!) */}
           <div
