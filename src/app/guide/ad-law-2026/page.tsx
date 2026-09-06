@@ -400,7 +400,7 @@ export default function AdLaw2026Page() {
                 </span>
               </div>
               <p style={{ color: '#0f172a' }} className="text-xs sm:text-sm font-extrabold tracking-tight line-clamp-1">
-                2026 전문직 블로그 마케팅 &amp; 광고법 과태료 제로(Zero) 공식 지침서
+                2026 전문직 AI 마케팅 &amp; 온라인 광고 규정 단속 대응 공식 지침서
               </p>
             </div>
           </div>
@@ -508,10 +508,10 @@ export default function AdLaw2026Page() {
 
           <div className="space-y-3">
             <h1 style={{ color: '#0f172a' }} className="text-2xl sm:text-4xl font-extrabold tracking-tight leading-tight">
-              2026 전문직 블로그 마케팅 &amp; 광고법 과태료 제로(Zero) 공식 지침서
+              2026 전문직 AI 마케팅 &amp; 온라인 광고 규정 단속 대응 공식 지침서
             </h1>
             <p style={{ color: '#4f46e5' }} className="text-base sm:text-lg font-extrabold">
-              변호사·의사·세무사·노무사 20대 불법 금지어 사전 &amp; 네이버 AI 검색(AI 브리핑) 상위 노출 바이블
+              보건복지부·대한변협·한국세무사회 2026 최신 심의 기준 완벽 준수 &amp; 20대 핵심 금지어 사전
             </p>
             <p style={{ color: '#334155' }} className="text-sm sm:text-base leading-relaxed max-w-3xl font-medium">
               대행사에 맡겼다가 과태료와 자격정지 위기에 직면한 전문직 대표님들을 위한 필독서입니다.

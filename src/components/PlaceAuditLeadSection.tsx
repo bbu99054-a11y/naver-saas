@@ -6,9 +6,22 @@ import { Gift, Zap, FileText, CheckCircle2, ArrowRight, Loader2, Sparkles } from
 
 function PlaceAuditLeadContent() {
   const searchParams = useSearchParams()
-  const paramName = searchParams.get('name') || ''
-  const paramEmail = searchParams.get('email') || ''
+  const rawName = searchParams.get('name') || ''
+  const rawEmail = searchParams.get('email') || ''
   const paramLeadId = searchParams.get('lead_id') || ''
+
+  let paramName = ''
+  let paramEmail = ''
+  try {
+    paramName = decodeURIComponent(rawName).trim()
+  } catch (_) {
+    paramName = rawName.trim()
+  }
+  try {
+    paramEmail = decodeURIComponent(rawEmail).trim().toLowerCase()
+  } catch (_) {
+    paramEmail = rawEmail.trim().toLowerCase()
+  }
 
   const [isManual, setIsManual] = useState(false)
   const [name, setName] = useState('')
@@ -93,10 +106,10 @@ function PlaceAuditLeadContent() {
       <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 leading-snug mb-2">
         {hasPreFill ? (
           <>
-            <span className="text-blue-600">[{paramName}]</span> 귀하를 위한 반경 2km 경쟁사 분석 리포트
+            🔥 <span className="text-blue-600">[{paramName}]</span> 반경 2km 네이버 플레이스 1~3위 경쟁사 순위·리뷰 심층 분석 리포트 (무료 발급)
           </>
         ) : (
-          '네이버 플레이스 반경 2km 경쟁사 분석 & 상위 노출 순위 관리 리포트'
+          '🔥 네이버 플레이스 반경 2km 1~3위 경쟁사 심층 분석 & 상위 노출 관리 리포트 (무료 발급)'
         )}
       </h2>
 
@@ -133,7 +146,7 @@ function PlaceAuditLeadContent() {
             ) : (
               <>
                 <Zap className="w-5 h-5 fill-current text-yellow-300" />
-                <span>1초 만에 무료 분석 신청하기 (클릭)</span>
+                <span>⚡ 1초 만에 무료 분석 신청하기 (즉시 접수)</span>
               </>
             )}
           </button>
@@ -203,7 +216,7 @@ function PlaceAuditLeadContent() {
             ) : (
               <>
                 <FileText className="w-5 h-5 text-blue-200" />
-                <span>반경 2km 분석 리포트 무료 신청하기 (3초 소요)</span>
+                <span>⚡ 반경 2km 1~3위 경쟁사 분석 리포트 무료 신청 (3초 소요)</span>
               </>
             )}
           </button>
