@@ -24,7 +24,20 @@ export async function POST(req: Request) {
         await fetch(`https://api.telegram.org/bot${tgToken.trim()}/sendMessage`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ chat_id: tgChatId, text: msg })
+          body: JSON.stringify({
+            chat_id: tgChatId,
+            text: msg,
+            reply_markup: {
+              inline_keyboard: [
+                [
+                  {
+                    text: '🚀 리포트 생성 & 자동 발송 승인',
+                    callback_data: `approve:${cleanName}:${targetIndustry}:${cleanEmail}`
+                  }
+                ]
+              ]
+            }
+          })
         })
       } catch (e) {
         console.error('[Place Apply Telegram Error]:', e)
