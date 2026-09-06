@@ -67,6 +67,35 @@ export async function POST(req: Request) {
       }
     }
 
+    
+    // 3. KakaoTalk 'Send to Me' Memo Alert
+    const kakaoToken = process.env.KAKAO_ACCESS_TOKEN;
+    if (kakaoToken) {
+      try {
+        const kText = `🔔 [플레이스 분석 신규 신청 접수]\n\n🏢 상호명: ${cleanName}\n📧 수신처: ${cleanEmail}\n📍 상권/업종: ${location || '반경 2km'} (${targetIndustry})\n⏱ 일시: ${nowTime}\n\n👇 고객에게 A4 PDF 리포트를 발송하려면 승인해 주세요!`;
+        const templateObj = {
+          object_type: 'text',
+          text: kText,
+          link: { web_url: 'https://postsyncapp.com', mobile_web_url: 'https://postsyncapp.com' },
+          button_title: '확인 및 발송'
+        };
+        const kParams = new URLSearchParams();
+        kParams.append('template_object', JSON.stringify(templateObj));
+        const kRes = await fetch('https://kapi.kakao.com/v2/api/talk/memo/default/send', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${kakaoToken.trim()}`,
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          body: kParams.toString()
+        });
+        const kJson = await kRes.json();
+        console.log('[Place Apply Kakao Response]:', kJson);
+      } catch (kErr) {
+        console.error('[Place Apply Kakao Error]:', kErr);
+      }
+    }
+
     console.log(`[Place Apply Success] ${cleanName} (${cleanEmail}) at ${nowTime}`)
 
     return NextResponse.json({
