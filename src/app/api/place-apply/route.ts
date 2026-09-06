@@ -15,8 +15,8 @@ export async function POST(req: Request) {
     const nowTime = new Date().toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' })
 
     // 1. Telegram Notification to Representative
-    const tgToken = process.env.TELEGRAM_BOT_TOKEN
-    const tgChatId = process.env.TELEGRAM_CHAT_ID
+    const tgToken = process.env.TELEGRAM_BOT_TOKEN || '8314703344:AAGoFyPTWjHCRjPWq32Pdq0dti0TG8zZahE';
+    const tgChatId = process.env.TELEGRAM_CHAT_ID || '8650197247';
 
     if (tgToken && tgChatId) {
       try {
