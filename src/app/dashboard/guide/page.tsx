@@ -575,7 +575,7 @@ export default function GuidePage() {
                       <RefreshCw className="w-4 h-4 text-indigo-600" /> 실시간 상위 5개 블로그 분석
                     </div>
                     <p className="text-slate-600 leading-relaxed">
-                      키워드를 입력하면 네이버 1~5위 상위 블로그의 평균 글자수, 공통 H2 목차 구조, 표/인용구 패턴을 실시간 역설계하여 경쟁사보다 300자 더 풍부한 완성형 원고를 작성합니다.
+                      키워드를 입력하면 네이버 1~5위 상위 블로그의 평균 글자수, 공통 H2 목차 구조, 표/인용구 패턴을 실시간 역설계하여 경쟁사 수준(최소 2,300자 보장)의 완성형 원고를 작성합니다.
                     </p>
                   </div>
 

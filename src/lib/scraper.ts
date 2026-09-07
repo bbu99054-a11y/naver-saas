@@ -159,8 +159,8 @@ async function scrapeNaverSerpContextImpl(keyword: string): Promise<ScrapedData 
 
     return {
       averageTextLength: avgLength,
-      // 상위 글 평균보다 300자 더 길고 풍부하게 작성 유도
-      recommendedTextLength: Math.max(avgLength + 300, 2500),
+      // 상위 글 평균 수준으로 작성 유도 (최소 2,300자 보장)
+      recommendedTextLength: Math.max(avgLength, 2300),
       averageImageCount: Math.max(avgImages, 5),
       commonHeaders,
       imageContexts: [],

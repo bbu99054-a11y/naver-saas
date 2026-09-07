@@ -294,7 +294,7 @@ ${profile.about_us}
       contextInjection = `
 <serp_context>
 [실시간 네이버 상위 5개 블로그 SERP 역설계 데이터 (이 규칙을 최우선 반영할 것)]
-- 권장 글자 수: 상위 경쟁사 평균(${serpData.averageTextLength}자)보다 300자 더 길고 풍부한 약 ${serpData.recommendedTextLength}자 내외로 작성해.
+- 권장 글자 수: 상위 경쟁사 평균(${serpData.averageTextLength}자) 수준의 약 ${serpData.recommendedTextLength}자 내외로 작성해.
 - 경쟁사 주요 목차(H2): ${serpData.commonHeaders.join(', ') || '핵심 쟁점, 법적 판단 기준, 실무 대응 절차'}. 이 목차들의 장점을 흡수하고 빈틈을 메우는 차별화된 H2 구조로 전개해.
 - 권장 서식: ${serpData.recommendedComponents.useTable ? '비교표(Table) 적극 활용' : ''} ${serpData.recommendedComponents.useQuote ? '인용구(Quote) 적극 활용' : ''}
 </serp_context>
@@ -434,7 +434,7 @@ ${toneGuideline}
 1. CoT (Chain of Thought) 팩트 체크 및 동적 아웃라인 설계 강제:
 반드시 HTML 본문을 작성하기 전에, <internal_fact_check> 태그 안에 아래 3가지 설계 메모를 먼저 완벽히 작성해:
 - [팩트 체크]: 타겟 키워드 관련 핵심 전문 용어 정의 및 Tavily RAG 검색 팩트/출처 분리
-- [목표 분량]: SERP 분석 기반 목표 글자 수 (약 ${serpData?.recommendedTextLength || 2800}자)
+- [목표 분량]: SERP 분석 기반 목표 글자 수 (약 ${serpData?.recommendedTextLength || 2300}자)
 - [탈 양산화 설계도]: 이번 글의 맞춤형 H2 소제목 전개 계획 및 본문에 선별 배치할 2~3장의 시각 카드 종류 명시
 </internal_fact_check>
 이 기획 메모는 반드시 <internal_fact_check> 태그 안에만 작성하고, 닫는 태그(</internal_fact_check>) 이후의 실제 본문에는 [팩트 체크] 등의 텍스트를 절대 다시 노출하지 마. 본격적인 글은 바로 <post_title> 및 [최상단 대표 썸네일 카드]부터 시작해.
