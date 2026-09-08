@@ -1113,6 +1113,7 @@ export default function LandingPage() {
               <Link href="/blog" className="hover:text-indigo-400 font-semibold transition-colors text-indigo-300">블로그 칼럼</Link>
               <Link href="/pricing" className="hover:text-white transition-colors">요금안내</Link>
               <Link href="/seo-check" className="hover:text-rose-400 transition-colors text-rose-400/90 font-medium">무료 블로그 진단</Link>
+              <Link href="/contact" className="hover:text-white transition-colors">고객센터</Link>
               <Link href="/terms" className="hover:text-white transition-colors">이용약관</Link>
               <Link href="/privacy" className="hover:text-indigo-400 font-semibold transition-colors">개인정보 처리방침</Link>
             </div>
