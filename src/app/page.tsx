@@ -165,6 +165,10 @@ export default function LandingPage() {
                 블로그
                 <span className="w-1.5 h-1.5 rounded-full bg-indigo-400" />
               </Link>
+              <Link href="/tools" className="text-amber-300 hover:text-amber-200 font-semibold transition-colors flex items-center gap-1">
+                무료 웹툴
+                <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+              </Link>
               <a href="#faq" className="hover:text-white transition-colors">FAQ</a>
               <Link href="/seo-check" className="text-rose-400 hover:text-rose-300 font-bold flex items-center gap-1">
                 무료 진단 <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-ping" />
@@ -1111,6 +1115,7 @@ export default function LandingPage() {
 
             <div className="flex flex-wrap items-center gap-6 text-sm text-slate-300">
               <Link href="/blog" className="hover:text-indigo-400 font-semibold transition-colors text-indigo-300">블로그 칼럼</Link>
+              <Link href="/tools" className="hover:text-amber-300 font-semibold transition-colors text-amber-300/90">무료 웹툴 허브</Link>
               <Link href="/pricing" className="hover:text-white transition-colors">요금안내</Link>
               <Link href="/seo-check" className="hover:text-rose-400 transition-colors text-rose-400/90 font-medium">무료 블로그 진단</Link>
               <Link href="/contact" className="hover:text-white transition-colors">고객센터</Link>

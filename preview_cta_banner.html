@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>하단 상담 배너(CTA_FOOTER) 실시간 미리보기</title>
+  <style>
+    body {
+      background-color: #0F172A;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 40px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Pretendard', 'Malgun Gothic', sans-serif;
+      box-sizing: border-box;
+    }
+    .preview-container {
+      background-color: #1E293B;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    }
+    .badge-info {
+      color: #94A3B8;
+      font-size: 16px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    /* 1080 x 540 px 실제 배너 크기 (BANNER_C 고밀도 콤팩트 스타일) */
+    .cta-banner-c {
+      width: 1080px;
+      height: 540px;
+      background-color: #FEF9C3;
+      border: 3px solid #D4AF37;
+      border-radius: 28px;
+      padding: 36px 54px;
+      box-sizing: border-box;
+      letter-spacing: -0.03em;
+      word-break: break-word;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 22px;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+    }
+    .header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .title-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      max-width: 780px;
+    }
+    .main-title {
+      font-size: 46px;
+      font-weight: bold;
+      color: #0F172A;
+      line-height: 1.2;
+      margin: 0;
+    }
+    .sub-copy {
+      font-size: 26px;
+      color: #475569;
+      line-height: 1.35;
+      margin: 0;
+    }
+    .cta-btn-badge {
+      background-color: #D4AF37;
+      color: #FFFFFF;
+      padding: 14px 28px;
+      border-radius: 18px;
+      font-size: 24px;
+      font-weight: bold;
+      white-space: nowrap;
+      box-shadow: 0 4px 12px rgba(212, 175, 55, 0.35);
+    }
+    .info-card-box {
+      background-color: #FFFFFF;
+      border: 2.5px solid #E2E8F0;
+      border-radius: 24px;
+      padding: 30px 38px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      box-sizing: border-box;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.04);
+    }
+    .info-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .phone-label {
+      color: #D4AF37;
+      font-size: 38px;
+      font-weight: bold;
+      white-space: nowrap;
+    }
+    .phone-value {
+      font-size: 40px;
+      font-weight: bold;
+      color: #0F172A;
+    }
+    .address-label {
+      color: #475569;
+      font-size: 30px;
+      font-weight: bold;
+      white-space: nowrap;
+    }
+    .address-value {
+      font-size: 30px;
+      font-weight: bold;
+      color: #0F172A;
+    }
+  </style>
+</head>
+<body>
+  <div class="preview-container">
+    <div class="badge-info">✨ 1080 × 540 px 고밀도 명함형 하단 상담 배너(BANNER_C) 실시간 미리보기 ✨</div>
+    <div class="cta-banner-c">
+      <div class="header-row">
+        <div class="title-group">
+          <div class="main-title">분양권 상속재산분할 1:1 사실관계 검토</div>
+          <div class="sub-copy">풍부한 실무 경험을 바탕으로 의뢰인의 권익을 최우선으로 보호합니다.</div>
+        </div>
+        <div class="cta-btn-badge">1:1 공식 접수</div>
+      </div>
+      <div class="info-card-box">
+        <div class="info-row">
+          <span class="phone-label">📞 직통 상담:</span>
+          <span class="phone-value">02-345-6789 (정원 사랑 변호사)</span>
+        </div>
+        <div class="info-row">
+          <span class="address-label">🏢 오시는 길:</span>
+          <span class="address-value">서울 송파구 송파대로345</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
