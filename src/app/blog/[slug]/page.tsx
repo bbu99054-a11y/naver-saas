@@ -24,10 +24,14 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return {
     title: `${post.title} | PostSync 전문직 칼럼`,
     description: post.excerpt,
+    alternates: {
+      canonical: `/blog/${post.slug}`,
+    },
     openGraph: {
       title: post.title,
       description: post.excerpt,
       images: [post.imageUrl],
+      url: `https://postsyncapp.com/blog/${post.slug}`,
       type: 'article',
       publishedTime: post.date,
       authors: [post.author],

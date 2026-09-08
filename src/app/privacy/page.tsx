@@ -171,6 +171,20 @@ export default function PrivacyPage() {
               <li>경찰청 사이버수사국: (국번없이) 182 (ecrm.police.go.kr)</li>
             </ul>
           </section>
+
+          {/* 7. 구글 애드센스 쿠키 고지 */}
+          <section className="space-y-3">
+            <h2 className="text-lg md:text-xl font-bold text-white">7. 구글 애드센스(Google AdSense) 및 제3자 광고 사업자의 쿠키 사용 고지</h2>
+            <div className="bg-slate-800/60 p-4 rounded-xl space-y-2 border border-white/5 text-sm">
+              <p>
+                회사는 웹사이트의 운영 및 양질의 무료 도구 제공을 위해 <strong>구글(Google Inc.)이 제공하는 광고 서비스인 구글 애드센스(Google AdSense)</strong>를 게재할 수 있습니다.
+              </p>
+              <ul className="list-disc pl-5 space-y-1.5 text-slate-300">
+                <li>구글을 포함한 제3자 공급업체는 쿠키(Cookie)를 사용하여 이용자가 본 웹사이트 또는 다른 웹사이트를 이전에 방문한 기록을 바탕으로 맞춤형 광고를 게재합니다.</li>
+                <li>이용자는 <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener noreferrer" className="text-indigo-400 underline">구글 광고 설정</a>에 방문하여 맞춤설정 광고를 선택 해제할 수 있습니다.</li>
+              </ul>
+            </div>
+          </section>
         </div>
       </main>
     </div>
