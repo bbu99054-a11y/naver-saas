@@ -57,22 +57,22 @@ export default function AdCheckClient() {
 
     setIsScanning(true);
     setScanProgress(10);
-    setScanStepText('대한민국 법정 광고 규정 데이터베이스 로드 중...');
+    setScanStepText('대한민국 법정 광고 규정 데이터베이스 대조 중...');
     setPurifiedSuccess(false);
 
     setTimeout(() => {
       setScanProgress(45);
-      setScanStepText(PROFESSION_CONFIGS[profession].lawName + ' 대조 심사 중...');
+      setScanStepText(PROFESSION_CONFIGS[profession].lawName + ' 조항 심사 중...');
     }, 500);
 
     setTimeout(() => {
       setScanProgress(80);
-      setScanStepText('공정거래위원회 표시광고법 및 직역별 판례 분석 중...');
+      setScanStepText('공정거래위원회 표시광고 심사지침 및 판례 분석 중...');
     }, 1100);
 
     setTimeout(() => {
       setScanProgress(100);
-      setScanStepText('검사 완료! 종합 리포트를 생성합니다.');
+      setScanStepText('검사 완료! 진단 리포트를 도출합니다.');
       
       const scanRes = scanAdCompliance(text, profession);
       setResult(scanRes);
@@ -109,15 +109,15 @@ export default function AdCheckClient() {
 
   return (
     <div className="space-y-8">
-      {/* 1. 직역 선택 탭 */}
-      <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-2 md:p-3 backdrop-blur-md shadow-xl">
-        <div className="text-xs font-semibold text-slate-400 px-3 pt-1 pb-2 flex items-center justify-between">
-          <span>검사 대상 직역 선택</span>
-          <span className="text-emerald-400 font-mono flex items-center gap-1">
-            <Lock className="w-3 h-3" /> 100% 로컬 프라이버시 처리 (서버 전송 없음)
+      {/* 1. 직역 선택 탭 (토스 스타일 클린 카드) */}
+      <div className="bg-white border border-slate-200/90 rounded-2xl p-3 md:p-4 shadow-sm">
+        <div className="text-xs font-bold text-slate-500 px-2 pb-2.5 flex items-center justify-between border-b border-slate-100 mb-3">
+          <span className="text-slate-700">검사 대상 직역 선택</span>
+          <span className="text-emerald-600 font-medium flex items-center gap-1">
+            <Lock className="w-3.5 h-3.5" /> 100% 브라우저 로컬 처리 (서버 저장 제로)
           </span>
         </div>
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5">
           {PROFESSIONS.map((item) => {
             const active = profession === item.id;
             return (
@@ -129,19 +129,21 @@ export default function AdCheckClient() {
                   setResult(null);
                   setPurifiedSuccess(false);
                 }}
-                className={`flex flex-col items-start p-3 rounded-xl transition-all duration-200 text-left relative ${
+                className={`flex flex-col items-start p-3.5 rounded-xl transition-all duration-200 text-left relative ${
                   active
-                    ? 'bg-blue-600/20 border-blue-500/80 text-white shadow-lg shadow-blue-500/10 border'
-                    : 'bg-slate-800/40 border-slate-700/50 text-slate-300 hover:bg-slate-800/80 hover:border-slate-600 border'
+                    ? 'bg-blue-50/80 border-2 border-blue-600 text-blue-900 shadow-sm'
+                    : 'bg-slate-50/70 border border-slate-200/80 text-slate-600 hover:bg-slate-100/80 hover:text-slate-900'
                 }`}
               >
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="text-lg">{item.icon}</span>
-                  <span className="font-bold text-sm">{item.label}</span>
+                  <span className="text-xl">{item.icon}</span>
+                  <span className="font-bold text-sm tracking-tight">{item.label}</span>
                 </div>
-                <span className="text-[11px] text-slate-400 font-mono">{item.sub}</span>
+                <span className={`text-[11px] font-mono ${active ? 'text-blue-700 font-semibold' : 'text-slate-400'}`}>
+                  {item.sub}
+                </span>
                 {active && (
-                  <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-blue-400 animate-pulse" />
+                  <span className="absolute top-2.5 right-2.5 w-2 h-2 rounded-full bg-blue-600" />
                 )}
               </button>
             );
@@ -149,16 +151,16 @@ export default function AdCheckClient() {
         </div>
       </div>
 
-      {/* 2. 텍스트 입력 영역 */}
-      <div className="bg-slate-900/70 border border-slate-800 rounded-3xl p-5 md:p-6 shadow-2xl backdrop-blur-md relative overflow-hidden">
+      {/* 2. 텍스트 입력 영역 (순백색 페이퍼 에디터) */}
+      <div className="bg-white border border-slate-200/90 rounded-3xl p-6 md:p-8 shadow-sm relative overflow-hidden">
         {/* 상단 툴바 */}
-        <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-slate-800/80">
-          <div className="flex items-center gap-2">
-            <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping" />
-            <span className="text-sm font-semibold text-slate-200">
+        <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-slate-100">
+          <div className="flex items-center gap-2.5">
+            <div className="w-2.5 h-2.5 rounded-full bg-blue-600" />
+            <span className="text-sm font-bold text-slate-900">
               {PROFESSION_CONFIGS[profession].title} 광고 문안 입력
             </span>
-            <span className="text-xs px-2.5 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700">
+            <span className="text-xs px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600 font-medium border border-slate-200">
               {PROFESSION_CONFIGS[profession].badge}
             </span>
           </div>
@@ -167,9 +169,9 @@ export default function AdCheckClient() {
             <button
               type="button"
               onClick={() => handleLoadSample(profession)}
-              className="px-3 py-1.5 text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded-lg transition border border-slate-700 flex items-center gap-1.5"
+              className="px-3 py-1.5 text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg transition border border-slate-200 flex items-center gap-1.5 cursor-pointer"
             >
-              <RotateCcw className="w-3 h-3 text-blue-400" /> 위반 예시 문안 불러오기
+              <RotateCcw className="w-3 h-3 text-blue-600" /> 위반 예시 문안 불러오기
             </button>
             {text && (
               <button
@@ -179,7 +181,7 @@ export default function AdCheckClient() {
                   setResult(null);
                   setPurifiedSuccess(false);
                 }}
-                className="px-2.5 py-1.5 text-xs text-slate-400 hover:text-red-400 transition"
+                className="px-2.5 py-1.5 text-xs text-slate-400 hover:text-rose-600 transition cursor-pointer"
               >
                 비우기
               </button>
@@ -187,44 +189,44 @@ export default function AdCheckClient() {
           </div>
         </div>
 
-        {/* 텍스트 에디터 */}
-        <div className="relative mt-4">
+        {/* 텍스트 에디터 (워드/노트 느낌) */}
+        <div className="relative mt-5">
           <textarea
             value={text}
             onChange={(e) => setText(e.target.value)}
-            placeholder="블로그 포스팅, 홈페이지 소개문, 플레이스 소개글, 인스타그램 캡션 등을 입력하세요. 예: '서초동 최고의 변호사, 100% 승소 보장...'"
+            placeholder="블로그 포스팅 본문, 홈페이지 소개글, 네이버 플레이스 문구, 인스타그램 캡션을 붙여넣으세요. 예: '서초동 최고의 변호사, 100% 승소 보장, 판검사 출신 전관예우 네트워크...'"
             rows={8}
-            className="w-full bg-slate-950/80 border border-slate-800 rounded-2xl p-4 text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition text-sm md:text-base leading-relaxed resize-y"
+            className="w-full bg-slate-50/50 border border-slate-200 rounded-2xl p-4 md:p-5 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-600 focus:bg-white transition text-sm md:text-base leading-relaxed resize-y font-normal"
           />
 
           {/* 하단 카운터 & 상태 */}
-          <div className="flex flex-wrap items-center justify-between gap-3 mt-3 text-xs text-slate-400 font-mono">
+          <div className="flex flex-wrap items-center justify-between gap-3 mt-3 text-xs text-slate-500 font-mono">
             <div className="flex items-center gap-4">
-              <span>공백 포함: <strong className="text-slate-200">{charWithSpace.toLocaleString()}</strong>자</span>
-              <span>공백 제외: <strong className="text-slate-200">{charWithoutSpace.toLocaleString()}</strong>자</span>
+              <span>공백 포함: <strong className="text-slate-800">{charWithSpace.toLocaleString()}</strong>자</span>
+              <span>공백 제외: <strong className="text-slate-800">{charWithoutSpace.toLocaleString()}</strong>자</span>
             </div>
-            <div className="flex items-center gap-2 text-[11px] text-slate-500">
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-              암호화 없이 브라우저 메모리상에서만 단독 검사됩니다.
+            <div className="flex items-center gap-1.5 text-[11px] text-slate-500">
+              <ShieldCheck className="w-4 h-4 text-emerald-600" />
+              <span>작성된 원고는 브라우저 메모리상에서만 단독 검사됩니다.</span>
             </div>
           </div>
         </div>
 
         {/* 검사 실행 액션 바 */}
-        <div className="mt-6 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-4 border-t border-slate-800/80">
-          <div className="text-xs text-slate-400 flex items-center gap-1.5">
-            <Info className="w-3.5 h-3.5 text-blue-400 flex-shrink-0" />
-            <span>최신 2026 직역별 협회 광고 규정 및 행정처분 지침 실시간 대조</span>
+        <div className="mt-6 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-5 border-t border-slate-100">
+          <div className="text-xs text-slate-500 flex items-center gap-1.5">
+            <Info className="w-4 h-4 text-blue-600 flex-shrink-0" />
+            <span>최신 2026 직역별 협회 광고 규정 및 표시광고법 행정처분 지침 실시간 대조</span>
           </div>
 
           <button
             type="button"
             disabled={!text.trim() || isScanning}
             onClick={handleStartScan}
-            className={`px-6 py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 shadow-lg transition-all duration-300 ${
+            className={`px-7 py-3.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2 shadow-md transition-all duration-200 cursor-pointer ${
               !text.trim() || isScanning
-                ? 'bg-slate-800 text-slate-500 cursor-not-allowed'
-                : 'bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-500 hover:from-blue-500 hover:to-indigo-500 text-white shadow-blue-500/25 hover:shadow-blue-500/40 hover:-translate-y-0.5'
+                ? 'bg-slate-100 text-slate-400 border border-slate-200 cursor-not-allowed'
+                : 'bg-blue-600 hover:bg-blue-700 text-white shadow-blue-500/20 hover:shadow-blue-500/30 hover:-translate-y-0.5'
             }`}
           >
             {isScanning ? (
@@ -241,60 +243,60 @@ export default function AdCheckClient() {
           </button>
         </div>
 
-        {/* 1.8초 AdTech 딥스캔 프로그레스 바 */}
+        {/* 1.8초 AdTech 딥스캔 프로그레스 바 (토스 스타일) */}
         {isScanning && (
-          <div className="mt-6 p-4 rounded-2xl bg-blue-950/40 border border-blue-800/40 backdrop-blur-md animate-in fade-in duration-300">
-            <div className="flex items-center justify-between text-xs font-semibold mb-2">
-              <span className="text-blue-300 flex items-center gap-1.5">
-                <Sparkles className="w-3.5 h-3.5 text-blue-400 animate-spin" />
+          <div className="mt-6 p-5 rounded-2xl bg-blue-50/70 border border-blue-100 animate-in fade-in duration-300">
+            <div className="flex items-center justify-between text-xs font-bold mb-2">
+              <span className="text-blue-900 flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-blue-600 animate-spin" />
                 {scanStepText}
               </span>
-              <span className="text-blue-400 font-mono">{scanProgress}%</span>
+              <span className="text-blue-700 font-mono text-sm">{scanProgress}%</span>
             </div>
-            <div className="w-full h-2.5 bg-slate-800 rounded-full overflow-hidden">
+            <div className="w-full h-2.5 bg-blue-100/80 rounded-full overflow-hidden">
               <div
-                className="h-full bg-gradient-to-r from-blue-500 via-indigo-400 to-emerald-400 transition-all duration-300 rounded-full"
+                className="h-full bg-gradient-to-r from-blue-600 to-indigo-600 transition-all duration-300 rounded-full"
                 style={{ width: `${scanProgress}%` }}
               />
             </div>
-            <p className="text-[11px] text-slate-400 mt-2 text-center">
-              대법원 판례, 헌법재판소 결정, 직역별 협회 광고 심의위원회 가이드라인을 교차 검증하고 있습니다.
+            <p className="text-[11px] text-slate-500 mt-2.5 text-center">
+              대법원 판례, 헌법재판소 결정례, 직역별 협회 광고 심의위원회 가이드라인을 정밀 교차 검증 중입니다.
             </p>
           </div>
         )}
       </div>
 
-      {/* CLS 방지용 표준 광고 컨테이너 (728x90 / 300x250 반응형) */}
-      <div className="w-full min-h-[100px] flex flex-col items-center justify-center p-3 rounded-2xl bg-slate-900/30 border border-dashed border-slate-800 text-center relative overflow-hidden">
-        <span className="text-[10px] uppercase font-mono tracking-wider text-slate-600 mb-1">SPONSORED ADVERTISEMENT</span>
+      {/* CLS 방지용 표준 광고 컨테이너 (라이트 전용) */}
+      <div className="w-full min-h-[90px] flex flex-col items-center justify-center p-3 rounded-2xl bg-slate-50 border border-dashed border-slate-300 text-center relative overflow-hidden">
+        <span className="text-[10px] uppercase font-mono tracking-wider text-slate-400 mb-1">SPONSORED ADVERTISEMENT</span>
         <div className="text-xs text-slate-500 flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-slate-700" />
-          <span>구글 애드센스 공식 제휴 지면 (Google AdSense Verified Placement)</span>
+          <span className="w-2 h-2 rounded-full bg-slate-400" />
+          <span>Google AdSense 공식 검증 광고 지면 (라이트 최적화 배너)</span>
         </div>
       </div>
 
-      {/* 3. 검사 결과 대시보드 */}
+      {/* 3. 검사 결과 대시보드 (토스 스타일 고대비 카드) */}
       {result && (
         <div className="space-y-6 animate-in slide-in-from-bottom-4 duration-500">
           {/* 종합 점수 카드 */}
           <div
-            className={`p-6 md:p-8 rounded-3xl border backdrop-blur-xl shadow-2xl relative overflow-hidden ${
+            className={`p-6 md:p-8 rounded-3xl border shadow-sm relative overflow-hidden ${
               result.status === 'safe'
-                ? 'bg-emerald-950/20 border-emerald-500/40 shadow-emerald-500/10'
+                ? 'bg-emerald-50/70 border-emerald-200'
                 : result.status === 'warning'
-                ? 'bg-amber-950/20 border-amber-500/40 shadow-amber-500/10'
-                : 'bg-red-950/20 border-red-500/40 shadow-red-500/10'
+                ? 'bg-amber-50/70 border-amber-200'
+                : 'bg-rose-50/70 border-rose-200'
             }`}
           >
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
               <div className="flex items-start gap-4">
                 <div
-                  className={`w-16 h-16 rounded-2xl flex items-center justify-center text-3xl shadow-inner ${
+                  className={`w-16 h-16 rounded-2xl flex items-center justify-center text-3xl shadow-sm ${
                     result.status === 'safe'
-                      ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40'
+                      ? 'bg-emerald-100 text-emerald-600 border border-emerald-200'
                       : result.status === 'warning'
-                      ? 'bg-amber-500/20 text-amber-400 border border-amber-500/40'
-                      : 'bg-red-500/20 text-red-400 border border-red-500/40'
+                      ? 'bg-amber-100 text-amber-600 border border-amber-200'
+                      : 'bg-rose-100 text-rose-600 border border-rose-200'
                   }`}
                 >
                   {result.status === 'safe' ? (
@@ -308,12 +310,12 @@ export default function AdCheckClient() {
                 <div>
                   <div className="flex items-center gap-2">
                     <span
-                      className={`px-2.5 py-0.5 rounded-full text-xs font-bold ${
+                      className={`px-3 py-0.5 rounded-full text-xs font-bold ${
                         result.status === 'safe'
-                          ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+                          ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
                           : result.status === 'warning'
-                          ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
-                          : 'bg-red-500/20 text-red-300 border border-red-500/30'
+                          ? 'bg-amber-100 text-amber-800 border border-amber-300'
+                          : 'bg-rose-100 text-rose-800 border border-rose-300'
                       }`}
                     >
                       {result.status === 'safe'
@@ -322,16 +324,16 @@ export default function AdCheckClient() {
                         ? '🟡 주의 필요 문안'
                         : '🔴 심각한 법률 위반 문안'}
                     </span>
-                    <span className="text-xs text-slate-400 font-mono">
-                      적발 항목: {result.matches.length}건
+                    <span className="text-xs text-slate-500 font-mono">
+                      적발 항목: <strong>{result.matches.length}</strong>건
                     </span>
                   </div>
-                  <h3 className="text-xl md:text-2xl font-black text-white mt-1">
-                    광고 규정 준수 점수: <span className="text-3xl font-mono">{result.score}</span> / 100점
+                  <h3 className="text-xl md:text-2xl font-extrabold text-slate-900 mt-1">
+                    광고 규정 준수 점수: <span className="text-3xl font-mono font-black">{result.score}</span> / 100점
                   </h3>
-                  <p className="text-xs md:text-sm text-slate-300 mt-1 max-w-xl leading-relaxed">
+                  <p className="text-xs md:text-sm text-slate-600 mt-1 max-w-xl leading-relaxed">
                     {result.status === 'safe'
-                      ? '관련 직역 광고 규정 및 표시광고법 위반 소지가 발견되지 않았습니다. 안심하고 포스팅하셔도 좋습니다.'
+                      ? '해당 직역 광고 규정 및 표시광고법 위반 소지가 발견되지 않았습니다. 안심하고 포스팅하셔도 좋습니다.'
                       : result.status === 'warning'
                       ? '소비자 오인 우려가 있거나 협회 심의 기준상 지양을 권고하는 표현이 포함되어 있습니다. 추천 대체어로 수정을 권장합니다.'
                       : '변호사법/의료법/세무사법 등 현행 법령상 형사 처벌 또는 자격정지·과태료 행정처분 대상이 되는 절대 금칙어가 포함되어 있습니다.'}
@@ -341,11 +343,11 @@ export default function AdCheckClient() {
 
               {/* 우측 원클릭 정제 버튼 */}
               {result.matches.length > 0 && (
-                <div className="flex flex-col sm:flex-row md:flex-col gap-2 w-full md:w-auto">
+                <div className="flex flex-col sm:flex-row md:flex-col gap-2.5 w-full md:w-auto">
                   <button
                     type="button"
                     onClick={handlePurify}
-                    className="px-5 py-3 rounded-xl font-bold text-sm bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white shadow-lg shadow-emerald-500/20 transition flex items-center justify-center gap-2"
+                    className="px-5 py-3.5 rounded-xl font-bold text-sm bg-emerald-600 hover:bg-emerald-700 text-white shadow-md shadow-emerald-600/20 transition flex items-center justify-center gap-2 cursor-pointer"
                   >
                     <Sparkles className="w-4 h-4" />
                     <span>🪄 법정 안전 대체어로 원클릭 일괄 변환</span>
@@ -353,16 +355,16 @@ export default function AdCheckClient() {
                   <button
                     type="button"
                     onClick={handleCopy}
-                    className="px-4 py-2.5 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition flex items-center justify-center gap-1.5"
+                    className="px-4 py-2.5 rounded-xl text-xs font-semibold bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 shadow-sm transition flex items-center justify-center gap-1.5 cursor-pointer"
                   >
                     {copied ? (
                       <>
-                        <Check className="w-3.5 h-3.5 text-emerald-400" />
-                        <span className="text-emerald-300">클립보드에 복사 완료!</span>
+                        <Check className="w-3.5 h-3.5 text-emerald-600" />
+                        <span className="text-emerald-700 font-bold">클립보드에 복사 완료!</span>
                       </>
                     ) : (
                       <>
-                        <Copy className="w-3.5 h-3.5 text-slate-400" />
+                        <Copy className="w-3.5 h-3.5 text-slate-500" />
                         <span>정제된 본문 전체 복사</span>
                       </>
                     )}
@@ -371,61 +373,61 @@ export default function AdCheckClient() {
               )}
             </div>
 
-            {/* 정제 성공 토스트 알림 */}
+            {/* 정제 성공 알림 */}
             {purifiedSuccess && (
-              <div className="mt-4 p-3 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-200 text-xs flex items-center gap-2 animate-in fade-in duration-200">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
-                <span>모든 위반 표현이 법률 안전 대체어로 자동 치환되었습니다. 점수가 100점으로 재산출되었습니다!</span>
+              <div className="mt-4 p-3.5 rounded-xl bg-emerald-100/80 border border-emerald-300 text-emerald-900 text-xs font-medium flex items-center gap-2 animate-in fade-in duration-200">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+                <span>모든 위반 표현이 법률 안전 대체어로 자동 치환되었습니다. 준수 점수가 100점으로 상향되었습니다!</span>
               </div>
             )}
           </div>
 
-          {/* 위반 키워드 상세 분석 리스트 */}
+          {/* 위반 키워드 상세 분석 리스트 (클린 화이트 카드) */}
           {result.matches.length > 0 && (
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <h4 className="text-sm font-bold text-slate-300 flex items-center gap-2">
-                  <AlertTriangle className="w-4 h-4 text-amber-400" />
+                <h4 className="text-sm font-bold text-slate-800 flex items-center gap-2">
+                  <AlertTriangle className="w-4 h-4 text-amber-600" />
                   적발된 위반 항목 상세 내역 ({result.matches.length}건)
                 </h4>
-                <span className="text-xs text-slate-500">카드 우측의 추천 대체어를 확인하세요.</span>
+                <span className="text-xs text-slate-500">카드 우측의 안전한 추천 대체어를 확인하세요.</span>
               </div>
 
               <div className="grid grid-cols-1 gap-3">
                 {result.matches.map((match, idx) => (
                   <div
                     key={match.ruleId + idx}
-                    className="bg-slate-900/80 border border-slate-800/80 hover:border-slate-700 rounded-2xl p-4 md:p-5 transition shadow-lg"
+                    className="bg-white border border-slate-200 hover:border-slate-300 rounded-2xl p-5 transition shadow-sm"
                   >
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
                       <div className="flex items-center gap-2 flex-wrap">
                         <span
-                          className={`px-2 py-0.5 text-xs font-bold rounded ${
+                          className={`px-2.5 py-0.5 text-xs font-bold rounded ${
                             match.severity === 'danger'
-                              ? 'bg-red-500/20 text-red-300 border border-red-500/30'
-                              : 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+                              ? 'bg-rose-100 text-rose-700 border border-rose-200'
+                              : 'bg-amber-100 text-amber-800 border border-amber-200'
                           }`}
                         >
                           {match.severity === 'danger' ? '심각 위반' : '주의 권고'}
                         </span>
-                        <span className="text-sm font-bold text-white bg-slate-800/80 px-2.5 py-0.5 rounded border border-slate-700 font-mono">
+                        <span className="text-sm font-bold text-slate-900 bg-slate-100 px-2.5 py-0.5 rounded border border-slate-200 font-mono">
                           &quot;{match.matchedText}&quot;
                         </span>
-                        <span className="text-xs text-slate-400 font-medium">[{match.category}]</span>
+                        <span className="text-xs text-slate-500 font-medium">[{match.category}]</span>
                       </div>
-                      <span className="text-[11px] font-mono text-slate-400 bg-slate-950 px-2 py-1 rounded border border-slate-800">
+                      <span className="text-[11px] font-mono text-slate-600 bg-slate-100 px-2.5 py-1 rounded border border-slate-200">
                         {match.law}
                       </span>
                     </div>
 
-                    <p className="text-xs md:text-sm text-slate-300 leading-relaxed mt-2">
-                      <strong className="text-slate-200">위반 사유:</strong> {match.explanation}
+                    <p className="text-xs md:text-sm text-slate-700 leading-relaxed mt-2.5">
+                      <strong className="text-slate-900 font-semibold">위반 사유:</strong> {match.explanation}
                     </p>
 
-                    <div className="mt-3 pt-3 border-t border-slate-800/60 flex flex-wrap items-center justify-between gap-2">
+                    <div className="mt-3.5 pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2">
                       <div className="flex items-center gap-2 text-xs">
-                        <span className="text-slate-400">권장 안전 대체어:</span>
-                        <span className="px-2 py-1 rounded-md bg-emerald-950/60 border border-emerald-700/50 text-emerald-300 font-bold font-mono">
+                        <span className="text-slate-500">권장 안전 대체어:</span>
+                        <span className="px-2.5 py-1 rounded-md bg-emerald-50 border border-emerald-200 text-emerald-800 font-bold font-mono">
                           {match.replacement}
                         </span>
                       </div>
@@ -436,22 +438,21 @@ export default function AdCheckClient() {
             </div>
           )}
 
-          {/* 4. TinyWow 모델: PostSync AI B2B 유입 전환 배너 */}
-          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-blue-900/60 via-indigo-950/80 to-purple-900/60 border border-blue-500/30 p-6 md:p-8 shadow-2xl backdrop-blur-xl">
-            <div className="absolute -right-10 -bottom-10 w-64 h-64 rounded-full bg-blue-500/10 blur-3xl pointer-events-none" />
+          {/* 4. TinyWow 모델: PostSync AI B2B 전환 배너 (프리미엄 토스 블루 카드) */}
+          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 p-7 md:p-9 shadow-lg text-white">
             <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 relative z-10">
               <div className="space-y-2">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/20 border border-blue-400/30 text-blue-300 text-xs font-semibold">
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 border border-white/30 text-white text-xs font-bold">
                   <Sparkles className="w-3.5 h-3.5" /> 전문직 블로그 자동화 No.1 솔루션
                 </div>
-                <h3 className="text-xl md:text-2xl font-black text-white tracking-tight">
+                <h3 className="text-xl md:text-2xl font-black tracking-tight text-white">
                   매번 광고법 위반 걱정하며 포스팅을 작성하고 계신가요?
                 </h3>
-                <p className="text-xs md:text-sm text-slate-300 leading-relaxed max-w-2xl">
+                <p className="text-xs md:text-sm text-blue-100 leading-relaxed max-w-2xl">
                   <strong>PostSync AI</strong>는 변호사법 제23조, 의료법 제56조, 세무사법 제12조 컴플라이언스가 100% 내장되어,
                   금칙어 없이 E-E-A-T 전문성을 극대화한 네이버 블로그 원고를 3분 만에 전자동 생성 및 원클릭 예약 발행합니다.
                 </p>
-                <div className="flex flex-wrap items-center gap-4 pt-1 text-xs text-slate-400 font-mono">
+                <div className="flex flex-wrap items-center gap-4 pt-1 text-xs text-blue-200 font-mono">
                   <span>✓ 2026 직역별 금칙어 필터 탑재</span>
                   <span>✓ 스마트블록 C-Rank 최적화</span>
                   <span>✓ 구글 AI Overviews 스키마 내장</span>
@@ -461,17 +462,17 @@ export default function AdCheckClient() {
               <div className="flex flex-col sm:flex-row lg:flex-col gap-3 w-full lg:w-auto flex-shrink-0">
                 <Link
                   href="https://www.postsyncapp.com/dashboard"
-                  className="px-6 py-3.5 rounded-xl font-bold text-sm bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-400 hover:to-indigo-500 text-white shadow-xl shadow-blue-500/25 transition-all text-center flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-[0.98]"
+                  className="px-6 py-3.5 rounded-xl font-bold text-sm bg-white hover:bg-slate-100 text-blue-600 shadow-md transition text-center flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-[0.98]"
                 >
                   <span>PostSync AI 3회 무료 체험하기</span>
                   <ArrowRight className="w-4 h-4" />
                 </Link>
                 <Link
                   href="https://www.postsyncapp.com/pricing"
-                  className="px-5 py-2.5 rounded-xl text-xs font-semibold bg-slate-900/80 hover:bg-slate-800 text-slate-300 border border-slate-700/80 transition text-center flex items-center justify-center gap-1.5"
+                  className="px-5 py-2.5 rounded-xl text-xs font-semibold bg-white/10 hover:bg-white/20 text-white border border-white/20 transition text-center flex items-center justify-center gap-1.5"
                 >
                   <span>요금제 및 기능 살펴보기</span>
-                  <ExternalLink className="w-3 h-3 text-slate-400" />
+                  <ExternalLink className="w-3 h-3 text-white" />
                 </Link>
               </div>
             </div>
