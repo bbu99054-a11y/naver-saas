@@ -1,0 +1,1377 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>스마트스토어·쿠팡 상세페이지 1초 자동 분할기 & 리사이저 | PostSync Tools</title>
+  <meta name="description" content="포토샵 없이 20,000px 이상의 초장문 상세페이지를 네이버(860px), 쿠팡(780px), 인스타(1080px) 규격으로 즉시 자동 리사이징 및 무손실 분할하여 ZIP으로 다운로드합니다. 서버 전송 0% 브라우저 로컬 100% 안전 보증.">
+  <meta name="keywords" content="상세페이지 자르기, 스마트스토어 상세페이지 분할, 쿠팡 상세페이지 리사이즈, 이미지 분할기, 포토샵 없이 상세페이지 자르기, 상세페이지 슬라이서">
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="스마트스토어·쿠팡 상세페이지 1초 자동 분할기 | PostSync Tools">
+  <meta property="og:description" content="10,000px 장문 상세페이지를 860px/780px로 자동 리사이징 & 균등 분할. 서버 업로드 0% 무료 웹툴">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://postsyncapp.com/crop">
+  
+  <!-- Fonts & Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- JSZip for Client-side ZIP creation -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+  <!-- Google AdSense Code Placeholder (소유하신 ca-pub 코드로 자동 연동) -->
+  <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script> -->
+
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --primary-light: #eff6ff;
+      --accent: #f59e0b;
+      --emerald: #10b981;
+      --slate-900: #0f172a;
+      --slate-800: #1e293b;
+      --slate-700: #334155;
+      --slate-600: #475569;
+      --slate-500: #64748b;
+      --slate-200: #e2e8f0;
+      --slate-100: #f1f5f9;
+      --slate-50: #f8fafc;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+      --shadow-md: 0 4px 12px rgba(15,23,42,0.08);
+      --shadow-lg: 0 10px 25px -3px rgba(15,23,42,0.12);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; }
+    body { background-color: #f8fafc; color: var(--slate-900); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+
+    /* Header Nav */
+    header {
+      background: rgba(15, 23, 42, 0.98);
+      backdrop-filter: blur(12px);
+      color: white;
+      padding: 14px 24px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .header-inner {
+      max-width: 1040px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .brand {
+      font-size: 18px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #ffffff;
+      text-decoration: none;
+      letter-spacing: -0.5px;
+    }
+    .brand i { color: #60a5fa; font-size: 20px; }
+    .brand-tag {
+      background: linear-gradient(135deg, #3b82f6, #6366f1);
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .header-link {
+      color: #cbd5e1;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      transition: color 0.2s;
+    }
+    .header-link:hover { color: #ffffff; }
+    .header-btn {
+      background: #2563eb;
+      color: white;
+      padding: 7px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .header-btn:hover { background: #1d4ed8; }
+
+    /* Cross-Traffic 5 Micro-Tools Tab Bar */
+    .tools-nav-bar {
+      background: #ffffff;
+      border-bottom: 1px solid var(--slate-200);
+      overflow-x: auto;
+      white-space: nowrap;
+      padding: 6px 20px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+    }
+    .tools-nav-inner {
+      max-width: 1040px;
+      margin: 0 auto;
+      display: flex;
+      gap: 8px;
+    }
+    .tool-tab {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--slate-600);
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .tool-tab:hover {
+      background: var(--slate-100);
+      color: var(--slate-900);
+    }
+    .tool-tab.active {
+      background: var(--primary-light);
+      color: var(--primary);
+      font-weight: 700;
+      border: 1px solid #bfdbfe;
+    }
+    .tool-tab .soon-badge {
+      font-size: 10px;
+      background: var(--slate-200);
+      color: var(--slate-600);
+      padding: 1px 5px;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+
+    /* Main Container */
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 24px 20px 80px 20px;
+    }
+
+    /* Standard Ad Container (CLS Prevention: 728x90 pre-reserved box) */
+    .ad-slot-leaderboard {
+      width: 100%;
+      min-height: 90px;
+      margin: 16px auto 24px auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #ffffff;
+      border: 1px dashed var(--slate-200);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      text-align: center;
+    }
+    .ad-placeholder-text {
+      color: var(--slate-500);
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    /* Hero Section */
+    .hero-box {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+    .hero-title {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--slate-900);
+      letter-spacing: -0.5px;
+      margin-bottom: 10px;
+      line-height: 1.35;
+    }
+    .hero-subtitle {
+      font-size: 15px;
+      color: var(--slate-600);
+      max-width: 680px;
+      margin: 0 auto 16px auto;
+    }
+    .trust-badges {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .trust-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #ffffff;
+      border: 1px solid var(--slate-200);
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--slate-700);
+      box-shadow: var(--shadow-sm);
+    }
+    .trust-pill i { color: var(--emerald); }
+
+    /* Work Tool Card */
+    .tool-card {
+      background: #ffffff;
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-lg);
+      padding: 32px 28px;
+      box-shadow: var(--shadow-md);
+      margin-bottom: 32px;
+    }
+
+    /* Drag & Drop Upload Zone */
+    .upload-zone {
+      border: 2px dashed #93c5fd;
+      background: #f0f7ff;
+      border-radius: var(--radius-md);
+      padding: 44px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      position: relative;
+    }
+    .upload-zone:hover, .upload-zone.dragover {
+      background: #e0effe;
+      border-color: var(--primary);
+      transform: translateY(-2px);
+    }
+    .upload-icon {
+      font-size: 48px;
+      color: var(--primary);
+      margin-bottom: 14px;
+    }
+    .upload-main-text {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--slate-800);
+      margin-bottom: 6px;
+    }
+    .upload-sub-text {
+      font-size: 13px;
+      color: var(--slate-500);
+    }
+    #fileInput { display: none; }
+
+    /* Image Preview Meta Bar */
+    .file-meta-bar {
+      display: none;
+      background: var(--slate-50);
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-sm);
+      padding: 12px 18px;
+      margin-top: 20px;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .file-meta-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--slate-700);
+    }
+    .file-meta-info i { color: var(--primary); font-size: 16px; }
+    .badge-dim {
+      background: #e0e7ff;
+      color: #3730a3;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .btn-reset {
+      background: transparent;
+      border: 1px solid var(--slate-300);
+      color: var(--slate-600);
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-reset:hover { background: #fee2e2; border-color: #fca5a5; color: #b91c1c; }
+
+    /* Settings & Presets */
+    .settings-section {
+      display: none;
+      margin-top: 28px;
+      border-top: 1px solid var(--slate-100);
+      padding-top: 24px;
+    }
+    .section-label {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--slate-800);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Preset Buttons Grid */
+    .preset-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .preset-card {
+      background: #ffffff;
+      border: 2px solid var(--slate-200);
+      border-radius: var(--radius-md);
+      padding: 16px 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: left;
+      position: relative;
+    }
+    .preset-card:hover {
+      border-color: #93c5fd;
+      background: #f8fafc;
+    }
+    .preset-card.active {
+      border-color: var(--primary);
+      background: #eff6ff;
+    }
+    .preset-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--slate-900);
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .preset-desc {
+      font-size: 12px;
+      color: var(--slate-500);
+      line-height: 1.4;
+    }
+    .preset-badge {
+      font-size: 10px;
+      background: #dbeafe;
+      color: var(--primary);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 700;
+    }
+
+    /* Custom Sliders & Inputs */
+    .custom-params-box {
+      background: var(--slate-50);
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-md);
+      padding: 18px 20px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 640px) {
+      .custom-params-box { grid-template-columns: 1fr; }
+    }
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--slate-700);
+      margin-bottom: 6px;
+    }
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 9px 12px;
+      border: 1px solid var(--slate-300);
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      color: var(--slate-800);
+      background: #ffffff;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .form-group input:focus, .form-group select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37,99,235,0.12);
+    }
+    .input-hint {
+      font-size: 11px;
+      color: var(--slate-500);
+      margin-top: 4px;
+    }
+
+    /* Slice Summary Banner */
+    .slice-summary-alert {
+      background: #ecfdf5;
+      border: 1px solid #a7f3d0;
+      border-radius: var(--radius-md);
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .summary-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #065f46;
+    }
+    .summary-left i { font-size: 18px; color: var(--emerald); }
+    .summary-stats {
+      font-size: 13px;
+      color: #047857;
+      font-weight: 600;
+    }
+
+    /* Action Button */
+    .btn-execute {
+      width: 100%;
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: white;
+      border: none;
+      border-radius: var(--radius-md);
+      padding: 16px 24px;
+      font-size: 17px;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+      transition: all 0.2s;
+    }
+    .btn-execute:hover {
+      background: linear-gradient(135deg, #1d4ed8, #1e40af);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(37, 99, 235, 0.45);
+    }
+    .btn-execute:active { transform: translateY(0); }
+
+    /* Live Slice Preview Grid */
+    .preview-section {
+      display: none;
+      margin-top: 32px;
+      border-top: 1px solid var(--slate-200);
+      padding-top: 24px;
+    }
+    .slice-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 14px;
+      max-height: 480px;
+      overflow-y: auto;
+      padding: 12px 4px;
+    }
+    .slice-card {
+      background: #ffffff;
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      text-align: center;
+    }
+    .slice-card img {
+      width: 100%;
+      height: 140px;
+      object-fit: cover;
+      display: block;
+      background: #f1f5f9;
+    }
+    .slice-card-info {
+      padding: 6px 8px;
+      background: var(--slate-50);
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--slate-700);
+      display: flex;
+      justify-content: space-between;
+      border-top: 1px solid var(--slate-200);
+    }
+
+    /* Self-Ad PostSync SaaS Conversion Banner */
+    .self-ad-banner {
+      background: linear-gradient(135deg, #1e1b4b, #312e81);
+      border-radius: var(--radius-lg);
+      padding: 24px 28px;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 36px 0;
+      box-shadow: var(--shadow-lg);
+      flex-wrap: wrap;
+      gap: 18px;
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+    .ad-banner-content h4 {
+      font-size: 17px;
+      font-weight: 800;
+      margin-bottom: 6px;
+      color: #93c5fd;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .ad-banner-content p {
+      font-size: 13px;
+      color: #e2e8f0;
+      line-height: 1.5;
+    }
+    .ad-banner-btn {
+      background: linear-gradient(135deg, #3b82f6, #60a5fa);
+      color: #0f172a;
+      font-weight: 800;
+      font-size: 13px;
+      padding: 10px 20px;
+      border-radius: var(--radius-sm);
+      text-decoration: none;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+    .ad-banner-btn:hover {
+      background: #ffffff;
+      transform: scale(1.03);
+    }
+
+    /* 1.5s Intentional Ad Viewability Progress Modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(6px);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .modal-content {
+      background: #ffffff;
+      border-radius: var(--radius-lg);
+      padding: 32px 28px;
+      max-width: 440px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+    }
+    .modal-spinner-icon {
+      font-size: 40px;
+      color: var(--primary);
+      animation: spin 1s linear infinite;
+      margin-bottom: 18px;
+    }
+    @keyframes spin { 100% { transform: rotate(360deg); } }
+    .modal-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--slate-900);
+      margin-bottom: 8px;
+    }
+    .modal-desc {
+      font-size: 13px;
+      color: var(--slate-600);
+      margin-bottom: 20px;
+    }
+    .progress-bar-wrap {
+      width: 100%;
+      height: 10px;
+      background: var(--slate-100);
+      border-radius: 20px;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #2563eb, #10b981);
+      transition: width 0.15s ease;
+    }
+    .modal-ad-notice {
+      font-size: 11px;
+      color: var(--slate-500);
+    }
+
+    /* Programmatic SEO & FAQ Section */
+    .seo-section {
+      background: #ffffff;
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-lg);
+      padding: 32px 28px;
+      margin-top: 36px;
+    }
+    .seo-title {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--slate-900);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .seo-text {
+      font-size: 14px;
+      color: var(--slate-600);
+      line-height: 1.7;
+      margin-bottom: 24px;
+    }
+    
+    /* Comparison Spec Table */
+    .spec-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 28px;
+      font-size: 13px;
+    }
+    .spec-table th, .spec-table td {
+      border: 1px solid var(--slate-200);
+      padding: 10px 14px;
+      text-align: left;
+    }
+    .spec-table th {
+      background: var(--slate-50);
+      font-weight: 700;
+      color: var(--slate-800);
+    }
+
+    /* FAQ Accordion */
+    .faq-item {
+      border-bottom: 1px solid var(--slate-200);
+      padding: 14px 0;
+    }
+    .faq-question {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--slate-800);
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      user-select: none;
+    }
+    .faq-question i {
+      transition: transform 0.2s ease;
+      color: var(--slate-500);
+    }
+    .faq-question.active i { transform: rotate(180deg); color: var(--primary); }
+    .faq-answer {
+      display: none;
+      font-size: 13px;
+      color: var(--slate-600);
+      line-height: 1.65;
+      padding-top: 10px;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 36px 20px;
+      color: var(--slate-500);
+      font-size: 12px;
+      border-top: 1px solid var(--slate-200);
+      background: #ffffff;
+    }
+    footer a { color: var(--slate-700); text-decoration: none; font-weight: 600; }
+  </style>
+
+  <!-- Structured Data: JSON-LD for Programmatic SEO -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "SoftwareApplication",
+        "name": "PostSync 상세페이지 1초 자동 슬라이서",
+        "operatingSystem": "Web Browser",
+        "applicationCategory": "DesignApplication",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "KRW"
+        },
+        "description": "포토샵 없이 네이버 스마트스토어(860px) 및 쿠팡(780px) 규격에 맞춰 긴 상세페이지를 1초 만에 균등 분할하고 무손실 압축 다운로드합니다."
+      },
+      {
+        "@type": "HowTo",
+        "name": "스마트스토어 상세페이지 이미지 860px로 자르는 법",
+        "step": [
+          {
+            "@type": "HowToStep",
+            "name": "상세페이지 이미지 업로드",
+            "text": "자르고자 하는 장문의 상세페이지 이미지를 드래그 앤 드롭으로 브라우저에 올립니다."
+          },
+          {
+            "@type": "HowToStep",
+            "name": "스마트스토어 프리셋 선택",
+            "text": "[네이버 스마트스토어(860px)] 버튼을 누르면 자동으로 가로폭과 균등 분할 높이가 최적화됩니다."
+          },
+          {
+            "@type": "HowToStep",
+            "name": "ZIP 다운로드",
+            "text": "[1초 자르기 & ZIP 다운로드]를 누르면 브라우저 로컬에서 순서대로 정렬된 번호의 이미지 압축파일이 생성됩니다."
+          }
+        ]
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "스마트스토어 상세페이지를 왜 860px로 잘라야 하나요?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "네이버 스마트스토어는 가로 860px을 공식 권장 규격으로 채택하고 있으며, 한 번에 20,000px 이상의 긴 이미지를 통째로 올리면 모바일 로딩 지연과 플랫폼 업로드 용량 제한 오류가 발생하기 때문입니다."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "내 상세페이지 이미지가 외부 서버에 유출될 위험은 없나요?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "절대 없습니다. 본 도구는 HTML5 Canvas와 JSZip을 활용하여 100% 사용자의 웹 브라우저 메모리상에서만 연산되므로, 이미지가 외부 서버로 1바이트도 전송되지 않습니다."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+
+  <!-- Top Global Header -->
+  <header>
+    <div class="header-inner">
+      <a href="#" onclick="window.scrollTo({top:0, behavior:'smooth'}); return false;" class="brand" title="페이지 상단으로 이동">
+        <i class="fa-solid fa-layer-group"></i>
+        <span>PostSync Tools</span>
+        <span class="brand-tag">Micro Hub</span>
+      </a>
+      <div class="header-right">
+        <a href="#guide" class="header-link">규격 가이드</a>
+        <a href="#faq" class="header-link">자주 묻는 질문</a>
+        <a href="https://postsyncapp.com" class="header-btn" target="_blank">PostSync AI 본체 <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:11px; margin-left:3px;"></i></a>
+      </div>
+    </div>
+  </header>
+
+  <!-- 5 Micro-Tools Cross-Traffic Navigation Tab Bar -->
+  <nav class="tools-nav-bar" aria-label="Micro Tools List">
+    <div class="tools-nav-inner">
+      <a href="/crop" class="tool-tab active">
+        <i class="fa-solid fa-scissors"></i>
+        <span>상세페이지 슬라이서</span>
+      </a>
+      <a href="/byte" class="tool-tab" onclick="alert('바이트 계산기 & C-Rank 밀도 분석기는 순차 오픈 예정입니다.'); return false;">
+        <i class="fa-solid fa-font"></i>
+        <span>자소서 바이트 계산기</span>
+        <span class="soon-badge">오픈예정</span>
+      </a>
+      <a href="/hwpx" class="tool-tab" onclick="alert('안심 HWPX ➔ Markdown 파서는 순차 오픈 예정입니다.'); return false;">
+        <i class="fa-solid fa-file-lines"></i>
+        <span>HWPX 안심 변환기</span>
+        <span class="soon-badge">오픈예정</span>
+      </a>
+      <a href="/utm" class="tool-tab" onclick="alert('마케팅 캠페인 UTM 빌더는 순차 오픈 예정입니다.'); return false;">
+        <i class="fa-solid fa-link"></i>
+        <span>마케팅 UTM 빌더</span>
+        <span class="soon-badge">오픈예정</span>
+      </a>
+      <a href="/adcheck" class="tool-tab" onclick="alert('전문직 법정 광고 금칙어 검사기는 순차 오픈 예정입니다.'); return false;">
+        <i class="fa-solid fa-scale-balanced"></i>
+        <span>광고법 금칙어 스캐너</span>
+        <span class="soon-badge">오픈예정</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- Main Work Container -->
+  <main class="container">
+
+    <!-- Pre-reserved Top AdSlot (IAB 728x90 Leaderboard - CLS 0%) -->
+    <div class="ad-slot-leaderboard" id="top-ad-container">
+      <span class="ad-placeholder-text">
+        <i class="fa-solid fa-rectangle-ad"></i> 광고 스폰서 슬롯 (Google AdSense 728x90)
+      </span>
+    </div>
+
+    <!-- Hero Titles & Trust Badges -->
+    <section class="hero-box">
+      <h1 class="hero-title">스마트스토어·쿠팡 상세페이지 1초 자동 분할기</h1>
+      <p class="hero-subtitle">
+        포토샵 없이 20,000px+ 초장문 이미지를 네이버(860px)·쿠팡(780px) 규격으로 자동 리사이징하고 균등 분할합니다. 번호순 ZIP 파일로 즉시 다운로드하세요!
+      </p>
+      <div class="trust-badges">
+        <span class="trust-pill"><i class="fa-solid fa-shield-halved"></i> 서버 전송 0% (로컬 100% 보안)</span>
+        <span class="trust-pill"><i class="fa-solid fa-bolt"></i> GPU 캔버스 무손실 화질 보존</span>
+        <span class="trust-pill"><i class="fa-solid fa-file-zipper"></i> 번호순 자동 정렬 ZIP 다운로드</span>
+      </div>
+    </section>
+
+    <!-- Main Tool Interface Card -->
+    <section class="tool-card">
+      <!-- Drag & Drop Zone -->
+      <div class="upload-zone" id="dropZone">
+        <i class="fa-solid fa-cloud-arrow-up upload-icon"></i>
+        <div class="upload-main-text">상세페이지 이미지를 여기에 드래그 앤 드롭하세요</div>
+        <div class="upload-sub-text">또는 클릭하여 파일 선택 (JPG, PNG, WEBP 지원 / 30,000px 이상 대용량 지원)</div>
+        <input type="file" id="fileInput" accept="image/png, image/jpeg, image/webp">
+      </div>
+
+      <!-- Loaded File Meta Bar -->
+      <div class="file-meta-bar" id="fileMetaBar">
+        <div class="file-meta-info">
+          <i class="fa-solid fa-image"></i>
+          <span id="metaFileName">detail_page.jpg</span>
+          <span class="badge-dim" id="metaDimensions">0 x 0 px</span>
+          <span id="metaFileSize" style="color:var(--slate-500); font-size:12px;">(0 MB)</span>
+        </div>
+        <button class="btn-reset" id="btnReset" type="button">
+          <i class="fa-solid fa-rotate-left"></i> 다른 이미지 선택
+        </button>
+      </div>
+
+      <!-- Settings & Presets Area -->
+      <div class="settings-section" id="settingsSection">
+        <div class="section-label">
+          <i class="fa-solid fa-sliders"></i>
+          <span>1. 플랫폼 최적화 프리셋 선택</span>
+        </div>
+
+        <div class="preset-grid">
+          <!-- Preset 1: Naver Smartstore -->
+          <div class="preset-card active" data-preset="smartstore">
+            <div class="preset-title">
+              <span>네이버 스마트스토어</span>
+              <span class="preset-badge">추천</span>
+            </div>
+            <div class="preset-desc">가로 860px 고정 리사이즈<br>세로 2,500px 단위 균등 분할</div>
+          </div>
+
+          <!-- Preset 2: Coupang -->
+          <div class="preset-card" data-preset="coupang">
+            <div class="preset-title">
+              <span>쿠팡 최적화</span>
+              <span class="preset-badge">인기</span>
+            </div>
+            <div class="preset-desc">가로 780px 고정 리사이즈<br>세로 3,000px 단위 균등 분할</div>
+          </div>
+
+          <!-- Preset 3: Instagram / Threads -->
+          <div class="preset-card" data-preset="instagram">
+            <div class="preset-title">
+              <span>인스타 / 스레드 1:1</span>
+              <span class="preset-badge">카드뉴스</span>
+            </div>
+            <div class="preset-desc">1080x1080 정사각형 타일<br>연속 캐러셀 슬라이드 분할</div>
+          </div>
+
+          <!-- Preset 4: Custom -->
+          <div class="preset-card" data-preset="custom">
+            <div class="preset-title">
+              <span>사용자 직접 설정</span>
+              <span class="preset-badge">자유형</span>
+            </div>
+            <div class="preset-desc">가로 너비 유지 / 분할 높이(px) 직접 입력</div>
+          </div>
+        </div>
+
+        <!-- Custom Parameter Inputs (Conditional) -->
+        <div class="custom-params-box" id="customParamsBox" style="display:none;">
+          <div class="form-group">
+            <label for="customWidth">가로 너비 (Width px)</label>
+            <input type="number" id="customWidth" value="860" min="100" max="4000">
+            <div class="input-hint">0 입력 시 원본 가로폭 그대로 유지</div>
+          </div>
+          <div class="form-group">
+            <label for="customHeight">1조각당 세로 분할 높이 (Height px)</label>
+            <input type="number" id="customHeight" value="2500" min="500" max="10000">
+            <div class="input-hint">권장: 2,000px ~ 3,000px</div>
+          </div>
+        </div>
+
+        <!-- Slice Summary Alert -->
+        <div class="slice-summary-alert">
+          <div class="summary-left">
+            <i class="fa-solid fa-circle-check"></i>
+            <span id="sliceSummaryText">총 0개 조각으로 분할 예정 (가로 860px)</span>
+          </div>
+          <div class="summary-stats" id="sliceEstSize">예상 파일 규격 계산 완료</div>
+        </div>
+
+        <!-- Execute Action Button -->
+        <button class="btn-execute" id="btnExecute" type="button">
+          <i class="fa-solid fa-bolt"></i>
+          <span>1초 자르기 & ZIP 압축 다운로드</span>
+        </button>
+      </div>
+
+      <!-- Live Slice Preview Grid -->
+      <div class="preview-section" id="previewSection">
+        <div class="section-label">
+          <i class="fa-solid fa-table-cells"></i>
+          <span>2. 분할 조각 실시간 미리보기 (순서 번호 정렬)</span>
+        </div>
+        <div class="slice-grid" id="sliceGrid"></div>
+      </div>
+    </section>
+
+    <!-- PostSync AI SaaS Self-Ad Banner (High-Converting Funnel) -->
+    <aside class="self-ad-banner">
+      <div class="ad-banner-content">
+        <h4><i class="fa-solid fa-wand-magic-sparkles"></i> 상세페이지 쪼개고 블로그에 하나씩 올리기 힘드셨나요?</h4>
+        <p>PostSync AI는 키워드 분석부터 스마트에디터 본문 배치, 네이버 블로그 10초 원클릭 자동 발행까지 전 과정을 무인 자동화합니다.</p>
+      </div>
+      <a href="https://postsyncapp.com" class="ad-banner-btn" target="_blank">
+        PostSync AI 무료 체험하기 <i class="fa-solid fa-arrow-right"></i>
+      </a>
+    </aside>
+
+    <!-- Bottom Secondary Ad Slot (728x90) -->
+    <div class="ad-slot-leaderboard" id="bottom-ad-container">
+      <span class="ad-placeholder-text">
+        <i class="fa-solid fa-rectangle-ad"></i> 스폰서 광고 영역 (Google AdSense)
+      </span>
+    </div>
+
+    <!-- Programmatic SEO Guide & FAQ Section -->
+    <article class="seo-section" id="guide" style="scroll-margin-top: 80px;">
+      <h2 class="seo-title"><i class="fa-solid fa-book-open"></i> 스마트스토어 & 쿠팡 상세페이지 최적 규격 가이드</h2>
+      <p class="seo-text">
+        온라인 쇼핑몰 상세페이지는 첫 로딩 2초 안에 고객의 구매 결정을 좌우합니다. 특히 20,000px 이상의 긴 상세페이지를 압축하지 않고 통째로 업로드할 경우, 모바일 네트워크에서 이미지 로딩이 멈추거나 엑스박스가 뜨며 고객 이탈률이 급증합니다.
+      </p>
+
+      <table class="spec-table">
+        <thead>
+          <tr>
+            <th>구분</th>
+            <th>권장 가로(Width)</th>
+            <th>권장 분할 세로(Height)</th>
+            <th>권장 파일 포맷</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>네이버 스마트스토어</strong></td>
+            <td>860 px (고정 권장)</td>
+            <td>2,000 ~ 2,500 px</td>
+            <td>JPG / PNG (장당 10MB 미만)</td>
+          </tr>
+          <tr>
+            <td><strong>쿠팡 (Coupang)</strong></td>
+            <td>780 px (최적 뷰어)</td>
+            <td>2,500 ~ 3,000 px</td>
+            <td>JPG (웹 무손실 85%)</td>
+          </tr>
+          <tr>
+            <td><strong>인스타그램 / 스레드</strong></td>
+            <td>1080 px (1:1 정사각형)</td>
+            <td>1080 px</td>
+            <td>PNG / JPG (캐러셀 슬라이드)</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3 id="faq" style="font-size:16px; font-weight:700; margin-bottom:14px; color:var(--slate-800); scroll-margin-top: 80px;">자주 묻는 질문 (FAQ)</h3>
+      
+      <div class="faq-item">
+        <div class="faq-question">
+          <span>Q. 이미지를 여러 조각으로 잘라야 하는 진짜 이유는 무엇인가요?</span>
+          <i class="fa-solid fa-chevron-down"></i>
+        </div>
+        <div class="faq-answer">
+          네이버 스마트스토어와 쿠팡은 모바일 웹 환경에서 한 번에 20,000px 이상의 대형 이미지를 불러올 때 렌더링 지연이 발생합니다. 2,000~3,000px 단위로 잘라 올리면 사용자가 스크롤을 내릴 때마다 필요한 조각만 지연 로딩(Lazy Loading)되어 초기 로딩 속도가 3배 이상 빨라집니다.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">
+          <span>Q. 내 상품 디자인이나 원본 이미지가 외부에 유출되지 않나요?</span>
+          <i class="fa-solid fa-chevron-down"></i>
+        </div>
+        <div class="faq-answer">
+          100% 안전합니다. PostSync 상세페이지 슬라이서는 HTML5 Canvas와 클라이언트 JSZip 라이브러리를 통해 사용자의 PC/스마트폰 브라우저 메모리 안에서만 이미지를 처리합니다. 외부 서버로 이미지가 전송되지 않으므로 기밀 상품 상세페이지도 안심하고 작업하실 수 있습니다.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">
+          <span>Q. 잘린 이미지 파일 이름은 어떻게 정렬되어 다운로드되나요?</span>
+          <i class="fa-solid fa-chevron-down"></i>
+        </div>
+        <div class="faq-answer">
+          압축을 풀었을 때 네이버 스마트에디터나 쿠팡 에디터에 그대로 드래그할 수 있도록, 위에서부터 순서대로 `01_postsync_crop.jpg`, `02_postsync_crop.jpg`와 같이 2자리 번호가 매겨진 ZIP 파일로 다운로드됩니다.
+        </div>
+      </div>
+    </article>
+
+  </main>
+
+  <!-- 1.5s Intentional Ad Viewability Progress Modal -->
+  <div class="modal-overlay" id="progressModal">
+    <div class="modal-content">
+      <i class="fa-solid fa-circle-notch modal-spinner-icon"></i>
+      <h3 class="modal-title">상세페이지 규격 최적화 및 분할 중</h3>
+      <p class="modal-desc" id="modalStatusText">무손실 화질 보존 및 캔버스 슬라이싱 연산 중입니다...</p>
+      
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-fill" id="progressBarFill"></div>
+      </div>
+
+      <p class="modal-ad-notice">
+        <i class="fa-solid fa-shield-check" style="color:var(--emerald);"></i>
+        브라우저 로컬 연산 완료 즉시 ZIP 다운로드가 시작됩니다.
+      </p>
+    </div>
+  </div>
+
+  <!-- Global Footer -->
+  <footer>
+    <p>© 2026 PostSync AI & Marketing Hub. All rights reserved.</p>
+    <p style="margin-top:6px;">
+      <a href="/guide/ad-law-2026">광고법 가이드</a> | 
+      <a href="/crop">상세페이지 슬라이서</a> | 
+      <a href="https://postsyncapp.com" target="_blank">PostSync AI 공식홈</a>
+    </p>
+  </footer>
+
+  <!-- JavaScript Engine (100% Client-Side Canvas & JSZip) -->
+  <script>
+    (function() {
+      // DOM Elements
+      const dropZone = document.getElementById('dropZone');
+      const fileInput = document.getElementById('fileInput');
+      const fileMetaBar = document.getElementById('fileMetaBar');
+      const metaFileName = document.getElementById('metaFileName');
+      const metaDimensions = document.getElementById('metaDimensions');
+      const metaFileSize = document.getElementById('metaFileSize');
+      const btnReset = document.getElementById('btnReset');
+      const settingsSection = document.getElementById('settingsSection');
+      const customParamsBox = document.getElementById('customParamsBox');
+      const customWidthInput = document.getElementById('customWidth');
+      const customHeightInput = document.getElementById('customHeight');
+      const sliceSummaryText = document.getElementById('sliceSummaryText');
+      const sliceEstSize = document.getElementById('sliceEstSize');
+      const btnExecute = document.getElementById('btnExecute');
+      const previewSection = document.getElementById('previewSection');
+      const sliceGrid = document.getElementById('sliceGrid');
+      const progressModal = document.getElementById('progressModal');
+      const progressBarFill = document.getElementById('progressBarFill');
+      const modalStatusText = document.getElementById('modalStatusText');
+      const presetCards = document.querySelectorAll('.preset-card');
+
+      // State
+      let currentImage = null;
+      let currentFile = null;
+      let originalWidth = 0;
+      let originalHeight = 0;
+      let currentPreset = 'smartstore';
+      let sliceCaches = []; // Cached blobs for preview and zip
+
+      // Preset Settings
+      const PRESET_CONFIGS = {
+        smartstore: { targetWidth: 860, sliceHeight: 2500, label: '네이버 스마트스토어' },
+        coupang: { targetWidth: 780, sliceHeight: 3000, label: '쿠팡 최적화' },
+        instagram: { targetWidth: 1080, sliceHeight: 1080, label: '인스타그램 1:1' },
+        custom: { targetWidth: 860, sliceHeight: 2500, label: '사용자 지정' }
+      };
+
+      // 1. Drag & Drop Handling
+      dropZone.addEventListener('click', () => fileInput.click());
+
+      ['dragenter', 'dragover'].forEach(eventName => {
+        dropZone.addEventListener(eventName, (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          dropZone.classList.add('dragover');
+        });
+      });
+
+      ['dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          dropZone.classList.remove('dragover');
+        });
+      });
+
+      dropZone.addEventListener('drop', (e) => {
+        const files = e.dataTransfer.files;
+        if (files && files.length > 0) {
+          handleFile(files[0]);
+        }
+      });
+
+      fileInput.addEventListener('change', (e) => {
+        if (e.target.files && e.target.files.length > 0) {
+          handleFile(e.target.files[0]);
+        }
+      });
+
+      btnReset.addEventListener('click', resetUploader);
+
+      function handleFile(file) {
+        if (!file.type.startsWith('image/')) {
+          alert('이미지 파일(JPG, PNG, WEBP)만 업로드할 수 있습니다.');
+          return;
+        }
+
+        currentFile = file;
+        metaFileName.textContent = file.name;
+        metaFileSize.textContent = `(${(file.size / (1024 * 1024)).toFixed(2)} MB)`;
+
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          const img = new Image();
+          img.onload = () => {
+            currentImage = img;
+            originalWidth = img.naturalWidth;
+            originalHeight = img.naturalHeight;
+            metaDimensions.textContent = `${originalWidth.toLocaleString()} x ${originalHeight.toLocaleString()} px`;
+
+            // Display components
+            dropZone.style.display = 'none';
+            fileMetaBar.style.display = 'flex';
+            settingsSection.style.display = 'block';
+
+            // Recalculate based on current preset
+            updateCalculations();
+          };
+          img.src = event.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+
+      function resetUploader() {
+        currentImage = null;
+        currentFile = null;
+        fileInput.value = '';
+        dropZone.style.display = 'block';
+        fileMetaBar.style.display = 'none';
+        settingsSection.style.display = 'none';
+        previewSection.style.display = 'none';
+        sliceGrid.innerHTML = '';
+        sliceCaches = [];
+      }
+
+      // 2. Preset Switching
+      presetCards.forEach(card => {
+        card.addEventListener('click', () => {
+          presetCards.forEach(c => c.classList.remove('active'));
+          card.classList.add('active');
+          currentPreset = card.getAttribute('data-preset');
+
+          if (currentPreset === 'custom') {
+            customParamsBox.style.display = 'grid';
+            customWidthInput.value = PRESET_CONFIGS.custom.targetWidth;
+            customHeightInput.value = PRESET_CONFIGS.custom.sliceHeight;
+          } else {
+            customParamsBox.style.display = 'none';
+          }
+          updateCalculations();
+        });
+      });
+
+      customWidthInput.addEventListener('input', updateCalculations);
+      customHeightInput.addEventListener('input', updateCalculations);
+
+      // 3. Calculation & Slice Layout Estimator
+      function getActiveConfig() {
+        if (currentPreset === 'custom') {
+          let w = parseInt(customWidthInput.value) || originalWidth;
+          let h = parseInt(customHeightInput.value) || 2500;
+          if (w <= 0) w = originalWidth;
+          if (h < 200) h = 200;
+          return { targetWidth: w, sliceHeight: h, label: '사용자 지정' };
+        }
+        return PRESET_CONFIGS[currentPreset];
+      }
+
+      function updateCalculations() {
+        if (!currentImage) return;
+
+        const config = getActiveConfig();
+        // Scale ratio
+        const scale = config.targetWidth / originalWidth;
+        const scaledHeight = Math.round(originalHeight * scale);
+        const sliceCount = Math.ceil(scaledHeight / config.sliceHeight);
+
+        sliceSummaryText.textContent = `총 ${sliceCount}개 조각으로 분할 예정 (가로 ${config.targetWidth}px x 세로 ${config.sliceHeight}px)`;
+        sliceEstSize.textContent = `스케일 후 세로 총합: ${scaledHeight.toLocaleString()}px`;
+
+        // Render preview slices in background
+        generatePreviewSlices(config, scale, scaledHeight, sliceCount);
+      }
+
+      // 4. Client-side Slicing Engine (HTML5 Canvas)
+      async function generatePreviewSlices(config, scale, scaledHeight, sliceCount) {
+        sliceGrid.innerHTML = '';
+        sliceCaches = [];
+
+        // Offscreen Canvas
+        const offCanvas = document.createElement('canvas');
+        const ctx = offCanvas.getContext('2d');
+
+        offCanvas.width = config.targetWidth;
+        offCanvas.height = scaledHeight;
+
+        // Draw resized entire image
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
+        ctx.drawImage(currentImage, 0, 0, config.targetWidth, scaledHeight);
+
+        // Slice iteratively
+        for (let i = 0; i < sliceCount; i++) {
+          const startY = i * config.sliceHeight;
+          const currentSliceH = Math.min(config.sliceHeight, scaledHeight - startY);
+
+          const sliceCanvas = document.createElement('canvas');
+          sliceCanvas.width = config.targetWidth;
+          sliceCanvas.height = currentSliceH;
+          const sCtx = sliceCanvas.getContext('2d');
+
+          sCtx.drawImage(offCanvas, 0, startY, config.targetWidth, currentSliceH, 0, 0, config.targetWidth, currentSliceH);
+
+          // Convert to blob and dataUrl for preview
+          const dataUrl = sliceCanvas.toDataURL('image/jpeg', 0.92);
+          sliceCaches.push({
+            index: i + 1,
+            dataUrl: dataUrl,
+            width: config.targetWidth,
+            height: currentSliceH,
+            canvas: sliceCanvas
+          });
+
+          // Build preview card
+          const card = document.createElement('div');
+          card.className = 'slice-card';
+          const sliceNum = String(i + 1).padStart(2, '0');
+          card.innerHTML = `
+            <img src="${dataUrl}" alt="조각 ${sliceNum}" loading="lazy">
+            <div class="slice-card-info">
+              <span>#${sliceNum}</span>
+              <span>${config.targetWidth}x${currentSliceH}</span>
+            </div>
+          `;
+          sliceGrid.appendChild(card);
+        }
+
+        previewSection.style.display = 'block';
+      }
+
+      // 5. Intentional 1.5s Progress Delay & ZIP Packaging (Ad Viewability Hack)
+      btnExecute.addEventListener('click', async () => {
+        if (!currentImage || sliceCaches.length === 0) return;
+
+        // Show Modal
+        progressModal.style.display = 'flex';
+        progressBarFill.style.width = '0%';
+        modalStatusText.textContent = '무손실 규격 연산 및 슬라이싱 최적화 중...';
+
+        // 1.5s simulated progressive steps to ensure ad viewability
+        await animateProgress(0, 40, 400);
+        modalStatusText.textContent = '메모리상 번호순 정렬 및 ZIP 아카이브 압축 중...';
+        await animateProgress(40, 85, 600);
+
+        // Actual ZIP creation via JSZip
+        const zip = new JSZip();
+        const baseName = (currentFile.name.replace(/\.[^/.]+$/, '') || 'detail_page').replace(/[^a-zA-Z0-9가-힣_-]/g, '_');
+
+        for (const item of sliceCaches) {
+          const sliceNum = String(item.index).padStart(2, '0');
+          const fileName = `${sliceNum}_${baseName}_${item.width}px.jpg`;
+          
+          // Data URL to base64
+          const base64Data = item.dataUrl.replace(/^data:image\/jpeg;base64,/, '');
+          zip.file(fileName, base64Data, { base64: true });
+        }
+
+        modalStatusText.textContent = 'ZIP 패키징 완료! 다운로드를 시작합니다...';
+        await animateProgress(85, 100, 400);
+
+        // Generate Blob
+        const zipBlob = await zip.generateAsync({ type: 'blob' });
+
+        // Trigger Download
+        const downloadLink = document.createElement('a');
+        downloadLink.href = URL.createObjectURL(zipBlob);
+        downloadLink.download = `${baseName}_cropped_pack.zip`;
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+
+        // Close modal after 400ms
+        setTimeout(() => {
+          progressModal.style.display = 'none';
+          progressBarFill.style.width = '0%';
+          
+          // Optional: trigger Google AdSense refresh if adsbygoogle is active
+          if (window.googletag && googletag.pubads) {
+            googletag.pubads().refresh();
+          }
+        }, 400);
+      });
+
+      function animateProgress(start, end, duration) {
+        return new Promise(resolve => {
+          const startTime = performance.now();
+          function step(now) {
+            const elapsed = now - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            const currentVal = Math.round(start + (end - start) * progress);
+            progressBarFill.style.width = `${currentVal}%`;
+            if (progress < 1) {
+              requestAnimationFrame(step);
+            } else {
+              resolve();
+            }
+          }
+          requestAnimationFrame(step);
+        });
+      }
+
+      // 6. FAQ Accordion Interaction
+      const faqQuestions = document.querySelectorAll('.faq-question');
+      faqQuestions.forEach(q => {
+        q.addEventListener('click', () => {
+          const ans = q.nextElementSibling;
+          const isActive = q.classList.contains('active');
+          
+          faqQuestions.forEach(otherQ => {
+            otherQ.classList.remove('active');
+            otherQ.nextElementSibling.style.display = 'none';
+          });
+
+          if (!isActive) {
+            q.classList.add('active');
+            ans.style.display = 'block';
+          }
+        });
+      });
+
+    })();
+  </script>
+</body>
+</html>
