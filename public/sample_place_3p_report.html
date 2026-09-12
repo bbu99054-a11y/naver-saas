@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>강남더블유치과 - 주간 로컬 인텔리전스 심층 리포트 (3P Deck)</title>
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --primary-light: #eff6ff;
+      --indigo-600: #4f46e5;
+      --indigo-50: #eef2ff;
+      --slate-900: #0f172a;
+      --slate-800: #1e293b;
+      --slate-700: #334155;
+      --slate-600: #475569;
+      --slate-500: #64748b;
+      --slate-200: #e2e8f0;
+      --slate-100: #f1f5f9;
+      --slate-50: #f8fafc;
+      --emerald-600: #059669;
+      --emerald-50: #ecfdf5;
+      --amber-600: #d97706;
+      --amber-50: #fffbeb;
+      --rose-600: #e11d48;
+      --rose-50: #fff1f2;
+      --border: #e2e8f0;
+      --radius: 12px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Pretendard", -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+      background-color: #f1f5f9;
+      color: var(--slate-900);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* 상단 모바일/웹 액션바 */
+    .top-action-bar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(15, 23, 42, 0.96);
+      backdrop-filter: blur(10px);
+      color: white;
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .brand {
+      font-size: 15px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .brand-badge {
+      background: linear-gradient(135deg, #3b82f6, #6366f1);
+      color: white;
+      font-size: 11px;
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-weight: 800;
+    }
+
+    .btn-pdf {
+      background: #2563eb;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .btn-pdf:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+    }
+
+    /* 모바일 빠른 네비게이션 */
+    .quick-nav {
+      max-width: 860px;
+      margin: 12px auto 0;
+      display: flex;
+      gap: 8px;
+      padding: 0 12px;
+      overflow-x: auto;
+    }
+
+    .nav-btn {
+      background: white;
+      border: 1px solid var(--border);
+      color: var(--slate-700);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      text-decoration: none;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .nav-btn:hover {
+      background: var(--primary-light);
+      color: var(--primary);
+      border-color: var(--primary);
+    }
+
+    /* 메인 리포트 덱 컨테이너 */
+    .deck-container {
+      max-width: 860px;
+      margin: 16px auto 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    /* 페이지 카드 (인쇄 시 각각 1장의 A4 페이지로 맵핑) */
+    .report-page {
+      background: #ffffff;
+      padding: 34px 38px;
+      border-radius: 16px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.02);
+      border: 1px solid var(--border);
+      position: relative;
+    }
+
+    /* 페이지 번호 뱃지 */
+    .page-indicator {
+      position: absolute;
+      bottom: 16px;
+      right: 24px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--slate-400);
+      letter-spacing: 0.5px;
+    }
+
+    /* 공통 헤더 */
+    .report-header {
+      border-bottom: 2px solid var(--slate-100);
+      padding-bottom: 16px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+
+    .subpage-header {
+      border-bottom: 1.5px solid var(--slate-100);
+      padding-bottom: 10px;
+      margin-bottom: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .subpage-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--slate-500);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .client-title {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--slate-900);
+      letter-spacing: -0.5px;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .industry-pill {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--primary);
+      background: var(--primary-light);
+      padding: 3px 8px;
+      border-radius: 6px;
+    }
+
+    .report-meta {
+      font-size: 12px;
+      color: var(--slate-500);
+      text-align: right;
+    }
+
+    .meta-badge {
+      display: inline-block;
+      background: #e0f2fe;
+      color: #0369a1;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-weight: 700;
+      font-size: 11px;
+      margin-top: 4px;
+    }
+
+    /* 섹션 공통 */
+    .section {
+      margin-bottom: 20px;
+    }
+
+    .section-title {
+      font-size: 14.5px;
+      font-weight: 700;
+      color: var(--slate-800);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .section-title-left {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .section-icon {
+      font-size: 15px;
+    }
+
+    .section-tag {
+      font-size: 11px;
+      color: var(--slate-500);
+      font-weight: 500;
+    }
+
+    /* 순위 테이블 */
+    .table-card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 12px;
+    }
+
+    th {
+      background-color: var(--slate-50);
+      color: var(--slate-600);
+      font-weight: 600;
+      padding: 9px 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    td {
+      padding: 9px 12px;
+      border-bottom: 1px solid var(--border);
+      color: var(--slate-700);
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    .rank-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .rank-my { background: #dbeafe; color: #1d4ed8; font-weight: 800; }
+    .diff-same { color: var(--slate-400); font-size: 11px; }
+
+    /* 주간 상권 총괄 요약 카드 (1P 하단) */
+    .exec-summary-card {
+      background: linear-gradient(135deg, #f8fafc 0%, #eff6ff 100%);
+      border: 1px solid #bfdbfe;
+      border-radius: var(--radius);
+      padding: 16px 20px;
+    }
+
+    .exec-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .exec-box {
+      background: white;
+      border: 1px solid #dbeafe;
+      border-radius: 8px;
+      padding: 12px;
+      text-align: center;
+    }
+
+    .exec-box-title {
+      font-size: 11px;
+      color: var(--slate-500);
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .exec-box-val {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    /* 경쟁사 첩보 카드 (2P 상단) */
+    .intel-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .intel-card {
+      background: var(--slate-50);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px;
+    }
+
+    .intel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .intel-name {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--slate-900);
+    }
+
+    .intel-tag {
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+
+    .tag-event { background: #fef3c7; color: #b45309; }
+    .tag-blog { background: #e0f2fe; color: #0284c7; }
+    .tag-ad { background: #fce7f3; color: #be185d; }
+
+    .intel-body {
+      font-size: 11.5px;
+      color: var(--slate-600);
+      line-height: 1.5;
+    }
+
+    /* 리뷰 풀 세트 (2P 하단) */
+    .review-box {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px 16px;
+      margin-bottom: 12px;
+    }
+
+    .review-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .review-author {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--slate-800);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .star-badge {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    .review-content {
+      font-size: 11.5px;
+      color: var(--slate-700);
+      padding: 8px 10px;
+      border-radius: 6px;
+      margin-bottom: 8px;
+      line-height: 1.45;
+      font-style: italic;
+    }
+
+    .reply-card {
+      background: var(--slate-50);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 12px;
+    }
+
+    .reply-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+    }
+
+    .verifier-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--emerald-600);
+      background: var(--emerald-50);
+      padding: 2px 6px;
+      border-radius: 4px;
+      border: 1px solid #a7f3d0;
+    }
+
+    .btn-copy {
+      background: white;
+      border: 1px solid var(--border);
+      color: var(--slate-700);
+      font-size: 10.5px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.2s;
+    }
+
+    .btn-copy:hover {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    .reply-text {
+      font-size: 11.5px;
+      color: var(--slate-800);
+      line-height: 1.45;
+      white-space: pre-line;
+    }
+
+    /* 실행 액션 가이드 (3P 상단) */
+    .action-card {
+      background: #ffffff;
+      border: 1px solid #c7d2fe;
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      margin-bottom: 20px;
+    }
+
+    .action-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .action-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--slate-800);
+      line-height: 1.45;
+    }
+
+    .action-bullet {
+      background: var(--primary);
+      color: white;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    /* 킬러 콘텐츠: 플레이스 새소식 완성 원고 (3P 하단) */
+    .post-card {
+      background: linear-gradient(135deg, #ffffff 0%, #faf5ff 100%);
+      border: 2px solid #c084fc;
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: 0 4px 12px rgba(192, 132, 252, 0.08);
+      position: relative;
+    }
+
+    .post-header-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #9333ea;
+      color: white;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 3px 10px;
+      border-radius: 20px;
+      margin-bottom: 12px;
+    }
+
+    .post-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--slate-900);
+      margin-bottom: 12px;
+      background: white;
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid #e9d5ff;
+    }
+
+    .post-body {
+      font-size: 12px;
+      color: var(--slate-800);
+      line-height: 1.6;
+      white-space: pre-line;
+      background: white;
+      padding: 14px 16px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      margin-bottom: 12px;
+    }
+
+    .post-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .post-tags {
+      font-size: 11.5px;
+      color: #7e22ce;
+      font-weight: 600;
+    }
+
+    .btn-copy-post {
+      background: #9333ea;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .btn-copy-post:hover {
+      background: #7e22ce;
+      transform: translateY(-1px);
+    }
+
+    /* 토스트 알림 */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: var(--slate-900);
+      color: white;
+      padding: 10px 22px;
+      border-radius: 30px;
+      font-size: 12px;
+      font-weight: 600;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      opacity: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    /* ==========================================================================
+       인쇄 및 Playwright PDF 렌더링: 완벽한 3페이지 브리핑 덱 규격
+       ========================================================================== */
+    @page {
+      size: A4 portrait;
+      margin: 8mm 10mm;
+    }
+
+    @media print {
+      body {
+        background-color: #ffffff !important;
+      }
+
+      .top-action-bar, .quick-nav, .toast, .btn-copy, .btn-copy-post {
+        display: none !important;
+      }
+
+      .deck-container {
+        max-width: 100% !important;
+        margin: 0 !important;
+        gap: 0 !important;
+      }
+
+      .report-page {
+        page-break-after: always !important;
+        break-after: page !important;
+        min-height: 98vh !important;
+        padding: 6mm 8mm !important;
+        border: none !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+      }
+
+      .report-page:last-child {
+        page-break-after: avoid !important;
+        break-after: avoid !important;
+      }
+
+      .page-indicator {
+        bottom: 8mm !important;
+        right: 10mm !important;
+      }
+
+      .client-title {
+        font-size: 17px !important;
+      }
+
+      .section-title {
+        font-size: 12px !important;
+        margin-bottom: 6px !important;
+      }
+
+      th, td {
+        padding: 6px 10px !important;
+        font-size: 10.5px !important;
+      }
+
+      .intel-card {
+        padding: 8px 10px !important;
+      }
+
+      .intel-body {
+        font-size: 10.5px !important;
+      }
+
+      .review-box {
+        padding: 8px 12px !important;
+        margin-bottom: 8px !important;
+      }
+
+      .review-content {
+        padding: 6px 10px !important;
+        font-size: 10.5px !important;
+        margin-bottom: 6px !important;
+      }
+
+      .reply-card {
+        padding: 6px 10px !important;
+      }
+
+      .reply-text {
+        font-size: 10.5px !important;
+      }
+
+      .post-card {
+        padding: 12px 16px !important;
+      }
+
+      .post-body {
+        padding: 10px 12px !important;
+        font-size: 10.5px !important;
+      }
+    }
+
+    /* 모바일 반응형 */
+    @media screen and (max-width: 640px) {
+      .report-page {
+        padding: 20px 16px;
+        border-radius: 12px;
+      }
+
+      .intel-grid, .exec-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .report-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+      }
+
+      .report-meta {
+        text-align: left;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 상단 모바일/웹 액션바 -->
+  <header class="top-action-bar">
+    <div class="brand">
+      <span>🛡️ 플레이스 가디언</span>
+      <span class="brand-badge">3P 프리미엄 덱</span>
+    </div>
+    <button class="btn-pdf" onclick="window.print()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 6 2 18 2 18 9"></polyline>
+        <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+        <rect x="6" y="14" width="12" height="8"></rect>
+      </svg>
+      A4 3장 리포트 PDF 저장/인쇄
+    </button>
+  </header>
+
+  <!-- 모바일 퀵 네비게이션 탭 -->
+  <nav class="quick-nav">
+    <a href="#page-1" class="nav-btn">📊 1. 순위 및 총괄</a>
+    <a href="#page-2" class="nav-btn">🕵️ 2. 경쟁사 & 리뷰 풀세트</a>
+    <a href="#page-3" class="nav-btn">⭐ 3. 새소식 완성 원고</a>
+  </nav>
+
+  <!-- 메인 덱 컨테이너 -->
+  <main class="deck-container">
+
+    <!-- ====================================================================
+         PAGE 1: 주간 총괄 인텔리전스 & 핵심 키워드 실시간 순위 변동
+         ==================================================================== -->
+    <article class="report-page" id="page-1">
+      <header class="report-header">
+        <div>
+          <h1 class="client-title">
+            강남더블유치과
+            <span class="industry-pill">치과 전용</span>
+          </h1>
+          <p style="font-size: 12px; color: var(--slate-600);">
+            📍 타깃 상권: <strong>서울 서초구 강남대로 463 (신논현역 7번 출구 반경 1.5km)</strong> | 핵심 모니터링 키워드 3개
+          </p>
+        </div>
+        <div class="report-meta">
+          <div>발행일시: <strong>2026-09-05 (월) 08:00</strong></div>
+          <div class="meta-badge">주간 인텔리전스 No. 2026-W36</div>
+        </div>
+      </header>
+
+      <!-- 섹션 1: 실시간 순위 표 -->
+      <section class="section">
+        <div class="section-title">
+          <div class="section-title-left">
+            <span class="section-icon">📊</span>
+            <span>1. 핵심 키워드 플레이스 순위 변동 표</span>
+          </div>
+          <span class="section-tag">네이버 모바일 플레이스 기준</span>
+        </div>
+        <div class="table-card">
+          <table>
+            <thead>
+              <tr>
+                <th>모니터링 키워드</th>
+                <th>우리 매장 (현재)</th>
+                <th>지난주 대비</th>
+                <th>1위 경쟁사</th>
+                <th>2위 경쟁사</th>
+                <th>3위 경쟁사</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+              <tr>
+                <td><strong>신논현역 치과</strong></td>
+                <td>
+                  <span class="rank-badge rank-my">2위</span>
+                </td>
+                <td>
+                  
+                    <span class="diff-same" style="color: #64748b;">- 변동없음</span>
+                  
+                </td>
+                <td>미니쉬치과의원 강남점</td>
+                <td>티유치과의원</td>
+                <td>2D치과의원</td>
+              </tr>
+              
+              <tr>
+                <td><strong>강남역 치과</strong></td>
+                <td>
+                  <span class="rank-badge rank-my">2위</span>
+                </td>
+                <td>
+                  
+                    <span class="diff-same" style="color: #64748b;">- 변동없음</span>
+                  
+                </td>
+                <td>고르다치과의원 강남점</td>
+                <td>강남새로치과의원</td>
+                <td>뉴엔치과의원 강남본원</td>
+              </tr>
+              
+              <tr>
+                <td><strong>신논현 임플란트</strong></td>
+                <td>
+                  <span class="rank-badge rank-my">2위</span>
+                </td>
+                <td>
+                  
+                    <span class="diff-same" style="color: #64748b;">- 변동없음</span>
+                  
+                </td>
+                <td>서울매스티지치과의원</td>
+                <td>이살리는치과의원 신논현역점</td>
+                <td>강남브라운치과의원</td>
+              </tr>
+              
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 섹션 1-B: 주간 상권 총괄 진단 요약 -->
+      <section class="section">
+        <div class="section-title">
+          <div class="section-title-left">
+            <span class="section-icon">📈</span>
+            <span>주간 상권 경쟁 총괄 인텔리전스 진단</span>
+          </div>
+          <span class="section-tag">AI 종합 분석</span>
+        </div>
+        <div class="exec-summary-card">
+          <p style="font-size: 12px; color: var(--slate-700); line-height: 1.6;">
+            현재 <strong>신논현역 치과</strong> 키워드에서 2위를 유지하며 최상위권을 견고히 방어 중입니다. 
+            인근 반경 1.5km 내 경쟁 병원들의 비급여 프로모션과 예약 마케팅 공세가 강화되고 있으므로, 
+            3페이지에 제공된 <strong>'플레이스 새소식 완성 원고'</strong>를 즉시 등록하여 1위 탈환을 위한 체류 시간 및 검색 점유율을 확보할 것을 권장합니다.
+          </p>
+          <div class="exec-grid">
+            <div class="exec-box">
+              <div class="exec-box-title">상위 노출 점유율</div>
+              <div class="exec-box-val">Top 3 (안정권)</div>
+            </div>
+            <div class="exec-box">
+              <div class="exec-box-title">주간 리뷰 위기 지수</div>
+              <div class="exec-box-val" style="color: var(--emerald-600);">정상 (위기 0건)</div>
+            </div>
+            <div class="exec-box">
+              <div class="exec-box-title">경쟁사 마케팅 강도</div>
+              <div class="exec-box-val" style="color: var(--amber-600);">보통 (이벤트 감지)</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="page-indicator">PAGE 1 / 3</div>
+    </article>
+
+    <!-- ====================================================================
+         PAGE 2: 반경 2km 경쟁사 3곳 정밀 해부 & 최신 영수증 리뷰 풀 세트
+         ==================================================================== -->
+    <article class="report-page" id="page-2">
+      <header class="subpage-header">
+        <span class="subpage-title">🛡️ 강남더블유치과 주간 브리핑 덱</span>
+        <span style="font-size: 11px; color: var(--slate-400);">경쟁사 첩보 & 리뷰 위기 방어</span>
+      </header>
+
+      <!-- 섹션 2: 경쟁사 첩보 -->
+      <section class="section">
+        <div class="section-title">
+          <div class="section-title-left">
+            <span class="section-icon">🕵️</span>
+            <span>2. 반경 2km 경쟁사 3곳 최신 동향 & 이벤트 첩보</span>
+          </div>
+          <span class="section-tag">최근 7일간 감지된 변경사항</span>
+        </div>
+        <div class="intel-grid">
+          
+          <div class="intel-card">
+            <div class="intel-header">
+              <span class="intel-name">미니쉬치과의원 강남점</span>
+              <span class="intel-tag tag-blog">진료/운영 안내</span>
+            </div>
+            <p class="intel-body">기본 진료 및 시설 소개를 중심으로 안정적 운영을 유지하고 있으며, 최근 7일간 파격적인 공격 프로모션은 미감지되었습니다.</p>
+          </div>
+          
+          <div class="intel-card">
+            <div class="intel-header">
+              <span class="intel-name">티유치과의원</span>
+              <span class="intel-tag tag-blog">진료/운영 안내</span>
+            </div>
+            <p class="intel-body">기본 진료 및 시설 소개를 중심으로 안정적 운영을 유지하고 있으며, 최근 7일간 파격적인 공격 프로모션은 미감지되었습니다.</p>
+          </div>
+          
+          <div class="intel-card">
+            <div class="intel-header">
+              <span class="intel-name">고르다치과의원 강남점</span>
+              <span class="intel-tag tag-blog">진료/운영 안내</span>
+            </div>
+            <p class="intel-body">기본 진료 및 시설 소개를 중심으로 안정적 운영을 유지하고 있으며, 최근 7일간 파격적인 공격 프로모션은 미감지되었습니다.</p>
+          </div>
+          
+        </div>
+      </section>
+
+      <!-- 섹션 3: 최신 리뷰 풀 세트 (3건) -->
+      <section class="section" style="margin-bottom: 0;">
+        <div class="section-title">
+          <div class="section-title-left">
+            <span class="section-icon">💬</span>
+            <span>3. 최신 방문자 영수증 리뷰 및 법률 검증 맞춤 답글 풀 세트</span>
+          </div>
+          <span class="section-tag">치과법 규정 준수 100% 검증 완료</span>
+        </div>
+
+        
+        <div class="review-box" style="border-color: #bbf7d0; border-left: 4px solid #10b981;">
+          <div class="review-meta">
+            <div class="review-author">
+              <span>yyo**** 님 (방문일: 9.4.)</span>
+              
+                <span class="star-badge" style="background:#ecfdf5; color:#059669;">★ 5점 긍정 후기</span>
+              
+            </div>
+            
+              <span style="font-size: 11px; color: var(--emerald-600); font-weight: 700;">안심 (추천 답글 제공)</span>
+            
+          </div>
+          <div class="review-content" style="background: #f0fdf4;">
+            "예약 후 이용대기 시간 바로 입장 원장님 꼼꼼하시고, 너무 실력자 이십니다. 아프지않게 치료도 해주셔서, 그동안 치료 미뤘던거 후회 했네요! 앞으로 임플란트 치료 더 남았는데 신뢰가 가서 마음이 편합니다! 남편도 너무 만족하며, 치료 받았고, 가족에게 소개할만큼 믿을 만한 좋은병원 입니다.^^"
+          </div>
+
+          <div class="reply-card">
+            <div class="reply-header">
+              <div class="verifier-badge">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                <span>법률·규정 준수 100% 검증</span>
+              </div>
+              <button class="btn-copy" onclick="copyText(this, 'reply-text-1')">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+                답글 복사
+              </button>
+            </div>
+            <div class="reply-text" id="reply-text-1">환자분, 정성스러운 후기와 따뜻한 말씀 남겨주셔서 진심으로 감사드립니다! 😊
+저희 강남더블유치과는 '과잉진료 없이 내 가족을 대하는 마음'으로 진료에 임하고 있습니다. 환자분께서 편안하게 치료받으시고 만족해하셔서 저희 의료진 모두 큰 보람을 느낍니다.
+앞으로도 건강하고 밝은 미소를 지켜드릴 수 있도록 초심을 잃지 않고 정성을 다하겠습니다. 정기 검진 때 반갑게 뵙겠습니다!</div>
+          </div>
+        </div>
+        
+        <div class="review-box" style="border-color: #bbf7d0; border-left: 4px solid #10b981;">
+          <div class="review-meta">
+            <div class="review-author">
+              <span>다이어트 싫어 님 (방문일: 8.22.)</span>
+              
+                <span class="star-badge" style="background:#ecfdf5; color:#059669;">★ 5점 긍정 후기</span>
+              
+            </div>
+            
+              <span style="font-size: 11px; color: var(--emerald-600); font-weight: 700;">안심 (추천 답글 제공)</span>
+            
+          </div>
+          <div class="review-content" style="background: #f0fdf4;">
+            "예약 후 이용대기 시간 바로 입장 수진 원장님 너무 안아프게 하고 2026년 8월 22일 토요일 만족하는 진료 보시고 가셨다니 저희도 기분이 좋네요 언제든 불편한 점 있으시면 친절히 응대해드리겠습니다 감사합니다"
+          </div>
+
+          <div class="reply-card">
+            <div class="reply-header">
+              <div class="verifier-badge">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                <span>법률·규정 준수 100% 검증</span>
+              </div>
+              <button class="btn-copy" onclick="copyText(this, 'reply-text-2')">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+                답글 복사
+              </button>
+            </div>
+            <div class="reply-text" id="reply-text-2">환자분, 정성스러운 후기와 따뜻한 말씀 남겨주셔서 진심으로 감사드립니다! 😊
+저희 강남더블유치과는 '과잉진료 없이 내 가족을 대하는 마음'으로 진료에 임하고 있습니다. 환자분께서 편안하게 치료받으시고 만족해하셔서 저희 의료진 모두 큰 보람을 느낍니다.
+앞으로도 건강하고 밝은 미소를 지켜드릴 수 있도록 초심을 잃지 않고 정성을 다하겠습니다. 정기 검진 때 반갑게 뵙겠습니다!</div>
+          </div>
+        </div>
+        
+        <div class="review-box" style="border-color: #bbf7d0; border-left: 4px solid #10b981;">
+          <div class="review-meta">
+            <div class="review-author">
+              <span>bij**** 님 (방문일: 8.10.)</span>
+              
+                <span class="star-badge" style="background:#ecfdf5; color:#059669;">★ 5점 긍정 후기</span>
+              
+            </div>
+            
+              <span style="font-size: 11px; color: var(--emerald-600); font-weight: 700;">안심 (추천 답글 제공)</span>
+            
+          </div>
+          <div class="review-content" style="background: #f0fdf4;">
+            "예약 후 이용대기 시간 10분 이내 원장님이 필요한 진료 잘봐주시고 간호사분도 친절합니다 다음 진료 필요시 재방문 할게요 2026년 8월 10일 월요일 저희 강남더블유치과를 찾아주셔서 감사합니다. 궁금하신 점 있으시면 언제든 문의주시고 언제나 친절히 최고의 진료를 약속드립니다^^"
+          </div>
+
+          <div class="reply-card">
+            <div class="reply-header">
+              <div class="verifier-badge">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                <span>법률·규정 준수 100% 검증</span>
+              </div>
+              <button class="btn-copy" onclick="copyText(this, 'reply-text-3')">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+                답글 복사
+              </button>
+            </div>
+            <div class="reply-text" id="reply-text-3">환자분, 정성스러운 후기와 따뜻한 말씀 남겨주셔서 진심으로 감사드립니다! 😊
+저희 강남더블유치과는 '과잉진료 없이 내 가족을 대하는 마음'으로 진료에 임하고 있습니다. 환자분께서 편안하게 치료받으시고 만족해하셔서 저희 의료진 모두 큰 보람을 느낍니다.
+앞으로도 건강하고 밝은 미소를 지켜드릴 수 있도록 초심을 잃지 않고 정성을 다하겠습니다. 정기 검진 때 반갑게 뵙겠습니다!</div>
+          </div>
+        </div>
+        
+      </section>
+
+      <div class="page-indicator">PAGE 2 / 3</div>
+    </article>
+
+    <!-- ====================================================================
+         PAGE 3: 이번 주 실전 액션 & 플레이스 새소식 완성 원고 (킬러 콘텐츠)
+         ==================================================================== -->
+    <article class="report-page" id="page-3">
+      <header class="subpage-header">
+        <span class="subpage-title">🛡️ 강남더블유치과 주간 브리핑 덱</span>
+        <span style="font-size: 11px; color: var(--slate-400);">실전 마케팅 액션 & 완성 원고</span>
+      </header>
+
+      <!-- 섹션 4: 이번 주 추천 마케팅 실행 액션 -->
+      <section class="section">
+        <div class="section-title">
+          <div class="section-title-left">
+            <span class="section-icon">🎯</span>
+            <span>4. 이번 주 원내 마케팅 우선순위 실행 액션</span>
+          </div>
+          <span class="section-tag">전략 실행 가이드</span>
+        </div>
+        <div class="action-card">
+          <ul class="action-list">
+            
+            <li class="action-item">
+              <span class="action-bullet">1</span>
+              <div>
+                <strong>'신논현역 치과' 1위 탈환을 위한 소식 발행</strong>: 현재 '신논현역 치과' 상위 노출 방어를 위해, 아래 5번 섹션의 '플레이스 새소식 완성 원고'를 네이버에 즉시 등록하세요.
+              </div>
+            </li>
+            
+            <li class="action-item">
+              <span class="action-bullet">2</span>
+              <div>
+                <strong>네이버 예약 슬롯 최적화</strong>: 방문객 문의가 집중되는 시간대 당일 예약 잔여 좌석을 추가 오픈하여 유입 전환율을 극대화하세요.
+              </div>
+            </li>
+            
+            <li class="action-item">
+              <span class="action-bullet">3</span>
+              <div>
+                <strong>영수증 리뷰 감사 답글 일괄 등록</strong>: 최근 등록된 방문자 후기 3건에 대해 위 3번 섹션의 맞춤 답글을 [복사]하여 등록하면 체류 점수가 가산됩니다.
+              </div>
+            </li>
+            
+          </ul>
+        </div>
+      </section>
+
+      <!-- 섹션 5: ⭐ 킬러 콘텐츠: 이번 주 바로 복사해서 올리는 플레이스 새소식 완성 원고 -->
+      <section class="section" style="margin-bottom: 0;">
+        <div class="section-title">
+          <div class="section-title-left">
+            <span class="section-icon">✍️</span>
+            <span>5. [킬러 콘텐츠] 이번 주 네이버 플레이스 새소식 완성 원고</span>
+          </div>
+          <span class="section-tag">복사해서 바로 등록 가능</span>
+        </div>
+        
+        <div class="post-card">
+          <div class="post-header-badge">
+            <span>⭐ 원장님 전용 500자 완성형 SEO 원고 (작성 완료)</span>
+          </div>
+          
+          <div class="post-title" id="weekly-post-title">
+            🦷 [원장 칼럼] 안전하고 오래 쓰는 신논현역 치과, 첫 진단에서 결정됩니다
+          </div>
+
+          <div class="post-body" id="weekly-post-body">안녕하세요, 환자분의 평생 구강 건강을 함께하는 서울 서초구 강남대로 463 (신논현역 7번 출구 반경 1.5km) 강남더블유치과입니다.
+
+많은 분들께서 신논현역 치과 치료나 강남역 치과 내원을 앞두고 통증에 대한 두려움과 과잉진료 걱정으로 치료 시기를 미루시곤 합니다. 하지만 잇몸뼈가 소실되기 전에 정확한 정밀 진단을 받는 것이 자연치를 지키고 치료 기간을 단축하는 가장 확실한 길입니다.
+
+저희 강남더블유치과는 3D CT 정밀 진단을 바탕으로 환자 개개인의 골격과 신경 위치를 정밀하게 분석하여 맞춤 치료 계획을 수립합니다. 불필요한 비급여 시술은 엄격히 지양하며, 원장이 직접 충분한 설명과 상담을 거친 후 정성을 다해 진료에 임하고 있습니다.
+
+치아 불편감이나 스케일링, 정기 검진이 필요하시다면 네이버 예약을 통해 대기 없이 편안한 시간에 내원해 주시기 바랍니다. 언제나 따뜻하고 정직한 진료로 보답하겠습니다.
+
+👉 네이버 플레이스 '예약' 탭에서 원하시는 날짜와 시간을 선택하시면 대기 시간을 최소화하여 모시겠습니다.</div>
+
+          <div class="post-footer">
+            <div class="post-tags" id="weekly-post-tags">
+              #신논현역 치과 #강남역 치과 #강남더블유치과 #정직한치과 #네이버예약 
+            </div>
+            <button class="btn-copy-post" onclick="copyFullPost(this)">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+              </svg>
+              원고 전체 복사하기
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <div class="page-indicator">PAGE 3 / 3</div>
+    </article>
+
+  </main>
+
+  <!-- 복사 완료 토스트 알림 -->
+  <div id="toast" class="toast">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="3">
+      <polyline points="20 6 9 17 4 12"></polyline>
+    </svg>
+    <span id="toast-msg">내용이 클립보드에 복사되었습니다!</span>
+  </div>
+
+  <script>
+    function copyText(btn, targetId) {
+      const text = document.getElementById(targetId).innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        showToast("답글이 복사되었습니다. 네이버 플레이스에 바로 붙여넣으세요!");
+        animateBtn(btn, "✓ 복사완료!");
+      });
+    }
+
+    function copyFullPost(btn) {
+      const title = document.getElementById('weekly-post-title').innerText;
+      const body = document.getElementById('weekly-post-body').innerText;
+      const tags = document.getElementById('weekly-post-tags').innerText;
+      const fullText = `${title}\n\n${body}\n\n${tags}`;
+
+      navigator.clipboard.writeText(fullText).then(() => {
+        showToast("플레이스 새소식 완성 원고 전체가 복사되었습니다!");
+        animateBtn(btn, "✓ 원고 복사완료!");
+      });
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toast-msg').innerText = msg;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 2500);
+    }
+
+    function animateBtn(btn, text) {
+      const origText = btn.innerHTML;
+      btn.innerHTML = text;
+      setTimeout(() => {
+        btn.innerHTML = origText;
+      }, 2000);
+    }
+  </script>
+</body>
+</html>
