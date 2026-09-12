@@ -1,0 +1,1439 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <!-- Google tag (gtag.js) GA4 Single Property -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-7WTMC1GBC8"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-7WTMC1GBC8', {
+      page_path: window.location.pathname,
+      page_title: '한국형 마케팅 캠페인 UTM 빌더 & 고화질 QR코드 생성기'
+    });
+  </script>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>한국형 마케팅 캠페인 UTM 빌더 & 고화질 QR코드 생성기 | PostSync Tools</title>
+  <meta name="description" content="인스타그램 프로필·스레드·네이버 블로그·플레이스·유튜브·카카오톡 원클릭 채널 프리셋 UTM URL 빌더. GA4 유입 추적 및 오프라인 인쇄용 고화질 QR코드(PNG) 즉시 생성. 공백 자동 하이픈 치환 및 소문자 정제.">
+  <meta name="keywords" content="utm빌더, utm생성기, ga4추적링크, 인스타그램utm, 네이버블로그utm, qr코드생성기, 고화질qr코드, 마케팅추적링크, url단축, 캠페인url">
+  <link rel="canonical" href="https://www.postsyncapp.com/utm">
+
+  <!-- OpenGraph / SNS -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="PostSync Tools">
+  <meta property="og:title" content="한국형 마케팅 캠페인 UTM 빌더 & 고화질 QR코드 생성기">
+  <meta property="og:description" content="네이버/인스타/스레드/유튜브 1초 프리셋 UTM 링크 생성 및 인쇄용 고화질 QR코드 무료 렌더링.">
+  <meta property="og:url" content="https://www.postsyncapp.com/utm">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3734423172731921" crossorigin="anonymous"></script>
+
+  <!-- Typography & Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+
+  <!-- QRCode.js Client Library (100% Local Canvas Rendering) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --primary-light: #eff6ff;
+      --emerald: #059669;
+      --emerald-light: #ecfdf5;
+      --amber: #d97706;
+      --amber-light: #fffbeb;
+      --rose: #e11d48;
+      --rose-light: #fff1f2;
+      --slate-900: #0f172a;
+      --slate-800: #1e293b;
+      --slate-700: #334155;
+      --slate-600: #475569;
+      --slate-500: #64748b;
+      --slate-400: #94a3b8;
+      --slate-300: #cbd5e1;
+      --slate-200: #e2e8f0;
+      --slate-100: #f1f5f9;
+      --slate-50: #f8fafc;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+      --shadow-md: 0 4px 14px rgba(15,23,42,0.08);
+      --shadow-lg: 0 10px 25px -3px rgba(15,23,42,0.12);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif; }
+    body { background-color: #f8fafc; color: var(--slate-900); line-height: 1.6; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+
+    /* Header Nav */
+    header {
+      background: #0f172a;
+      color: white;
+      padding: 14px 24px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .header-inner {
+      max-width: 1240px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .brand {
+      font-size: 18px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #ffffff;
+      text-decoration: none;
+      letter-spacing: -0.5px;
+    }
+    .brand i { color: #60a5fa; font-size: 20px; }
+    .brand-tag {
+      background: linear-gradient(135deg, #3b82f6, #6366f1);
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .header-link {
+      color: #cbd5e1;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      transition: color 0.2s;
+    }
+    .header-link:hover { color: #ffffff; }
+    .header-btn {
+      background: #2563eb;
+      color: white;
+      padding: 7px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .header-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+      .header-link { display: none; }
+    }
+
+    /* Cross-Traffic 5 Micro-Tools Tab Bar */
+    .tools-nav-bar {
+      background: #ffffff;
+      border-bottom: 1px solid var(--slate-200);
+      overflow-x: auto;
+      white-space: nowrap;
+      padding: 6px 20px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+    }
+    .tools-nav-inner {
+      max-width: 1240px;
+      margin: 0 auto;
+      display: flex;
+      gap: 8px;
+    }
+    .tool-tab {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--slate-600);
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .tool-tab:hover {
+      background: var(--slate-100);
+      color: var(--slate-900);
+    }
+    .tool-tab.active {
+      background: #eff6ff;
+      color: var(--primary);
+      font-weight: 700;
+      border: 1px solid #bfdbfe;
+    }
+
+    /* Ad Container */
+    .ad-slot-header {
+      max-width: 1240px;
+      margin: 16px auto 0 auto;
+      padding: 0 20px;
+      height: 90px;
+      background: #ffffff;
+      border: 1px dashed var(--slate-300);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--slate-400);
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    /* Main Container */
+    .main-wrapper {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 24px 20px 80px 20px;
+    }
+
+    /* Hero */
+    .hero-section {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #ecfdf5;
+      color: #059669;
+      border: 1px solid #a7f3d0;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .hero-title {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--slate-900);
+      letter-spacing: -0.5px;
+      margin-bottom: 8px;
+    }
+    .hero-subtitle {
+      font-size: 14.5px;
+      color: var(--slate-600);
+      max-width: 780px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* Preset Quick Bar */
+    .preset-bar {
+      background: #ffffff;
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-md);
+      padding: 14px 18px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow-sm);
+    }
+    .preset-header {
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--slate-500);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .preset-chips {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .preset-chip {
+      background: var(--slate-100);
+      border: 1px solid var(--slate-200);
+      color: var(--slate-700);
+      padding: 6px 13px;
+      border-radius: 20px;
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s;
+    }
+    .preset-chip:hover {
+      background: #eff6ff;
+      border-color: var(--primary);
+      color: var(--primary);
+      transform: translateY(-1px);
+    }
+
+    /* Layout Grid: Form Left, Result Right */
+    .app-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 24px;
+      align-items: start;
+    }
+    @media (max-width: 960px) {
+      .app-grid { grid-template-columns: 1fr; }
+    }
+
+    /* Form Card */
+    .form-card {
+      background: #ffffff;
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      box-shadow: var(--shadow-sm);
+    }
+    .form-section-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--slate-900);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .form-group {
+      margin-bottom: 16px;
+    }
+    .form-group label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--slate-700);
+      margin-bottom: 6px;
+    }
+    .form-group label span.req {
+      color: var(--rose);
+      margin-left: 2px;
+    }
+    .form-group label span.hint {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--slate-400);
+    }
+    .form-input {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--slate-300);
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      color: var(--slate-900);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .form-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    @media (max-width: 540px) {
+      .form-row { grid-template-columns: 1fr; }
+    }
+
+    .toggle-group {
+      display: flex;
+      gap: 16px;
+      margin: 18px 0;
+      padding: 12px 14px;
+      background: var(--slate-50);
+      border-radius: var(--radius-sm);
+    }
+    .toggle-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--slate-700);
+      cursor: pointer;
+    }
+    .form-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    .btn-reset {
+      background: var(--slate-100);
+      border: 1px solid var(--slate-300);
+      color: var(--slate-700);
+      padding: 10px 18px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    /* Result Card (Right) */
+    .result-card {
+      background: #ffffff;
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .result-header {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--slate-900);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .url-output-box {
+      background: var(--slate-50);
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      position: relative;
+    }
+    .url-output-text {
+      font-size: 13px;
+      color: var(--primary);
+      font-weight: 700;
+      word-break: break-all;
+      line-height: 1.6;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+    .url-chips {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px dashed var(--slate-200);
+    }
+    .url-chip {
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: #ffffff;
+      border: 1px solid var(--slate-200);
+      color: var(--slate-600);
+    }
+
+    .btn-copy-main {
+      width: 100%;
+      background: var(--primary);
+      color: #ffffff;
+      border: none;
+      padding: 12px;
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: background 0.2s;
+    }
+    .btn-copy-main:hover { background: var(--primary-hover); }
+
+    /* QR Code Section */
+    .qr-box {
+      background: var(--slate-50);
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .qr-canvas-wrap {
+      background: #ffffff;
+      padding: 12px;
+      border-radius: var(--radius-sm);
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 14px;
+      display: inline-block;
+    }
+    #qrcodeContainer img, #qrcodeContainer canvas {
+      display: block;
+      margin: 0 auto;
+    }
+    .btn-qr-download {
+      background: #ffffff;
+      border: 1px solid var(--slate-300);
+      color: var(--slate-700);
+      padding: 8px 16px;
+      border-radius: var(--radius-sm);
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s;
+    }
+    .btn-qr-download:hover {
+      background: var(--slate-100);
+      border-color: var(--slate-400);
+      color: var(--slate-900);
+    }
+
+    /* History Table Section */
+    .history-card {
+      margin-top: 36px;
+      background: #ffffff;
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      box-shadow: var(--shadow-sm);
+    }
+    .history-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .history-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--slate-900);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .history-actions {
+      display: flex;
+      gap: 8px;
+    }
+    .btn-hist {
+      background: #ffffff;
+      border: 1px solid var(--slate-300);
+      padding: 6px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .history-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12.5px;
+    }
+    .history-table th, .history-table td {
+      border-bottom: 1px solid var(--slate-200);
+      padding: 10px 12px;
+      text-align: left;
+    }
+    .history-table th {
+      background: var(--slate-50);
+      color: var(--slate-600);
+      font-weight: 700;
+    }
+    .hist-url-cell {
+      max-width: 320px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-family: ui-monospace, monospace;
+      color: var(--slate-800);
+    }
+
+    /* Self-Ad PostSync AI Banner */
+    .self-ad-box {
+      margin-top: 36px;
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      border-radius: var(--radius-lg);
+      padding: 24px 30px;
+      color: #ffffff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    @media (max-width: 768px) {
+      .self-ad-box { flex-direction: column; text-align: center; }
+    }
+    .ad-txt h3 {
+      font-size: 17px;
+      font-weight: 800;
+      margin-bottom: 6px;
+      color: #93c5fd;
+    }
+    .ad-txt p {
+      font-size: 13.5px;
+      color: #cbd5e1;
+      line-height: 1.5;
+    }
+    .ad-btn {
+      background: linear-gradient(135deg, #3b82f6, #6366f1);
+      color: #ffffff;
+      padding: 12px 22px;
+      border-radius: var(--radius-sm);
+      font-size: 13.5px;
+      font-weight: 800;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+    .ad-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(59,130,246,0.4);
+    }
+
+    /* SEO Deep Article & FAQ */
+    .seo-guide-section {
+      margin-top: 48px;
+      background: #ffffff;
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-lg);
+      padding: 36px;
+    }
+    .seo-guide-section h2 {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--slate-900);
+      margin-bottom: 14px;
+      border-bottom: 2px solid var(--slate-100);
+      padding-bottom: 10px;
+    }
+    .seo-guide-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 18px 0 28px 0;
+      font-size: 13px;
+    }
+    .seo-guide-table th, .seo-guide-table td {
+      border: 1px solid var(--slate-200);
+      padding: 11px 14px;
+      text-align: left;
+    }
+    .seo-guide-table th { background: var(--slate-50); font-weight: 700; color: var(--slate-800); }
+    .seo-guide-section p { font-size: 14px; color: var(--slate-600); margin-bottom: 16px; line-height: 1.7; }
+
+    .faq-list {
+      margin-top: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .faq-item {
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-sm);
+      padding: 14px 18px;
+      background: #ffffff;
+    }
+    .faq-q {
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--slate-900);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .faq-a {
+      font-size: 13px;
+      color: var(--slate-600);
+      line-height: 1.6;
+    }
+
+    /* Toast Notification */
+    .toast-box {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(8px);
+      color: #ffffff;
+      padding: 12px 24px;
+      border-radius: 30px;
+      font-size: 13.5px;
+      font-weight: 700;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      pointer-events: none;
+    }
+    .toast-box.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 40px 20px 48px 20px;
+      color: var(--slate-500);
+      font-size: 12px;
+      border-top: 1px solid var(--slate-200);
+      background: #ffffff;
+      margin-top: 60px;
+    }
+    footer a { color: var(--slate-700); text-decoration: none; font-weight: 600; }
+  </style>
+
+  <!-- Structured Data: JSON-LD for Programmatic SEO -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "SoftwareApplication",
+        "name": "PostSync 한국형 캠페인 UTM 빌더 & QR코드 생성기",
+        "operatingSystem": "All",
+        "applicationCategory": "BusinessApplication",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "KRW"
+        },
+        "description": "인스타그램, 스레드, 네이버 블로그, 플레이스, 유튜브, 카카오톡 채널 맞춤형 UTM 파라미터 링크 빌더 및 인쇄용 고화질 QR코드 무료 생성."
+      },
+      {
+        "@type": "HowTo",
+        "name": "인스타그램 프로필 링크에 UTM 파라미터 적용하고 GA4로 추적하는 법",
+        "step": [
+          {
+            "@type": "HowToStep",
+            "name": "웹사이트 URL 입력",
+            "text": "랜딩시키고자 하는 자사몰이나 블로그의 원본 주소를 입력합니다."
+          },
+          {
+            "@type": "HowToStep",
+            "name": "인스타그램 프리셋 선택",
+            "text": "[인스타 프로필] 버튼을 클릭하면 Source(instagram), Medium(social), Campaign(profile_bio)가 1초 만에 자동 주입됩니다."
+          },
+          {
+            "@type": "HowToStep",
+            "name": "링크 복사 및 QR코드 다운로드",
+            "text": "생성된 UTM URL을 인스타그램 프로필 링크에 등록하거나, 오프라인 인쇄용 고화질 QR코드를 다운로드합니다."
+          }
+        ]
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "UTM 파라미터에서 공백이나 대소문자가 왜 중요한가요?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "구글 애널리틱스(GA4)는 대소문자를 엄격히 구분하므로 'Instagram'과 'instagram'을 서로 다른 채널로 쪼개어 분석합니다. 또한 공백이 들어가면 브라우저에 따라 '%20'으로 깨지기 때문에 하이픈(-)으로 통일하는 것이 필수입니다."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "여기서 생성한 QR코드를 오프라인 인쇄물(포스터, 명함)에 써도 되나요?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "네, 완벽하게 가능합니다. 본 도구의 QR코드는 256x256 해상도 무손실 PNG로 렌더링되므로 매장 X배너, 테이블 텐트, 전단지, 명함에 인쇄하여 오프라인 고객의 온라인 방문 데이터를 GA4로 정밀하게 추적할 수 있습니다."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+
+  <!-- Top Global Header -->
+  <header>
+    <div class="header-inner">
+      <a href="#" onclick="window.scrollTo({top:0, behavior:'smooth'}); return false;" class="brand" title="페이지 상단으로 이동">
+        <i class="fa-solid fa-layer-group"></i>
+        <span>PostSync Tools</span>
+        <span class="brand-tag">Micro Hub</span>
+      </a>
+      <div class="header-right">
+        <a href="/crop" class="header-link">✂️ 슬라이서</a>
+        <a href="/adcheck" class="header-link">⚖️ 광고법</a>
+        <a href="/byte" class="header-link">📝 바이트</a>
+        <a href="/hwpx" class="header-link">📄 HWPX</a>
+        <a href="https://postsyncapp.com" class="header-btn" target="_blank">PostSync AI 본체 <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:11px; margin-left:3px;"></i></a>
+      </div>
+    </div>
+  </header>
+
+  <!-- 5 Micro-Tools Cross-Traffic Navigation Tab Bar (All 5 Tools Officially Active) -->
+  <nav class="tools-nav-bar" aria-label="Micro Tools List">
+    <div class="tools-nav-inner">
+      <a href="/crop" class="tool-tab">
+        <i class="fa-solid fa-scissors"></i>
+        <span>상세페이지 슬라이서</span>
+      </a>
+      <a href="/adcheck" class="tool-tab">
+        <i class="fa-solid fa-scale-balanced"></i>
+        <span>광고법 금칙어 스캐너</span>
+      </a>
+      <a href="/byte" class="tool-tab">
+        <i class="fa-solid fa-font"></i>
+        <span>자소서 바이트 계산기</span>
+      </a>
+      <a href="/hwpx" class="tool-tab">
+        <i class="fa-solid fa-file-lines"></i>
+        <span>HWPX 안심 변환기</span>
+      </a>
+      <a href="/utm" class="tool-tab active">
+        <i class="fa-solid fa-link"></i>
+        <span>마케팅 UTM 빌더</span>
+      </a>
+      <a href="/place" class="tool-tab">
+        <i class="fa-solid fa-location-dot"></i>
+        <span>플레이스 순위 조회</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- Google AdSense Header Slot (728x90) -->
+  <div class="ad-slot-header">
+    <span>[Google AdSense Banner Area - 728x90]</span>
+  </div>
+
+  <div class="main-wrapper">
+    <!-- Hero -->
+    <div class="hero-section">
+      <div class="hero-badge">
+        <i class="fa-solid fa-shield-halved"></i> 100% 브라우저 로컬 연산 · 한국 마케팅 채널 최적화
+      </div>
+      <h1 class="hero-title">한국형 마케팅 캠페인 UTM 빌더 & 고화질 QR코드 생성기</h1>
+      <p class="hero-subtitle">
+        인스타그램, 스레드, 네이버 블로그, 플레이스, 카카오톡 등 한국 주요 마케팅 채널 파라미터를 <b>1초 만에 원클릭 프리셋으로 조합</b>하고, 오프라인 매장 인쇄용 고화질 QR코드를 즉시 생성합니다.
+      </p>
+    </div>
+
+    <!-- Quick Channel Preset Chips Bar -->
+    <div class="preset-bar">
+      <div class="preset-header">
+        <i class="fa-solid fa-bolt" style="color:var(--primary);"></i> 빠른 채널 프리셋 (클릭 시 1초 자동 완성)
+      </div>
+      <div class="preset-chips">
+        <button class="preset-chip" onclick="applyPreset('instagram', 'social', 'profile_bio')">
+          <i class="fa-brands fa-instagram" style="color:#e1306c;"></i> 인스타 프로필
+        </button>
+        <button class="preset-chip" onclick="applyPreset('instagram', 'story', 'daily_story')">
+          <i class="fa-brands fa-instagram" style="color:#fd1d1d;"></i> 인스타 스토리
+        </button>
+        <button class="preset-chip" onclick="applyPreset('threads', 'social', 'threads_post')">
+          <i class="fa-brands fa-threads"></i> 스레드 (Threads)
+        </button>
+        <button class="preset-chip" onclick="applyPreset('naver_blog', 'blog', 'posting')">
+          <i class="fa-solid fa-square-n" style="color:#03c75a;"></i> 네이버 블로그
+        </button>
+        <button class="preset-chip" onclick="applyPreset('naver_place', 'local', 'store_bio')">
+          <i class="fa-solid fa-location-dot" style="color:#03c75a;"></i> 네이버 플레이스
+        </button>
+        <button class="preset-chip" onclick="applyPreset('youtube', 'video', 'desc_link')">
+          <i class="fa-brands fa-youtube" style="color:#ff0000;"></i> 유튜브 더보기
+        </button>
+        <button class="preset-chip" onclick="applyPreset('kakaotalk', 'crm', 'channel_msg')">
+          <i class="fa-solid fa-comment" style="color:#fee500; background:#3c1e1e; border-radius:4px; padding:1px 2px;"></i> 카카오 알림톡
+        </button>
+        <button class="preset-chip" onclick="applyPreset('email', 'outreach', 'cold_newsletter')">
+          <i class="fa-solid fa-envelope" style="color:#2563eb;"></i> 콜드메일
+        </button>
+        <button class="preset-chip" onclick="applyPreset('daangn', 'local_ad', 'town_story')">
+          <i class="fa-solid fa-carrot" style="color:#ff6f0f;"></i> 당근마켓
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Workspace: Form & Result -->
+    <div class="app-grid">
+      <!-- Left: UTM Form -->
+      <div class="form-card">
+        <div class="form-section-title">
+          <i class="fa-solid fa-sliders" style="color:var(--primary);"></i> 캠페인 파라미터 설정
+        </div>
+
+        <div class="form-group">
+          <label for="inputUrl">
+            <span>도착 웹사이트 URL <span class="req">*</span></span>
+            <span class="hint">방문자가 최종 도달할 랜딩페이지</span>
+          </label>
+          <input type="url" id="inputUrl" class="form-input" placeholder="https://yourbrand.com/event" value="https://postsyncapp.com">
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="inputSource">
+              <span>캠페인 소스 (Source) <span class="req">*</span></span>
+              <span class="hint">utm_source</span>
+            </label>
+            <input type="text" id="inputSource" class="form-input" placeholder="예: instagram, naver_blog" value="instagram">
+          </div>
+          <div class="form-group">
+            <label for="inputMedium">
+              <span>캠페인 매체 (Medium) <span class="req">*</span></span>
+              <span class="hint">utm_medium</span>
+            </label>
+            <input type="text" id="inputMedium" class="form-input" placeholder="예: social, blog, cpc" value="social">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="inputCampaign">
+            <span>캠페인 이름 (Campaign) <span class="req">*</span></span>
+            <span class="hint">utm_campaign (목적/상품명)</span>
+          </label>
+          <input type="text" id="inputCampaign" class="form-input" placeholder="예: 2026_spring_launch" value="2026_growth_promo">
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="inputTerm">
+              <span>캠페인 키워드 (Term)</span>
+              <span class="hint">utm_term (선택)</span>
+            </label>
+            <input type="text" id="inputTerm" class="form-input" placeholder="예: ai_marketing, seo">
+          </div>
+          <div class="form-group">
+            <label for="inputContent">
+              <span>콘텐츠 구분 (Content)</span>
+              <span class="hint">utm_content (선택)</span>
+            </label>
+            <input type="text" id="inputContent" class="form-input" placeholder="예: bio_link, hero_banner">
+          </div>
+        </div>
+
+        <div class="toggle-group">
+          <label class="toggle-label">
+            <input type="checkbox" id="chkLowercase" checked>
+            <span>소문자 자동 변환 (GA4 트래픽 쪼개짐 방지)</span>
+          </label>
+          <label class="toggle-label">
+            <input type="checkbox" id="chkHyphen" checked>
+            <span>공백을 하이픈(-)으로 자동 치환</span>
+          </label>
+        </div>
+
+        <div class="form-actions">
+          <button class="btn-reset" id="btnResetForm"><i class="fa-solid fa-rotate-left"></i> 초기화</button>
+        </div>
+      </div>
+
+      <!-- Right: Real-time Output & QR Code -->
+      <div class="result-card">
+        <div class="result-header">
+          <span><i class="fa-solid fa-link" style="color:var(--primary);"></i> 완성된 UTM 추적 링크</span>
+          <span style="font-size:11px; color:var(--emerald); font-weight:700;"><i class="fa-solid fa-circle-check"></i> 실시간 생성됨</span>
+        </div>
+
+        <div class="url-output-box">
+          <div class="url-output-text" id="outputUrl">https://postsyncapp.com?utm_source=instagram&utm_medium=social&utm_campaign=2026_growth_promo</div>
+          <div class="url-chips" id="outputChips">
+            <span class="url-chip">source: instagram</span>
+            <span class="url-chip">medium: social</span>
+            <span class="url-chip">campaign: 2026_growth_promo</span>
+          </div>
+        </div>
+
+        <button class="btn-copy-main" id="btnCopyUrl">
+          <i class="fa-solid fa-copy"></i> UTM 링크 원클릭 복사
+        </button>
+
+        <!-- QR Code Canvas Container -->
+        <div class="qr-box">
+          <div style="font-size:13.5px; font-weight:800; color:var(--slate-800); margin-bottom:12px;">
+            <i class="fa-solid fa-qrcode" style="color:var(--primary);"></i> 오프라인 인쇄용 고화질 QR코드
+          </div>
+          <div class="qr-canvas-wrap">
+            <div id="qrcodeContainer"></div>
+          </div>
+          <p style="font-size:11.5px; color:var(--slate-500); margin-bottom:12px;">
+            포스터, 명함, 테이블 텐트, 엑스배너에 인쇄하여 오프라인 매장 유입을 GA4로 추적하세요.
+          </p>
+          <button class="btn-qr-download" id="btnDownloadQr">
+            <i class="fa-solid fa-download"></i> 인쇄용 QR코드 PNG 다운로드
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- History Card -->
+    <div class="history-card">
+      <div class="history-header">
+        <div class="history-title">
+          <i class="fa-solid fa-clock-rotate-left" style="color:var(--primary);"></i> 최근 생성한 UTM 캠페인 히스토리
+        </div>
+        <div class="history-actions">
+          <button class="btn-hist" id="btnExportCsv"><i class="fa-solid fa-file-csv"></i> CSV 내보내기</button>
+          <button class="btn-hist" id="btnClearHistory" style="color:var(--rose);"><i class="fa-solid fa-trash-can"></i> 비우기</button>
+        </div>
+      </div>
+
+      <div style="overflow-x: auto;">
+        <table class="history-table">
+          <thead>
+            <tr>
+              <th style="width:140px;">생성 일시</th>
+              <th style="width:130px;">소스 / 매체</th>
+              <th style="width:160px;">캠페인 명</th>
+              <th>완성된 UTM 링크</th>
+              <th style="width:90px; text-align:center;">작업</th>
+            </tr>
+          </thead>
+          <tbody id="historyTableBody">
+            <tr>
+              <td colspan="5" style="text-align:center; padding:24px; color:var(--slate-400);">
+                생성된 UTM 링크가 여기에 자동 저장됩니다.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Self-Ad PostSync B2B Promo Banner -->
+    <div class="self-ad-box">
+      <div class="ad-txt">
+        <h3>🚀 유입된 마케팅 트래픽의 실제 문의 전환율을 극대화하고 싶으신가요?</h3>
+        <p>
+          PostSync AI는 채널별 유입 링크 분석부터 잠재고객 이탈 방지, AEO 기반 맞춤형 원고 자동 발행, 데모 예약 트래커까지 원스톱 마케팅 엔진을 제공합니다.
+        </p>
+      </div>
+      <a href="/" class="ad-btn">PostSync 무인 엔진 3회 무료 체험</a>
+    </div>
+
+    <!-- pSEO Deep Knowledge Section -->
+    <div class="seo-guide-section">
+      <h2>📈 GA4 UTM 파라미터 5대 핵심 요소 및 네이밍 룰</h2>
+      <p>
+        구글 애널리틱스(GA4)에서 트래픽 획득(Traffic Acquisition) 보고서를 정확하게 분석하려면 전 세계 표준 UTM 규약을 준수해야 합니다.
+      </p>
+
+      <div style="overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 18px 0 28px 0;">
+        <table class="seo-guide-table" style="margin: 0;">
+          <thead>
+            <tr>
+              <th>파라미터 명</th>
+              <th>필수 여부</th>
+              <th>설명</th>
+              <th>권장 예시</th>
+            </tr>
+          </thead>
+        <tbody>
+          <tr>
+            <td><b>utm_source</b></td>
+            <td><b>필수</b></td>
+            <td>방문자가 유입된 구체적인 플랫폼/채널</td>
+            <td><code>instagram</code>, <code>naver_blog</code>, <code>threads</code></td>
+          </tr>
+          <tr>
+            <td><b>utm_medium</b></td>
+            <td><b>필수</b></td>
+            <td>유입 마케팅 수단 또는 매체 성격</td>
+            <td><code>social</code>, <code>blog</code>, <code>cpc</code>, <code>email</code></td>
+          </tr>
+          <tr>
+            <td><b>utm_campaign</b></td>
+            <td><b>필수</b></td>
+            <td>개별 프로모션, 시즌, 이벤트 명칭</td>
+            <td><code>2026_spring_sale</code>, <code>ebook_launch</code></td>
+          </tr>
+          <tr>
+            <td><b>utm_term</b></td>
+            <td>선택</td>
+            <td>검색 광고 키워드 또는 세부 타깃</td>
+            <td><code>ai_agent</code>, <code>lawyer_seo</code></td>
+          </tr>
+          <tr>
+            <td><b>utm_content</b></td>
+            <td>선택</td>
+            <td>동일 채널 내 소재, 버튼, 배너 위치 구분</td>
+            <td><code>bio_link</code>, <code>cta_bottom</code>, <code>header_banner</code></td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+
+      <h2>❓ 자주 묻는 질문 (FAQ)</h2>
+      <div class="faq-list">
+        <div class="faq-item">
+          <div class="faq-q"><i class="fa-solid fa-circle-question" style="color:var(--primary);"></i> 인스타그램 프로필 링크에는 왜 UTM을 붙여야 하나요?</div>
+          <div class="faq-a">
+            인스타그램 앱 내 브라우저는 레퍼러(Referrer)가 유실되는 경우가 많아, UTM 없이 일반 주소를 넣으면 GA4에서 'Direct(직접 유입)'으로 잡혀 인스타그램 성과 측정이 불가능해집니다. `utm_source=instagram&utm_medium=social`을 붙여야 정확히 집계됩니다.
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q"><i class="fa-solid fa-qrcode" style="color:var(--primary);"></i> 오프라인 전단지나 명함에 인쇄된 QR코드도 GA4로 집계되나요?</div>
+          <div class="faq-a">
+            네! `utm_source=offline&utm_medium=flyer`나 `utm_medium=business_card`로 생성한 QR코드를 카메라로 스캔하면 스마트폰 브라우저가 해당 UTM 링크로 접속하므로, 오프라인 인쇄물을 통한 웹 유입률과 전환율을 완벽히 추적할 수 있습니다.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Global Footer -->
+  <footer>
+    <div style="max-width:840px; margin:0 auto; padding:0 16px;">
+      <!-- Security & Privacy Disclaimer (애드센스 규정 충족) -->
+      <div style="background:var(--slate-50); border:1px solid var(--slate-200); border-radius:var(--radius-sm); padding:12px 18px; margin-bottom:20px; text-align:left; font-size:12px; color:var(--slate-600); line-height:1.65;">
+        <i class="fa-solid fa-shield-halved" style="color:var(--emerald); margin-right:6px;"></i>
+        <strong>100% 브라우저 로컬 연산 및 보안 보증:</strong> 본 도구는 클라이언트 브라우저 로컬 JavaScript 엔진으로 동작하며, 생성하신 UTM 파라미터 및 히스토리는 외부 서버에 저장되지 않고 사용자 브라우저 LocalStorage에만 안전하게 보관됩니다.
+      </div>
+
+      <p style="display:flex; justify-content:center; align-items:center; gap:16px; flex-wrap:wrap; font-size:13px; font-weight:600;">
+        <a href="https://postsyncapp.com/privacy" target="_blank" style="color:var(--slate-700); text-decoration:none;">개인정보처리방침</a>
+        <span style="color:var(--slate-300);">|</span>
+        <a href="https://postsyncapp.com/terms" target="_blank" style="color:var(--slate-700); text-decoration:none;">이용약관</a>
+        <span style="color:var(--slate-300);">|</span>
+        <a href="https://postsyncapp.com" target="_blank" style="color:var(--slate-700); text-decoration:none;">PostSync AI 공식홈</a>
+      </p>
+
+      <p style="margin-top:12px; color:var(--slate-500); font-size:12px;">
+        서비스 문의 & 제휴: <a href="mailto:contact@postsyncapp.com" style="color:var(--primary); font-weight:700; text-decoration:none;">contact@postsyncapp.com</a>
+      </p>
+
+      <p style="margin-top:8px; color:var(--slate-400); font-size:11.5px;">
+        © 2026 PostSync AI. All rights reserved. 본 도구는 Google Analytics 4 표준 UTM 규격에 맞추어 설계되었습니다.
+      </p>
+    </div>
+  </footer>
+
+  <!-- Core JavaScript Engine (100% Client-Side Parameter Engine & QRCode.js) -->
+  <script>
+    (function() {
+      // DOM Elements
+      const inputUrl = document.getElementById('inputUrl');
+      const inputSource = document.getElementById('inputSource');
+      const inputMedium = document.getElementById('inputMedium');
+      const inputCampaign = document.getElementById('inputCampaign');
+      const inputTerm = document.getElementById('inputTerm');
+      const inputContent = document.getElementById('inputContent');
+      const chkLowercase = document.getElementById('chkLowercase');
+      const chkHyphen = document.getElementById('chkHyphen');
+      const btnResetForm = document.getElementById('btnResetForm');
+
+      const outputUrl = document.getElementById('outputUrl');
+      const outputChips = document.getElementById('outputChips');
+      const btnCopyUrl = document.getElementById('btnCopyUrl');
+      const qrcodeContainer = document.getElementById('qrcodeContainer');
+      const btnDownloadQr = document.getElementById('btnDownloadQr');
+
+      const historyTableBody = document.getElementById('historyTableBody');
+      const btnExportCsv = document.getElementById('btnExportCsv');
+      const btnClearHistory = document.getElementById('btnClearHistory');
+
+      let qrcodeObj = null;
+      const STORAGE_KEY = 'postsync_utm_history_v1';
+
+      // Preset Applicator
+      window.applyPreset = function(source, medium, campaignSuffix) {
+        inputSource.value = source;
+        inputMedium.value = medium;
+        if (!inputCampaign.value.trim() || inputCampaign.value === '2026_growth_promo') {
+          inputCampaign.value = campaignSuffix || 'promo';
+        }
+        buildUtmUrl(true);
+        showToast(`✅ [${source} / ${medium}] 프리셋이 적용되었습니다.`);
+      };
+
+      // Sanitize Parameter Helper
+      function sanitize(val) {
+        let res = val.trim();
+        if (chkHyphen.checked) {
+          res = res.replace(/\s+/g, '-');
+        }
+        if (chkLowercase.checked) {
+          res = res.toLowerCase();
+        }
+        return res;
+      }
+
+      // Build UTM URL Function
+      function buildUtmUrl(saveToHistory = false) {
+        let rawUrl = inputUrl.value.trim();
+        if (!rawUrl) {
+          outputUrl.textContent = '웹사이트 URL을 입력해주세요.';
+          outputChips.innerHTML = '';
+          return;
+        }
+
+        // Prepend https:// if protocol missing
+        if (!/^https?:\/\//i.test(rawUrl)) {
+          rawUrl = 'https://' + rawUrl;
+        }
+
+        const source = sanitize(inputSource.value);
+        const medium = sanitize(inputMedium.value);
+        const campaign = sanitize(inputCampaign.value);
+        const term = sanitize(inputTerm.value);
+        const content = sanitize(inputContent.value);
+
+        try {
+          const urlObj = new URL(rawUrl);
+
+          if (source) urlObj.searchParams.set('utm_source', source);
+          else urlObj.searchParams.delete('utm_source');
+
+          if (medium) urlObj.searchParams.set('utm_medium', medium);
+          else urlObj.searchParams.delete('utm_medium');
+
+          if (campaign) urlObj.searchParams.set('utm_campaign', campaign);
+          else urlObj.searchParams.delete('utm_campaign');
+
+          if (term) urlObj.searchParams.set('utm_term', term);
+          else urlObj.searchParams.delete('utm_term');
+
+          if (content) urlObj.searchParams.set('utm_content', content);
+          else urlObj.searchParams.delete('utm_content');
+
+          const finalUrl = urlObj.toString();
+          outputUrl.textContent = finalUrl;
+
+          // Render Parameter Chips
+          const chips = [];
+          if (source) chips.push(`<span class="url-chip">source: ${escapeHtml(source)}</span>`);
+          if (medium) chips.push(`<span class="url-chip">medium: ${escapeHtml(medium)}</span>`);
+          if (campaign) chips.push(`<span class="url-chip">campaign: ${escapeHtml(campaign)}</span>`);
+          if (term) chips.push(`<span class="url-chip">term: ${escapeHtml(term)}</span>`);
+          if (content) chips.push(`<span class="url-chip">content: ${escapeHtml(content)}</span>`);
+          outputChips.innerHTML = chips.join('');
+
+          // Update QR Code
+          renderQrCode(finalUrl);
+
+          if (saveToHistory && source && campaign) {
+            saveHistoryItem({
+              date: new Date().toLocaleString('ko-KR'),
+              source: source,
+              medium: medium,
+              campaign: campaign,
+              url: finalUrl
+            });
+          }
+        } catch (e) {
+          outputUrl.textContent = '유효하지 않은 URL 형식입니다.';
+          outputChips.innerHTML = '';
+        }
+      }
+
+      // Render QR Code using QRCode.js (Resilient Level Fallback)
+      function renderQrCode(text) {
+        qrcodeContainer.innerHTML = '';
+        if (!text || text.startsWith('웹사이트') || text.startsWith('유효하지')) return;
+
+        // Try standard M level first, fallback to L if URL length is long!
+        const levels = [QRCode.CorrectLevel.M, QRCode.CorrectLevel.L];
+        for (let level of levels) {
+          try {
+            qrcodeContainer.innerHTML = '';
+            qrcodeObj = new QRCode(qrcodeContainer, {
+              text: text,
+              width: 180,
+              height: 180,
+              colorDark: "#0f172a",
+              colorLight: "#ffffff",
+              correctLevel: level
+            });
+            break;
+          } catch (err) {
+            // fallback to next level gracefully
+          }
+        }
+      }
+
+      // Download QR Code as PNG
+      btnDownloadQr.addEventListener('click', () => {
+        const img = qrcodeContainer.querySelector('img');
+        const canvas = qrcodeContainer.querySelector('canvas');
+
+        let dataUrl = '';
+        if (img && img.src) {
+          dataUrl = img.src;
+        } else if (canvas) {
+          dataUrl = canvas.toDataURL('image/png');
+        }
+
+        if (!dataUrl) {
+          showToast('다운로드할 QR코드가 생성되지 않았습니다.');
+          return;
+        }
+
+        const a = document.createElement('a');
+        a.href = dataUrl;
+        a.download = `postsync_qrcode_${Date.now()}.png`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        showToast('💾 고화질 QR코드 이미지가 다운로드되었습니다!');
+      });
+
+      // Copy URL Button
+      btnCopyUrl.addEventListener('click', () => {
+        const text = outputUrl.textContent;
+        if (!text || text.startsWith('웹사이트') || text.startsWith('유효하지')) {
+          showToast('복사할 유효한 링크가 없습니다.');
+          return;
+        }
+
+        navigator.clipboard.writeText(text).then(() => {
+          showToast('📋 UTM 링크가 클립보드에 복사되었습니다!');
+          // Save to history on copy
+          buildUtmUrl(true);
+        });
+      });
+
+      // Form Event Listeners
+      [inputUrl, inputSource, inputMedium, inputCampaign, inputTerm, inputContent].forEach(input => {
+        input.addEventListener('input', () => buildUtmUrl(false));
+      });
+      [chkLowercase, chkHyphen].forEach(chk => {
+        chk.addEventListener('change', () => buildUtmUrl(false));
+      });
+
+      btnResetForm.addEventListener('click', () => {
+        inputUrl.value = 'https://postsyncapp.com';
+        inputSource.value = '';
+        inputMedium.value = '';
+        inputCampaign.value = '';
+        inputTerm.value = '';
+        inputContent.value = '';
+        buildUtmUrl(false);
+        showToast('설정이 초기화되었습니다.');
+      });
+
+      // LocalStorage History
+      function getHistory() {
+        try {
+          return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+        } catch (e) {
+          return [];
+        }
+      }
+
+      function saveHistoryItem(item) {
+        let history = getHistory();
+        // Prevent exact duplicate at top
+        if (history.length > 0 && history[0].url === item.url) return;
+
+        history.unshift(item);
+        if (history.length > 20) history = history.slice(0, 20); // max 20
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
+        renderHistory();
+      }
+
+      function renderHistory() {
+        const history = getHistory();
+        if (history.length === 0) {
+          historyTableBody.innerHTML = `
+            <tr>
+              <td colspan="5" style="text-align:center; padding:24px; color:var(--slate-400);">
+                생성된 UTM 링크가 여기에 자동 저장됩니다.
+              </td>
+            </tr>`;
+          return;
+        }
+
+        historyTableBody.innerHTML = history.map((item, idx) => `
+          <tr>
+            <td style="color:var(--slate-500); font-size:11.5px;">${escapeHtml(item.date)}</td>
+            <td><span class="url-chip">${escapeHtml(item.source)} / ${escapeHtml(item.medium)}</span></td>
+            <td style="font-weight:700; color:var(--slate-800);">${escapeHtml(item.campaign)}</td>
+            <td class="hist-url-cell" title="${escapeHtml(item.url)}">${escapeHtml(item.url)}</td>
+            <td style="text-align:center;">
+              <button class="btn-hist" onclick="copyText('${escapeJs(item.url)}')"><i class="fa-solid fa-copy"></i></button>
+            </td>
+          </tr>
+        `).join('');
+      }
+
+      window.copyText = function(text) {
+        navigator.clipboard.writeText(text).then(() => {
+          showToast('📋 링크가 복사되었습니다!');
+        });
+      };
+
+      // Export CSV
+      btnExportCsv.addEventListener('click', () => {
+        const history = getHistory();
+        if (history.length === 0) {
+          showToast('내보낼 히스토리가 없습니다.');
+          return;
+        }
+
+        let csvContent = 'data:text/csv;charset=utf-8,\uFEFF';
+        csvContent += '생성일시,소스(Source),매체(Medium),캠페인명(Campaign),완성URL\n';
+
+        history.forEach(row => {
+          csvContent += `"${row.date}","${row.source}","${row.medium}","${row.campaign}","${row.url}"\n`;
+        });
+
+        const encodedUri = encodeURI(csvContent);
+        const a = document.createElement('a');
+        a.href = encodedUri;
+        a.download = `postsync_utm_campaigns_${Date.now()}.csv`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        showToast('💾 CSV 파일이 다운로드되었습니다!');
+      });
+
+      // Clear History
+      btnClearHistory.addEventListener('click', () => {
+        if (confirm('저장된 UTM 히스토리를 모두 삭제하시겠습니까?')) {
+          localStorage.removeItem(STORAGE_KEY);
+          renderHistory();
+          showToast('히스토리가 삭제되었습니다.');
+        }
+      });
+
+      // Helpers
+      function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+      }
+      function escapeJs(str) {
+        return str.replace(/'/g, "\\'").replace(/"/g, '\\"');
+      }
+
+      // Initialize on load
+      buildUtmUrl(false);
+      renderHistory();
+    })();
+
+    // Global Modern Toast Function
+    function showToast(msg) {
+      let toast = document.getElementById('globalToast');
+      if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'globalToast';
+        toast.className = 'toast-box';
+        document.body.appendChild(toast);
+      }
+      toast.innerHTML = `<i class="fa-solid fa-sparkles" style="color:#60a5fa;"></i> <span>${msg}</span>`;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 2500);
+    }
+  </script>
+</body>
+</html>

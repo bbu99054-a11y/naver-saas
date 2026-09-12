@@ -1,0 +1,1443 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <!-- Google tag (gtag.js) GA4 Single Property -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-7WTMC1GBC8"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-7WTMC1GBC8', {
+      page_path: window.location.pathname,
+      page_title: '공공기관 HWPX 안심 변환기 & 노설치 웹 뷰어'
+    });
+  </script>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>공공기관 HWPX 안심 변환기 & 노설치 웹 뷰어 (텍스트/마크다운 추출) | PostSync Tools</title>
+  <meta name="description" content="한컴오피스 없이 맥북(Mac), 모바일, 리눅스에서 HWPX 공공문서를 1초 만에 텍스트·마크다운(.md)으로 변환하고 즉시 열람하는 웹 뷰어. 100% 브라우저 메모리 연산으로 정부 입찰 및 기밀문서 유출 0% 보증.">
+  <meta name="keywords" content="hwpx변환, hwpx뷰어, hwpx열기, 맥북hwpx, hwpx텍스트추출, hwpx마크다운변환, 한글문서뷰어, 공공기관hwpx, 한컴오피스뷰어">
+  <link rel="canonical" href="https://www.postsyncapp.com/hwpx">
+
+  <!-- OpenGraph / SNS -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="PostSync Tools">
+  <meta property="og:title" content="공공기관 HWPX 안심 변환기 & 노설치 웹 뷰어">
+  <meta property="og:description" content="한컴오피스 설치 없이 1초 만에 HWPX 문서를 텍스트/마크다운/이미지로 안전 추출 (100% 로컬 보안 연산).">
+  <meta property="og:url" content="https://www.postsyncapp.com/hwpx">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3734423172731921" crossorigin="anonymous"></script>
+
+  <!-- Typography & Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+
+  <!-- JSZip Client Library (100% Local Browser Memory Operations) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --primary-light: #eff6ff;
+      --emerald: #059669;
+      --emerald-light: #ecfdf5;
+      --amber: #d97706;
+      --amber-light: #fffbeb;
+      --rose: #e11d48;
+      --rose-light: #fff1f2;
+      --slate-900: #0f172a;
+      --slate-800: #1e293b;
+      --slate-700: #334155;
+      --slate-600: #475569;
+      --slate-500: #64748b;
+      --slate-400: #94a3b8;
+      --slate-300: #cbd5e1;
+      --slate-200: #e2e8f0;
+      --slate-100: #f1f5f9;
+      --slate-50: #f8fafc;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+      --shadow-md: 0 4px 14px rgba(15,23,42,0.08);
+      --shadow-lg: 0 10px 25px -3px rgba(15,23,42,0.12);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif; }
+    body { background-color: #f8fafc; color: var(--slate-900); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+
+    /* Header Nav */
+    header {
+      background: #0f172a;
+      color: white;
+      padding: 14px 24px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .header-inner {
+      max-width: 1240px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .brand {
+      font-size: 18px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #ffffff;
+      text-decoration: none;
+      letter-spacing: -0.5px;
+    }
+    .brand i { color: #60a5fa; font-size: 20px; }
+    .brand-tag {
+      background: linear-gradient(135deg, #3b82f6, #6366f1);
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .header-link {
+      color: #cbd5e1;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      transition: color 0.2s;
+    }
+    .header-link:hover { color: #ffffff; }
+    .header-btn {
+      background: #2563eb;
+      color: white;
+      padding: 7px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .header-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+      .header-link { display: none; }
+    }
+
+    /* Cross-Traffic 5 Micro-Tools Tab Bar */
+    .tools-nav-bar {
+      background: #ffffff;
+      border-bottom: 1px solid var(--slate-200);
+      overflow-x: auto;
+      white-space: nowrap;
+      padding: 6px 20px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+    }
+    .tools-nav-inner {
+      max-width: 1240px;
+      margin: 0 auto;
+      display: flex;
+      gap: 8px;
+    }
+    .tool-tab {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--slate-600);
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .tool-tab:hover {
+      background: var(--slate-100);
+      color: var(--slate-900);
+    }
+    .tool-tab.active {
+      background: #eff6ff;
+      color: var(--primary);
+      font-weight: 700;
+      border: 1px solid #bfdbfe;
+    }
+    .tool-tab .soon-badge {
+      font-size: 10px;
+      background: var(--slate-200);
+      color: var(--slate-600);
+      padding: 1px 5px;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+
+    /* Ad Container */
+    .ad-slot-header {
+      max-width: 1240px;
+      margin: 16px auto 0 auto;
+      padding: 0 20px;
+      height: 90px;
+      background: #ffffff;
+      border: 1px dashed var(--slate-300);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--slate-400);
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    /* Main Container */
+    .main-wrapper {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 24px 20px 80px 20px;
+    }
+
+    /* Hero */
+    .hero-section {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #ecfdf5;
+      color: #059669;
+      border: 1px solid #a7f3d0;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .hero-title {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--slate-900);
+      letter-spacing: -0.5px;
+      margin-bottom: 8px;
+    }
+    .hero-subtitle {
+      font-size: 14.5px;
+      color: var(--slate-600);
+      max-width: 780px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* Drop Zone Card */
+    .drop-zone {
+      background: #ffffff;
+      border: 2px dashed #93c5fd;
+      border-radius: var(--radius-lg);
+      padding: 40px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: var(--shadow-sm);
+      position: relative;
+    }
+    .drop-zone:hover, .drop-zone.dragover {
+      background: #eff6ff;
+      border-color: var(--primary);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+    .drop-icon {
+      font-size: 48px;
+      color: var(--primary);
+      margin-bottom: 14px;
+    }
+    .drop-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--slate-800);
+      margin-bottom: 6px;
+    }
+    .drop-desc {
+      font-size: 13.5px;
+      color: var(--slate-500);
+      margin-bottom: 16px;
+    }
+    .btn-file-select {
+      background: var(--primary);
+      color: #ffffff;
+      padding: 10px 22px;
+      border-radius: var(--radius-sm);
+      font-size: 13.5px;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.2s;
+    }
+    .btn-file-select:hover { background: var(--primary-hover); }
+
+    .sample-action-row {
+      margin-top: 14px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+    }
+    .btn-sample {
+      background: var(--slate-100);
+      border: 1px solid var(--slate-300);
+      color: var(--slate-700);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s;
+    }
+    .btn-sample:hover {
+      background: #ffffff;
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    /* File Metadata Status Bar */
+    .file-meta-bar {
+      display: none;
+      background: #ffffff;
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-md);
+      padding: 14px 20px;
+      margin-top: 20px;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      box-shadow: var(--shadow-sm);
+    }
+    .meta-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .file-type-icon {
+      background: #eff6ff;
+      color: var(--primary);
+      width: 42px;
+      height: 42px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+    .meta-details strong {
+      display: block;
+      font-size: 14.5px;
+      color: var(--slate-900);
+      font-weight: 700;
+    }
+    .meta-details span {
+      font-size: 12px;
+      color: var(--slate-500);
+    }
+    .meta-pills {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .meta-pill {
+      background: var(--slate-100);
+      color: var(--slate-700);
+      font-size: 11.5px;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-weight: 600;
+    }
+
+    /* Result Viewer Workspace */
+    .result-workspace {
+      display: none;
+      margin-top: 24px;
+      background: #ffffff;
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+    }
+    .view-tab-bar {
+      background: var(--slate-50);
+      border-bottom: 1px solid var(--slate-200);
+      padding: 10px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .tab-group-nav {
+      display: flex;
+      gap: 6px;
+    }
+    .view-tab-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--slate-600);
+      padding: 7px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s;
+    }
+    .view-tab-btn:hover {
+      background: var(--slate-200);
+      color: var(--slate-900);
+    }
+    .view-tab-btn.active {
+      background: #ffffff;
+      color: var(--primary);
+      border-color: var(--slate-300);
+      box-shadow: var(--shadow-sm);
+    }
+    .view-action-group {
+      display: flex;
+      gap: 8px;
+    }
+    .btn-action-view {
+      background: #ffffff;
+      border: 1px solid var(--slate-300);
+      color: var(--slate-700);
+      padding: 7px 13px;
+      border-radius: var(--radius-sm);
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s;
+    }
+    .btn-action-view:hover {
+      background: var(--slate-100);
+      border-color: var(--slate-400);
+      color: var(--slate-900);
+    }
+    .btn-action-primary {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+    }
+    .btn-action-primary:hover {
+      background: var(--primary-hover);
+      color: #ffffff;
+    }
+
+    /* Content Panes */
+    .pane-content {
+      display: none;
+      padding: 24px;
+      min-height: 480px;
+    }
+    .pane-content.active { display: block; }
+
+    /* Pane 1: HTML Document Viewer (Clean Paper Style) */
+    .doc-preview-paper {
+      background: #ffffff;
+      border: 1px solid var(--slate-200);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+      padding: 40px 48px;
+      border-radius: var(--radius-sm);
+      max-width: 860px;
+      margin: 0 auto;
+      min-height: 600px;
+      font-size: 14.5px;
+      line-height: 1.8;
+      color: #1e293b;
+    }
+    @media (max-width: 640px) {
+      .doc-preview-paper { padding: 20px 16px; }
+    }
+    .doc-preview-paper h1, .doc-preview-paper h2, .doc-preview-paper h3 {
+      color: var(--slate-900);
+      margin: 18px 0 10px 0;
+      font-weight: 800;
+    }
+    .doc-preview-paper p {
+      margin-bottom: 12px;
+      text-align: justify;
+      word-break: break-all;
+    }
+    .doc-preview-paper table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 18px 0;
+      font-size: 13px;
+    }
+    .doc-preview-paper th, .doc-preview-paper td {
+      border: 1px solid #cbd5e1;
+      padding: 9px 12px;
+      text-align: left;
+    }
+    .doc-preview-paper th {
+      background: #f1f5f9;
+      font-weight: 700;
+    }
+
+    /* Pane 2 & 3: Code / Plain Text Textarea */
+    .code-textarea {
+      width: 100%;
+      min-height: 480px;
+      padding: 16px;
+      background: var(--slate-50);
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-md);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 13.5px;
+      line-height: 1.6;
+      color: var(--slate-800);
+      resize: vertical;
+      outline: none;
+    }
+    .code-textarea:focus {
+      border-color: var(--primary);
+      background: #ffffff;
+    }
+
+    /* Pane 4: Image Gallery */
+    .image-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 16px;
+    }
+    .image-card {
+      background: var(--slate-50);
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      text-align: center;
+    }
+    .image-thumb-wrap {
+      height: 140px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #ffffff;
+      padding: 8px;
+    }
+    .image-thumb-wrap img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+    .image-info {
+      padding: 8px;
+      font-size: 11px;
+      color: var(--slate-600);
+      border-top: 1px solid var(--slate-200);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* Self-Ad PostSync AI Banner */
+    .self-ad-box {
+      margin-top: 36px;
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      border-radius: var(--radius-lg);
+      padding: 24px 30px;
+      color: #ffffff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    @media (max-width: 768px) {
+      .self-ad-box { flex-direction: column; text-align: center; }
+    }
+    .ad-txt h3 {
+      font-size: 17px;
+      font-weight: 800;
+      margin-bottom: 6px;
+      color: #93c5fd;
+    }
+    .ad-txt p {
+      font-size: 13.5px;
+      color: #cbd5e1;
+      line-height: 1.5;
+    }
+    .ad-btn {
+      background: linear-gradient(135deg, #3b82f6, #6366f1);
+      color: #ffffff;
+      padding: 12px 22px;
+      border-radius: var(--radius-sm);
+      font-size: 13.5px;
+      font-weight: 800;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+    .ad-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(59,130,246,0.4);
+    }
+
+    /* SEO Deep Article & FAQ */
+    .seo-guide-section {
+      margin-top: 48px;
+      background: #ffffff;
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-lg);
+      padding: 36px;
+    }
+    .seo-guide-section h2 {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--slate-900);
+      margin-bottom: 14px;
+      border-bottom: 2px solid var(--slate-100);
+      padding-bottom: 10px;
+    }
+    .seo-guide-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 18px 0 28px 0;
+      font-size: 13px;
+    }
+    .seo-guide-table th, .seo-guide-table td {
+      border: 1px solid var(--slate-200);
+      padding: 11px 14px;
+      text-align: left;
+    }
+    .seo-guide-table th { background: var(--slate-50); font-weight: 700; color: var(--slate-800); }
+    .seo-guide-section p { font-size: 14px; color: var(--slate-600); margin-bottom: 16px; line-height: 1.7; }
+
+    .faq-list {
+      margin-top: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .faq-item {
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-sm);
+      padding: 14px 18px;
+      background: #ffffff;
+    }
+    .faq-q {
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--slate-900);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .faq-a {
+      font-size: 13px;
+      color: var(--slate-600);
+      line-height: 1.6;
+    }
+
+    /* Toast Notification */
+    .toast-box {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(8px);
+      color: #ffffff;
+      padding: 12px 24px;
+      border-radius: 30px;
+      font-size: 13.5px;
+      font-weight: 700;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      pointer-events: none;
+    }
+    .toast-box.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 40px 20px 48px 20px;
+      color: var(--slate-500);
+      font-size: 12px;
+      border-top: 1px solid var(--slate-200);
+      background: #ffffff;
+      margin-top: 60px;
+    }
+    footer a { color: var(--slate-700); text-decoration: none; font-weight: 600; }
+  </style>
+
+  <!-- Structured Data: JSON-LD for Programmatic SEO -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "SoftwareApplication",
+        "name": "PostSync 공공기관 HWPX 안심 변환기 & 노설치 웹 뷰어",
+        "operatingSystem": "All",
+        "applicationCategory": "BusinessApplication",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "KRW"
+        },
+        "description": "한컴오피스 없이 맥북(macOS), 모바일, 리눅스에서 공공기관 HWPX 문서를 1초 만에 텍스트·마크다운으로 변환하고 즉시 열람하는 노설치 웹 뷰어."
+      },
+      {
+        "@type": "HowTo",
+        "name": "맥북(Mac)에서 한컴오피스 없이 HWPX 파일 열고 텍스트 추출하는 법",
+        "step": [
+          {
+            "@type": "HowToStep",
+            "name": "HWPX 파일 드롭",
+            "text": "다운로드받은 공공기관 .hwpx 파일을 브라우저 화면의 드롭존에 드래그 앤 드롭합니다."
+          },
+          {
+            "@type": "HowToStep",
+            "name": "1초 즉시 열람 및 파싱",
+            "text": "100% 브라우저 메모리상에서 압축이 해제되며 표와 문단 서식이 복원된 [미리보기] 탭에서 내용을 열람합니다."
+          },
+          {
+            "@type": "HowToStep",
+            "name": "마크다운 또는 텍스트 복사",
+            "text": "ChatGPT나 LLM에 붙여넣을 마크다운(.md) 또는 순수 텍스트를 원클릭으로 복사하거나 파일로 다운로드합니다."
+          }
+        ]
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "입찰 제안서나 계약서 등 기밀문서가 외부 서버에 유출되지 않나요?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "절대 유출되지 않습니다. 본 도구는 JSZip과 브라우저 내장 XML 엔진(DOMParser)을 활용하여 100% 사용자의 PC 메모리 안에서만 파일을 압축 해제하고 파싱하므로, 파일 데이터가 외부 서버로 1바이트도 전송되지 않습니다."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "HWP와 HWPX 파일의 차이점은 무엇인가요?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "기존 HWP는 한글과컴퓨터 전용의 바이너리 포맷이라 전용 프로그램 없이는 열기 어려웠으나, HWPX는 한국산업표준(KS X 6101) 및 OWPML 오픈 표준에 따라 만들어진 XML 기반 ZIP 압축 문서입니다. 따라서 웹 브라우저에서도 완벽하게 텍스트와 서식을 추출할 수 있습니다."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+
+  <!-- Top Global Header -->
+  <header>
+    <div class="header-inner">
+      <a href="#" onclick="window.scrollTo({top:0, behavior:'smooth'}); return false;" class="brand" title="페이지 상단으로 이동">
+        <i class="fa-solid fa-layer-group"></i>
+        <span>PostSync Tools</span>
+        <span class="brand-tag">Micro Hub</span>
+      </a>
+      <div class="header-right">
+        <a href="/crop" class="header-link">✂️ 슬라이서</a>
+        <a href="/adcheck" class="header-link">⚖️ 광고법 스캐너</a>
+        <a href="/byte" class="header-link">📝 바이트 계산기</a>
+        <a href="https://postsyncapp.com" class="header-btn" target="_blank">PostSync AI 본체 <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:11px; margin-left:3px;"></i></a>
+      </div>
+    </div>
+  </header>
+
+  <!-- 5 Micro-Tools Cross-Traffic Navigation Tab Bar -->
+  <nav class="tools-nav-bar" aria-label="Micro Tools List">
+    <div class="tools-nav-inner">
+      <a href="/crop" class="tool-tab">
+        <i class="fa-solid fa-scissors"></i>
+        <span>상세페이지 슬라이서</span>
+      </a>
+      <a href="/adcheck" class="tool-tab">
+        <i class="fa-solid fa-scale-balanced"></i>
+        <span>광고법 금칙어 스캐너</span>
+      </a>
+      <a href="/byte" class="tool-tab">
+        <i class="fa-solid fa-font"></i>
+        <span>자소서 바이트 계산기</span>
+      </a>
+      <a href="/hwpx" class="tool-tab active">
+        <i class="fa-solid fa-file-lines"></i>
+        <span>HWPX 안심 변환기</span>
+      </a>
+      <a href="/utm" class="tool-tab">
+        <i class="fa-solid fa-link"></i>
+        <span>마케팅 UTM 빌더</span>
+      </a>
+      <a href="/place" class="tool-tab">
+        <i class="fa-solid fa-location-dot"></i>
+        <span>플레이스 순위 조회</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- Google AdSense Header Slot (728x90) -->
+  <div class="ad-slot-header">
+    <span>[Google AdSense Banner Area - 728x90]</span>
+  </div>
+
+  <div class="main-wrapper">
+    <!-- Hero -->
+    <div class="hero-section">
+      <div class="hero-badge">
+        <i class="fa-solid fa-shield-halved"></i> 서버 전송 0% · 100% 브라우저 메모리 로컬 보안 변환
+      </div>
+      <h1 class="hero-title">공공기관 HWPX 안심 변환기 & 노설치 웹 뷰어</h1>
+      <p class="hero-subtitle">
+        한컴오피스 프로그램 없이도 정부 공공기관, 지자체, 교육청, 법원 <b>HWPX 문서를 브라우저에서 1초 만에 즉시 열람</b>하고, AI/LLM 프롬프트에 최적화된 마크다운(.md) 및 텍스트로 안전하게 추출합니다.
+      </p>
+    </div>
+
+    <!-- Drop Zone -->
+    <div class="drop-zone" id="dropZone">
+      <i class="fa-solid fa-file-arrow-up drop-icon"></i>
+      <div class="drop-title">HWPX 파일을 여기에 끌어다 놓으세요</div>
+      <div class="drop-desc">또는 버튼을 눌러 컴퓨터에서 파일을 선택하세요 (맥북, 모바일, 크롬북 지원)</div>
+      
+      <button class="btn-file-select" onclick="document.getElementById('fileInput').click(); event.stopPropagation();">
+        <i class="fa-solid fa-folder-open"></i> 내 컴퓨터에서 파일 선택
+      </button>
+      <input type="file" id="fileInput" accept=".hwpx" style="display: none;">
+
+      <div class="sample-action-row" onclick="event.stopPropagation();">
+        <button class="btn-sample" id="btnLoadSampleHwpx">
+          <i class="fa-solid fa-landmark"></i> 공공기관 입찰 공고문 샘플로 즉시 체험
+        </button>
+      </div>
+    </div>
+
+    <!-- File Metadata Bar -->
+    <div class="file-meta-bar" id="fileMetaBar">
+      <div class="meta-left">
+        <div class="file-type-icon"><i class="fa-solid fa-file-code"></i></div>
+        <div class="meta-details">
+          <strong id="metaFileName">document.hwpx</strong>
+          <span id="metaFileSize">0 KB · 파싱 완료 (0.05초)</span>
+        </div>
+      </div>
+      <div class="meta-pills">
+        <span class="meta-pill" id="pillParagraphs">단락 0개</span>
+        <span class="meta-pill" id="pillTables">표 0개</span>
+        <span class="meta-pill" id="pillImages">이미지 0개</span>
+      </div>
+    </div>
+
+    <!-- Result Viewer Workspace -->
+    <div class="result-workspace" id="resultWorkspace">
+      <div class="view-tab-bar">
+        <div class="tab-group-nav">
+          <button class="view-tab-btn active" data-tab="preview"><i class="fa-solid fa-eye"></i> 미리보기 (뷰어)</button>
+          <button class="view-tab-btn" data-tab="markdown"><i class="fa-brands fa-markdown"></i> 마크다운 (.md)</button>
+          <button class="view-tab-btn" data-tab="text"><i class="fa-solid fa-align-left"></i> 순수 텍스트</button>
+          <button class="view-tab-btn" data-tab="images"><i class="fa-solid fa-images"></i> 첨부 이미지 <span id="tabImgCount">(0)</span></button>
+        </div>
+
+        <div class="view-action-group">
+          <button class="btn-action-view" id="btnCopyActive"><i class="fa-solid fa-copy"></i> 복사하기</button>
+          <button class="btn-action-view btn-action-primary" id="btnDownloadActive"><i class="fa-solid fa-download"></i> 다운로드</button>
+        </div>
+      </div>
+
+      <!-- Pane 1: HTML Document Viewer -->
+      <div class="pane-content active" id="pane-preview">
+        <div class="doc-preview-paper" id="htmlPreviewContainer">
+          <!-- Rendered Document will be injected here -->
+        </div>
+      </div>
+
+      <!-- Pane 2: Markdown View -->
+      <div class="pane-content" id="pane-markdown">
+        <p style="font-size:12.5px; color:var(--slate-500); margin-bottom:10px;">
+          💡 ChatGPT, Claude, Gemini 등에 그대로 복사하여 요약이나 질의응답 프롬프트로 활용하세요.
+        </p>
+        <textarea class="code-textarea" id="markdownOutput" readonly></textarea>
+      </div>
+
+      <!-- Pane 3: Plain Text View -->
+      <div class="pane-content" id="pane-text">
+        <textarea class="code-textarea" id="plainTextOutput" readonly></textarea>
+      </div>
+
+      <!-- Pane 4: Extracted Images View -->
+      <div class="pane-content" id="pane-images">
+        <div class="image-grid" id="imageGridContainer">
+          <!-- Extracted images injected here -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Self-Ad PostSync B2B Promo Banner -->
+    <div class="self-ad-box">
+      <div class="ad-txt">
+        <h3>🚀 공공기관 HWPX 입찰 공고문이나 지원사업 서류를 일일이 읽기 힘드신가요?</h3>
+        <p>
+          PostSync AI는 방대한 HWPX 서류를 3초 만에 분석하여 자격 요건 요약, 맞춤형 제안서 초안, 최신 SEO/AEO 블로그 원고를 완전 자동으로 생성합니다.
+        </p>
+      </div>
+      <a href="/" class="ad-btn">PostSync 무인 엔진 3회 무료 체험</a>
+    </div>
+
+    <!-- pSEO Deep Knowledge Section -->
+    <div class="seo-guide-section">
+      <h2>📁 HWP vs HWPX(OWPML) 기술 규격 비교</h2>
+      <p>
+        대한민국 행정안전부와 공공기관은 공공 기록물의 보존성과 상호 운용성을 높이기 위해 기존 HWP 바이너리 포맷을 개방형 문서 표준인 <b>HWPX(KS X 6101)</b>로 전면 전환했습니다.
+      </p>
+
+      <table class="seo-guide-table">
+        <thead>
+          <tr>
+            <th>구분</th>
+            <th>기존 HWP 포맷</th>
+            <th>신규 HWPX 포맷 (OWPML)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><b>파일 구조</b></td>
+            <td>바이너리(Binary OLE) 암호화 구조</td>
+            <td><b>ZIP 압축 표준 + XML 개방형 텍스트</b></td>
+          </tr>
+          <tr>
+            <td><b>프로그램 의존도</b></td>
+            <td>한컴오피스 전용 프로그램 필수</td>
+            <td><b>모든 웹 브라우저 및 AI 프로그램에서 분석 가능</b></td>
+          </tr>
+          <tr>
+            <td><b>맥(Mac) / 모바일 지원</b></td>
+            <td>전용 뷰어 설치 필요 및 서식 깨짐</td>
+            <td>웹 표준 기술로 무설치 1초 열람 가능</td>
+          </tr>
+          <tr>
+            <td><b>AI / LLM 연동</b></td>
+            <td>텍스트 파싱 극도로 어려움</td>
+            <td><b>마크다운 및 텍스트 자동 변환 최적화</b></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>❓ 자주 묻는 질문 (FAQ)</h2>
+      <div class="faq-list">
+        <div class="faq-item">
+          <div class="faq-q"><i class="fa-solid fa-lock" style="color:var(--primary);"></i> 기밀 입찰 서류나 지원사업 신청서가 외부 서버에 유출되지 않나요?</div>
+          <div class="faq-a">
+            절대 유출되지 않습니다. PostSync HWPX 안심 변환기는 JSZip과 브라우저 내장 XML DOMParser를 사용하여 100% 사용자의 PC/스마트폰 메모리 안에서만 압축을 풀고 렌더링합니다. 파일 데이터가 외부 서버로 1바이트도 전송되지 않으므로 정부 대외비나 개인정보가 포함된 문서도 안심하고 열람하실 수 있습니다.
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q"><i class="fa-solid fa-circle-question" style="color:var(--primary);"></i> 마크다운(.md) 변환 기능은 어떤 용도로 쓰나요?</div>
+          <div class="faq-a">
+            ChatGPT, Claude, Notion 등에 복사할 때 표(Table)와 소제목 서식이 그대로 유지되도록 변환해 줍니다. 긴 공공 공고문이나 지원사업 지침서를 AI에게 요약시키거나 제안서 초안을 작성하게 할 때 매우 유용합니다.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Global Footer -->
+  <footer>
+    <div style="max-width:840px; margin:0 auto; padding:0 16px;">
+      <!-- Security & Privacy Disclaimer (애드센스 규정 충족) -->
+      <div style="background:var(--slate-50); border:1px solid var(--slate-200); border-radius:var(--radius-sm); padding:12px 18px; margin-bottom:20px; text-align:left; font-size:12px; color:var(--slate-600); line-height:1.65;">
+        <i class="fa-solid fa-shield-halved" style="color:var(--emerald); margin-right:6px;"></i>
+        <strong>100% 브라우저 로컬 연산 및 보안 보증:</strong> 본 도구는 클라이언트 브라우저 로컬 JavaScript 엔진으로 동작하며, 업로드하신 HWPX 문서는 외부 서버로 1바이트도 전송되지 않고 사용자 기기 메모리에서만 안전하게 연산된 후 자동 소멸합니다.
+      </div>
+
+      <p style="display:flex; justify-content:center; align-items:center; gap:16px; flex-wrap:wrap; font-size:13px; font-weight:600;">
+        <a href="https://postsyncapp.com/privacy" target="_blank" style="color:var(--slate-700); text-decoration:none;">개인정보처리방침</a>
+        <span style="color:var(--slate-300);">|</span>
+        <a href="https://postsyncapp.com/terms" target="_blank" style="color:var(--slate-700); text-decoration:none;">이용약관</a>
+        <span style="color:var(--slate-300);">|</span>
+        <a href="https://postsyncapp.com" target="_blank" style="color:var(--slate-700); text-decoration:none;">PostSync AI 공식홈</a>
+      </p>
+
+      <p style="margin-top:12px; color:var(--slate-500); font-size:12px;">
+        서비스 문의 & 제휴: <a href="mailto:contact@postsyncapp.com" style="color:var(--primary); font-weight:700; text-decoration:none;">contact@postsyncapp.com</a>
+      </p>
+
+      <p style="margin-top:8px; color:var(--slate-400); font-size:11.5px;">
+        © 2026 PostSync AI. All rights reserved. 본 도구는 OWPML 오픈 문서 표준에 기반한 독립적인 변환 뷰어입니다.
+      </p>
+    </div>
+  </footer>
+
+  <!-- Core JavaScript Engine (100% Client-Side JSZip + DOMParser) -->
+  <script>
+    (function() {
+      // DOM Elements
+      const dropZone = document.getElementById('dropZone');
+      const fileInput = document.getElementById('fileInput');
+      const fileMetaBar = document.getElementById('fileMetaBar');
+      const metaFileName = document.getElementById('metaFileName');
+      const metaFileSize = document.getElementById('metaFileSize');
+      const pillParagraphs = document.getElementById('pillParagraphs');
+      const pillTables = document.getElementById('pillTables');
+      const pillImages = document.getElementById('pillImages');
+
+      const resultWorkspace = document.getElementById('resultWorkspace');
+      const htmlPreviewContainer = document.getElementById('htmlPreviewContainer');
+      const markdownOutput = document.getElementById('markdownOutput');
+      const plainTextOutput = document.getElementById('plainTextOutput');
+      const imageGridContainer = document.getElementById('imageGridContainer');
+      const tabImgCount = document.getElementById('tabImgCount');
+
+      const viewTabBtns = document.querySelectorAll('.view-tab-btn');
+      const paneContents = document.querySelectorAll('.pane-content');
+      const btnCopyActive = document.getElementById('btnCopyActive');
+      const btnDownloadActive = document.getElementById('btnDownloadActive');
+
+      let currentParsedData = {
+        fileName: '',
+        html: '',
+        markdown: '',
+        plainText: '',
+        images: []
+      };
+      let activeTab = 'preview';
+
+      // Tab Switching
+      viewTabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          viewTabBtns.forEach(b => b.classList.remove('active'));
+          paneContents.forEach(p => p.classList.remove('active'));
+
+          btn.classList.add('active');
+          activeTab = btn.getAttribute('data-tab');
+          document.getElementById(`pane-${activeTab}`).classList.add('active');
+        });
+      });
+
+      // Drag & Drop Handlers
+      dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.classList.add('dragover');
+      });
+
+      dropZone.addEventListener('dragleave', () => {
+        dropZone.classList.remove('dragover');
+      });
+
+      dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('dragover');
+        if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+          handleFile(e.dataTransfer.files[0]);
+        }
+      });
+
+      fileInput.addEventListener('change', (e) => {
+        if (e.target.files && e.target.files.length > 0) {
+          handleFile(e.target.files[0]);
+        }
+      });
+
+      // Handle File Processing
+      async function handleFile(file) {
+        if (!file.name.toLowerCase().endsWith('.hwpx')) {
+          showToast('⚠️ .hwpx 형식의 파일만 지원됩니다.');
+          return;
+        }
+
+        const startTime = performance.now();
+        showToast('HWPX 압축 해제 및 파싱 중...');
+
+        try {
+          const zip = new JSZip();
+          const zipData = await zip.loadAsync(file);
+
+          await parseHwpxZip(zipData, file.name, file.size, startTime);
+        } catch (err) {
+          console.error('HWPX parse error:', err);
+          showToast('❌ HWPX 파싱에 실패했습니다. 올바른 파일인지 확인해주세요.');
+        }
+      }
+
+      // Parse Hwpx ZIP Archive
+      async function parseHwpxZip(zip, fileName, fileSize, startTime) {
+        // Find section XML files (e.g. Contents/section0.xml, section1.xml)
+        const sectionFiles = [];
+        zip.forEach((relativePath, zipEntry) => {
+          if (/Contents\/section\d+\.xml$/i.test(relativePath) || /section\d+\.xml$/i.test(relativePath)) {
+            sectionFiles.push(zipEntry);
+          }
+        });
+
+        // Sort section files numerically
+        sectionFiles.sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: 'base' }));
+
+        if (sectionFiles.length === 0) {
+          // Fallback: check any xml in Contents
+          zip.forEach((relativePath, zipEntry) => {
+            if (relativePath.endsWith('.xml') && !relativePath.includes('manifest') && !relativePath.includes('settings')) {
+              sectionFiles.push(zipEntry);
+            }
+          });
+        }
+
+        let fullHtml = '';
+        let fullMarkdown = '';
+        let fullPlainText = '';
+        let totalParagraphs = 0;
+        let totalTables = 0;
+
+        const parser = new DOMParser();
+
+        for (const sectionEntry of sectionFiles) {
+          const xmlText = await sectionEntry.async('text');
+          const xmlDoc = parser.parseFromString(xmlText, 'text/xml');
+
+          // Check parsing error
+          const parseError = xmlDoc.querySelector('parsererror');
+          if (parseError) {
+            console.warn('XML Parse error in', sectionEntry.name, parseError.textContent);
+            continue;
+          }
+
+          const parsedSection = parseSectionXml(xmlDoc);
+          fullHtml += parsedSection.html;
+          fullMarkdown += parsedSection.markdown;
+          fullPlainText += parsedSection.plainText;
+          totalParagraphs += parsedSection.paragraphCount;
+          totalTables += parsedSection.tableCount;
+        }
+
+        // Extract Images from BinData/
+        const extractedImages = [];
+        for (const relativePath in zip.files) {
+          if (/BinData\/.*\.(png|jpg|jpeg|gif|bmp)$/i.test(relativePath)) {
+            const imgFile = zip.files[relativePath];
+            const blob = await imgFile.async('blob');
+            const url = URL.createObjectURL(blob);
+            const baseName = relativePath.split('/').pop();
+            extractedImages.push({ name: baseName, url: url, size: blob.size, blob: blob });
+          }
+        }
+
+        const elapsed = ((performance.now() - startTime) / 1000).toFixed(2);
+
+        // Store Current Parsed Data
+        currentParsedData = {
+          fileName: fileName,
+          html: fullHtml || '<p style="color:#64748b;">(본문 텍스트가 비어 있습니다)</p>',
+          markdown: fullMarkdown || '(본문 없음)',
+          plainText: fullPlainText || '(본문 없음)',
+          images: extractedImages
+        };
+
+        // Update UI
+        metaFileName.textContent = fileName;
+        metaFileSize.textContent = `${(fileSize / 1024).toFixed(1)} KB · 파싱 완료 (${elapsed}초)`;
+        pillParagraphs.textContent = `단락 ${totalParagraphs}개`;
+        pillTables.textContent = `표 ${totalTables}개`;
+        pillImages.textContent = `이미지 ${extractedImages.length}개`;
+        tabImgCount.textContent = `(${extractedImages.length})`;
+
+        fileMetaBar.style.display = 'flex';
+        resultWorkspace.style.display = 'block';
+
+        htmlPreviewContainer.innerHTML = currentParsedData.html;
+        markdownOutput.value = currentParsedData.markdown;
+        plainTextOutput.value = currentParsedData.plainText;
+
+        renderImageGrid(extractedImages);
+
+        showToast(`✅ ${fileName} 파싱이 0.1초 만에 완료되었습니다!`);
+        resultWorkspace.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+
+      // Parse single section XML to HTML, Markdown, and Plain Text
+      function parseSectionXml(xmlDoc) {
+        let html = '';
+        let markdown = '';
+        let plainText = '';
+        let paragraphCount = 0;
+        let tableCount = 0;
+
+        // OWPML tags: hp:p, hp:tbl, hp:t, hp:run, hp:subList
+        // Fallback without namespace prefix if any
+        const pElements = xmlDoc.querySelectorAll('p, hp\\:p');
+
+        pElements.forEach(p => {
+          // Check if p is inside a table cell (skip top-level duplication)
+          if (p.closest('tc, hp\\:tc')) return;
+
+          // Check if paragraph contains table
+          const tbl = p.querySelector('tbl, hp\\:tbl');
+          if (tbl) {
+            tableCount++;
+            const parsedTbl = parseTable(tbl);
+            html += parsedTbl.html;
+            markdown += parsedTbl.markdown + '\n\n';
+            plainText += parsedTbl.plainText + '\n\n';
+            return;
+          }
+
+          // Extract text from text nodes
+          const tNodes = p.querySelectorAll('t, hp\\:t');
+          let pText = '';
+          tNodes.forEach(t => {
+            pText += t.textContent;
+          });
+
+          if (pText.trim()) {
+            paragraphCount++;
+            const cleanText = pText.trim();
+
+            // Detect heading heuristics (e.g. 1., 제1조, [공고] etc.)
+            if (/^(제\s*\d+\s*조|\[.*\]|\d+\.\s+[가-힣]+)/.test(cleanText) && cleanText.length < 50) {
+              html += `<h3>${escapeHtml(cleanText)}</h3>`;
+              markdown += `### ${cleanText}\n\n`;
+            } else {
+              html += `<p>${escapeHtml(cleanText)}</p>`;
+              markdown += `${cleanText}\n\n`;
+            }
+            plainText += cleanText + '\n';
+          }
+        });
+
+        return { html, markdown, plainText, paragraphCount, tableCount };
+      }
+
+      // Parse HWPX Table (hp:tbl)
+      function parseTable(tblDoc) {
+        let html = '<table class="hwpx-table"><tbody>';
+        let markdown = '';
+        let plainText = '';
+
+        const trs = tblDoc.querySelectorAll('tr, hp\\:tr');
+        const rowsData = [];
+
+        trs.forEach((tr, rIdx) => {
+          html += '<tr>';
+          const tcs = tr.querySelectorAll('tc, hp\\:tc');
+          const rowCols = [];
+
+          tcs.forEach((tc) => {
+            const tNodes = tc.querySelectorAll('t, hp\\:t');
+            let cellText = '';
+            tNodes.forEach(t => cellText += t.textContent);
+            cellText = cellText.replace(/[\n\r]+/g, ' ').trim();
+
+            const isHeader = (rIdx === 0);
+            if (isHeader) {
+              html += `<th>${escapeHtml(cellText)}</th>`;
+            } else {
+              html += `<td>${escapeHtml(cellText)}</td>`;
+            }
+            rowCols.push(cellText);
+          });
+          html += '</tr>';
+          rowsData.push(rowCols);
+        });
+        html += '</tbody></table>';
+
+        // Markdown Table Construction
+        if (rowsData.length > 0) {
+          const colCount = Math.max(...rowsData.map(r => r.length));
+          rowsData.forEach((row, idx) => {
+            while (row.length < colCount) row.push('');
+            markdown += '| ' + row.map(c => c || ' ').join(' | ') + ' |\n';
+            plainText += row.join('\t') + '\n';
+
+            if (idx === 0) {
+              markdown += '| ' + Array(colCount).fill('---').join(' | ') + ' |\n';
+            }
+          });
+        }
+
+        return { html, markdown, plainText };
+      }
+
+      // Render Image Grid
+      function renderImageGrid(images) {
+        if (images.length === 0) {
+          imageGridContainer.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:30px; color:var(--slate-400); font-size:13px;">문서에 포함된 첨부 이미지가 없습니다.</div>';
+          return;
+        }
+
+        imageGridContainer.innerHTML = images.map((img, idx) => `
+          <div class="image-card">
+            <div class="image-thumb-wrap">
+              <img src="${img.url}" alt="${escapeHtml(img.name)}">
+            </div>
+            <div class="image-info">
+              <span>${escapeHtml(img.name)}</span>
+              <a href="${img.url}" download="${img.name}" style="color:var(--primary); font-weight:700; text-decoration:none;"><i class="fa-solid fa-download"></i></a>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      // Sample HWPX Loader (Simulates real OWPML Section parsing)
+      document.getElementById('btnLoadSampleHwpx').addEventListener('click', async () => {
+        showToast('공공기관 스마트 입찰 공고문 샘플 생성 중...');
+
+        const sampleZip = new JSZip();
+        const sampleXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+        <hs:sec xmlns:hp="http://www.hancom.co.kr/hwpml/2011/paragraph" xmlns:hs="http://www.hancom.co.kr/hwpml/2011/section">
+          <hp:p><hp:run><hp:t>[공고 제2026-0912호] 2026년 공공 스마트 마케팅 엔진 구축 용역 공고</hp:t></hp:run></hp:p>
+          <hp:p><hp:run><hp:t>1. 입찰에 부치는 사항</hp:t></hp:run></hp:p>
+          <hp:p><hp:run><hp:t>가. 사업명: PostSync AI 기반 공공기관 스마트 인바운드 마케팅 엔진 및 무인 자동화 구축 사업</hp:t></hp:run></hp:p>
+          <hp:p><hp:run><hp:t>나. 사업기간: 계약체결일로부터 120일간</hp:t></hp:run></hp:p>
+          <hp:p><hp:run><hp:t>다. 추정사업비: 금 250,000,000원 (부가가치세 포함)</hp:t></hp:run></hp:p>
+          <hp:p><hp:run><hp:t>2. 주요 과업 내용 및 요구 규격</hp:t></hp:run></hp:p>
+          <hp:p>
+            <hp:tbl>
+              <hp:tr>
+                <hp:tc><hp:p><hp:run><hp:t>구분</hp:t></hp:run></hp:p></hp:tc>
+                <hp:tc><hp:p><hp:run><hp:t>핵심 요구기능</hp:t></hp:run></hp:p></hp:tc>
+                <hp:tc><hp:p><hp:run><hp:t>보안 및 성능 기준</hp:t></hp:run></hp:p></hp:tc>
+              </hp:tr>
+              <hp:tr>
+                <hp:tc><hp:p><hp:run><hp:t>1단계</hp:t></hp:run></hp:p></hp:tc>
+                <hp:tc><hp:p><hp:run><hp:t>HWPX 공공 표준 OWPML 무설치 웹 변환 엔진</hp:t></hp:run></hp:p></hp:tc>
+                <hp:tc><hp:p><hp:run><hp:t>100% 브라우저 메모리 연산 (서버 유출 0%)</hp:t></hp:run></hp:p></hp:tc>
+              </hp:tr>
+              <hp:tr>
+                <hp:tc><hp:p><hp:run><hp:t>2단계</hp:t></hp:run></hp:p></hp:tc>
+                <hp:tc><hp:p><hp:run><hp:t>네이버 C-Rank 및 AEO 생성형 검색 최적화</hp:t></hp:run></hp:p></hp:tc>
+                <hp:tc><hp:p><hp:run><hp:t>키워드 밀도 골든존 1.0%~2.5% 자동 제어</hp:t></hp:run></hp:p></hp:tc>
+              </hp:tr>
+              <hp:tr>
+                <hp:tc><hp:p><hp:run><hp:t>3단계</hp:t></hp:run></hp:p></hp:tc>
+                <hp:tc><hp:p><hp:run><hp:t>전문직 법정 광고 규정(변호사·의료·세무) 필터링</hp:t></hp:run></hp:p></hp:tc>
+                <hp:tc><hp:p><hp:run><hp:t>실시간 금칙어 감지 및 합법 대체어 자동 치환</hp:t></hp:run></hp:p></hp:tc>
+              </hp:tr>
+            </hp:tbl>
+          </hp:p>
+          <hp:p><hp:run><hp:t>3. 제안서 제출 및 평가 기준</hp:t></hp:run></hp:p>
+          <hp:p><hp:run><hp:t>본 입찰은 국가를 당사자로 하는 계약에 관한 법률 시행령 제43조에 의거하여 협상에 의한 계약 체결 방식으로 진행됩니다.</hp:t></hp:run></hp:p>
+          <hp:p><hp:run><hp:t>기술평가 90% 및 가격평가 10%의 종합 평가를 거쳐 최고 득점자를 우선협상대상자로 선정합니다.</hp:t></hp:run></hp:p>
+        </hs:sec>`;
+
+        sampleZip.file('Contents/section0.xml', sampleXml);
+
+        const startTime = performance.now();
+        await parseHwpxZip(sampleZip, '2026_공공기관_스마트마케팅구축_입찰공고문.hwpx', 45200, startTime);
+      });
+
+      // Copy Active Tab Content
+      btnCopyActive.addEventListener('click', () => {
+        let contentToCopy = '';
+        if (activeTab === 'markdown') {
+          contentToCopy = currentParsedData.markdown;
+        } else if (activeTab === 'text') {
+          contentToCopy = currentParsedData.plainText;
+        } else {
+          contentToCopy = currentParsedData.plainText;
+        }
+
+        if (!contentToCopy) {
+          showToast('복사할 내용이 없습니다.');
+          return;
+        }
+
+        navigator.clipboard.writeText(contentToCopy).then(() => {
+          showToast(`📋 ${activeTab.toUpperCase()} 내용이 클립보드에 복사되었습니다!`);
+        });
+      });
+
+      // Download Active Tab Content
+      btnDownloadActive.addEventListener('click', () => {
+        const base = (currentParsedData.fileName || 'document').replace(/\.hwpx$/i, '');
+
+        if (activeTab === 'markdown') {
+          downloadBlob(new Blob([currentParsedData.markdown], { type: 'text/markdown;charset=utf-8' }), `${base}.md`);
+        } else if (activeTab === 'text') {
+          downloadBlob(new Blob([currentParsedData.plainText], { type: 'text/plain;charset=utf-8' }), `${base}.txt`);
+        } else if (activeTab === 'images') {
+          if (currentParsedData.images.length === 0) {
+            showToast('다운로드할 이미지가 없습니다.');
+            return;
+          }
+          downloadImagesAsZip(base);
+        } else {
+          // HTML Preview download
+          downloadBlob(new Blob([currentParsedData.html], { type: 'text/html;charset=utf-8' }), `${base}_preview.html`);
+        }
+      });
+
+      function downloadBlob(blob, filename) {
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        showToast(`💾 ${filename} 파일 다운로드가 시작되었습니다.`);
+      }
+
+      async function downloadImagesAsZip(baseName) {
+        const zip = new JSZip();
+        currentParsedData.images.forEach(img => {
+          zip.file(img.name, img.blob);
+        });
+        const zipBlob = await zip.generateAsync({ type: 'blob' });
+        downloadBlob(zipBlob, `${baseName}_images.zip`);
+      }
+
+      function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+      }
+    })();
+
+    // Global Modern Toast Function
+    function showToast(msg) {
+      let toast = document.getElementById('globalToast');
+      if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'globalToast';
+        toast.className = 'toast-box';
+        document.body.appendChild(toast);
+      }
+      toast.innerHTML = `<i class="fa-solid fa-sparkles" style="color:#60a5fa;"></i> <span>${msg}</span>`;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 2500);
+    }
+  </script>
+</body>
+</html>

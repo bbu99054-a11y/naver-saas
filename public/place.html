@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>네이버 플레이스 실시간 순위 조회기 (1위~75위 무료 분석) | PostSync</title>
+  <meta name="description" content="키워드와 상호명만 입력하면 네이버 스마트플레이스 1위부터 75위까지 내 매장의 실시간 노출 순위와 1페이지(5위 이내) 진입 여부, 경쟁사 예약/주소를 1초 만에 무료로 전수 분석합니다.">
+  <meta name="keywords" content="네이버 플레이스 순위 조회, 스마트플레이스 순위 확인, 플레이스 1페이지 상위노출, 플레이스 순위 추적, 지도 순위 검색, 플레이스 마케팅">
+  
+  <!-- Canonical Consolidation -->
+  <link rel="canonical" href="https://www.postsyncapp.com/place">
+
+  <!-- SVG Favicon (📍) -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📍</text></svg>">
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="네이버 플레이스 실시간 순위 조회기 (1위~75위 무료) | PostSync">
+  <meta property="og:description" content="내 매장은 오늘 몇 위일까? 키워드 1개로 네이버 지도 1위~75위 전체 순위와 경쟁사 현황을 1초 만에 확인하세요.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.postsyncapp.com/place">
+  
+  <!-- Google Analytics 4 (GA4) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-7WTMC1GBC8"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-7WTMC1GBC8');
+  </script>
+
+  <!-- Google AdSense Code Placeholder -->
+  <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3734423172731921" crossorigin="anonymous"></script> -->
+
+  <!-- Fonts & Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --primary-light: #eff6ff;
+      --accent: #f59e0b;
+      --emerald: #10b981;
+      --rose: #f43f5e;
+      --amber: #d97706;
+      --slate-900: #0f172a;
+      --slate-800: #1e293b;
+      --slate-700: #334155;
+      --slate-600: #475569;
+      --slate-500: #64748b;
+      --slate-400: #94a3b8;
+      --slate-300: #cbd5e1;
+      --slate-200: #e2e8f0;
+      --slate-100: #f1f5f9;
+      --slate-50: #f8fafc;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+      --shadow-md: 0 4px 14px rgba(15,23,42,0.08);
+      --shadow-lg: 0 10px 25px -3px rgba(15,23,42,0.12);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif; }
+    body { background-color: #f8fafc; color: var(--slate-900); line-height: 1.6; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+
+    /* Header Nav */
+    header {
+      background: #0f172a;
+      color: white;
+      padding: 14px 24px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .header-inner {
+      max-width: 1240px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .brand {
+      font-size: 18px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #ffffff;
+      text-decoration: none;
+      letter-spacing: -0.5px;
+    }
+    .brand i { color: #60a5fa; font-size: 20px; }
+    .brand-tag {
+      background: linear-gradient(135deg, #3b82f6, #6366f1);
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .header-link {
+      color: #cbd5e1;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      transition: color 0.2s;
+    }
+    .header-link:hover { color: #ffffff; }
+    .header-btn {
+      background: #2563eb;
+      color: white;
+      padding: 7px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .header-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+      .header-link { display: none; }
+    }
+
+    /* Cross-Traffic 6 Micro-Tools Tab Bar */
+    .tools-nav-bar {
+      background: #ffffff;
+      border-bottom: 1px solid var(--slate-200);
+      overflow-x: auto;
+      white-space: nowrap;
+      padding: 6px 20px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+    }
+    .tools-nav-inner {
+      max-width: 1240px;
+      margin: 0 auto;
+      display: flex;
+      gap: 8px;
+    }
+    .tool-tab {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--slate-600);
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .tool-tab:hover {
+      background: var(--slate-100);
+      color: var(--slate-900);
+    }
+    .tool-tab.active {
+      background: #eff6ff;
+      color: var(--primary);
+      font-weight: 700;
+      border: 1px solid #bfdbfe;
+    }
+
+    /* Ad Container */
+    .ad-slot-header {
+      max-width: 1240px;
+      margin: 16px auto 0 auto;
+      padding: 0 20px;
+      height: 90px;
+      background: #ffffff;
+      border: 1px dashed var(--slate-300);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--slate-400);
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    /* Main Container */
+    .main-wrapper {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 24px 20px 80px 20px;
+    }
+
+    /* Hero */
+    .hero-section {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #ecfdf5;
+      color: #059669;
+      border: 1px solid #a7f3d0;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .hero-title {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--slate-900);
+      letter-spacing: -0.5px;
+      margin-bottom: 8px;
+    }
+    .hero-subtitle {
+      font-size: 14.5px;
+      color: var(--slate-600);
+      max-width: 820px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* Search Workspace Card */
+    .search-card {
+      background: #ffffff;
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 24px;
+    }
+    .search-grid {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr auto;
+      gap: 12px;
+      align-items: flex-end;
+    }
+    @media (max-width: 768px) {
+      .search-grid { grid-template-columns: 1fr; }
+    }
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--slate-700);
+      margin-bottom: 6px;
+    }
+    .search-input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid var(--slate-300);
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .search-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+    }
+    .btn-search {
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: #ffffff;
+      border: none;
+      padding: 12px 28px;
+      border-radius: var(--radius-sm);
+      font-size: 14.5px;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      height: 48px;
+      transition: all 0.2s;
+    }
+    .btn-search:hover {
+      background: #1e40af;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(37,99,235,0.25);
+    }
+
+    /* Popular Keyword Chips */
+    .keyword-chips-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 14px;
+      flex-wrap: wrap;
+    }
+    .chip-lbl { font-size: 12px; font-weight: 700; color: var(--slate-500); }
+    .kw-chip {
+      background: var(--slate-50);
+      border: 1px solid var(--slate-200);
+      padding: 4px 10px;
+      border-radius: 16px;
+      font-size: 12px;
+      color: var(--slate-700);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .kw-chip:hover {
+      background: #eff6ff;
+      border-color: #bfdbfe;
+      color: var(--primary);
+    }
+
+    /* Loading Spinner */
+    .loading-container {
+      display: none;
+      text-align: center;
+      padding: 48px 20px;
+      background: #ffffff;
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-lg);
+      margin-bottom: 24px;
+    }
+    .spinner-icon {
+      font-size: 36px;
+      color: var(--primary);
+      animation: spin 1s linear infinite;
+      margin-bottom: 14px;
+    }
+    @keyframes spin { 100% { transform: rotate(360deg); } }
+    .loading-txt { font-size: 15px; font-weight: 700; color: var(--slate-800); margin-bottom: 6px; }
+    .loading-sub { font-size: 13px; color: var(--slate-500); }
+
+    /* Diagnosis Banner Card (Target Place Found) */
+    .diagnosis-card {
+      display: none;
+      background: #ffffff;
+      border: 2px solid var(--primary);
+      border-radius: var(--radius-lg);
+      padding: 24px 28px;
+      box-shadow: var(--shadow-md);
+      margin-bottom: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    .diagnosis-card.top1 { border-color: #f59e0b; background: linear-gradient(to bottom, #fffbeb, #ffffff); }
+    .diag-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .diag-rank-badge {
+      font-size: 26px;
+      font-weight: 900;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .diag-rank-badge.gold { color: #d97706; }
+    .diag-status-pill {
+      font-size: 12px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 20px;
+    }
+    .pill-optimal { background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0; }
+    .pill-warn { background: #fffbeb; color: #d97706; border: 1px solid #fde68a; }
+    .pill-danger { background: #fef2f2; color: #e11d48; border: 1px solid #fecdd3; }
+
+    .diag-details-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 14px;
+      background: var(--slate-50);
+      padding: 16px;
+      border-radius: var(--radius-md);
+      font-size: 13px;
+    }
+    .diag-item strong { color: var(--slate-800); display: block; margin-bottom: 2px; }
+    .diag-item span { color: var(--slate-600); }
+
+    /* Ranking Table Section */
+    .ranking-card {
+      display: none;
+      background: #ffffff;
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 32px;
+    }
+    .ranking-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .ranking-title {
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--slate-900);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .ranking-table-wrap {
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .ranking-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      min-width: 650px;
+    }
+    .ranking-table th, .ranking-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--slate-200);
+      text-align: left;
+    }
+    .ranking-table th {
+      background: var(--slate-50);
+      font-weight: 700;
+      color: var(--slate-700);
+    }
+    .rank-cell {
+      font-weight: 800;
+      font-size: 14px;
+      width: 65px;
+      text-align: center;
+    }
+    .rank-cell.top3 { color: #d97706; }
+    .firm-cell { font-weight: 700; color: var(--slate-900); }
+    .firm-cell a { color: inherit; text-decoration: none; }
+    .firm-cell a:hover { color: var(--primary); text-decoration: underline; }
+    .booking-tag {
+      font-size: 11px;
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-weight: 700;
+    }
+    .booking-on { background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0; }
+    .booking-off { background: var(--slate-100); color: var(--slate-500); }
+
+    /* Highlight matched row */
+    .row-highlight {
+      background: #eff6ff !important;
+      border-left: 4px solid var(--primary);
+    }
+    .row-highlight td { font-weight: 700; }
+
+    /* Self-Ad PostSync AI Banner */
+    .self-ad-box {
+      margin-top: 36px;
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      border-radius: var(--radius-lg);
+      padding: 24px 30px;
+      color: #ffffff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    @media (max-width: 768px) {
+      .self-ad-box { flex-direction: column; text-align: center; }
+    }
+    .ad-txt h3 {
+      font-size: 17px;
+      font-weight: 800;
+      margin-bottom: 6px;
+      color: #93c5fd;
+    }
+    .ad-txt p {
+      font-size: 13.5px;
+      color: #cbd5e1;
+      line-height: 1.5;
+    }
+    .ad-btn {
+      background: linear-gradient(135deg, #3b82f6, #6366f1);
+      color: #ffffff;
+      padding: 12px 22px;
+      border-radius: var(--radius-sm);
+      font-size: 13.5px;
+      font-weight: 800;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+    .ad-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(59,130,246,0.4);
+    }
+
+    /* SEO Deep Article & FAQ */
+    .seo-guide-section {
+      margin-top: 48px;
+      background: #ffffff;
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-lg);
+      padding: 36px;
+    }
+    .seo-guide-section h2 {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--slate-900);
+      margin-bottom: 14px;
+      border-bottom: 2px solid var(--slate-100);
+      padding-bottom: 10px;
+    }
+    .seo-guide-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    .seo-guide-table th, .seo-guide-table td {
+      border: 1px solid var(--slate-200);
+      padding: 11px 14px;
+      text-align: left;
+    }
+    .seo-guide-table th { background: var(--slate-50); font-weight: 700; color: var(--slate-800); }
+    .seo-guide-section p { font-size: 14px; color: var(--slate-600); margin-bottom: 16px; line-height: 1.7; }
+
+    .faq-list {
+      margin-top: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .faq-item {
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-sm);
+      padding: 14px 18px;
+      background: #ffffff;
+    }
+    .faq-q {
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--slate-900);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .faq-a {
+      font-size: 13px;
+      color: var(--slate-600);
+      line-height: 1.6;
+    }
+
+    /* Toast */
+    .toast-box {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(8px);
+      color: #ffffff;
+      padding: 12px 24px;
+      border-radius: 30px;
+      font-size: 13.5px;
+      font-weight: 700;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      pointer-events: none;
+    }
+    .toast-box.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 40px 20px 48px 20px;
+      color: var(--slate-500);
+      font-size: 12px;
+      border-top: 1px solid var(--slate-200);
+      background: #ffffff;
+      margin-top: 60px;
+    }
+    footer a { color: var(--slate-700); text-decoration: none; font-weight: 600; }
+  </style>
+
+  <!-- Structured Data: JSON-LD for Programmatic SEO -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "SoftwareApplication",
+        "name": "PostSync 네이버 플레이스 실시간 순위 조회기",
+        "operatingSystem": "All",
+        "applicationCategory": "BusinessApplication",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "KRW"
+        },
+        "description": "네이버 스마트플레이스 1위부터 75위까지 특정 키워드에 대한 내 매장/사무소의 실시간 노출 순위, 1페이지 진입 여부, 경쟁사 현황을 1초 만에 무료로 전수 조회."
+      },
+      {
+        "@type": "HowTo",
+        "name": "네이버 스마트플레이스 내 매장 순위 실시간 조회하는 법",
+        "step": [
+          {
+            "@type": "HowToStep",
+            "name": "타깃 검색 키워드 입력",
+            "text": "지역명과 업종이 포함된 키워드(예: '강남역 변호사', '서초동 세무사', '성수동 카페')를 입력합니다."
+          },
+          {
+            "@type": "HowToStep",
+            "name": "내 매장 상호명 입력",
+            "text": "조회하고자 하는 내 업체명(예: '법무법인 YK')을 입력합니다."
+          },
+          {
+            "@type": "HowToStep",
+            "name": "실시간 순위 확인",
+            "text": "[1초 순위 조회]를 누르면 네이버 지도 1위부터 75위까지의 전체 순위표에서 내 매장의 등수와 1페이지 진입 여부가 즉시 하이라이트됩니다."
+          }
+        ]
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "네이버 플레이스에서 1페이지(상위 5위) 진입이 왜 중요한가요?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "네이버 모바일 통합검색 시 첫 화면에는 상위 3~5개 플레이스만 노출됩니다. 90% 이상의 잠재 고객은 더보기 버튼을 누르지 않고 1페이지 상위 매장에 바로 전화하거나 예약하므로 매출의 80% 이상이 1페이지 5위 이내에서 결정됩니다."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "플레이스 순위는 어떤 요소로 결정되나요?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "네이버 플레이스 알고리즘은 1) 매장명/카테고리의 검색어 적합도, 2) 최근 방문자 영수증 리뷰 수 및 평점, 3) 저장하기(저장수)와 길찾기 클릭 수, 4) 네이버 예약 연동 여부, 5) C-Rank 최적화 블로그 리뷰 언급량을 종합적으로 평가합니다."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+
+  <!-- Top Global Header -->
+  <header>
+    <div class="header-inner">
+      <a href="#" onclick="window.scrollTo({top:0, behavior:'smooth'}); return false;" class="brand" title="페이지 상단으로 이동">
+        <i class="fa-solid fa-layer-group"></i>
+        <span>PostSync Tools</span>
+        <span class="brand-tag">Micro Hub</span>
+      </a>
+      <div class="header-right">
+        <a href="/crop" class="header-link">✂️ 슬라이서</a>
+        <a href="/adcheck" class="header-link">⚖️ 광고법</a>
+        <a href="/byte" class="header-link">📝 바이트</a>
+        <a href="https://postsyncapp.com" class="header-btn" target="_blank">PostSync AI 본체 <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:11px; margin-left:3px;"></i></a>
+      </div>
+    </div>
+  </header>
+
+  <!-- 6 Micro-Tools Cross-Traffic Navigation Tab Bar -->
+  <nav class="tools-nav-bar" aria-label="Micro Tools List">
+    <div class="tools-nav-inner">
+      <a href="/crop" class="tool-tab">
+        <i class="fa-solid fa-scissors"></i>
+        <span>상세페이지 슬라이서</span>
+      </a>
+      <a href="/adcheck" class="tool-tab">
+        <i class="fa-solid fa-scale-balanced"></i>
+        <span>광고법 금칙어 스캐너</span>
+      </a>
+      <a href="/byte" class="tool-tab">
+        <i class="fa-solid fa-font"></i>
+        <span>자소서 바이트 계산기</span>
+      </a>
+      <a href="/hwpx" class="tool-tab">
+        <i class="fa-solid fa-file-lines"></i>
+        <span>HWPX 안심 변환기</span>
+      </a>
+      <a href="/utm" class="tool-tab">
+        <i class="fa-solid fa-link"></i>
+        <span>마케팅 UTM 빌더</span>
+      </a>
+      <a href="/place" class="tool-tab active">
+        <i class="fa-solid fa-location-dot"></i>
+        <span>플레이스 순위 조회</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- Google AdSense Header Slot (728x90) -->
+  <div class="ad-slot-header">
+    <span>[Google AdSense Banner Area - 728x90]</span>
+  </div>
+
+  <div class="main-wrapper">
+    <!-- Hero -->
+    <div class="hero-section">
+      <div class="hero-badge">
+        <i class="fa-solid fa-satellite-dish"></i> 실시간 네이버 지도 1위~75위 전수 추적기
+      </div>
+      <h1 class="hero-title">네이버 스마트플레이스 실시간 순위 조회기</h1>
+      <p class="hero-subtitle">
+        키워드와 상호명을 입력하면 네이버 지도 1위부터 75위까지 <b>내 매장의 실시간 노출 등수</b>, 1페이지(5위 이내) 진입 여부, 경쟁사 예약/주소 현황을 1초 만에 무료로 분석합니다.
+      </p>
+    </div>
+
+    <!-- Search Card -->
+    <div class="search-card">
+      <form id="placeSearchForm" onsubmit="handleSearch(event)">
+        <div class="search-grid">
+          <div class="form-group">
+            <label for="inputKeyword"><i class="fa-solid fa-magnifying-glass"></i> 검색 키워드 (지역명 + 업종)</label>
+            <input type="text" id="inputKeyword" class="search-input" placeholder="예: 강남역 변호사, 서초동 세무사, 성수동 카페" required autofocus>
+          </div>
+          <div class="form-group">
+            <label for="inputTarget"><i class="fa-solid fa-store"></i> 내 매장 / 사무소 상호명 (선택)</label>
+            <input type="text" id="inputTarget" class="search-input" placeholder="예: 법무법인 YK, 스타벅스">
+          </div>
+          <button type="submit" class="btn-search" id="btnSearch">
+            <i class="fa-solid fa-bolt"></i> <span>1초 순위 조회</span>
+          </button>
+        </div>
+      </form>
+
+      <!-- Popular Keyword Chips -->
+      <div class="keyword-chips-row">
+        <span class="chip-lbl">⚡ 빠른 예시:</span>
+        <button type="button" class="kw-chip" onclick="quickFill('강남역 변호사', '법무법인 YK')">⚖️ 강남역 변호사</button>
+        <button type="button" class="kw-chip" onclick="quickFill('서초동 세무사', '세무법인')">💼 서초동 세무사</button>
+        <button type="button" class="kw-chip" onclick="quickFill('신사동 피부과', '피부과의원')">🩺 신사동 피부과</button>
+        <button type="button" class="kw-chip" onclick="quickFill('성수동 카페', '블루보틀')">☕ 성수동 카페</button>
+        <button type="button" class="kw-chip" onclick="quickFill('홍대 미용실', '헤어')">✂️ 홍대 미용실</button>
+      </div>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div class="loading-container" id="loadingContainer">
+      <i class="fa-solid fa-circle-notch spinner-icon"></i>
+      <div class="loading-txt">네이버 실시간 스마트플레이스 1위~75위 전수 수집 중...</div>
+      <div class="loading-sub">네이버 지도 API 통신 및 타깃 상호명 매칭 분석을 진행하고 있습니다.</div>
+    </div>
+
+    <!-- Diagnosis Result Card -->
+    <div class="diagnosis-card" id="diagnosisCard">
+      <div class="diag-header">
+        <div class="diag-rank-badge" id="diagRankText">
+          <i class="fa-solid fa-trophy"></i> <span>전체 1위</span>
+        </div>
+        <span class="diag-status-pill" id="diagStatusPill">골든존 노출</span>
+      </div>
+      <div class="diag-details-grid" id="diagGrid">
+        <!-- Injected via JS -->
+      </div>
+    </div>
+
+    <!-- Ranking Table Card -->
+    <div class="ranking-card" id="rankingCard">
+      <div class="ranking-header">
+        <div class="ranking-title">
+          <i class="fa-solid fa-list-ol" style="color:var(--primary);"></i>
+          <span id="rankingTitleText">실시간 네이버 플레이스 1위~75위 순위표</span>
+        </div>
+        <div style="font-size:12px; color:var(--slate-500);" id="totalPlacesCount">
+          총 0개 업체 검색됨
+        </div>
+      </div>
+
+      <div class="ranking-table-wrap">
+        <table class="ranking-table">
+          <thead>
+            <tr>
+              <th style="width:70px; text-align:center;">순위</th>
+              <th>매장 / 업체명</th>
+              <th>카테고리</th>
+              <th>도로명 주소</th>
+              <th style="width:110px;">전화번호</th>
+              <th style="width:90px; text-align:center;">네이버 예약</th>
+            </tr>
+          </thead>
+          <tbody id="rankingTableBody">
+            <!-- Injected via JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- PostSync AI SaaS Self-Ad Banner -->
+    <div class="self-ad-box">
+      <div class="ad-txt">
+        <h3>🚀 내 매장 스마트플레이스 순위를 1페이지(1~5위)로 올리고 싶으신가요?</h3>
+        <p>
+          PostSync AI는 네이버 플레이스 순위를 결정하는 핵심 지표(C-Rank 블로그 리뷰 누적, GEO 위치 기반 원고, 네이버 스마트블록 키워드)를 매일 아침 전자동으로 발행합니다.
+        </p>
+      </div>
+      <a href="https://postsyncapp.com" class="ad-btn" target="_blank">PostSync AI 무료 체험하기 <i class="fa-solid fa-arrow-right"></i></a>
+    </div>
+
+    <!-- pSEO Deep Knowledge Section -->
+    <div class="seo-guide-section">
+      <h2>📍 2026 네이버 스마트플레이스 상위노출 알고리즘 5대 핵심 요소</h2>
+      <p>
+        네이버 스마트플레이스는 단순한 거리순 노출이 아니라, AI 기반 검색 적합도와 이용자 반응 지표를 복합적으로 결합한 <b>C-Rank & 플레이스 랭킹 알고리즘</b>에 의해 결정됩니다.
+      </p>
+
+      <div style="overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 18px 0 28px 0;">
+        <table class="seo-guide-table" style="margin: 0;">
+          <thead>
+            <tr>
+              <th>순위 결정 요소</th>
+              <th>반영 비중</th>
+              <th>핵심 평가 기준</th>
+              <th>상위노출 최적화 전략</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><b>검색어 적합도 (Relevance)</b></td>
+              <td><b>30%</b></td>
+              <td>상호명, 소개글, 대표 키워드 5개와 검색어의 일치율</td>
+              <td>대표 키워드에 지역명+세부 업종(예: 강남역 변호사) 정확히 등록</td>
+            </tr>
+            <tr>
+              <td><b>네이버 예약 연동 (Booking)</b></td>
+              <td><b>20%</b></td>
+              <td>네이버 예약, 네이버페이, 톡톡 활성화 여부</td>
+              <td>스마트콜 및 네이버 실시간 예약 기능을 무조건 'ON'으로 연동</td>
+            </tr>
+            <tr>
+              <td><b>방문자 영수증 리뷰 (Reviews)</b></td>
+              <td><b>25%</b></td>
+              <td>최근 30일 이내 영수증 리뷰 생성 빈도 및 키워드 언급</td>
+              <td>결제 고객 대상 네이버 영수증 리뷰 유도 및 사진 첨부 권장</td>
+            </tr>
+            <tr>
+              <td><b>저장하기 & 길찾기 (Interactions)</b></td>
+              <td><b>15%</b></td>
+              <td>사용자의 '저장하기(북마크)' 및 '길찾기' 클릭 수</td>
+              <td>SNS, 블로그, 지도 링크를 통한 잠재 고객 유입 활성화</td>
+            </tr>
+            <tr>
+              <td><b>C-Rank 블로그 리뷰 (Blog Score)</b></td>
+              <td><b>10%</b></td>
+              <td>전문성 높은 최신 네이버 블로그 포스팅에서의 장소 첨부</td>
+              <td>PostSync AI로 주 2~3회 최신 전문 블로그 원고 지속 발행</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>❓ 자주 묻는 질문 (FAQ)</h2>
+      <div class="faq-list">
+        <div class="faq-item">
+          <div class="faq-q"><i class="fa-solid fa-circle-question" style="color:var(--primary);"></i> 네이버 플레이스 순위는 왜 매일 달라지나요?</div>
+          <div class="faq-a">
+            네이버 알고리즘은 실시간 이용자 반응(오늘의 예약 수, 길찾기 클릭, 영수증 리뷰 등록)을 매일 동적으로 반영합니다. 특히 경쟁 매장이 리뷰 이벤트를 진행하거나 최신 블로그 글을 발행하면 순위 변동이 발생하므로 주 2~3회 정기적인 모니터링이 필수적입니다.
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q"><i class="fa-solid fa-shield-halved" style="color:var(--emerald);"></i> 이 순위 조회기는 네이버 공식 데이터를 실시간으로 보여주나요?</div>
+          <div class="faq-a">
+            네, 그렇습니다! 본 도구는 네이버 지도 오픈 검색 엔진과 직접 통신하여 현재 이 순간 사용자가 모바일 네이버에서 검색했을 때 노출되는 실제 1위부터 75위까지의 순위를 가공 없이 100% 정직하게 보여드립니다.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Global Footer -->
+  <footer>
+    <div style="max-width:840px; margin:0 auto; padding:0 16px;">
+      <div style="background:var(--slate-50); border:1px solid var(--slate-200); border-radius:var(--radius-sm); padding:12px 18px; margin-bottom:20px; text-align:left; font-size:12px; color:var(--slate-600); line-height:1.65;">
+        <i class="fa-solid fa-shield-halved" style="color:var(--emerald); margin-right:6px;"></i>
+        <strong>실시간 공공 검색 데이터 안내:</strong> 본 서비스는 네이버 지도의 공개 검색 인덱스를 기반으로 실시간 순위를 산출하며, 특정 매장의 조작이나 편향 없이 객관적인 검색 순위만을 투명하게 제공합니다.
+      </div>
+
+      <p style="display:flex; justify-content:center; align-items:center; gap:16px; flex-wrap:wrap; font-size:13px; font-weight:600;">
+        <a href="https://postsyncapp.com/privacy" target="_blank" style="color:var(--slate-700); text-decoration:none;">개인정보처리방침</a>
+        <span style="color:var(--slate-300);">|</span>
+        <a href="https://postsyncapp.com/terms" target="_blank" style="color:var(--slate-700); text-decoration:none;">이용약관</a>
+        <span style="color:var(--slate-300);">|</span>
+        <a href="https://postsyncapp.com" target="_blank" style="color:var(--slate-700); text-decoration:none;">PostSync AI 공식홈</a>
+      </p>
+
+      <p style="margin-top:12px; color:var(--slate-500); font-size:12px;">
+        서비스 문의 & 제휴: <a href="mailto:contact@postsyncapp.com" style="color:var(--primary); font-weight:700; text-decoration:none;">contact@postsyncapp.com</a>
+      </p>
+
+      <p style="margin-top:8px; color:var(--slate-400); font-size:11.5px;">
+        © 2026 PostSync AI. All rights reserved. 본 도구는 네이버 스마트플레이스 마케팅 참조용 유틸리티입니다.
+      </p>
+    </div>
+  </footer>
+
+  <!-- Core Interactive Script -->
+  <script>
+    (function() {
+      const form = document.getElementById('placeSearchForm');
+      const inputKeyword = document.getElementById('inputKeyword');
+      const inputTarget = document.getElementById('inputTarget');
+      const btnSearch = document.getElementById('btnSearch');
+
+      const loadingContainer = document.getElementById('loadingContainer');
+      const diagnosisCard = document.getElementById('diagnosisCard');
+      const diagRankText = document.getElementById('diagRankText');
+      const diagStatusPill = document.getElementById('diagStatusPill');
+      const diagGrid = document.getElementById('diagGrid');
+
+      const rankingCard = document.getElementById('rankingCard');
+      const rankingTitleText = document.getElementById('rankingTitleText');
+      const totalPlacesCount = document.getElementById('totalPlacesCount');
+      const rankingTableBody = document.getElementById('rankingTableBody');
+
+      // Quick Fill Helper
+      window.quickFill = function(kw, target) {
+        inputKeyword.value = kw;
+        inputTarget.value = target;
+        handleSearch();
+      };
+
+      // Main Search Handler
+      window.handleSearch = async function(e) {
+        if (e) e.preventDefault();
+        const kw = inputKeyword.value.trim();
+        const target = inputTarget.value.trim();
+
+        if (!kw) {
+          showToast('검색할 지역 키워드를 입력해주세요.');
+          inputKeyword.focus();
+          return;
+        }
+
+        // Show loading state
+        btnSearch.disabled = true;
+        btnSearch.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> <span>조회 중...</span>';
+        loadingContainer.style.display = 'block';
+        diagnosisCard.style.display = 'none';
+        rankingCard.style.display = 'none';
+
+        try {
+          const res = await fetch(`/api/place/rank?query=${encodeURIComponent(kw)}&target=${encodeURIComponent(target)}`);
+          const data = await res.json();
+
+          if (!data.success) {
+            showToast(data.error || '순위 조회에 실패했습니다.');
+            return;
+          }
+
+          renderResults(data);
+
+        } catch (err) {
+          console.error(err);
+          showToast('서버 통신 중 오류가 발생했습니다.');
+        } finally {
+          btnSearch.disabled = false;
+          btnSearch.innerHTML = '<i class="fa-solid fa-bolt"></i> <span>1초 순위 조회</span>';
+          loadingContainer.style.display = 'none';
+        }
+      };
+
+      // Render Results Logic
+      function renderResults(data) {
+        rankingTitleText.textContent = `[${data.query}] 네이버 플레이스 1위~${data.rankingList.length}위 순위표`;
+        totalPlacesCount.textContent = `총 ${data.totalCount.toLocaleString()}개 등록 업체 중 상위 ${data.rankingList.length}개 분석`;
+
+        // 1. Render Diagnosis Card if target was specified
+        if (data.target) {
+          diagnosisCard.style.display = 'block';
+          if (data.myPlace) {
+            const p = data.myPlace;
+            diagnosisCard.className = `diagnosis-card ${p.rank === 1 ? 'top1' : ''}`;
+            
+            if (p.rank <= 5) {
+              diagRankText.className = 'diag-rank-badge gold';
+              diagRankText.innerHTML = `<i class="fa-solid fa-crown"></i> <span>현재 전체 ${p.rank}위</span>`;
+              diagStatusPill.className = 'diag-status-pill pill-optimal';
+              diagStatusPill.textContent = '🏆 1페이지 최상위 독점존 (상위 5%)';
+            } else if (p.rank <= 15) {
+              diagRankText.className = 'diag-rank-badge';
+              diagRankText.innerHTML = `<i class="fa-solid fa-bolt"></i> <span>현재 전체 ${p.rank}위</span>`;
+              diagStatusPill.className = 'diag-status-pill pill-warn';
+              diagStatusPill.textContent = '⚡ 1페이지 진입 가시권';
+            } else {
+              diagRankText.className = 'diag-rank-badge';
+              diagRankText.innerHTML = `<i class="fa-solid fa-triangle-exclamation" style="color:var(--rose);"></i> <span>현재 전체 ${p.rank}위</span>`;
+              diagStatusPill.className = 'diag-status-pill pill-danger';
+              diagStatusPill.textContent = '🚨 2페이지 이하 이탈 경고';
+            }
+
+            diagGrid.innerHTML = `
+              <div class="diag-item">
+                <strong>상호명</strong>
+                <span>${escapeHtml(p.name)}</span>
+              </div>
+              <div class="diag-item">
+                <strong>카테고리</strong>
+                <span>${escapeHtml(p.category)}</span>
+              </div>
+              <div class="diag-item">
+                <strong>네이버 예약</strong>
+                <span>${p.hasBooking ? '<b style="color:var(--emerald);">🟢 실시간 예약 연동 중</b>' : '<b style="color:var(--slate-500);">⚪ 미연동 (순위 감점 요인)</b>'}</span>
+              </div>
+              <div class="diag-item">
+                <strong>도로명 주소</strong>
+                <span>${escapeHtml(p.address || '정보 없음')}</span>
+              </div>
+            `;
+          } else {
+            // Target not found within top 75
+            diagnosisCard.className = 'diagnosis-card';
+            diagRankText.className = 'diag-rank-badge';
+            diagRankText.innerHTML = `<i class="fa-solid fa-triangle-exclamation" style="color:var(--rose);"></i> <span>75위 밖 (미노출)</span>`;
+            diagStatusPill.className = 'diag-status-pill pill-danger';
+            diagStatusPill.textContent = '🚨 1페이지 진입 시급';
+
+            diagGrid.innerHTML = `
+              <div class="diag-item" style="grid-column: 1 / -1;">
+                <strong>진단 결과:</strong>
+                <span>입력하신 <b>"${escapeHtml(data.target)}"</b> 상호가 상위 75위 이내에 감지되지 않았습니다. 잠재 고객 유입이 완전히 차단된 상태이므로 C-Rank 블로그 최적화 및 스마트플레이스 리뉴얼이 강력히 권장됩니다.</span>
+              </div>
+            `;
+          }
+        }
+
+        // 2. Render Table
+        rankingCard.style.display = 'block';
+        if (!data.rankingList || data.rankingList.length === 0) {
+          rankingTableBody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:30px; color:var(--slate-400);">검색 결과가 없습니다. 다른 지역명이나 업종을 입력해보세요.</td></tr>';
+          return;
+        }
+
+        const targetNorm = data.target ? data.target.toLowerCase().replace(/\s+/g, '') : '';
+
+        rankingTableBody.innerHTML = data.rankingList.map(item => {
+          const nameNorm = item.name.toLowerCase().replace(/\s+/g, '');
+          const isMatch = targetNorm && (nameNorm.includes(targetNorm) || targetNorm.includes(nameNorm));
+          const rowClass = isMatch ? 'row-highlight' : '';
+
+          return `
+            <tr class="${rowClass}">
+              <td class="rank-cell ${item.rank <= 3 ? 'top3' : ''}">
+                ${item.rank === 1 ? '🥇 1' : item.rank === 2 ? '🥈 2' : item.rank === 3 ? '🥉 3' : item.rank}
+              </td>
+              <td class="firm-cell">
+                <a href="${escapeHtml(item.placeUrl)}" target="_blank" rel="noopener">
+                  ${escapeHtml(item.name)}
+                </a>
+                ${isMatch ? '<span style="font-size:11px; background:#2563eb; color:#ffffff; padding:1px 6px; border-radius:4px; margin-left:6px;">내 매장</span>' : ''}
+              </td>
+              <td><span style="font-size:12px; color:var(--slate-600);">${escapeHtml(item.category)}</span></td>
+              <td style="font-size:12px; color:var(--slate-600); max-width:240px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${escapeHtml(item.address)}">${escapeHtml(item.address)}</td>
+              <td style="font-size:12px; color:var(--slate-600);">${escapeHtml(item.phone || '-')}</td>
+              <td style="text-align:center;">
+                ${item.hasBooking ? '<span class="booking-tag booking-on"><i class="fa-solid fa-check"></i> 연동</span>' : '<span class="booking-tag booking-off">미연동</span>'}
+              </td>
+            </tr>
+          `;
+        }).join('');
+
+        // Smooth scroll to diagnosis or table
+        if (data.target) {
+          diagnosisCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } else {
+          rankingCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }
+
+      function escapeHtml(str) {
+        if (!str) return '';
+        return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+      }
+
+      function showToast(msg) {
+        let toast = document.getElementById('globalToast');
+        if (!toast) {
+          toast = document.createElement('div');
+          toast.id = 'globalToast';
+          toast.className = 'toast-box';
+          document.body.appendChild(toast);
+        }
+        toast.innerHTML = `<i class="fa-solid fa-circle-info" style="color:#60a5fa;"></i> <span>${msg}</span>`;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2500);
+      }
+
+    })();
+  </script>
+</body>
+</html>

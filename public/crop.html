@@ -7,8 +7,8 @@
   <meta name="description" content="포토샵 없이 20,000px 이상의 초장문 상세페이지를 네이버(860px), 쿠팡(780px), 인스타(1080px) 규격으로 즉시 자동 리사이징 및 무손실 분할하여 ZIP으로 다운로드합니다. 서버 전송 0% 브라우저 로컬 100% 안전 보증.">
   <meta name="keywords" content="상세페이지 자르기, 스마트스토어 상세페이지 분할, 쿠팡 상세페이지 리사이즈, 이미지 분할기, 포토샵 없이 상세페이지 자르기, 상세페이지 슬라이서">
   
-  <!-- Canonical Consolidation: 모든 링크 점수를 postsyncapp.com/crop으로 집중 -->
-  <link rel="canonical" href="https://postsyncapp.com/crop">
+  <!-- Canonical Consolidation: 모든 링크 점수를 www.postsyncapp.com/crop으로 집중 -->
+  <link rel="canonical" href="https://www.postsyncapp.com/crop">
 
   <!-- SVG Favicon (✂️) -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✂️</text></svg>">
@@ -17,8 +17,17 @@
   <meta property="og:title" content="스마트스토어·쿠팡 상세페이지 1초 자동 자르기 & 리사이저 | PostSync">
   <meta property="og:description" content="10,000px 장문 상세페이지를 860px/780px로 자동 리사이징 & 균등 분할. 서버 업로드 0% 무료 웹툴">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://postsyncapp.com/crop">
+  <meta property="og:url" content="https://www.postsyncapp.com/crop">
   
+  <!-- Google Analytics 4 (GA4) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-7WTMC1GBC8"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-7WTMC1GBC8');
+  </script>
+
   <!-- Fonts & Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -26,7 +35,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 
   <!-- Google AdSense Code Placeholder (소유하신 ca-pub 코드로 자동 연동) -->
-  <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script> -->
+  <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3734423172731921" crossorigin="anonymous"></script> -->
 
   <style>
     :root {
@@ -860,25 +869,25 @@
         <i class="fa-solid fa-scissors"></i>
         <span>상세페이지 슬라이서</span>
       </a>
-      <a href="/byte" class="tool-tab" onclick="showToast('2호 자소서 바이트 & C-Rank 밀도 계산기는 곧 오픈됩니다!'); return false;">
-        <i class="fa-solid fa-font"></i>
-        <span>자소서 바이트 계산기</span>
-        <span class="soon-badge">오픈예정</span>
-      </a>
-      <a href="/hwpx" class="tool-tab" onclick="showToast('3호 안심 HWPX ➔ Markdown 파서는 곧 오픈됩니다!'); return false;">
-        <i class="fa-solid fa-file-lines"></i>
-        <span>HWPX 안심 변환기</span>
-        <span class="soon-badge">오픈예정</span>
-      </a>
-      <a href="/utm" class="tool-tab" onclick="showToast('4호 마케팅 캠페인 UTM 빌더는 곧 오픈됩니다!'); return false;">
-        <i class="fa-solid fa-link"></i>
-        <span>마케팅 UTM 빌더</span>
-        <span class="soon-badge">오픈예정</span>
-      </a>
-      <a href="/adcheck" class="tool-tab" onclick="showToast('5호 전문직 법정 광고 금칙어 검사기는 곧 오픈됩니다!'); return false;">
+      <a href="/adcheck" class="tool-tab">
         <i class="fa-solid fa-scale-balanced"></i>
         <span>광고법 금칙어 스캐너</span>
-        <span class="soon-badge">오픈예정</span>
+      </a>
+      <a href="/byte" class="tool-tab">
+        <i class="fa-solid fa-font"></i>
+        <span>자소서 바이트 계산기</span>
+      </a>
+      <a href="/hwpx" class="tool-tab">
+        <i class="fa-solid fa-file-lines"></i>
+        <span>HWPX 안심 변환기</span>
+      </a>
+      <a href="/utm" class="tool-tab">
+        <i class="fa-solid fa-link"></i>
+        <span>마케팅 UTM 빌더</span>
+      </a>
+      <a href="/place" class="tool-tab">
+        <i class="fa-solid fa-location-dot"></i>
+        <span>플레이스 순위 조회</span>
       </a>
     </div>
   </nav>

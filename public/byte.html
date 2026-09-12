@@ -1,0 +1,1421 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <!-- Google tag (gtag.js) GA4 Single Property -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-7WTMC1GBC8"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-7WTMC1GBC8', {
+      page_path: window.location.pathname,
+      page_title: '자소서 글자수 바이트 계산기 & 네이버 블로그 C-Rank 키워드 밀도 분석기'
+    });
+  </script>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>자소서 글자수 바이트 계산기 & 네이버 블로그 C-Rank 키워드 밀도 분석기 | PostSync Tools</title>
+  <meta name="description" content="사람인·잡코리아·공기업 NCS 플랫폼별 자소서 글자수 및 바이트(Byte) 실시간 분기 계산. 2026 네이버 블로그 C-Rank & 스마트블록 상위노출 최적 키워드 밀도(1~2.5%) 분석 도구. 100% 브라우저 로컬 메모리 연산으로 개인정보 및 초안 유출 0% 보증.">
+  <meta name="keywords" content="글자수세기, 바이트계산기, 자소서글자수, 사람인글자수, 잡코리아바이트, 네이버글자수세기, 키워드밀도계산기, 블로그키워드분석, 네이버C-Rank, 스마트블록최적화">
+  <link rel="canonical" href="https://www.postsyncapp.com/byte">
+
+  <!-- OpenGraph / SNS -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="PostSync Tools">
+  <meta property="og:title" content="자소서 글자수 바이트 계산기 & 네이버 블로그 C-Rank 키워드 밀도 분석기">
+  <meta property="og:description" content="사람인/잡코리아/NCS 자소서 바이트 규격 실시간 비교 및 네이버 블로그 C-Rank 상위노출 키워드 밀도 1초 진단 (100% 로컬 보안 연산).">
+  <meta property="og:url" content="https://www.postsyncapp.com/byte">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3734423172731921" crossorigin="anonymous"></script>
+
+  <!-- Typography & Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --primary-light: #eff6ff;
+      --emerald: #059669;
+      --emerald-light: #ecfdf5;
+      --amber: #d97706;
+      --amber-light: #fffbeb;
+      --rose: #e11d48;
+      --rose-light: #fff1f2;
+      --slate-900: #0f172a;
+      --slate-800: #1e293b;
+      --slate-700: #334155;
+      --slate-600: #475569;
+      --slate-500: #64748b;
+      --slate-400: #94a3b8;
+      --slate-300: #cbd5e1;
+      --slate-200: #e2e8f0;
+      --slate-100: #f1f5f9;
+      --slate-50: #f8fafc;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+      --shadow-md: 0 4px 14px rgba(15,23,42,0.08);
+      --shadow-lg: 0 10px 25px -3px rgba(15,23,42,0.12);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif; }
+    body { background-color: #f8fafc; color: var(--slate-900); line-height: 1.6; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+
+    /* Header Nav */
+    header {
+      background: #0f172a;
+      color: white;
+      padding: 14px 24px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .header-inner {
+      max-width: 1240px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .brand {
+      font-size: 18px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #ffffff;
+      text-decoration: none;
+      letter-spacing: -0.5px;
+    }
+    .brand i { color: #60a5fa; font-size: 20px; }
+    .brand-tag {
+      background: linear-gradient(135deg, #3b82f6, #6366f1);
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .header-link {
+      color: #cbd5e1;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      transition: color 0.2s;
+    }
+    .header-link:hover { color: #ffffff; }
+    .header-btn {
+      background: #2563eb;
+      color: white;
+      padding: 7px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .header-btn:hover { background: #1d4ed8; }
+    @media (max-width: 640px) {
+      .header-link { display: none; }
+    }
+
+    /* Cross-Traffic 5 Micro-Tools Tab Bar */
+    .tools-nav-bar {
+      background: #ffffff;
+      border-bottom: 1px solid var(--slate-200);
+      overflow-x: auto;
+      white-space: nowrap;
+      padding: 6px 20px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+    }
+    .tools-nav-inner {
+      max-width: 1240px;
+      margin: 0 auto;
+      display: flex;
+      gap: 8px;
+    }
+    .tool-tab {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--slate-600);
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .tool-tab:hover {
+      background: var(--slate-100);
+      color: var(--slate-900);
+    }
+    .tool-tab.active {
+      background: #eff6ff;
+      color: var(--primary);
+      font-weight: 700;
+      border: 1px solid #bfdbfe;
+    }
+    .tool-tab .soon-badge {
+      font-size: 10px;
+      background: var(--slate-200);
+      color: var(--slate-600);
+      padding: 1px 5px;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+
+    /* Ad Container */
+    .ad-slot-header {
+      max-width: 1240px;
+      margin: 16px auto 0 auto;
+      padding: 0 20px;
+      height: 90px;
+      background: #ffffff;
+      border: 1px dashed var(--slate-300);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--slate-400);
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    /* Main Container */
+    .main-wrapper {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 24px 20px 80px 20px;
+    }
+
+    /* Hero */
+    .hero-section {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #ecfdf5;
+      color: #059669;
+      border: 1px solid #a7f3d0;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .hero-title {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--slate-900);
+      letter-spacing: -0.5px;
+      margin-bottom: 8px;
+    }
+    .hero-subtitle {
+      font-size: 14.5px;
+      color: var(--slate-600);
+      max-width: 780px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* Layout Grid: Editor Left, Stats Right */
+    .app-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 24px;
+      align-items: start;
+    }
+    @media (max-width: 960px) {
+      .app-grid { grid-template-columns: 1fr; }
+    }
+
+    /* Editor Card (Left) */
+    .editor-card {
+      background: #ffffff;
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .editor-toolbar {
+      padding: 12px 16px;
+      background: var(--slate-50);
+      border-bottom: 1px solid var(--slate-200);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .tool-btn-group {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .btn-tool {
+      background: #ffffff;
+      border: 1px solid var(--slate-300);
+      color: var(--slate-700);
+      padding: 6px 11px;
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.15s;
+    }
+    .btn-tool:hover {
+      background: var(--slate-100);
+      color: var(--slate-900);
+      border-color: var(--slate-400);
+    }
+    .btn-tool-primary {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+    }
+    .btn-tool-primary:hover {
+      background: var(--primary-hover);
+      color: #ffffff;
+    }
+    .editor-body {
+      position: relative;
+      padding: 16px;
+    }
+    .text-editor {
+      width: 100%;
+      min-height: 480px;
+      padding: 14px;
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-md);
+      font-size: 15px;
+      line-height: 1.7;
+      color: var(--slate-900);
+      outline: none;
+      resize: vertical;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .text-editor:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+    }
+    .editor-footer-status {
+      padding: 10px 16px;
+      background: var(--slate-50);
+      border-top: 1px solid var(--slate-200);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: var(--slate-500);
+    }
+
+    /* Stats Panel (Right) */
+    .stats-container {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* Main Counter Card */
+    .stat-card {
+      background: #ffffff;
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      box-shadow: var(--shadow-sm);
+    }
+    .stat-header {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--slate-900);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .stat-header i { color: var(--primary); margin-right: 6px; }
+
+    .counter-hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .counter-box-main {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: var(--radius-md);
+      padding: 16px;
+      text-align: center;
+    }
+    .counter-box-main .val {
+      font-size: 32px;
+      font-weight: 900;
+      color: var(--primary);
+      line-height: 1.1;
+      font-feature-settings: "tnum";
+    }
+    .counter-box-main .lbl {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--slate-600);
+      margin-top: 4px;
+    }
+
+    .counter-sub-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      padding-top: 12px;
+      border-top: 1px dashed var(--slate-200);
+    }
+    .sub-box {
+      background: var(--slate-50);
+      padding: 10px 8px;
+      border-radius: var(--radius-sm);
+      text-align: center;
+    }
+    .sub-box .val {
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--slate-800);
+    }
+    .sub-box .lbl {
+      font-size: 11px;
+      color: var(--slate-500);
+      margin-top: 2px;
+    }
+
+    /* Platform Byte Comparison Card */
+    .byte-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    .byte-table tr {
+      border-bottom: 1px solid var(--slate-100);
+    }
+    .byte-table tr:last-child { border-bottom: none; }
+    .byte-table td {
+      padding: 10px 6px;
+      vertical-align: middle;
+    }
+    .byte-table td.name {
+      font-weight: 700;
+      color: var(--slate-800);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .byte-table td.rule {
+      color: var(--slate-500);
+      font-size: 11px;
+    }
+    .byte-table td.result {
+      text-align: right;
+      font-weight: 800;
+      font-size: 15px;
+      color: var(--slate-900);
+    }
+    .byte-tag {
+      font-size: 10.5px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 700;
+    }
+    .tag-blue { background: #dbeafe; color: #1e40af; }
+    .tag-green { background: #dcfce7; color: #166534; }
+    .tag-purple { background: #f3e8ff; color: #6b21a8; }
+
+    /* Keyword Density Analyzer Card */
+    .density-input-wrap {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+    .density-input {
+      flex: 1;
+      padding: 8px 12px;
+      border: 1px solid var(--slate-300);
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      outline: none;
+    }
+    .density-input:focus { border-color: var(--primary); }
+
+    .density-meter-box {
+      background: var(--slate-50);
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      margin-bottom: 14px;
+    }
+    .meter-bar-track {
+      height: 8px;
+      background: var(--slate-200);
+      border-radius: 4px;
+      overflow: hidden;
+      margin: 8px 0;
+      position: relative;
+    }
+    .meter-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--emerald);
+      transition: width 0.3s, background-color 0.3s;
+    }
+    .meter-scale {
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      color: var(--slate-400);
+    }
+
+    .keyword-rank-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      max-height: 220px;
+      overflow-y: auto;
+    }
+    .keyword-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 10px;
+      background: var(--slate-50);
+      border-radius: var(--radius-sm);
+      font-size: 12.5px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .keyword-item:hover {
+      background: #eff6ff;
+      border-color: #bfdbfe;
+    }
+    .keyword-name {
+      font-weight: 700;
+      color: var(--slate-800);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .keyword-stats {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+    }
+    .badge-status {
+      font-size: 10.5px;
+      padding: 2px 7px;
+      border-radius: 12px;
+      font-weight: 700;
+    }
+    .badge-optimal { background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0; }
+    .badge-low { background: #fffbeb; color: #d97706; border: 1px solid #fde68a; }
+    .badge-high { background: #fff1f2; color: #e11d48; border: 1px solid #fecdd3; }
+
+    /* Self-Ad PostSync AI Banner */
+    .self-ad-box {
+      margin-top: 36px;
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      border-radius: var(--radius-lg);
+      padding: 24px 30px;
+      color: #ffffff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    @media (max-width: 768px) {
+      .self-ad-box { flex-direction: column; text-align: center; }
+    }
+    .ad-txt h3 {
+      font-size: 17px;
+      font-weight: 800;
+      margin-bottom: 6px;
+      color: #93c5fd;
+    }
+    .ad-txt p {
+      font-size: 13.5px;
+      color: #cbd5e1;
+      line-height: 1.5;
+    }
+    .ad-btn {
+      background: linear-gradient(135deg, #3b82f6, #6366f1);
+      color: #ffffff;
+      padding: 12px 22px;
+      border-radius: var(--radius-sm);
+      font-size: 13.5px;
+      font-weight: 800;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+    .ad-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(59,130,246,0.4);
+    }
+
+    /* SEO Deep Article & FAQ */
+    .seo-guide-section {
+      margin-top: 48px;
+      background: #ffffff;
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-lg);
+      padding: 36px;
+    }
+    .seo-guide-section h2 {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--slate-900);
+      margin-bottom: 14px;
+      border-bottom: 2px solid var(--slate-100);
+      padding-bottom: 10px;
+    }
+    .seo-guide-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 18px 0 28px 0;
+      font-size: 13px;
+    }
+    .seo-guide-table th, .seo-guide-table td {
+      border: 1px solid var(--slate-200);
+      padding: 11px 14px;
+      text-align: left;
+    }
+    .seo-guide-table th { background: var(--slate-50); font-weight: 700; color: var(--slate-800); }
+    .seo-guide-section p { font-size: 14px; color: var(--slate-600); margin-bottom: 16px; line-height: 1.7; }
+
+    .faq-list {
+      margin-top: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .faq-item {
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-sm);
+      padding: 14px 18px;
+      background: #ffffff;
+    }
+    .faq-q {
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--slate-900);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .faq-a {
+      font-size: 13px;
+      color: var(--slate-600);
+      line-height: 1.6;
+    }
+
+    /* Toast Notification */
+    .toast-box {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(8px);
+      color: #ffffff;
+      padding: 12px 24px;
+      border-radius: 30px;
+      font-size: 13.5px;
+      font-weight: 700;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      pointer-events: none;
+    }
+    .toast-box.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 40px 20px 48px 20px;
+      color: var(--slate-500);
+      font-size: 12px;
+      border-top: 1px solid var(--slate-200);
+      background: #ffffff;
+      margin-top: 60px;
+    }
+    footer a { color: var(--slate-700); text-decoration: none; font-weight: 600; }
+  </style>
+
+  <!-- Structured Data: JSON-LD for Programmatic SEO -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "SoftwareApplication",
+        "name": "PostSync 자소서 바이트 계산기 & 네이버 C-Rank 키워드 밀도 분석기",
+        "operatingSystem": "All",
+        "applicationCategory": "BusinessApplication",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "KRW"
+        },
+        "description": "사람인, 잡코리아, 공기업 NCS 자소서 글자수/바이트 실시간 비교 계산 및 네이버 블로그 C-Rank 상위노출 최적 키워드 밀도(1~2.5%) 진단 유틸리티."
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "사람인과 잡코리아의 바이트 계산 기준이 왜 다른가요?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "한글은 두 플랫폼 모두 2바이트로 동일하지만, 줄바꿈(엔터) 처리에서 사람인은 윈도우 표준인 CRLF(2바이트)를 적용하고, 잡코리아는 리눅스 표준인 LF(1바이트)를 적용하기 때문에 엔터가 많은 글일수록 사람인의 바이트 수가 더 높게 측정됩니다."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "네이버 블로그 C-Rank에서 키워드 밀도는 몇 퍼센트가 가장 좋은가요?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "네이버 알고리즘 연구 결과, 전체 본문 글자수 대비 핵심 키워드 밀도는 1.0%~2.5%가 가장 이상적인 상위노출 골든존입니다. 1% 미만은 주제 집중도 부족으로 분류되며, 3.5%를 초과하면 기계적인 어뷰징 도배글로 판단되어 패널티를 받을 수 있습니다."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+
+  <!-- Top Global Header -->
+  <header>
+    <div class="header-inner">
+      <a href="#" onclick="window.scrollTo({top:0, behavior:'smooth'}); return false;" class="brand" title="페이지 상단으로 이동">
+        <i class="fa-solid fa-layer-group"></i>
+        <span>PostSync Tools</span>
+        <span class="brand-tag">Micro Hub</span>
+      </a>
+      <div class="header-right">
+        <a href="/crop" class="header-link">✂️ 슬라이서</a>
+        <a href="/adcheck" class="header-link">⚖️ 광고법 스캐너</a>
+        <a href="https://postsyncapp.com" class="header-btn" target="_blank">PostSync AI 본체 <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:11px; margin-left:3px;"></i></a>
+      </div>
+    </div>
+  </header>
+
+  <!-- 5 Micro-Tools Cross-Traffic Navigation Tab Bar -->
+  <nav class="tools-nav-bar" aria-label="Micro Tools List">
+    <div class="tools-nav-inner">
+      <a href="/crop" class="tool-tab">
+        <i class="fa-solid fa-scissors"></i>
+        <span>상세페이지 슬라이서</span>
+      </a>
+      <a href="/adcheck" class="tool-tab">
+        <i class="fa-solid fa-scale-balanced"></i>
+        <span>광고법 금칙어 스캐너</span>
+      </a>
+      <a href="/byte" class="tool-tab active">
+        <i class="fa-solid fa-font"></i>
+        <span>자소서 바이트 계산기</span>
+      </a>
+      <a href="/hwpx" class="tool-tab">
+        <i class="fa-solid fa-file-lines"></i>
+        <span>HWPX 안심 변환기</span>
+      </a>
+      <a href="/utm" class="tool-tab">
+        <i class="fa-solid fa-link"></i>
+        <span>마케팅 UTM 빌더</span>
+      </a>
+      <a href="/place" class="tool-tab">
+        <i class="fa-solid fa-location-dot"></i>
+        <span>플레이스 순위 조회</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- Google AdSense Header Slot (728x90) -->
+  <div class="ad-slot-header">
+    <span>[Google AdSense Banner Area - 728x90]</span>
+  </div>
+
+  <div class="main-wrapper">
+    <!-- Hero -->
+    <div class="hero-section">
+      <div class="hero-badge">
+        <i class="fa-solid fa-shield-halved"></i> 서버 전송 0% · 100% 브라우저 메모리 로컬 연산
+      </div>
+      <h1 class="hero-title">자소서 글자수·바이트 계산기 & C-Rank 키워드 밀도 분석기</h1>
+      <p class="hero-subtitle">
+        사람인·잡코리아·공기업 NCS 플랫폼별 바이트 차이를 1초 만에 비교하고, 네이버 블로그 스마트블록 상위노출에 최적화된 <b>키워드 밀도 골든존(1~2.5%)</b>을 실시간으로 분석합니다.
+      </p>
+    </div>
+
+    <!-- Main Workspace Grid -->
+    <div class="app-grid">
+      <!-- Left: Editor & Toolbar -->
+      <div class="editor-card">
+        <div class="editor-toolbar">
+          <div class="tool-btn-group">
+            <button class="btn-tool" id="btnSampleResume"><i class="fa-solid fa-user-graduate"></i> 샘플 자소서</button>
+            <button class="btn-tool" id="btnSampleBlog"><i class="fa-brands fa-blogger"></i> 샘플 블로그글</button>
+            <button class="btn-tool" id="btnTrimSpaces" title="불필요한 2칸 이상 공백을 1칸으로 정리"><i class="fa-solid fa-compress"></i> 공백 정리</button>
+            <button class="btn-tool" id="btnTrimLines" title="다중 빈 줄을 1줄로 정리"><i class="fa-solid fa-align-justify"></i> 빈줄 압축</button>
+          </div>
+          <div class="tool-btn-group">
+            <button class="btn-tool btn-tool-primary" id="btnCopyText"><i class="fa-solid fa-copy"></i> 복사하기</button>
+            <button class="btn-tool" id="btnClearText" style="color:var(--rose);"><i class="fa-solid fa-trash-can"></i></button>
+          </div>
+        </div>
+
+        <div class="editor-body">
+          <textarea id="mainEditor" class="text-editor" placeholder="여기에 자기소개서 원고나 블로그 포스팅 초안을 붙여넣으세요. 실시간으로 글자수, 플랫폼별 바이트, 네이버 C-Rank 키워드 밀도가 분석됩니다..." autofocus></textarea>
+        </div>
+
+        <div class="editor-footer-status">
+          <span><i class="fa-solid fa-bolt" style="color:#eab308;"></i> 실시간 자동 연산 중</span>
+          <span id="readTimeStatus">예상 완독: 약 0분 0초</span>
+        </div>
+      </div>
+
+      <!-- Right: Real-time Analysis Dashboard -->
+      <div class="stats-container">
+        <!-- Card 1: Core Metrics Summary -->
+        <div class="stat-card">
+          <div class="stat-header">
+            <span><i class="fa-solid fa-chart-simple"></i> 기본 분량 통계</span>
+            <span style="font-size:11.5px; color:var(--slate-500);">원고지 <strong id="manuscriptCount" style="color:var(--primary);">0</strong>장</span>
+          </div>
+
+          <div class="counter-hero-grid">
+            <div class="counter-box-main">
+              <div class="val" id="charWithSpace">0</div>
+              <div class="lbl">공백 포함 글자수</div>
+            </div>
+            <div class="counter-box-main" style="background:#f0fdf4; border-color:#bbf7d0;">
+              <div class="val" id="charWithoutSpace" style="color:#16a34a;">0</div>
+              <div class="lbl">공백 제외 글자수</div>
+            </div>
+          </div>
+
+          <div class="counter-sub-grid">
+            <div class="sub-box">
+              <div class="val" id="wordCount">0</div>
+              <div class="lbl">단어수 (Words)</div>
+            </div>
+            <div class="sub-box">
+              <div class="val" id="sentenceCount">0</div>
+              <div class="lbl">문장수</div>
+            </div>
+            <div class="sub-box">
+              <div class="val" id="paragraphCount">0</div>
+              <div class="lbl">문단수</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2: Platform Byte Comparison -->
+        <div class="stat-card">
+          <div class="stat-header">
+            <span><i class="fa-solid fa-briefcase"></i> 채용 플랫폼별 바이트(Byte)</span>
+            <span style="font-size:11px; color:var(--slate-400);">실시간 자동 분기</span>
+          </div>
+
+          <table class="byte-table">
+            <tr>
+              <td class="name">
+                <span class="byte-tag tag-blue">사람인</span>
+                <span>Saramin</span>
+              </td>
+              <td class="rule">한글 2B / 줄바꿈 2B</td>
+              <td class="result" id="byteSaramin">0 Byte</td>
+            </tr>
+            <tr>
+              <td class="name">
+                <span class="byte-tag tag-green">잡코리아</span>
+                <span>JobKorea</span>
+              </td>
+              <td class="rule">한글 2B / 줄바꿈 1B</td>
+              <td class="result" id="byteJobkorea">0 Byte</td>
+            </tr>
+            <tr>
+              <td class="name">
+                <span class="byte-tag tag-purple">공기업 NCS</span>
+                <span>UTF-8 규격</span>
+              </td>
+              <td class="rule">한글 3B / 줄바꿈 1B</td>
+              <td class="result" id="byteNcs">0 Byte</td>
+            </tr>
+          </table>
+        </div>
+
+        <!-- Card 3: Naver Blog C-Rank Keyword Density -->
+        <div class="stat-card">
+          <div class="stat-header">
+            <span><i class="fa-solid fa-bullseye"></i> 네이버 C-Rank 키워드 밀도</span>
+            <span style="font-size:11px; color:var(--slate-500);">골든존 1.0% ~ 2.5%</span>
+          </div>
+
+          <!-- Specific Keyword Quick Finder -->
+          <div class="density-input-wrap">
+            <input type="text" id="targetKeywordInput" class="density-input" placeholder="확인할 핵심 키워드 입력 (예: 개인회생, 이혼소송)">
+            <button class="btn-tool btn-tool-primary" id="btnCheckKeyword" style="padding:0 14px;">조회</button>
+          </div>
+
+          <div class="density-meter-box" id="keywordResultBox" style="display:none;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <strong id="resKeywordName" style="font-size:14px; color:var(--slate-900);">키워드</strong>
+              <span id="resKeywordBadge" class="badge-status badge-optimal">최적 골든존</span>
+            </div>
+            <div class="meter-bar-track">
+              <div class="meter-bar-fill" id="resMeterFill"></div>
+            </div>
+            <div class="meter-scale">
+              <span>0% (부족)</span>
+              <span>1.0% (최적 시작)</span>
+              <span>2.5% (주의 시작)</span>
+              <span>3.5%+ (도배 위험)</span>
+            </div>
+            <div style="font-size:11.5px; color:var(--slate-600); margin-top:8px; display:flex; justify-content:space-between;">
+              <span id="resKeywordCountText">등장 0회</span>
+              <span id="resKeywordDensityText">밀도: 0.00%</span>
+            </div>
+          </div>
+
+          <!-- Top 6 Extracted Keywords -->
+          <div style="font-size:12px; font-weight:700; color:var(--slate-700); margin-bottom:8px; display:flex; justify-content:space-between;">
+            <span>본문 주요 키워드 빈도 TOP 6</span>
+            <span style="font-size:11px; color:var(--slate-400);">자동 추출</span>
+          </div>
+          <div class="keyword-rank-list" id="keywordRankList">
+            <div style="text-align:center; padding:18px 0; color:var(--slate-400); font-size:12px;">
+              텍스트를 입력하면 키워드가 자동 추출됩니다.
+            </div>
+          </div>
+
+          <!-- Blog Optimization Diagnostic Advice -->
+          <div style="margin-top:14px; padding:10px 12px; background:var(--slate-50); border-radius:var(--radius-sm); font-size:11.5px; color:var(--slate-600); line-height:1.6;">
+            <div style="font-weight:700; color:var(--slate-800); margin-bottom:2px;">
+              💡 2026 네이버 상위노출 권장 규격:
+            </div>
+            <span id="blogAdviceLength">• 본문 길이: 1,500자 이상 작성 권장</span><br>
+            <span id="blogAdviceImage">• 권장 이미지 장수: 약 4~6장 배치 최적</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Self-Ad PostSync B2B Promo Banner -->
+    <div class="self-ad-box">
+      <div class="ad-txt">
+        <h3>🚀 키워드 밀도와 네이버 C-Rank 알고리즘 맞추기 번거로우신가요?</h3>
+        <p>
+          PostSync AI는 글자수, 키워드 밀도(1.5%~2.2%), JSON-LD 스키마, 소제목 구조까지 100% 자동 최적화된 고품질 전문직 블로그 원고를 완전 자동으로 집필합니다.
+        </p>
+      </div>
+      <a href="/" class="ad-btn">PostSync 무인 엔진 3회 무료 체험</a>
+    </div>
+
+    <!-- pSEO Deep Knowledge Section -->
+    <div class="seo-guide-section">
+      <h2>📊 사람인 vs 잡코리아 vs 공기업 NCS 바이트 계산 기준 비교</h2>
+      <p>
+        지원서 제출 직전 가장 빈번하게 발생하는 글자수 초과 오류는 각 취업 포털마다 적용하는 문자 바이트(Byte) 및 줄바꿈(엔터) 연산 규칙이 다르기 때문입니다.
+      </p>
+
+      <div style="overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 18px 0 28px 0;">
+        <table class="seo-guide-table" style="margin: 0;">
+          <thead>
+            <tr>
+              <th>구분</th>
+              <th>한글(가~힣)</th>
+              <th>영문 / 숫자 / 특수기호</th>
+              <th>공백(띄어쓰기)</th>
+              <th>줄바꿈(엔터/개행)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><b>사람인 (Saramin)</b></td>
+              <td>2 Byte</td>
+              <td>1 Byte</td>
+              <td>1 Byte</td>
+              <td><b>2 Byte (CRLF)</b></td>
+            </tr>
+            <tr>
+              <td><b>잡코리아 (JobKorea)</b></td>
+              <td>2 Byte</td>
+              <td>1 Byte</td>
+              <td>1 Byte</td>
+              <td><b>1 Byte (LF)</b></td>
+            </tr>
+            <tr>
+              <td><b>공기업 / 공공기관 (NCS)</b></td>
+              <td><b>3 Byte (UTF-8)</b></td>
+              <td>1 Byte</td>
+              <td>1 Byte</td>
+              <td>1 Byte</td>
+            </tr>
+            <tr>
+              <td><b>네이버 블로그 / 스마트에디터</b></td>
+              <td colspan="4">바이트 대신 <b>순수 글자수(공백 포함/제외)</b>를 기준으로 카운트</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>🎯 2026 네이버 블로그 C-Rank와 스마트블록의 키워드 밀도 황금률</h2>
+      <p>
+        과거에는 검색 상위노출을 위해 키워드를 무조건 많이 반복하는 방식이 통했으나, 2026년 현재 네이버 C-Rank 및 스마트블록 알고리즘은 <b>'문맥적 연관성(Semantic Context)'</b>과 <b>'어뷰징 방지 필터'</b>를 엄격히 적용합니다.
+      </p>
+      <p>
+        • <b>0% ~ 1.0% (부족):</b> 본문 분량 대비 핵심 키워드 출현 횟수가 적어 검색 로봇이 글의 핵심 주제를 판별하기 어렵습니다.<br>
+        • <b>1.0% ~ 2.5% (골든존 - 최적):</b> 자연스러운 문맥 안에서 키워드가 고르게 분포되어 상위노출 지수가 가장 높게 평가됩니다.<br>
+        • <b>3.5% 초과 (위험):</b> 기계적인 키워드 도배(Stuffing)로 판정되어 네이버 클린봇 및 저품질 패널티 대상이 될 수 있습니다.
+      </p>
+
+      <h2 style="margin-top: 36px;">❓ 자주 묻는 질문 (FAQ)</h2>
+      <div class="faq-list">
+        <div class="faq-item">
+          <div class="faq-q"><i class="fa-solid fa-lock" style="color:var(--primary);"></i> 작성 중인 자기소개서나 기밀 초안이 외부 서버로 전송되나요?</div>
+          <div class="faq-a">
+            절대 전송되지 않습니다. 본 글자수·바이트 계산기는 순수 웹 브라우저 로컬 자바스크립트 엔진으로만 구동되며, 입력하신 어떠한 글도 외부 서버로 전송되거나 저장되지 않아 안심하고 대외비 원고를 검토하실 수 있습니다.
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q"><i class="fa-solid fa-circle-question" style="color:var(--primary);"></i> 원고지 매수는 어떤 기준으로 환산되나요?</div>
+          <div class="faq-a">
+            대한민국 표준 200자 원고지 기준으로, 공백을 포함한 전체 글자수를 200으로 나누어 올림 계산합니다. 각종 문예 공모전 및 논술 제출 시 참고하실 수 있습니다.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Global Footer -->
+  <footer>
+    <div style="max-width:840px; margin:0 auto; padding:0 16px;">
+      <!-- Security & Privacy Disclaimer (애드센스 규정 충족) -->
+      <div style="background:var(--slate-50); border:1px solid var(--slate-200); border-radius:var(--radius-sm); padding:12px 18px; margin-bottom:20px; text-align:left; font-size:12px; color:var(--slate-600); line-height:1.65;">
+        <i class="fa-solid fa-shield-halved" style="color:var(--emerald); margin-right:6px;"></i>
+        <strong>100% 브라우저 로컬 연산 및 보안 보증:</strong> 본 도구는 클라이언트 브라우저 로컬 JavaScript 엔진으로 동작하며, 입력하신 자기소개서 원고나 블로그 텍스트는 외부 서버로 1바이트도 전송되지 않고 사용자 기기 메모리에서만 안전하게 연산된 후 자동 소멸합니다.
+      </div>
+
+      <p style="display:flex; justify-content:center; align-items:center; gap:16px; flex-wrap:wrap; font-size:13px; font-weight:600;">
+        <a href="https://postsyncapp.com/privacy" target="_blank" style="color:var(--slate-700); text-decoration:none;">개인정보처리방침</a>
+        <span style="color:var(--slate-300);">|</span>
+        <a href="https://postsyncapp.com/terms" target="_blank" style="color:var(--slate-700); text-decoration:none;">이용약관</a>
+        <span style="color:var(--slate-300);">|</span>
+        <a href="https://postsyncapp.com" target="_blank" style="color:var(--slate-700); text-decoration:none;">PostSync AI 공식홈</a>
+      </p>
+
+      <p style="margin-top:12px; color:var(--slate-500); font-size:12px;">
+        서비스 문의 & 제휴: <a href="mailto:contact@postsyncapp.com" style="color:var(--primary); font-weight:700; text-decoration:none;">contact@postsyncapp.com</a>
+      </p>
+
+      <p style="margin-top:8px; color:var(--slate-400); font-size:11.5px;">
+        © 2026 PostSync AI. All rights reserved. 본 도구의 바이트 및 키워드 밀도 지표는 각 플랫폼의 공개 알고리즘 기준 참조용입니다.
+      </p>
+    </div>
+  </footer>
+
+  <!-- Core JavaScript Engine -->
+  <script>
+    (function() {
+      // DOM Elements
+      const editor = document.getElementById('mainEditor');
+      const charWithSpaceEl = document.getElementById('charWithSpace');
+      const charWithoutSpaceEl = document.getElementById('charWithoutSpace');
+      const wordCountEl = document.getElementById('wordCount');
+      const sentenceCountEl = document.getElementById('sentenceCount');
+      const paragraphCountEl = document.getElementById('paragraphCount');
+      const manuscriptCountEl = document.getElementById('manuscriptCount');
+      const readTimeStatusEl = document.getElementById('readTimeStatus');
+
+      const byteSaraminEl = document.getElementById('byteSaramin');
+      const byteJobkoreaEl = document.getElementById('byteJobkorea');
+      const byteNcsEl = document.getElementById('byteNcs');
+
+      const targetKeywordInput = document.getElementById('targetKeywordInput');
+      const btnCheckKeyword = document.getElementById('btnCheckKeyword');
+      const keywordResultBox = document.getElementById('keywordResultBox');
+      const resKeywordName = document.getElementById('resKeywordName');
+      const resKeywordBadge = document.getElementById('resKeywordBadge');
+      const resMeterFill = document.getElementById('resMeterFill');
+      const resKeywordCountText = document.getElementById('resKeywordCountText');
+      const resKeywordDensityText = document.getElementById('resKeywordDensityText');
+
+      const keywordRankList = document.getElementById('keywordRankList');
+      const blogAdviceLength = document.getElementById('blogAdviceLength');
+      const blogAdviceImage = document.getElementById('blogAdviceImage');
+
+      // Sample Data
+      const SAMPLE_RESUME = `[도전과 성장을 두려워하지 않는 데이터 기반 마케터]
+
+대학 시절, 스타트업 서포터즈 팀장으로서 고객 유입률 250% 성장을 달성한 경험이 있습니다. 초기에는 단순 노출 중심의 홍보를 진행했으나 이탈률이 70%에 달하는 한계에 부딪혔습니다. 
+
+이를 해결하기 위해 GA4를 도입하여 사용자 유입 경로와 체류 시간을 정밀 분석했습니다. 그 결과, 2030 직장인 타깃은 긴 서술형 콘텐츠보다 실질적인 문제 해결형 체크리스트에 훨씬 높은 반응을 보인다는 인사이트를 도출했습니다.
+
+이후 상세페이지 구조를 핵심 가치 두괄식 배치와 카드뉴스 형식으로 전면 개편하고, 타깃 맞춤형 랜딩페이지를 제작했습니다. 그 결과 3개월 만에 전환율은 기존 1.2%에서 4.8%로 4배 상승했으며, 서포터즈 우수 프로젝트로 선정되었습니다.
+
+입사 후에도 직관에만 의존하지 않고 객관적인 고객 데이터와 시장 지표를 분석하여 실질적인 비즈니스 성과를 창출하는 인재가 되겠습니다.`;
+
+      const SAMPLE_BLOG = `최근 상가임대차보호법 개정과 관련하여 임대인과 임차인 간의 권리금 회수 및 계약갱신요구권을 둘러싼 법적 분쟁이 급증하고 있습니다. 
+
+상가임대차보호법에 따르면 임차인은 계약 만료 6개월 전부터 1개월 전까지 임대인에게 계약갱신을 요구할 수 있으며, 전체 임대차 기간은 최대 10년을 초과하지 않는 범위에서 보장됩니다.
+
+그러나 권리금 회수 기회의 경우, 임대인이 정당한 사유 없이 신규 임차인과의 계약 체결을 거절하면 손해배상 청구 소송의 대상이 될 수 있습니다. 상가임대차보호법 제10조의4는 이러한 임차인의 정당한 재산권 행사를 두텁게 보호하고 있습니다.
+
+따라서 상가임대차보호법 관련 분쟁이 발생했을 때는 내용증명 발송 단계부터 객관적인 증거를 확보하고, 부동산 전문 변호사의 조력을 받아 신속하게 대처하는 것이 권리 구제의 핵심입니다.`;
+
+      // Korean Stopwords (불용어 필터링)
+      const STOPWORDS = new Set([
+        '은', '는', '이', '가', '을', '를', '의', '에', '로', '으로', '과', '와', '도', '에서', '에게', '하여', '하고',
+        '그', '이', '저', '것', '수', '등', '및', '위해', '대한', '통해', '있는', '없는', '따라', '경우', '있다', '한다',
+        '입니다', '있습니다', '합니다', '하지만', '그리고', '그러나', '따라서', '또한', '통한', '관한', '대해', '모든'
+      ]);
+
+      // Calculate Real-time Statistics
+      function calculateStats() {
+        const text = editor.value;
+
+        // 1. Basic Character Counts
+        const lenWithSpace = text.length;
+        const textWithoutSpace = text.replace(/\s/g, '');
+        const lenWithoutSpace = textWithoutSpace.length;
+
+        charWithSpaceEl.textContent = lenWithSpace.toLocaleString();
+        charWithoutSpaceEl.textContent = lenWithoutSpace.toLocaleString();
+
+        // 2. Words, Sentences, Paragraphs
+        const words = text.trim() ? text.trim().split(/\s+/).filter(Boolean) : [];
+        wordCountEl.textContent = words.length.toLocaleString();
+
+        const sentences = text.trim() ? text.split(/[.!?]+(?:\s|$)/).filter(s => s.trim().length > 0) : [];
+        sentenceCountEl.textContent = sentences.length.toLocaleString();
+
+        const paragraphs = text.trim() ? text.split(/\n+/).filter(p => p.trim().length > 0) : [];
+        paragraphCountEl.textContent = paragraphs.length.toLocaleString();
+
+        // 200자 원고지 환산
+        const manuscriptPages = lenWithSpace > 0 ? Math.ceil(lenWithSpace / 200) : 0;
+        manuscriptCountEl.textContent = manuscriptPages.toLocaleString();
+
+        // 예상 완독 시간 (분당 500자)
+        if (lenWithSpace === 0) {
+          readTimeStatusEl.textContent = '예상 완독: 약 0분 0초';
+        } else {
+          const totalSeconds = Math.round((lenWithSpace / 500) * 60);
+          const mins = Math.floor(totalSeconds / 60);
+          const secs = totalSeconds % 60;
+          readTimeStatusEl.textContent = `예상 완독: 약 ${mins}분 ${secs}초`;
+        }
+
+        // 3. Platform Bytes
+        calculateBytes(text);
+
+        // 4. Keyword Frequency & Density
+        analyzeKeywords(text, lenWithoutSpace);
+
+        // 5. Blog Advice Update
+        updateBlogAdvice(lenWithoutSpace);
+      }
+
+      // Platform Byte Calculation Logic
+      function calculateBytes(text) {
+        let saramin = 0;
+        let jobkorea = 0;
+        let ncs = 0;
+
+        for (let i = 0; i < text.length; i++) {
+          const ch = text.charAt(i);
+          const code = text.charCodeAt(i);
+
+          if (ch === '\n') {
+            saramin += 2; // CRLF 2 Byte
+            jobkorea += 1; // LF 1 Byte
+            ncs += 1;
+          } else if (ch === '\r') {
+            // ignore lone CR
+            continue;
+          } else if (code <= 127) {
+            saramin += 1;
+            jobkorea += 1;
+            ncs += 1;
+          } else {
+            // 한글 및 다국어 유니코드
+            saramin += 2; // 사람인 한글 2 Byte
+            jobkorea += 2; // 잡코리아 한글 2 Byte
+            ncs += 3; // UTF-8 한글 3 Byte
+          }
+        }
+
+        byteSaraminEl.textContent = `${saramin.toLocaleString()} Byte`;
+        byteJobkoreaEl.textContent = `${jobkorea.toLocaleString()} Byte`;
+        byteNcsEl.textContent = `${ncs.toLocaleString()} Byte`;
+      }
+
+      // Keyword Density & C-Rank Extraction
+      function analyzeKeywords(text, totalCharsWithoutSpace) {
+        if (!text.trim() || totalCharsWithoutSpace === 0) {
+          keywordRankList.innerHTML = '<div style="text-align:center; padding:18px 0; color:var(--slate-400); font-size:12px;">텍스트를 입력하면 키워드가 자동 추출됩니다.</div>';
+          if (targetKeywordInput.value.trim()) checkTargetKeyword(targetKeywordInput.value.trim(), text, totalCharsWithoutSpace);
+          return;
+        }
+
+        // Extract Korean/English words (length >= 2)
+        const rawWords = text.match(/[가-힣a-zA-Z0-9]{2,}/g) || [];
+        const freqMap = {};
+
+        rawWords.forEach(w => {
+          const cleanWord = w.trim();
+          if (cleanWord.length < 2) return;
+          if (STOPWORDS.has(cleanWord)) return;
+
+          freqMap[cleanWord] = (freqMap[cleanWord] || 0) + 1;
+        });
+
+        // Sort by frequency descending
+        const sorted = Object.entries(freqMap)
+          .filter(([word, count]) => count >= 2 || rawWords.length < 30)
+          .sort((a, b) => b[1] - a[1])
+          .slice(0, 6);
+
+        if (sorted.length === 0) {
+          keywordRankList.innerHTML = '<div style="text-align:center; padding:18px 0; color:var(--slate-400); font-size:12px;">2회 이상 반복된 주요 키워드가 없습니다.</div>';
+        } else {
+          keywordRankList.innerHTML = sorted.map(([word, count]) => {
+            const density = ((count * word.length) / totalCharsWithoutSpace) * 100;
+            const status = getDensityStatus(density);
+            return `
+              <div class="keyword-item" onclick="selectKeyword('${escapeHtml(word)}')">
+                <span class="keyword-name"><i class="fa-solid fa-tag" style="color:var(--slate-400); font-size:11px;"></i> ${escapeHtml(word)}</span>
+                <div class="keyword-stats">
+                  <span>${count}회</span>
+                  <span style="font-weight:700; color:var(--slate-700);">${density.toFixed(1)}%</span>
+                  <span class="badge-status ${status.badgeClass}">${status.label}</span>
+                </div>
+              </div>
+            `;
+          }).join('');
+        }
+
+        // Also refresh manual target keyword if input is present
+        const currentTarget = targetKeywordInput.value.trim();
+        if (currentTarget) {
+          checkTargetKeyword(currentTarget, text, totalCharsWithoutSpace);
+        }
+      }
+
+      function getDensityStatus(density) {
+        if (density < 1.0) {
+          return { label: '부족', badgeClass: 'badge-low', color: '#d97706' };
+        } else if (density <= 2.5) {
+          return { label: '골든존', badgeClass: 'badge-optimal', color: '#059669' };
+        } else if (density <= 3.5) {
+          return { label: '주의', badgeClass: 'badge-low', color: '#d97706' };
+        } else {
+          return { label: '도배위험', badgeClass: 'badge-high', color: '#e11d48' };
+        }
+      }
+
+      // Check Specific Target Keyword
+      function checkTargetKeyword(keyword, text, totalCharsWithoutSpace) {
+        if (!keyword || !text) {
+          keywordResultBox.style.display = 'none';
+          return;
+        }
+
+        const regex = new RegExp(escapeRegex(keyword), 'gi');
+        const matches = text.match(regex) || [];
+        const count = matches.length;
+        const density = totalCharsWithoutSpace > 0 ? ((count * keyword.length) / totalCharsWithoutSpace) * 100 : 0;
+        const status = getDensityStatus(density);
+
+        keywordResultBox.style.display = 'block';
+        resKeywordName.textContent = `"${keyword}"`;
+        resKeywordBadge.className = `badge-status ${status.badgeClass}`;
+        resKeywordBadge.textContent = status.label;
+
+        // Visual Progress fill (capped at 100% where 4% is full meter)
+        const meterPercent = Math.min((density / 4.0) * 100, 100);
+        resMeterFill.style.width = `${meterPercent}%`;
+        resMeterFill.style.backgroundColor = status.color;
+
+        resKeywordCountText.textContent = `등장 ${count}회`;
+        resKeywordDensityText.textContent = `밀도: ${density.toFixed(2)}%`;
+      }
+
+      window.selectKeyword = function(word) {
+        targetKeywordInput.value = word;
+        const text = editor.value;
+        const lenWithoutSpace = text.replace(/\s/g, '').length;
+        checkTargetKeyword(word, text, lenWithoutSpace);
+      };
+
+      // Blog Optimization Diagnostic Advice
+      function updateBlogAdvice(lenWithoutSpace) {
+        if (lenWithoutSpace < 1000) {
+          blogAdviceLength.innerHTML = `• 본문 길이: <strong style="color:var(--rose);">${lenWithoutSpace}자</strong> (네이버 상위노출을 위해 1,500자 이상 보강 권장)`;
+          blogAdviceImage.innerHTML = `• 권장 이미지: <strong>최소 3~4장</strong> 이상 배치`;
+        } else if (lenWithoutSpace < 2500) {
+          blogAdviceLength.innerHTML = `• 본문 길이: <strong style="color:var(--emerald);">${lenWithoutSpace}자</strong> (네이버 스마트블록/블로그 탭 표준 최적 분량)`;
+          blogAdviceImage.innerHTML = `• 권장 이미지: <strong>4~6장</strong> 배치 최적`;
+        } else {
+          blogAdviceLength.innerHTML = `• 본문 길이: <strong style="color:var(--primary);">${lenWithoutSpace}자</strong> (전문직 심층 칼럼 및 C-Rank 최상위권 특화 분량)`;
+          blogAdviceImage.innerHTML = `• 권장 이미지: <strong>6~8장</strong> (소제목마다 1장씩 균등 분할)`;
+        }
+      }
+
+      // Event Listeners
+      editor.addEventListener('input', calculateStats);
+
+      btnCheckKeyword.addEventListener('click', () => {
+        const kw = targetKeywordInput.value.trim();
+        if (!kw) {
+          showToast('확인할 키워드를 입력해주세요.');
+          targetKeywordInput.focus();
+          return;
+        }
+        const text = editor.value;
+        const lenWithoutSpace = text.replace(/\s/g, '').length;
+        checkTargetKeyword(kw, text, lenWithoutSpace);
+      });
+
+      targetKeywordInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          btnCheckKeyword.click();
+        }
+      });
+
+      // Sample Loader
+      document.getElementById('btnSampleResume').addEventListener('click', () => {
+        editor.value = SAMPLE_RESUME;
+        calculateStats();
+        showToast('대기업 마케팅 직무 합격 자소서 샘플이 로드되었습니다.');
+      });
+
+      document.getElementById('btnSampleBlog').addEventListener('click', () => {
+        editor.value = SAMPLE_BLOG;
+        calculateStats();
+        targetKeywordInput.value = '상가임대차보호법';
+        btnCheckKeyword.click();
+        showToast('네이버 C-Rank 상위노출 전문직 법률 블로그 샘플이 로드되었습니다.');
+      });
+
+      // Text Utilities: Trim Spaces
+      document.getElementById('btnTrimSpaces').addEventListener('click', () => {
+        const original = editor.value;
+        const trimmed = original.replace(/[ \t]{2,}/g, ' ');
+        if (original === trimmed) {
+          showToast('정리할 연속 공백이 없습니다.');
+        } else {
+          editor.value = trimmed;
+          calculateStats();
+          showToast('불필요한 연속 띄어쓰기가 깔끔하게 1칸으로 정리되었습니다.');
+        }
+      });
+
+      // Text Utilities: Trim Empty Lines
+      document.getElementById('btnTrimLines').addEventListener('click', () => {
+        const original = editor.value;
+        const trimmed = original.replace(/\n{3,}/g, '\n\n');
+        if (original === trimmed) {
+          showToast('정리할 다중 빈 줄이 없습니다.');
+        } else {
+          editor.value = trimmed;
+          calculateStats();
+          showToast('3줄 이상의 다중 빈 줄이 1줄로 압축되었습니다.');
+        }
+      });
+
+      // Copy to Clipboard
+      document.getElementById('btnCopyText').addEventListener('click', () => {
+        const text = editor.value;
+        if (!text.trim()) {
+          showToast('복사할 텍스트가 없습니다.');
+          return;
+        }
+        navigator.clipboard.writeText(text).then(() => {
+          showToast('원고가 클립보드에 복사되었습니다!');
+        });
+      });
+
+      // Clear
+      document.getElementById('btnClearText').addEventListener('click', () => {
+        if (!editor.value) return;
+        editor.value = '';
+        targetKeywordInput.value = '';
+        keywordResultBox.style.display = 'none';
+        calculateStats();
+        editor.focus();
+        showToast('내용이 초기화되었습니다.');
+      });
+
+      // Helpers
+      function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+      }
+      function escapeRegex(str) {
+        return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      }
+
+      // Initialize on load
+      calculateStats();
+    })();
+
+    // Global Modern Toast Function
+    function showToast(msg) {
+      let toast = document.getElementById('globalToast');
+      if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'globalToast';
+        toast.className = 'toast-box';
+        document.body.appendChild(toast);
+      }
+      toast.innerHTML = `<i class="fa-solid fa-sparkles" style="color:#60a5fa;"></i> <span>${msg}</span>`;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 2500);
+    }
+  </script>
+</body>
+</html>
