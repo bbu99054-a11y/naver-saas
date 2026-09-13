@@ -761,7 +761,7 @@
       </a>
       <a href="/utm" class="tool-tab">
         <i class="fa-solid fa-link"></i>
-        <span>마케팅 UTM 빌더</span>
+        <span>유입 추적 링크 (UTM)</span>
       </a>
       <a href="/place" class="tool-tab">
         <i class="fa-solid fa-location-dot"></i>
@@ -891,6 +891,9 @@
             <span><i class="fa-solid fa-bullseye"></i> 네이버 C-Rank 키워드 밀도</span>
             <span style="font-size:11px; color:var(--slate-500);">골든존 1.0% ~ 2.5%</span>
           </div>
+
+          <!-- Real-time SEO Penalty Warning Banner -->
+          <div id="seoAlertBanner" style="display:none; margin-bottom:12px; padding:10px 14px; border-radius:8px; font-size:12px; font-weight:700; line-height:1.5;"></div>
 
           <!-- Specific Keyword Quick Finder -->
           <div class="density-input-wrap">
@@ -1234,6 +1237,48 @@
               </div>
             `;
           }).join('');
+        }
+
+        // Update Real-time SEO Penalty Warning Banner
+        const seoAlertBanner = document.getElementById('seoAlertBanner');
+        if (seoAlertBanner) {
+          if (sorted.length > 0 && totalCharsWithoutSpace >= 200) {
+            const topItem = sorted[0];
+            const topWord = topItem[0];
+            const topCount = topItem[1];
+            const topDensity = ((topCount * topWord.length) / totalCharsWithoutSpace) * 100;
+
+            if (topDensity > 3.0) {
+              const recommendedRemoval = Math.max(1, Math.ceil(topCount - (totalCharsWithoutSpace * 0.02 / topWord.length)));
+              seoAlertBanner.style.display = 'flex';
+              seoAlertBanner.style.background = '#fef2f2';
+              seoAlertBanner.style.border = '1px solid #fecaca';
+              seoAlertBanner.style.color = '#e11d48';
+              seoAlertBanner.style.alignItems = 'flex-start';
+              seoAlertBanner.style.gap = '8px';
+              seoAlertBanner.innerHTML = `<i class="fa-solid fa-triangle-exclamation" style="font-size:14px; margin-top:2px; flex-shrink:0;"></i> <span><b>[저품질 위험 경고]</b> '${escapeHtml(topWord)}' 키워드가 <b>${topDensity.toFixed(1)}%</b>로 과도합니다! 네이버 스팸 필터를 피하기 위해 <b>약 ${recommendedRemoval}회 삭제</b>를 권장합니다.</span>`;
+            } else if (topDensity >= 1.0 && topDensity <= 2.5) {
+              seoAlertBanner.style.display = 'flex';
+              seoAlertBanner.style.background = '#ecfdf5';
+              seoAlertBanner.style.border = '1px solid #a7f3d0';
+              seoAlertBanner.style.color = '#059669';
+              seoAlertBanner.style.alignItems = 'flex-start';
+              seoAlertBanner.style.gap = '8px';
+              seoAlertBanner.innerHTML = `<i class="fa-solid fa-circle-check" style="font-size:14px; margin-top:2px; flex-shrink:0;"></i> <span><b>[C-Rank 골든존]</b> '${escapeHtml(topWord)}'(${topDensity.toFixed(1)}%) 키워드가 네이버 스마트블록 상위노출에 가장 이상적인 황금 비율(1.0~2.5%)입니다!</span>`;
+            } else if (topDensity > 2.5) {
+              seoAlertBanner.style.display = 'flex';
+              seoAlertBanner.style.background = '#fffbeb';
+              seoAlertBanner.style.border = '1px solid #fde68a';
+              seoAlertBanner.style.color = '#d97706';
+              seoAlertBanner.style.alignItems = 'flex-start';
+              seoAlertBanner.style.gap = '8px';
+              seoAlertBanner.innerHTML = `<i class="fa-solid fa-circle-exclamation" style="font-size:14px; margin-top:2px; flex-shrink:0;"></i> <span><b>[키워드 밀도 주의]</b> '${escapeHtml(topWord)}'(${topDensity.toFixed(1)}%)가 권장 밀도(2.5%)를 약간 초과했습니다. 1~2회 완화를 권장합니다.</span>`;
+            } else {
+              seoAlertBanner.style.display = 'none';
+            }
+          } else {
+            seoAlertBanner.style.display = 'none';
+          }
         }
 
         // Also refresh manual target keyword if input is present

@@ -728,6 +728,23 @@
       margin-top: 60px;
     }
     footer a { color: var(--slate-700); text-decoration: none; font-weight: 600; }
+
+    /* Certificate Modal & Print Styling */
+    @media print {
+      body * { visibility: hidden !important; }
+      #printableCertArea, #printableCertArea * { visibility: visible !important; }
+      #printableCertArea {
+        position: absolute !important;
+        left: 0 !important;
+        top: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-shadow: none !important;
+        border: none !important;
+        padding: 20px !important;
+      }
+      .no-print { display: none !important; }
+    }
   </style>
 
   <!-- JSON-LD Schema (SoftwareApplication + FAQPage) -->
@@ -811,7 +828,7 @@
       </a>
       <a href="/utm" class="tool-tab">
         <i class="fa-solid fa-link"></i>
-        <span>마케팅 UTM 빌더</span>
+        <span>유입 추적 링크 (UTM)</span>
       </a>
       <a href="/place" class="tool-tab">
         <i class="fa-solid fa-location-dot"></i>
@@ -921,6 +938,10 @@
             <i class="fa-regular fa-copy"></i>
             <span>안전 원고 클립보드 복사</span>
           </button>
+          <button class="btn-action-secondary" id="btnPrintCertificate" style="border-color:#10b981; color:#059669; font-weight:700;">
+            <i class="fa-solid fa-file-shield"></i>
+            <span>사전점검 확인서 발급 (A4)</span>
+          </button>
         </div>
 
         <!-- Violations Detailed List -->
@@ -1012,6 +1033,58 @@
             법조문 위반 소지가 높은 단어를 감지한 후, 법원 판례 및 협회 심의 기준에 부합하는 객관적이고 신뢰도 높은 서술어(예: '최고의 로펌' ➔ '신뢰할 수 있는 로펌', '완치' ➔ '체계적 개선')로 본문의 문맥을 훼손하지 않고 일괄 변경해 드립니다.
           </div>
         </div>
+      </div>
+    </div>
+  <!-- Certificate Modal for Agency & Client Report -->
+  <div id="certModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(15,23,42,0.7); backdrop-filter:blur(6px); z-index:9999; justify-content:center; align-items:center; padding:20px;">
+    <div style="background:#ffffff; border-radius:16px; max-width:640px; width:100%; padding:36px; box-shadow:0 25px 50px -12px rgba(0,0,0,0.25); position:relative; max-height:90vh; overflow-y:auto;" id="printableCertArea">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; border-bottom:2px solid #0f172a; padding-bottom:16px; margin-bottom:20px;">
+        <div>
+          <div style="font-size:11px; font-weight:800; color:#2563eb; text-transform:uppercase; letter-spacing:1px;">PostSync Compliance Engine</div>
+          <h2 style="font-size:22px; font-weight:800; color:#0f172a; margin-top:4px;">전문직 광고 규정 사전점검 확인서</h2>
+        </div>
+        <div style="text-align:right;">
+          <span style="display:inline-block; background:#ecfdf5; color:#059669; border:1px solid #a7f3d0; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:800;">
+            <i class="fa-solid fa-circle-check"></i> 검증 완료 (PASS)
+          </span>
+        </div>
+      </div>
+
+      <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:16px; margin-bottom:20px; font-size:13px; line-height:1.9;">
+        <div style="display:flex; justify-content:space-between;">
+          <span style="color:#64748b;">• 점검 일시:</span>
+          <strong id="certDate" style="color:#0f172a;">-</strong>
+        </div>
+        <div style="display:flex; justify-content:space-between;">
+          <span style="color:#64748b;">• 적용 법률 규정:</span>
+          <strong id="certLaw" style="color:#0f172a;">-</strong>
+        </div>
+        <div style="display:flex; justify-content:space-between;">
+          <span style="color:#64748b;">• 원고 분량:</span>
+          <strong id="certLength" style="color:#0f172a;">-</strong>
+        </div>
+        <div style="display:flex; justify-content:space-between;">
+          <span style="color:#64748b;">• 규정 위반 잔여 건수:</span>
+          <strong style="color:#059669;">0건 (100% 컴플라이언스 준수)</strong>
+        </div>
+      </div>
+
+      <div style="margin-bottom:24px;">
+        <div style="font-size:12.5px; font-weight:700; color:#334155; margin-bottom:8px;">[점검 대상 원고 요약]</div>
+        <div id="certSnippet" style="background:#ffffff; border:1px solid #cbd5e1; border-radius:8px; padding:12px; font-size:12px; color:#475569; max-height:140px; overflow-y:auto; line-height:1.6; white-space:pre-wrap;"></div>
+      </div>
+
+      <div style="border-top:1px dashed #cbd5e1; padding-top:18px; text-align:center; color:#64748b; font-size:12px; line-height:1.6;">
+        본 원고는 PostSync AI 전문직 광고 컴플라이언스 엔진을 통해 사전 점검되었으며,<br>
+        허위·과장·최상급 표현 및 부당 유인 금지 규정을 준수하고 있음을 확인합니다.
+        <div style="margin-top:12px; font-weight:800; color:#0f172a; font-size:14px;">
+          PostSync AI Compliance Standard
+        </div>
+      </div>
+
+      <div style="display:flex; gap:10px; margin-top:24px; justify-content:flex-end;" class="no-print">
+        <button type="button" class="btn-action-secondary" onclick="document.getElementById('certModal').style.display='none'" style="padding:8px 18px;">닫기</button>
+        <button type="button" class="btn-action-primary" onclick="window.print()" style="padding:8px 20px;"><i class="fa-solid fa-print"></i> A4 인쇄 / PDF 저장</button>
       </div>
     </div>
   </div>
@@ -1357,6 +1430,51 @@
       editor.value = SAMPLES[currentProf] || '';
       scanText();
     });
+
+    // Issue Compliance Certificate (Modal & Print)
+    const btnPrintCertificate = document.getElementById('btnPrintCertificate');
+    if (btnPrintCertificate) {
+      btnPrintCertificate.addEventListener('click', () => {
+        const text = editor.value.trim();
+        if (!text) {
+          showToast('⚠️ 점검할 원고를 먼저 입력해주세요.');
+          return;
+        }
+        if (currentViolations && currentViolations.length > 0) {
+          showToast(`⚠️ 아직 ${currentViolations.length}건의 위반 소지 단어가 남아있습니다. [합법 대체어로 1초 일괄 치환] 후 발급받으세요.`);
+          return;
+        }
+
+        const now = new Date();
+        const dateStr = now.getFullYear() + '년 ' + 
+          String(now.getMonth() + 1).padStart(2, '0') + '월 ' + 
+          String(now.getDate()).padStart(2, '0') + '일 ' + 
+          String(now.getHours()).padStart(2, '0') + ':' + 
+          String(now.getMinutes()).padStart(2, '0');
+
+        const lawMap = {
+          lawyer: '변호사법 제23조 및 대한변협 변호사 광고규정',
+          doctor: '의료법 제56조 및 의료광고 자율심의기준',
+          tax: '세무사법 제12조 및 한국세무사회 광고규정',
+          labor: '공인노무사법 및 행정사법 광고 가이드라인'
+        };
+
+        const certDateEl = document.getElementById('certDate');
+        const certLawEl = document.getElementById('certLaw');
+        const certLengthEl = document.getElementById('certLength');
+        const certSnippetEl = document.getElementById('certSnippet');
+        const certModal = document.getElementById('certModal');
+
+        if (certDateEl) certDateEl.textContent = dateStr;
+        if (certLawEl) certLawEl.textContent = lawMap[currentProf] || '전문직 법정 광고규정';
+        if (certLengthEl) certLengthEl.textContent = editor.value.length.toLocaleString() + '자 (공백 포함)';
+        if (certSnippetEl) certSnippetEl.textContent = editor.value.slice(0, 320) + (editor.value.length > 320 ? '\n\n...(이하 원고 생략)...' : '');
+
+        if (certModal) {
+          certModal.style.display = 'flex';
+        }
+      });
+    }
 
     // Helpers
     function escapeHtml(str) {

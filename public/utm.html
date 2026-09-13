@@ -9,22 +9,22 @@
     gtag('js', new Date());
     gtag('config', 'G-7WTMC1GBC8', {
       page_path: window.location.pathname,
-      page_title: '한국형 마케팅 캠페인 UTM 빌더 & 고화질 QR코드 생성기'
+      page_title: '마케팅 유입 추적 링크(UTM) & 고화질 QR코드 생성기'
     });
   </script>
 
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>한국형 마케팅 캠페인 UTM 빌더 & 고화질 QR코드 생성기 | PostSync Tools</title>
-  <meta name="description" content="인스타그램 프로필·스레드·네이버 블로그·플레이스·유튜브·카카오톡 원클릭 채널 프리셋 UTM URL 빌더. GA4 유입 추적 및 오프라인 인쇄용 고화질 QR코드(PNG) 즉시 생성. 공백 자동 하이픈 치환 및 소문자 정제.">
-  <meta name="keywords" content="utm빌더, utm생성기, ga4추적링크, 인스타그램utm, 네이버블로그utm, qr코드생성기, 고화질qr코드, 마케팅추적링크, url단축, 캠페인url">
+  <title>마케팅 유입 추적 링크(UTM) & 고화질 QR코드 생성기 | PostSync Tools</title>
+  <meta name="description" content="방문자가 어디를 보고 들어왔는지 1초 만에 추적 링크(UTM) 생성! 인스타그램·네이버 블로그·플레이스·유튜브·카카오톡 채널 맞춤 GA4 유입 추적 및 매장 인쇄용 고화질 QR코드 무료 생성.">
+  <meta name="keywords" content="유입추적링크, 추적링크만들기, utm빌더, utm생성기, ga4추적링크, 인스타그램링크추적, 네이버블로그추적, qr코드생성기, 마케팅추적링크">
   <link rel="canonical" href="https://www.postsyncapp.com/utm">
 
   <!-- OpenGraph / SNS -->
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="PostSync Tools">
-  <meta property="og:title" content="한국형 마케팅 캠페인 UTM 빌더 & 고화질 QR코드 생성기">
-  <meta property="og:description" content="네이버/인스타/스레드/유튜브 1초 프리셋 UTM 링크 생성 및 인쇄용 고화질 QR코드 무료 렌더링.">
+  <meta property="og:title" content="마케팅 유입 추적 링크(UTM) & 고화질 QR코드 생성기">
+  <meta property="og:description" content="인스타·블로그·플레이스 방문자가 어디서 몇 명 왔는지 1초 만에 추적 링크(UTM) 및 인쇄용 QR코드 무료 생성.">
   <meta property="og:url" content="https://www.postsyncapp.com/utm">
   <meta name="twitter:card" content="summary_large_image">
 
@@ -695,6 +695,198 @@
       margin-top: 60px;
     }
     footer a { color: var(--slate-700); text-decoration: none; font-weight: 600; }
+
+    /* Social Preview Mockup Styles */
+    .social-preview-box {
+      margin-top: 20px;
+      background: #f8fafc;
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-md);
+      padding: 16px;
+    }
+    .social-preview-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .preview-tabs {
+      display: flex;
+      gap: 4px;
+      background: var(--slate-200);
+      padding: 3px;
+      border-radius: 8px;
+    }
+    .prev-tab {
+      background: transparent;
+      border: none;
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--slate-600);
+      padding: 4px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .prev-tab.active {
+      background: #ffffff;
+      color: var(--slate-900);
+      box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+    }
+    .kakao-bubble {
+      background: #fae100;
+      padding: 10px;
+      border-radius: 12px;
+      max-width: 310px;
+      margin: 0 auto;
+    }
+    .kakao-card {
+      background: #ffffff;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+    }
+    .kakao-thumb-wrap {
+      width: 100%;
+      height: 140px;
+      background: #e2e8f0;
+      overflow: hidden;
+    }
+    .kakao-thumb {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .kakao-info {
+      padding: 10px 12px;
+    }
+    .kakao-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 4px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .kakao-desc {
+      font-size: 11.5px;
+      color: #64748b;
+      line-height: 1.4;
+      height: 32px;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      margin-bottom: 6px;
+    }
+    .kakao-domain {
+      font-size: 10.5px;
+      color: #94a3b8;
+    }
+    .naver-card {
+      background: #ffffff;
+      border: 1px solid #03c75a;
+      border-radius: 8px;
+      display: flex;
+      overflow: hidden;
+      max-width: 340px;
+      margin: 0 auto;
+      box-shadow: 0 2px 6px rgba(3,199,90,0.12);
+    }
+    .naver-info {
+      flex: 1;
+      padding: 10px 12px;
+      min-width: 0;
+    }
+    .naver-title {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 4px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .naver-desc {
+      font-size: 11px;
+      color: #64748b;
+      height: 30px;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+    }
+    .naver-domain {
+      font-size: 10px;
+      color: #03c75a;
+      font-weight: 600;
+      margin-top: 4px;
+    }
+    .naver-thumb-wrap {
+      width: 85px;
+      background: #e2e8f0;
+      flex-shrink: 0;
+    }
+    .naver-thumb {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .insta-bubble {
+      background: #ffffff;
+      border: 1px solid var(--slate-200);
+      border-radius: 12px;
+      max-width: 310px;
+      margin: 0 auto;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+    .insta-thumb-wrap {
+      width: 100%;
+      height: 140px;
+    }
+    .insta-thumb {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .insta-info {
+      padding: 10px 12px;
+    }
+    .insta-domain {
+      font-size: 10px;
+      color: #94a3b8;
+      text-transform: uppercase;
+      margin-bottom: 2px;
+    }
+    .insta-title {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 4px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .insta-desc {
+      font-size: 11px;
+      color: #64748b;
+      line-height: 1.4;
+      height: 30px;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+    }
+    .mockup-caption {
+      font-size: 11px;
+      color: var(--slate-500);
+      text-align: center;
+      margin-top: 8px;
+    }
   </style>
 
   <!-- Structured Data: JSON-LD for Programmatic SEO -->
@@ -801,7 +993,7 @@
       </a>
       <a href="/utm" class="tool-tab active">
         <i class="fa-solid fa-link"></i>
-        <span>마케팅 UTM 빌더</span>
+        <span>유입 추적 링크 (UTM)</span>
       </a>
       <a href="/place" class="tool-tab">
         <i class="fa-solid fa-location-dot"></i>
@@ -821,9 +1013,9 @@
       <div class="hero-badge">
         <i class="fa-solid fa-shield-halved"></i> 100% 브라우저 로컬 연산 · 한국 마케팅 채널 최적화
       </div>
-      <h1 class="hero-title">한국형 마케팅 캠페인 UTM 빌더 & 고화질 QR코드 생성기</h1>
+      <h1 class="hero-title">마케팅 유입 추적 링크(UTM) & 고화질 QR코드 생성기</h1>
       <p class="hero-subtitle">
-        인스타그램, 스레드, 네이버 블로그, 플레이스, 카카오톡 등 한국 주요 마케팅 채널 파라미터를 <b>1초 만에 원클릭 프리셋으로 조합</b>하고, 오프라인 매장 인쇄용 고화질 QR코드를 즉시 생성합니다.
+        인스타그램, 스레드, 네이버 블로그, 플레이스, 카카오톡 등 <b>방문자가 어디를 보고 들어왔는지 1초 만에 추적 링크(UTM)를 조합</b>하고, 오프라인 매장 인쇄용 고화질 QR코드를 즉시 생성합니다.
       </p>
     </div>
 
@@ -971,6 +1163,67 @@
           <button class="btn-qr-download" id="btnDownloadQr">
             <i class="fa-solid fa-download"></i> 인쇄용 QR코드 PNG 다운로드
           </button>
+        </div>
+
+        <!-- Social Share Mockup Preview Card -->
+        <div class="social-preview-box">
+          <div class="social-preview-header">
+            <div style="font-size:13px; font-weight:800; color:var(--slate-800);">
+              <i class="fa-solid fa-mobile-screen-button" style="color:var(--primary);"></i> SNS 링크 공유 실시간 미리보기
+            </div>
+            <div class="preview-tabs">
+              <button type="button" class="prev-tab active" data-channel="kakao" onclick="switchPreviewChannel('kakao')">💬 카톡</button>
+              <button type="button" class="prev-tab" data-channel="naver" onclick="switchPreviewChannel('naver')">🟢 네이버</button>
+              <button type="button" class="prev-tab" data-channel="insta" onclick="switchPreviewChannel('insta')">📸 인스타</button>
+            </div>
+          </div>
+
+          <!-- KakaoTalk Card Mockup -->
+          <div id="previewKakao" class="mockup-channel">
+            <div class="kakao-bubble">
+              <div class="kakao-card">
+                <div class="kakao-thumb-wrap">
+                  <img id="ogThumbKakao" src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&auto=format&fit=crop&q=80" alt="Thumbnail Preview" class="kakao-thumb">
+                </div>
+                <div class="kakao-info">
+                  <div class="kakao-title" id="ogTitleKakao">PostSync AI - 전문직 마케팅 자동화 엔진</div>
+                  <div class="kakao-desc" id="ogDescKakao">방문자가 어디를 보고 들어왔는지 1초 만에 추적 링크(UTM)를 조합하고...</div>
+                  <div class="kakao-domain" id="ogDomainKakao">postsyncapp.com</div>
+                </div>
+              </div>
+            </div>
+            <div class="mockup-caption">💡 카카오톡 대화방에 링크를 보냈을 때 상대방 화면에 노출되는 실제 카드 형태입니다.</div>
+          </div>
+
+          <!-- Naver Blog Card Mockup -->
+          <div id="previewNaver" class="mockup-channel" style="display:none;">
+            <div class="naver-card">
+              <div class="naver-info">
+                <div class="naver-title" id="ogTitleNaver">PostSync AI - 전문직 마케팅 자동화 엔진</div>
+                <div class="naver-desc" id="ogDescNaver">방문자가 어디를 보고 들어왔는지 1초 만에 추적 링크(UTM)를 조합하고...</div>
+                <div class="naver-domain" id="ogDomainNaver">postsyncapp.com</div>
+              </div>
+              <div class="naver-thumb-wrap">
+                <img id="ogThumbNaver" src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&auto=format&fit=crop&q=80" alt="Thumbnail Preview" class="naver-thumb">
+              </div>
+            </div>
+            <div class="mockup-caption">💡 네이버 블로그에 링크 첨부 시 생성되는 본문 카드 형태입니다.</div>
+          </div>
+
+          <!-- Instagram/Threads Card Mockup -->
+          <div id="previewInsta" class="mockup-channel" style="display:none;">
+            <div class="insta-bubble">
+              <div class="insta-thumb-wrap">
+                <img id="ogThumbInsta" src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&auto=format&fit=crop&q=80" alt="Thumbnail Preview" class="insta-thumb">
+              </div>
+              <div class="insta-info">
+                <div class="insta-domain" id="ogDomainInsta">postsyncapp.com</div>
+                <div class="insta-title" id="ogTitleInsta">PostSync AI - 전문직 마케팅 자동화 엔진</div>
+                <div class="insta-desc" id="ogDescInsta">방문자가 어디를 보고 들어왔는지 1초 만에 추적 링크(UTM)를 조합하고...</div>
+              </div>
+            </div>
+            <div class="mockup-caption">💡 인스타그램 DM이나 스레드에 링크 공유 시 렌더링되는 프리뷰 카드입니다.</div>
+          </div>
         </div>
       </div>
     </div>
@@ -1220,6 +1473,9 @@
           // Update QR Code
           renderQrCode(finalUrl);
 
+          // Update Social Share Mockup Card
+          updateSocialPreview(finalUrl, source, campaign);
+
           if (saveToHistory && source && campaign) {
             saveHistoryItem({
               date: new Date().toLocaleString('ko-KR'),
@@ -1233,6 +1489,39 @@
           outputUrl.textContent = '유효하지 않은 URL 형식입니다.';
           outputChips.innerHTML = '';
         }
+      }
+
+      // Switch Preview Channel
+      window.switchPreviewChannel = function(channel) {
+        document.querySelectorAll('.prev-tab').forEach(t => {
+          t.classList.toggle('active', t.getAttribute('data-channel') === channel);
+        });
+        document.getElementById('previewKakao').style.display = channel === 'kakao' ? 'block' : 'none';
+        document.getElementById('previewNaver').style.display = channel === 'naver' ? 'block' : 'none';
+        document.getElementById('previewInsta').style.display = channel === 'insta' ? 'block' : 'none';
+      };
+
+      // Real-time Update Social Share Mockup
+      function updateSocialPreview(url, source, campaign) {
+        try {
+          let domain = 'postsyncapp.com';
+          try {
+            const parsed = new URL(url);
+            domain = parsed.hostname.replace(/^www\./, '');
+          } catch(e) {}
+
+          const title = campaign ? `${campaign.replace(/[-_]/g, ' ')} - 공식 안내` : 'PostSync AI - 전문직 마케팅 자동화 엔진';
+          const desc = source ? `지금 ${source} 채널을 통해 접속하신 고객님을 위한 단독 혜택 및 상세 안내 페이지입니다.` : '방문자가 어디를 보고 들어왔는지 1초 만에 추적 링크(UTM)를 조합하고...';
+
+          ['Kakao', 'Naver', 'Insta'].forEach(p => {
+            const dEl = document.getElementById(`ogDomain${p}`);
+            const tEl = document.getElementById(`ogTitle${p}`);
+            const descEl = document.getElementById(`ogDesc${p}`);
+            if (dEl) dEl.textContent = domain;
+            if (tEl) tEl.textContent = title;
+            if (descEl) descEl.textContent = desc;
+          });
+        } catch (err) {}
       }
 
       // Render QR Code using QRCode.js (Resilient Level Fallback)
