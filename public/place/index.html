@@ -112,6 +112,44 @@
     }
     .header-badge b { color: #60a5fa; }
 
+    /* Cross-Traffic 7 Micro-Tools Tab Bar */
+    .tools-nav-bar {
+      background: #ffffff;
+      border-bottom: 1px solid var(--slate-200);
+      overflow-x: auto;
+      white-space: nowrap;
+      padding: 6px 20px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+    }
+    .tools-nav-inner {
+      max-width: 1240px;
+      margin: 0 auto;
+      display: flex;
+      gap: 6px;
+    }
+    .tool-tab {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--slate-600);
+      text-decoration: none;
+      transition: all 0.15s;
+    }
+    .tool-tab:hover {
+      background: var(--slate-100);
+      color: var(--slate-900);
+    }
+    .tool-tab.active {
+      background: #eff6ff;
+      color: var(--primary);
+      font-weight: 700;
+    }
+    .tool-tab i { font-size: 13px; }
+
     /* Teaser Lock Card (1st place secret) */
     .teaser-card {
       display: none;
@@ -793,6 +831,40 @@
       </div>
     </div>
   </header>
+
+  <!-- 7 Micro-Tools Cross-Traffic Navigation Tab Bar -->
+  <nav class="tools-nav-bar" aria-label="Micro Tools List">
+    <div class="tools-nav-inner">
+      <a href="/crop" class="tool-tab">
+        <i class="fa-solid fa-scissors"></i>
+        <span>상세페이지 슬라이서</span>
+      </a>
+      <a href="/adcheck" class="tool-tab">
+        <i class="fa-solid fa-scale-balanced"></i>
+        <span>광고법 금칙어 스캐너</span>
+      </a>
+      <a href="/byte" class="tool-tab">
+        <i class="fa-solid fa-font"></i>
+        <span>자소서 바이트 계산기</span>
+      </a>
+      <a href="/hwpx" class="tool-tab">
+        <i class="fa-solid fa-file-lines"></i>
+        <span>HWPX 안심 변환기</span>
+      </a>
+      <a href="/utm" class="tool-tab">
+        <i class="fa-solid fa-link"></i>
+        <span>유입 추적 링크 (UTM)</span>
+      </a>
+      <a href="/place" class="tool-tab active">
+        <i class="fa-solid fa-location-dot"></i>
+        <span>플레이스 순위 조회</span>
+      </a>
+      <a href="/convert" class="tool-tab">
+        <i class="fa-solid fa-file-arrow-up"></i>
+        <span>네이버 서식 변환</span>
+      </a>
+    </div>
+  </nav>
 
   <div class="main-wrapper">
     <!-- Hero -->

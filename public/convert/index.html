@@ -1,0 +1,1280 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ChatGPT·노션 ➔ 네이버 블로그 서식 1초 변환기 (SmartEditor ONE) | PostSync</title>
+  <meta name="description" content="ChatGPT, Claude, Notion, Obsidian에서 작성한 마크다운을 네이버 블로그 스마트에디터 ONE에 서식 깨짐 없이 완벽하게 붙여넣는 전용 클립보드 서식 변환기입니다. 표, 소제목, 인용구, 코드블록 1초 변환.">
+  <meta name="keywords" content="네이버 블로그 마크다운 변환, 챗지피티 네이버 블로그 서식, 노션 네이버 블로그 복사, 스마트에디터 ONE 서식 변환, 네이버 블로그 표 복사, ChatGPT 네이버 블로그 깨짐">
+  
+  <!-- Canonical Consolidation -->
+  <link rel="canonical" href="https://www.postsyncapp.com/convert">
+
+  <!-- Favicon (📄) -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📝</text></svg>">
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="ChatGPT·노션 ➔ 네이버 블로그 서식 1초 변환기 | PostSync">
+  <meta property="og:description" content="표, 소제목, 인용구가 깨지지 않는 네이버 스마트에디터 ONE 전용 서식 복사기. 100% 브라우저 로컬 $0 무료 웹툴">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.postsyncapp.com/convert">
+  
+  <!-- Google Analytics 4 (GA4) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-7WTMC1GBC8"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-7WTMC1GBC8');
+  </script>
+
+  <!-- Fonts & Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700;800&family=Nanum+Gothic:wght@400;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Markdown & Sanitization Engines (with local safe fallback) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.1/marked.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.9/purify.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/turndown/7.1.3/turndown.min.js"></script>
+
+  <!-- Google AdSense Code Placeholder -->
+  <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3734423172731921" crossorigin="anonymous"></script> -->
+
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --primary-light: #eff6ff;
+      --naver-green: #03c75a;
+      --naver-green-hover: #02b350;
+      --accent: #f59e0b;
+      --emerald: #10b981;
+      --slate-900: #0f172a;
+      --slate-800: #1e293b;
+      --slate-700: #334155;
+      --slate-600: #475569;
+      --slate-500: #64748b;
+      --slate-400: #94a3b8;
+      --slate-300: #cbd5e1;
+      --slate-200: #e2e8f0;
+      --slate-100: #f1f5f9;
+      --slate-50: #f8fafc;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+      --shadow-md: 0 4px 12px rgba(15,23,42,0.08);
+      --shadow-lg: 0 10px 25px -3px rgba(15,23,42,0.12);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; }
+    body { background-color: #f8fafc; color: var(--slate-900); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+
+    /* Header Nav */
+    header {
+      background: rgba(15, 23, 42, 0.98);
+      backdrop-filter: blur(12px);
+      color: white;
+      padding: 14px 24px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .header-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .brand {
+      font-size: 18px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #ffffff;
+      text-decoration: none;
+      letter-spacing: -0.5px;
+    }
+    .brand i { color: #60a5fa; font-size: 20px; }
+    .brand-tag {
+      background: linear-gradient(135deg, #03c75a, #2563eb);
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .header-btn {
+      background: #2563eb;
+      color: white;
+      padding: 7px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .header-btn:hover { background: #1d4ed8; }
+
+    /* Cross-Traffic 7 Micro-Tools Tab Bar */
+    .tools-nav-bar {
+      background: #ffffff;
+      border-bottom: 1px solid var(--slate-200);
+      overflow-x: auto;
+      white-space: nowrap;
+      padding: 6px 20px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+    }
+    .tools-nav-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      display: flex;
+      gap: 6px;
+    }
+    .tool-tab {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--slate-600);
+      text-decoration: none;
+      transition: all 0.15s;
+    }
+    .tool-tab:hover {
+      background: var(--slate-100);
+      color: var(--slate-900);
+    }
+    .tool-tab.active {
+      background: #eff6ff;
+      color: var(--primary);
+      font-weight: 700;
+    }
+    .tool-tab i { font-size: 13px; }
+
+    /* Main Container */
+    .container {
+      max-width: 1180px;
+      margin: 28px auto 60px auto;
+      padding: 0 20px;
+    }
+
+    /* Hero Section */
+    .hero-box {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #ecfdf5;
+      color: #047857;
+      border: 1px solid #a7f3d0;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    .hero-title {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--slate-900);
+      letter-spacing: -0.6px;
+      margin-bottom: 8px;
+    }
+    .hero-subtitle {
+      font-size: 14.5px;
+      color: var(--slate-600);
+      max-width: 720px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* Top Toolbar (Presets & Helpers) */
+    .toolbar-bar {
+      background: #ffffff;
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-md);
+      padding: 12px 18px;
+      margin-bottom: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      box-shadow: var(--shadow-sm);
+    }
+    .toolbar-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .theme-selector-label {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--slate-700);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .theme-btn-group {
+      display: flex;
+      background: var(--slate-100);
+      padding: 3px;
+      border-radius: 8px;
+      gap: 2px;
+    }
+    .theme-btn {
+      background: transparent;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--slate-600);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .theme-btn.active {
+      background: #ffffff;
+      color: var(--primary);
+      font-weight: 800;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .toolbar-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-tool-subtle {
+      background: #ffffff;
+      border: 1px solid var(--slate-200);
+      color: var(--slate-700);
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s;
+    }
+    .btn-tool-subtle:hover {
+      background: var(--slate-50);
+      border-color: var(--slate-300);
+    }
+
+    /* Two-Pane Grid */
+    .converter-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 900px) {
+      .converter-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Card Panels */
+    .card-panel {
+      background: #ffffff;
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-lg);
+      display: flex;
+      flex-direction: column;
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+      height: 640px;
+    }
+    .panel-header {
+      background: var(--slate-50);
+      border-bottom: 1px solid var(--slate-200);
+      padding: 12px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .panel-title {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--slate-800);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .panel-badge {
+      background: #ffffff;
+      border: 1px solid var(--slate-200);
+      color: var(--slate-600);
+      font-size: 11px;
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+
+    /* Left Input Area */
+    .editor-textarea {
+      width: 100%;
+      flex: 1;
+      border: none;
+      padding: 16px 18px;
+      font-size: 14px;
+      font-family: 'Consolas', 'Pretendard', monospace;
+      line-height: 1.7;
+      color: var(--slate-800);
+      resize: none;
+      outline: none;
+      background: #ffffff;
+    }
+    .editor-textarea::placeholder {
+      color: var(--slate-400);
+      font-family: 'Pretendard', sans-serif;
+    }
+    .panel-footer {
+      background: var(--slate-50);
+      border-top: 1px solid var(--slate-200);
+      padding: 10px 18px;
+      font-size: 12px;
+      color: var(--slate-500);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .stats-summary {
+      display: flex;
+      gap: 12px;
+    }
+    .stats-summary b { color: var(--slate-800); }
+
+    /* Right Preview Area (Naver SmartEditor ONE Simulator) */
+    .preview-body-container {
+      flex: 1;
+      padding: 24px;
+      overflow-y: auto;
+      background: #ffffff;
+    }
+    .naver-editor-mock {
+      max-width: 100%;
+      margin: 0 auto;
+      font-family: 'Nanum Gothic', 'Pretendard', sans-serif;
+      font-size: 16px;
+      line-height: 1.85;
+      color: #333333;
+    }
+
+    /* Action Buttons Row */
+    .action-button-row {
+      margin-bottom: 30px;
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .btn-naver-copy {
+      background: linear-gradient(135deg, #03c75a, #02b350);
+      color: #ffffff;
+      border: none;
+      padding: 16px 36px;
+      border-radius: var(--radius-md);
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 4px 16px rgba(3, 199, 90, 0.35);
+      transition: all 0.2s;
+    }
+    .btn-naver-copy:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(3, 199, 90, 0.45);
+    }
+    .btn-reverse-convert {
+      background: #ffffff;
+      border: 1px solid var(--slate-300);
+      color: var(--slate-700);
+      padding: 14px 22px;
+      border-radius: var(--radius-md);
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.15s;
+    }
+    .btn-reverse-convert:hover {
+      background: var(--slate-50);
+      border-color: var(--slate-400);
+    }
+
+    /* Step Guide Cards */
+    .usage-guide-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 36px;
+    }
+    @media (max-width: 768px) {
+      .usage-guide-grid { grid-template-columns: 1fr; }
+    }
+    .guide-step-card {
+      background: #ffffff;
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      box-shadow: var(--shadow-sm);
+    }
+    .step-number {
+      background: #eff6ff;
+      color: var(--primary);
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+    .step-content h4 {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--slate-800);
+      margin-bottom: 4px;
+    }
+    .step-content p {
+      font-size: 12.5px;
+      color: var(--slate-500);
+      line-height: 1.5;
+    }
+
+    /* Self-Ad Promo Banner */
+    .self-ad-card {
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      border-radius: var(--radius-lg);
+      padding: 28px 32px;
+      color: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 24px;
+      box-shadow: var(--shadow-lg);
+      margin-bottom: 40px;
+    }
+    @media (max-width: 860px) {
+      .self-ad-card { flex-direction: column; text-align: center; }
+    }
+    .self-ad-content h3 {
+      font-size: 18px;
+      font-weight: 800;
+      margin-bottom: 8px;
+      color: #fff;
+    }
+    .self-ad-content p {
+      font-size: 14px;
+      color: #94a3b8;
+      line-height: 1.5;
+    }
+    .btn-self-ad {
+      background: linear-gradient(135deg, #3b82f6, #6366f1);
+      color: #fff;
+      padding: 14px 24px;
+      border-radius: var(--radius-md);
+      font-size: 14px;
+      font-weight: 800;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+    .btn-self-ad:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(59,130,246,0.4);
+    }
+
+    /* pSEO Content & FAQ */
+    .seo-article {
+      background: #ffffff;
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-lg);
+      padding: 36px;
+      margin-bottom: 40px;
+    }
+    .seo-article h2 {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--slate-900);
+      margin-bottom: 14px;
+      border-bottom: 2px solid var(--slate-100);
+      padding-bottom: 10px;
+    }
+    .seo-article p {
+      font-size: 14px;
+      color: var(--slate-600);
+      line-height: 1.7;
+      margin-bottom: 16px;
+    }
+    .seo-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      font-size: 13px;
+    }
+    .seo-table th, .seo-table td {
+      border: 1px solid var(--slate-200);
+      padding: 12px 14px;
+      text-align: left;
+    }
+    .seo-table th { background: var(--slate-50); font-weight: 700; color: var(--slate-800); }
+    .faq-list {
+      margin-top: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .faq-item {
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-sm);
+      padding: 14px 18px;
+      background: #fff;
+    }
+    .faq-q {
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--slate-900);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .faq-a {
+      font-size: 13px;
+      color: var(--slate-600);
+      line-height: 1.6;
+    }
+
+    /* Toast Notification */
+    .toast-box {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(8px);
+      color: #ffffff;
+      padding: 14px 28px;
+      border-radius: 30px;
+      font-size: 14px;
+      font-weight: 700;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      pointer-events: none;
+    }
+    .toast-box.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 40px 20px 48px 20px;
+      color: var(--slate-500);
+      font-size: 12px;
+      border-top: 1px solid var(--slate-200);
+      background: #ffffff;
+    }
+    footer a { color: var(--slate-700); text-decoration: none; font-weight: 600; }
+  </style>
+
+  <!-- JSON-LD Schema (SoftwareApplication + HowTo + FAQPage) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "SoftwareApplication",
+        "name": "PostSync 네이버 블로그 스마트에디터 ONE 서식 변환기",
+        "operatingSystem": "Web Browser",
+        "applicationCategory": "BusinessApplication",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "KRW"
+        },
+        "description": "ChatGPT, Claude, Notion에서 작성한 마크다운 및 텍스트를 네이버 블로그 스마트에디터 ONE에 깨짐 없이 완벽하게 복사할 수 있는 전용 인라인 서식 변환 도구입니다."
+      },
+      {
+        "@type": "HowTo",
+        "name": "ChatGPT 마크다운 글을 네이버 블로그에 서식 깨짐 없이 붙여넣는 방법",
+        "step": [
+          {
+            "@type": "HowToStep",
+            "name": "마크다운 원고 입력",
+            "text": "ChatGPT나 노션에서 작성한 글을 복사하여 좌측 원고 입력창에 붙여넣습니다."
+          },
+          {
+            "@type": "HowToStep",
+            "name": "디자인 테마 선택",
+            "text": "모던 비즈니스, 따뜻한 에디토리얼, 클린 테크 중 원하는 소제목 및 표 디자인 스타일을 선택합니다."
+          },
+          {
+            "@type": "HowToStep",
+            "name": "네이버 블로그 서식 복사",
+            "text": "[네이버 블로그 서식 복사] 버튼을 누른 뒤, 네이버 블로그 스마트에디터 ONE 글쓰기 창에서 Ctrl+V(붙여넣기)를 누르면 소제목 박스와 표가 완벽하게 삽입됩니다."
+          }
+        ]
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "ChatGPT나 노션 글을 네이버 블로그에 그냥 복사하면 왜 표나 소제목이 깨지나요?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "네이버 블로그 스마트에디터 ONE은 외부의 일반 마크다운 문법(#, |, > 등)을 자동으로 인식하지 못하며, 외부 CSS 클래스를 필터링하기 때문입니다. 본 도구는 네이버가 완벽하게 지원하는 HTML 인라인 스타일(Inline CSS)로 변환하여 클립보드에 주입하므로 깨짐 없이 삽입됩니다."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "작성한 원고나 비밀 기밀 텍스트가 외부 서버에 전송되나요?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "전혀 전송되지 않습니다. PostSync 서식 변환기는 100% 사용자의 웹 브라우저 로컬 메모리상에서만 자바스크립트로 변환되므로 어떠한 기밀도 외부로 유출되지 않습니다."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+
+  <!-- Global Header -->
+  <header>
+    <div class="header-inner">
+      <a href="https://postsyncapp.com" class="brand">
+        <i class="fa-solid fa-cube"></i>
+        <span>PostSync Tools</span>
+        <span class="brand-tag">7호툴</span>
+      </a>
+      <div class="header-right">
+        <a href="https://postsyncapp.com" class="header-btn" target="_blank">PostSync AI 본체 <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:11px; margin-left:3px;"></i></a>
+      </div>
+    </div>
+  </header>
+
+  <!-- 7 Micro-Tools Cross-Traffic Navigation Tab Bar -->
+  <nav class="tools-nav-bar" aria-label="Micro Tools List">
+    <div class="tools-nav-inner">
+      <a href="/crop" class="tool-tab">
+        <i class="fa-solid fa-scissors"></i>
+        <span>상세페이지 슬라이서</span>
+      </a>
+      <a href="/adcheck" class="tool-tab">
+        <i class="fa-solid fa-scale-balanced"></i>
+        <span>광고법 금칙어 스캐너</span>
+      </a>
+      <a href="/byte" class="tool-tab">
+        <i class="fa-solid fa-font"></i>
+        <span>자소서 바이트 계산기</span>
+      </a>
+      <a href="/hwpx" class="tool-tab">
+        <i class="fa-solid fa-file-lines"></i>
+        <span>HWPX 안심 변환기</span>
+      </a>
+      <a href="/utm" class="tool-tab">
+        <i class="fa-solid fa-link"></i>
+        <span>유입 추적 링크 (UTM)</span>
+      </a>
+      <a href="/place" class="tool-tab">
+        <i class="fa-solid fa-location-dot"></i>
+        <span>플레이스 순위 조회</span>
+      </a>
+      <a href="/convert" class="tool-tab active">
+        <i class="fa-solid fa-file-arrow-up"></i>
+        <span>네이버 서식 변환</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- Main Work Container -->
+  <main class="container">
+
+    <!-- Hero Section -->
+    <div class="hero-box">
+      <div class="hero-badge">
+        <i class="fa-solid fa-bolt"></i> 100% 브라우저 로컬 변환 (서버 전송 0% 기밀 안심)
+      </div>
+      <h1 class="hero-title">ChatGPT·노션 ➔ 네이버 블로그 서식 1초 변환기</h1>
+      <p class="hero-subtitle">
+        ChatGPT, Claude, Notion, Obsidian에서 작성한 마크다운을 붙여넣으면, 네이버 블로그 <b>스마트에디터 ONE</b>에 소제목·표·인용구 깨짐 없이 1초 만에 그대로 복사됩니다.
+      </p>
+    </div>
+
+    <!-- Top Toolbar: Preset Themes & Sample Buttons -->
+    <div class="toolbar-bar">
+      <div class="toolbar-left">
+        <span class="theme-selector-label"><i class="fa-solid fa-palette" style="color:var(--primary);"></i> 소제목·표 스타일 테마:</span>
+        <div class="theme-btn-group">
+          <button type="button" class="theme-btn active" data-theme="modern"><i class="fa-solid fa-briefcase"></i> 모던 비즈니스</button>
+          <button type="button" class="theme-btn" data-theme="warm"><i class="fa-solid fa-feather"></i> 감성 에디토리얼</button>
+          <button type="button" class="theme-btn" data-theme="tech"><i class="fa-solid fa-code"></i> 클린 테크</button>
+        </div>
+      </div>
+      <div class="toolbar-right">
+        <button type="button" class="btn-tool-subtle" id="btnLoadColumnSample"><i class="fa-solid fa-wand-magic-sparkles"></i> 전문직 칼럼 예시</button>
+        <button type="button" class="btn-tool-subtle" id="btnLoadReviewSample"><i class="fa-solid fa-list-check"></i> 정보 리뷰 예시</button>
+        <button type="button" class="btn-tool-subtle" id="btnClearEditor"><i class="fa-solid fa-rotate-right"></i> 비우기</button>
+      </div>
+    </div>
+
+    <!-- 2-Column Split Workspace -->
+    <div class="converter-grid">
+      <!-- Left: Markdown Input Area -->
+      <div class="card-panel">
+        <div class="panel-header">
+          <span class="panel-title"><i class="fa-brands fa-markdown" style="color:#2563eb;"></i> 마크다운 / 원본 텍스트 입력</span>
+          <span class="panel-badge">Ctrl + V 로 붙여넣기</span>
+        </div>
+        <textarea 
+          class="editor-textarea" 
+          id="markdownInput" 
+          spellcheck="false" 
+          placeholder="여기에 ChatGPT, Claude, 노션, 벨로그에서 작성한 마크다운(Markdown)이나 글을 붙여넣으세요...
+
+예시:
+## 1. 2026 개정 세법 핵심 요약
+올해부터 적용되는 주요 절세 규정을 안내해 드립니다.
+
+| 구분 | 개정 전 | 개정 후 | 절세 팁 |
+| :--- | :--- | :--- | :--- |
+| 법인세율 | 24% | 22% | 적격 증빙 필수 |
+| 연구개발 | 25% 공제 | 30% 공제 | 사전 검토 권장 |
+
+> **전문가 소견:** 사전에 세무 전문가와 검토하는 것을 권장합니다."
+        ></textarea>
+        <div class="panel-footer">
+          <div class="stats-summary">
+            <span>글자 수: <b id="statChars">0</b>자</span>
+            <span>단어 수: <b id="statWords">0</b>개</span>
+            <span>소제목: <b id="statHeadings">0</b>개</span>
+            <span>표(Table): <b id="statTables">0</b>개</span>
+          </div>
+          <span>자동 실시간 변환 중</span>
+        </div>
+      </div>
+
+      <!-- Right: Naver SmartEditor ONE Simulator -->
+      <div class="card-panel">
+        <div class="panel-header">
+          <span class="panel-title"><i class="fa-solid fa-eye" style="color:#03c75a;"></i> 네이버 스마트에디터 ONE 실시간 뷰어</span>
+          <span class="panel-badge" style="background:#ecfdf5; color:#047857; border-color:#a7f3d0;"><i class="fa-solid fa-circle-check"></i> 서식 준비 완료</span>
+        </div>
+        <div class="preview-body-container" id="previewContainer">
+          <div class="naver-editor-mock" id="naverPreview">
+            <!-- Dynamically rendered with rich inline styles -->
+          </div>
+        </div>
+        <div class="panel-footer">
+          <span>가로폭: <b>네이버 블로그 최적화 (860px)</b></span>
+          <span style="color:#03c75a; font-weight:700;"><i class="fa-solid fa-wand-magic-sparkles"></i> 인라인 스타일 주입 완료</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Center Big Action Buttons -->
+    <div class="action-button-row">
+      <button type="button" class="btn-naver-copy" id="btnCopyNaver">
+        <i class="fa-solid fa-copy"></i>
+        <span>📋 네이버 블로그 서식 복사하기 (SmartEditor ONE 전용)</span>
+      </button>
+      <button type="button" class="btn-reverse-convert" id="btnReverseConvert">
+        <i class="fa-solid fa-arrow-right-arrow-left"></i>
+        <span>네이버 글 ➔ 마크다운 역변환</span>
+      </button>
+    </div>
+
+    <!-- 3-Step Usage Guide -->
+    <div class="usage-guide-grid">
+      <div class="guide-step-card">
+        <div class="step-number">1</div>
+        <div class="step-content">
+          <h4>원고 붙여넣기</h4>
+          <p>ChatGPT나 노션에서 쓴 글을 좌측 입력창에 붙여넣습니다.</p>
+        </div>
+      </div>
+      <div class="guide-step-card">
+        <div class="step-number">2</div>
+        <div class="step-content">
+          <h4>서식 복사 버튼 클릭</h4>
+          <p>초록색 [네이버 블로그 서식 복사하기] 버튼을 누르면 서식이 복사됩니다.</p>
+        </div>
+      </div>
+      <div class="guide-step-card">
+        <div class="step-number">3</div>
+        <div class="step-content">
+          <h4>스마트에디터에 Ctrl+V</h4>
+          <p>네이버 블로그 글쓰기 창에서 Ctrl+V를 누르면 소제목과 표가 100% 삽입됩니다.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- PostSync AI SaaS Self-Ad Promo Banner -->
+    <div class="self-ad-card">
+      <div class="self-ad-content">
+        <h3>🚀 매번 복사해서 붙여넣기도 번거로우신가요?</h3>
+        <p>
+          PostSync AI는 전문직(변호사/세무사/의사) 타깃 키워드 분석부터 고품질 원고 작성, 그리고 네이버 블로그 스마트에디터 ONE 자동 포스팅까지 <b>100% 무인 자동화</b>로 처리해 드립니다.
+        </p>
+      </div>
+      <a href="https://postsyncapp.com" target="_blank" class="btn-self-ad">
+        PostSync AI 무인 자동 발행 무료 체험 <i class="fa-solid fa-arrow-right" style="margin-left: 6px;"></i>
+      </a>
+    </div>
+
+    <!-- Programmatic SEO Guide Article & FAQ -->
+    <article class="seo-article">
+      <h2>💡 ChatGPT·노션 마크다운을 네이버 블로그에 서식 깨짐 없이 올리는 법</h2>
+      <p>
+        최근 생성형 AI(ChatGPT, Claude, Gemini)와 노션(Notion)을 활용하여 블로그 포스팅 초안을 작성하는 마케터와 전문직이 급증하고 있습니다. 하지만 네이버 블로그의 <b>스마트에디터 ONE</b>은 마크다운 문법(#, ##, |, ---)을 자동으로 해석하지 못해, 그대로 복사할 경우 소제목이 본문 글씨로 작아지고 표(Table)가 줄글로 깨져버리는 고질적인 서식 파괴 현상이 발생합니다.
+      </p>
+
+      <table class="seo-table">
+        <thead>
+          <tr>
+            <th>문법 요소</th>
+            <th>일반 복사 시 네이버 문제점</th>
+            <th>PostSync 1초 변환기 해결책</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><b>소제목 (H2, H3)</b></td>
+            <td>글자 크기가 일반 본문과 동일해져 가독성 저하</td>
+            <td>네이비 포인트 라인 & 배경 박스 인라인 스타일 자동 주입</td>
+          </tr>
+          <tr>
+            <td><b>표 (Table)</b></td>
+            <td>열과 행이 붕괴되어 텍스트가 줄글로 나열됨</td>
+            <td>네이버 공식 규격 완벽 호환 그리드 테두리 테이블로 렌더링</td>
+          </tr>
+          <tr>
+            <td><b>인용구 (Quote)</b></td>
+            <td>단순 꺾쇠(>) 문자로 노출되거나 들여쓰기 소실</td>
+            <td>감성 인용구 바(Border) 및 박스 디자인 적용</td>
+          </tr>
+          <tr>
+            <td><b>코드/박스 (Code)</b></td>
+            <td>배경색 없는 밋밋한 텍스트로 전환</td>
+            <td>다크 슬레이트 백그라운드의 세련된 박스 서식 주입</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2 style="margin-top: 36px;">❓ 자주 묻는 질문 (FAQ)</h2>
+      <div class="faq-list">
+        <div class="faq-item">
+          <div class="faq-q"><i class="fa-solid fa-circle-question" style="color: var(--primary);"></i> '네이버 블로그 서식 복사하기'는 어떤 원리로 작동하나요?</div>
+          <div class="faq-a">
+            웹 브라우저 최신 클립보드 API(ClipboardItem)를 활용하여 일반 텍스트뿐 아니라 네이버 스마트에디터 ONE이 인식할 수 있는 'text/html' 데이터를 함께 생성합니다. 각 HTML 태그 내부에 인라인 CSS(style="...")를 주입하므로 네이버 에디터에 붙여넣었을 때 서식이 100% 온전하게 유지됩니다.
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q"><i class="fa-solid fa-lock" style="color: var(--emerald);"></i> 작성 중인 기밀 원고가 외부 서버로 저장되거나 전송되나요?</div>
+          <div class="faq-a">
+            절대 전송되지 않습니다. PostSync의 모든 마이크로 웹툴은 100% 사용자의 컴퓨터 웹 브라우저 로컬 메모리상에서만 자바스크립트로 연산되므로 서버 비용이 $0이며, 어떠한 텍스트도 유출되지 않아 안심하고 사용하실 수 있습니다.
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q"><i class="fa-solid fa-mobile-screen" style="color: var(--primary);"></i> 모바일 네이버 블로그 앱에서도 적용되나요?</div>
+          <div class="faq-a">
+            PC 웹 브라우저에서 복사하여 모바일 스마트에디터 앱에 붙여넣어도 인라인 스타일이 유지됩니다. 다만 최적의 편집 환경을 위해 PC 환경에서 [네이버 블로그 서식 복사] 후 스마트에디터 ONE 웹 글쓰기 창에서 붙여넣는 것을 권장합니다.
+          </div>
+        </div>
+      </div>
+    </article>
+
+  </main>
+
+  <!-- Global Footer -->
+  <footer>
+    <div style="max-width:840px; margin:0 auto; padding:0 16px;">
+      <div style="background:var(--slate-50); border:1px solid var(--slate-200); border-radius:var(--radius-sm); padding:12px 18px; margin-bottom:20px; text-align:left; font-size:12px; color:var(--slate-600); line-height:1.65;">
+        <i class="fa-solid fa-shield-halved" style="color:var(--emerald); margin-right:6px;"></i>
+        <strong>100% 브라우저 로컬 연산 및 보안 보증:</strong> 본 도구는 서버 백엔드로 텍스트를 전송하지 않고 사용자의 브라우저 클립보드 인라인 엔진으로만 동작합니다.
+      </div>
+      <p style="display:flex; justify-content:center; align-items:center; gap:16px; flex-wrap:wrap; font-size:13px; font-weight:600;">
+        <a href="https://postsyncapp.com/privacy" target="_blank" style="color:var(--slate-700); text-decoration:none;">개인정보처리방침</a>
+        <span style="color:var(--slate-300);">|</span>
+        <a href="https://postsyncapp.com/terms" target="_blank" style="color:var(--slate-700); text-decoration:none;">이용약관</a>
+        <span style="color:var(--slate-300);">|</span>
+        <a href="https://postsyncapp.com" target="_blank" style="color:var(--slate-700); text-decoration:none;">PostSync AI 공식홈</a>
+      </p>
+      <p style="margin-top:12px; color:var(--slate-500); font-size:12px;">
+        서비스 문의 & 제휴: <a href="mailto:contact@postsyncapp.com" style="color:var(--primary); font-weight:700; text-decoration:none;">contact@postsyncapp.com</a>
+      </p>
+      <p style="margin-top:8px; color:var(--slate-400); font-size:11.5px;">
+        © 2026 PostSync AI. All rights reserved. 네이버 블로그 및 스마트에디터 ONE은 NAVER Corp.의 등록상표입니다.
+      </p>
+    </div>
+  </footer>
+
+  <!-- Global Modern Toast -->
+  <div id="globalToast" class="toast-box"></div>
+
+  <!-- Core Conversion & Inlining Engine -->
+  <script>
+    // 3 Design Themes Inline Styles
+    const THEME_STYLES = {
+      modern: {
+        h1: 'font-size: 24px; font-weight: 800; color: #0f172a; margin: 32px 0 16px 0; line-height: 1.35;',
+        h2: 'font-size: 20px; font-weight: 800; color: #0f172a; border-left: 5px solid #2563eb; padding: 10px 16px; background-color: #f8fafc; margin: 28px 0 14px 0; border-radius: 4px; line-height: 1.4;',
+        h3: 'font-size: 17px; font-weight: 700; color: #1e293b; margin: 22px 0 10px 0; border-bottom: 2px solid #e2e8f0; padding-bottom: 6px;',
+        p: 'font-size: 16px; line-height: 1.85; color: #334155; margin-bottom: 16px; word-break: break-word;',
+        blockquote: 'border-left: 4px solid #3b82f6; background-color: #eff6ff; color: #1e3a8a; padding: 14px 18px; margin: 20px 0; border-radius: 0 8px 8px 0; font-size: 15px; line-height: 1.75;',
+        table: 'border-collapse: collapse; width: 100%; margin: 22px 0; border: 1px solid #cbd5e1; font-size: 14px; text-align: left;',
+        th: 'border: 1px solid #cbd5e1; background-color: #f1f5f9; padding: 10px 14px; font-weight: 700; color: #0f172a;',
+        td: 'border: 1px solid #e2e8f0; padding: 10px 14px; color: #334155; line-height: 1.6;',
+        pre: 'background-color: #0f172a; color: #f8fafc; padding: 16px; border-radius: 8px; font-family: Consolas, monospace; font-size: 13.5px; line-height: 1.6; margin: 18px 0; overflow-x: auto;',
+        code: 'background-color: #f1f5f9; color: #b91c1c; padding: 2px 6px; border-radius: 4px; font-family: Consolas, monospace; font-size: 13.5px;',
+        mark: 'background-color: #fef08a; color: #854d0e; padding: 2px 6px; border-radius: 3px; font-weight: 600;',
+        ul: 'margin: 12px 0 16px 24px; color: #334155; line-height: 1.8;',
+        ol: 'margin: 12px 0 16px 24px; color: #334155; line-height: 1.8;',
+        li: 'margin-bottom: 6px;',
+        hr: 'border: none; border-top: 1px dashed #cbd5e1; margin: 30px 0;'
+      },
+      warm: {
+        h1: 'font-size: 24px; font-weight: 800; color: #7c2d12; margin: 32px 0 16px 0; line-height: 1.35;',
+        h2: 'font-size: 20px; font-weight: 800; color: #7c2d12; border-bottom: 3px solid #ea580c; padding-bottom: 8px; margin: 28px 0 14px 0; line-height: 1.4;',
+        h3: 'font-size: 17px; font-weight: 700; color: #9a3412; margin: 22px 0 10px 0;',
+        p: 'font-size: 16px; line-height: 1.85; color: #431407; margin-bottom: 16px; word-break: break-word;',
+        blockquote: 'border: 1px solid #fed7aa; background-color: #fffaf5; color: #7c2d12; padding: 16px 20px; margin: 20px 0; border-radius: 8px; font-size: 15px; line-height: 1.75;',
+        table: 'border-collapse: collapse; width: 100%; margin: 22px 0; border: 1px solid #fed7aa; font-size: 14px; text-align: left;',
+        th: 'border: 1px solid #fed7aa; background-color: #ffedd5; padding: 10px 14px; font-weight: 700; color: #7c2d12;',
+        td: 'border: 1px solid #ffedd5; padding: 10px 14px; color: #431407; line-height: 1.6;',
+        pre: 'background-color: #292524; color: #fafaf9; padding: 16px; border-radius: 8px; font-family: Consolas, monospace; font-size: 13.5px; line-height: 1.6; margin: 18px 0; overflow-x: auto;',
+        code: 'background-color: #ffedd5; color: #c2410c; padding: 2px 6px; border-radius: 4px; font-family: Consolas, monospace; font-size: 13.5px;',
+        mark: 'background-color: #fed7aa; color: #7c2d12; padding: 2px 6px; border-radius: 3px; font-weight: 600;',
+        ul: 'margin: 12px 0 16px 24px; color: #431407; line-height: 1.8;',
+        ol: 'margin: 12px 0 16px 24px; color: #431407; line-height: 1.8;',
+        li: 'margin-bottom: 6px;',
+        hr: 'border: none; border-top: 1px dashed #fed7aa; margin: 30px 0;'
+      },
+      tech: {
+        h1: 'font-size: 24px; font-weight: 800; color: #0f172a; margin: 32px 0 16px 0; line-height: 1.35;',
+        h2: 'font-size: 20px; font-weight: 800; color: #ffffff; background-color: #0f172a; padding: 10px 16px; margin: 28px 0 14px 0; border-radius: 6px; line-height: 1.4;',
+        h3: 'font-size: 17px; font-weight: 700; color: #0f172a; border-left: 4px solid #475569; padding-left: 10px; margin: 22px 0 10px 0;',
+        p: 'font-size: 16px; line-height: 1.85; color: #1e293b; margin-bottom: 16px; word-break: break-word;',
+        blockquote: 'border-left: 4px solid #64748b; background-color: #f8fafc; color: #334155; padding: 14px 18px; margin: 20px 0; font-size: 14.5px; line-height: 1.75;',
+        table: 'border-collapse: collapse; width: 100%; margin: 22px 0; border: 1px solid #94a3b8; font-size: 13.5px; text-align: left;',
+        th: 'border: 1px solid #94a3b8; background-color: #1e293b; color: #ffffff; padding: 10px 14px; font-weight: 700;',
+        td: 'border: 1px solid #cbd5e1; padding: 10px 14px; color: #1e293b; line-height: 1.6;',
+        pre: 'background-color: #020617; color: #38bdf8; padding: 16px; border-radius: 8px; font-family: Consolas, monospace; font-size: 13.5px; line-height: 1.6; margin: 18px 0; overflow-x: auto;',
+        code: 'background-color: #e2e8f0; color: #0f172a; padding: 2px 6px; border-radius: 4px; font-family: Consolas, monospace; font-size: 13.5px;',
+        mark: 'background-color: #bae6fd; color: #0369a1; padding: 2px 6px; border-radius: 3px; font-weight: 600;',
+        ul: 'margin: 12px 0 16px 24px; color: #1e293b; line-height: 1.8;',
+        ol: 'margin: 12px 0 16px 24px; color: #1e293b; line-height: 1.8;',
+        li: 'margin-bottom: 6px;',
+        hr: 'border: none; border-top: 1px solid #94a3b8; margin: 30px 0;'
+      }
+    };
+
+    let currentTheme = 'modern';
+    let generatedNaverHtml = '';
+
+    // Sample Data
+    const SAMPLE_COLUMN = `## 1. 2026 세법 개정안 주요 핵심 정리
+올해부터 적용되는 세법 개정 사항 중 대표님들과 개인사업자분들이 반드시 체크하셔야 할 핵심 절세 항목을 정리해 드립니다.
+
+### 주요 변경 사항 요약 비교
+적격 증빙 수취 및 연구개발비 공제 요건이 대폭 개정되었습니다.
+
+| 구분 | 개정 전 기준 | 2026년 개정 후 | 절세 핵심 팁 |
+| :--- | :--- | :--- | :--- |
+| 법인세 최고세율 | 24% | 22% (2%p 인하) | 구간별 세부 공제 점검 |
+| R&D 세액공제 | 당기 지출액 25% | 신산업 30% 확대 | 연구소 인증 사전 확인 |
+| 업무용 승용차 | 연간 1,500만원 | 연간 1,800만원 한도 | 운행기록부 필수 작성 |
+
+> **세무 전문가 한 줄 조언:**  
+> "단순한 영수증 수취를 넘어, 지출 항목별 적격 증빙을 사전 검토하는 것이 최고의 절세 전략입니다."
+
+## 2. 세무조사 리스크 사전 차단 3대 원칙
+1. 법인 통장과 대표자 개인 계좌 철저 분리
+2. 가공 세금계산서 원천 차단 및 거래처 실재성 확인
+3. 가지급금 발생 시 결산기 내 신속 정리`;
+
+    const SAMPLE_REVIEW = `## 1. M3 맥북 프로 14인치 한 달 실사용 솔직 리뷰
+디자이너 및 개발자 관점에서 4주간 메인 머신으로 실사용하며 느낀 장단점을 가감 없이 정리합니다.
+
+### 성능 및 발열 벤치마크 비교
+팬 소음과 배터리 타임에서 압도적인 차이를 체감할 수 있었습니다.
+
+| 테스트 항목 | M2 Pro (이전 세대) | M3 Pro (신형) | 개선 체감도 |
+| :--- | :--- | :--- | :--- |
+| 4K 영상 렌더링 | 4분 12초 | 2분 48초 | 33% 시간 단축 |
+| 발열 (최고 온도) | 78도 (팬 가동) | 62도 (무소음) | 무릎 위 작업 가능 |
+| 실사용 배터리 | 약 11시간 | 약 16시간 | 충전기 없이 외출 |
+
+> **최종 구매 가이드:**  
+> 영상 편집이나 대용량 코드 컴파일 작업을 매일 하신다면 업그레이드 체감이 확실합니다.`;
+
+    // DOM Elements
+    const markdownInput = document.getElementById('markdownInput');
+    const naverPreview = document.getElementById('naverPreview');
+    const statChars = document.getElementById('statChars');
+    const statWords = document.getElementById('statWords');
+    const statHeadings = document.getElementById('statHeadings');
+    const statTables = document.getElementById('statTables');
+
+    // Convert Markdown to Naver SmartEditor ONE Inline Styled HTML
+    function convertToNaverHtml(mdText, themeKey = 'modern') {
+      if (!mdText || !mdText.trim()) {
+        return '<p style="' + THEME_STYLES[themeKey].p + 'color:#94a3b8; text-align:center; padding: 40px 0;">좌측에 마크다운이나 글을 입력하시면 실시간으로 네이버 스마트에디터 ONE 서식으로 미리보기가 생성됩니다.</p>';
+      }
+
+      // 1. Markdown Parsing (Using marked library if available, with built-in safe fallback)
+      let rawHtml = '';
+      if (window.marked && typeof window.marked.parse === 'function') {
+        rawHtml = window.marked.parse(mdText, { gfm: true, breaks: true });
+      } else {
+        // Fallback basic parser
+        rawHtml = basicMarkdownParse(mdText);
+      }
+
+      // Sanitize
+      if (window.DOMPurify && typeof window.DOMPurify.sanitize === 'function') {
+        rawHtml = window.DOMPurify.sanitize(rawHtml);
+      }
+
+      // 2. Parse DOM and Inject Exact Inline Styles
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(`<div>${rawHtml}</div>`, 'text/html');
+      const container = doc.body.firstElementChild;
+
+      const styles = THEME_STYLES[themeKey] || THEME_STYLES.modern;
+
+      // Inject styles on all elements
+      const applyStyle = (selector, styleStr) => {
+        container.querySelectorAll(selector).forEach(el => {
+          el.setAttribute('style', styleStr);
+        });
+      };
+
+      applyStyle('h1', styles.h1);
+      applyStyle('h2', styles.h2);
+      applyStyle('h3', styles.h3);
+      applyStyle('p', styles.p);
+      applyStyle('blockquote', styles.blockquote);
+      applyStyle('table', styles.table);
+      applyStyle('th', styles.th);
+      applyStyle('td', styles.td);
+      applyStyle('pre', styles.pre);
+      applyStyle('code', styles.code);
+      applyStyle('mark', styles.mark);
+      applyStyle('ul', styles.ul);
+      applyStyle('ol', styles.ol);
+      applyStyle('li', styles.li);
+      applyStyle('hr', styles.hr);
+
+      // Handle strong, em
+      container.querySelectorAll('strong').forEach(el => {
+        el.setAttribute('style', 'font-weight: 800; color: inherit;');
+      });
+
+      // Special callout highlights (==text==)
+      container.querySelectorAll('mark').forEach(el => {
+        el.setAttribute('style', styles.mark);
+      });
+
+      return container.innerHTML;
+    }
+
+    // Built-in Basic Parser Fallback
+    function basicMarkdownParse(text) {
+      let html = text
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/^### (.*$)/gim, '<h3>$1</h3>')
+        .replace(/^## (.*$)/gim, '<h2>$1</h2>')
+        .replace(/^# (.*$)/gim, '<h1>$1</h1>')
+        .replace(/^\> (.*$)/gim, '<blockquote>$1</blockquote>')
+        .replace(/\*\*(.*)\*\*/gim, '<strong>$1</strong>')
+        .replace(/\*(.*)\*/gim, '<em>$1</em>')
+        .replace(/`([^`]+)`/gim, '<code>$1</code>')
+        .replace(/\n\n/gim, '</p><p>')
+        .replace(/\n/gim, '<br>');
+      return `<p>${html}</p>`;
+    }
+
+    // Update Live Editor & Stats
+    function updateEditor() {
+      const text = markdownInput.value;
+
+      // Stats
+      statChars.textContent = text.length.toLocaleString();
+      statWords.textContent = text.trim() ? text.trim().split(/\s+/).length.toLocaleString() : 0;
+      
+      const headingMatches = text.match(/^#{1,3}\s/gm);
+      statHeadings.textContent = headingMatches ? headingMatches.length : 0;
+
+      const tableMatches = text.match(/\|.*\|/gm);
+      statTables.textContent = tableMatches && tableMatches.length >= 2 ? Math.floor(tableMatches.length / 3) || 1 : 0;
+
+      // Convert & Render
+      generatedNaverHtml = convertToNaverHtml(text, currentTheme);
+      naverPreview.innerHTML = generatedNaverHtml;
+    }
+
+    // Event Listeners
+    markdownInput.addEventListener('input', updateEditor);
+
+    // Theme Switch Buttons
+    document.querySelectorAll('.theme-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentTheme = btn.getAttribute('data-theme');
+        updateEditor();
+        showToast(`🎨 [${btn.textContent.trim()}] 디자인 테마가 적용되었습니다.`);
+      });
+    });
+
+    // Sample Loaders
+    document.getElementById('btnLoadColumnSample').addEventListener('click', () => {
+      markdownInput.value = SAMPLE_COLUMN;
+      updateEditor();
+      showToast('📄 전문직 절세 칼럼 샘플이 로딩되었습니다.');
+    });
+
+    document.getElementById('btnLoadReviewSample').addEventListener('click', () => {
+      markdownInput.value = SAMPLE_REVIEW;
+      updateEditor();
+      showToast('💻 IT 제품 리뷰 샘플이 로딩되었습니다.');
+    });
+
+    document.getElementById('btnClearEditor').addEventListener('click', () => {
+      markdownInput.value = '';
+      updateEditor();
+      markdownInput.focus();
+      showToast('🗑️ 입력창이 비워졌습니다.');
+    });
+
+    // Main Copy Action (SmartEditor ONE Clipboard Injection)
+    document.getElementById('btnCopyNaver').addEventListener('click', async () => {
+      const text = markdownInput.value.trim();
+      if (!text) {
+        showToast('⚠️ 변환할 원고나 마크다운을 먼저 입력해주세요.');
+        return;
+      }
+
+      // Ensure wrapped in a safe container with 860px max width and clear font declaration
+      const clipboardHtml = `
+        <div style="max-width: 860px; margin: 0 auto; font-family: 'Nanum Gothic', 'Pretendard', sans-serif; font-size: 16px; line-height: 1.85; color: #333333;">
+          ${generatedNaverHtml}
+        </div>
+      `;
+
+      try {
+        if (navigator.clipboard && window.ClipboardItem) {
+          const blobHtml = new Blob([clipboardHtml], { type: 'text/html' });
+          const blobText = new Blob([text], { type: 'text/plain' });
+          const item = new ClipboardItem({
+            'text/html': blobHtml,
+            'text/plain': blobText
+          });
+          await navigator.clipboard.write([item]);
+        } else {
+          // Fallback
+          const listener = (e) => {
+            e.clipboardData.setData('text/html', clipboardHtml);
+            e.clipboardData.setData('text/plain', text);
+            e.preventDefault();
+          };
+          document.addEventListener('copy', listener);
+          document.execCommand('copy');
+          document.removeEventListener('copy', listener);
+        }
+
+        showToast('📋 네이버 블로그 전용 서식 복사 완료! 스마트에디터 ONE에서 Ctrl+V 하세요.');
+      } catch (err) {
+        console.error('Clipboard copy error:', err);
+        // Fallback text copy
+        navigator.clipboard.writeText(text).then(() => {
+          showToast('📋 텍스트 복사 완료! (브라우저 권한상 일반 텍스트로 복사되었습니다)');
+        });
+      }
+    });
+
+    // Reverse Convert (Naver Blog / HTML to Markdown)
+    document.getElementById('btnReverseConvert').addEventListener('click', () => {
+      const text = markdownInput.value.trim();
+      if (!text) {
+        showToast('⚠️ 역변환할 텍스트나 HTML을 입력해주세요.');
+        return;
+      }
+
+      if (window.TurndownService) {
+        try {
+          const turndownService = new TurndownService({
+            headingStyle: 'atx',
+            codeBlockStyle: 'fenced'
+          });
+          const markdown = turndownService.turndown(text);
+          markdownInput.value = markdown;
+          updateEditor();
+          showToast('🔄 깔끔한 마크다운(Markdown)으로 역변환되었습니다!');
+        } catch (err) {
+          showToast('⚠️ 역변환 중 오류가 발생했습니다.');
+        }
+      } else {
+        showToast('⚠️ 역변환 모듈을 불러오는 중입니다. 잠시 후 다시 시도해주세요.');
+      }
+    });
+
+    // Global Modern Toast Function
+    function showToast(msg) {
+      let toast = document.getElementById('globalToast');
+      if (!toast) return;
+      toast.innerHTML = `<i class="fa-solid fa-sparkles" style="color:#60a5fa;"></i> <span>${msg}</span>`;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 2800);
+    }
+
+    // Initialize Default Demo
+    window.addEventListener('DOMContentLoaded', () => {
+      markdownInput.value = SAMPLE_COLUMN;
+      updateEditor();
+    });
+  </script>
+</body>
+</html>
