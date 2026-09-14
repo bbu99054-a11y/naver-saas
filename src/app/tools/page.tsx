@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import GoogleAdSlot from '@/components/monetization/GoogleAdSlot';
+import EbookPromoCard from '@/components/monetization/EbookPromoCard';
 import {
   ShieldCheck,
   Zap,
@@ -21,14 +23,14 @@ import {
 export const metadata: Metadata = {
   title: '무료 비즈니스 초소형 웹 유틸리티 허브 | PostSync Tools',
   description:
-    '설치 없이 브라우저에서 1초 만에 업무를 해결하는 무료 초소형 웹툴 6종 모음. 네이버 플레이스 순위 조회기, 상세페이지 슬라이서, 전문직 광고 금칙어 스캐너, 자소서 바이트 계산기, HWPX 안심 뷰어, 캠페인 UTM & QR 빌더.',
+    '설치 없이 브라우저에서 1초 만에 업무를 해결하는 무료 초소형 웹툴 7종 모음. 네이버 플레이스 순위 조회기, 상세페이지 슬라이서, 전문직 광고 금칙어 스캐너, 자소서 바이트 계산기, HWPX 안심 뷰어, 캠페인 UTM & QR 빌더, 웹 포맷 변환기.',
   alternates: {
     canonical: '/tools',
   },
   openGraph: {
-    title: 'PostSync 무료 비즈니스 초소형 웹 유틸리티 허브 (6대 웹툴)',
+    title: 'PostSync 무료 비즈니스 초소형 웹 유틸리티 허브 (7대 웹툴)',
     description:
-      '설치 제로, 가입 제로, 서버 전송 제로. 브라우저에서 즉시 구동되는 100% 무료 비즈니스 웹 유틸리티 6종 모음입니다.',
+      '설치 제로, 가입 제로, 서버 전송 제로. 브라우저에서 즉시 구동되는 100% 무료 비즈니스 웹 유틸리티 7종 모음입니다.',
     url: 'https://www.postsyncapp.com/tools',
     siteName: 'PostSync Tools',
     locale: 'ko_KR',
@@ -115,6 +117,19 @@ const TOOLS = [
     desc: '네이버 블로그, 인스타그램, 당근마켓, 카카오톡 등 한국형 매체별 맞춤 파라미터 프리셋을 지원하며 인쇄용 고해상도 QR코드를 1초 만에 즉시 제작합니다.',
     features: ['한국형 주요 매체 프리셋 내장', '인쇄용 고화질 SVG/PNG QR 생성', '파라미터 즉시 복사 및 검증'],
   },
+  {
+    id: 'convert',
+    title: 'ChatGPT·노션 ➔ 네이버 블로그 서식 1초 변환기',
+    badge: '스마트에디터 ONE 서식 완벽 호환 (LIVE)',
+    isLive: true,
+    href: '/convert',
+    icon: Layers,
+    color: 'from-emerald-600 to-green-600',
+    borderGlow: 'border-2 border-emerald-600 shadow-md shadow-emerald-500/10 hover:shadow-xl',
+    target: '블로거 · 마케터 · 노션/ChatGPT 사용자',
+    desc: 'ChatGPT, Claude, Notion에서 작성한 마크다운 및 표(Table)를 네이버 블로그 스마트에디터 ONE에 서식 깨짐 없이 원클릭 복사·붙여넣기할 수 있는 전용 클립보드 변환기입니다.',
+    features: ['표(Table) & 소제목 서식 100% 보존', '1초 원클릭 HTML 클립보드 복사', '100% 브라우저 로컬 안전 연산'],
+  },
 ];
 
 export default function ToolsHubPage() {
@@ -165,14 +180,8 @@ export default function ToolsHubPage() {
           </div>
         </div>
 
-        {/* CLS 방지용 표준 광고 컨테이너 (라이트) */}
-        <div className="w-full min-h-[90px] flex flex-col items-center justify-center p-3 mb-12 rounded-2xl bg-white border border-dashed border-slate-300 text-center relative overflow-hidden shadow-xs">
-          <span className="text-[10px] uppercase font-mono tracking-wider text-slate-400 mb-1">SPONSORED ADVERTISEMENT</span>
-          <div className="text-xs text-slate-500 flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-slate-400" />
-            <span>Google AdSense 공식 검증 광고 슬롯 (라이트 테마 최적화)</span>
-          </div>
-        </div>
+        {/* 상단 반응형 애드센스 슬롯 */}
+        <GoogleAdSlot adFormat="horizontal" className="mb-12 max-w-[728px] mx-auto" />
 
         {/* 5대 유틸리티 툴 카드 그리드 (토스 스타일 카드) */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16">
@@ -247,6 +256,11 @@ export default function ToolsHubPage() {
           })}
         </div>
 
+        {/* 2026 전문직 마케팅 PDF 전자책 프로모션 카드 */}
+        <div className="mb-12">
+          <EbookPromoCard toolSource="tools_hub" />
+        </div>
+
         {/* B2B SaaS 메인 전환 배너 (토스 스타일 로열 블루 카드) */}
         <div className="rounded-3xl bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 p-8 md:p-11 shadow-lg text-white relative overflow-hidden">
           <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 relative z-10">
@@ -281,6 +295,9 @@ export default function ToolsHubPage() {
             </div>
           </div>
         </div>
+
+        {/* 하단 반응형 멀티플렉스 애드센스 슬롯 */}
+        <GoogleAdSlot adFormat="auto" className="mt-12" />
 
         {/* 푸터 */}
         <div className="mt-16 pt-8 border-t border-slate-200 text-center text-xs text-slate-500 space-y-2">

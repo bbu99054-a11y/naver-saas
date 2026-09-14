@@ -26,6 +26,16 @@ export async function POST(req: Request) {
     const cleanName = String(name).trim() || String(businessName).trim() || '고객'
     const nowTime = new Date().toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' })
 
+    // 계산서 / 현금영수증 요청 정보
+    const taxType = metadata.taxDeductionType || body.taxDeductionType || 'NONE'
+    const taxNum = String(metadata.taxDeductionNum || body.taxDeductionNum || '').trim()
+    let taxDeductionText = '미발행'
+    if (taxType === 'PERSONAL') {
+      taxDeductionText = `개인 소득공제용 현금영수증 (${taxNum || cleanPhone || '번호 미기재'})`
+    } else if (taxType === 'BUSINESS') {
+      taxDeductionText = `사업자 지출증빙용 세금계산서 (${taxNum || '사업자번호 미기재'})`
+    }
+
     // 1. Telegram 실시간 알림 발송 (대표님 텔레그램 봇)
     const tgToken = process.env.TELEGRAM_BOT_TOKEN || '8314703344:AAGoFyPTWjHCRjPWq32Pdq0dti0TG8zZahE'
     const tgChatId = process.env.TELEGRAM_CHAT_ID || '8650197247'
@@ -35,16 +45,17 @@ export async function POST(req: Request) {
         let msg = ''
         if (leadType === 'ebook_order') {
           msg = `💰 [전자책 계좌이체 주문 접수 - ${toolSource.toUpperCase()}]\n\n` +
-            `📚 상품명: ${metadata.bookTitle || '2026 전문직 네이버 상위 1% 실전 공략집'}\n` +
+            `📚 상품명: ${metadata.bookTitle || '2026 변호사·세무사 네이버 상위 1% 인바운드 마케팅 실전 지침서 (PDF)'}\n` +
             `💵 결제금액: ${metadata.amount ? Number(metadata.amount).toLocaleString() + '원' : '39,000원'}\n` +
             `👤 입금자명: ${cleanName}\n` +
             `📧 수신 이메일: ${cleanEmail}\n` +
             `📱 연락처: ${cleanPhone || '미기재'}\n` +
+            `🧾 증빙요청: ${taxDeductionText}\n` +
             `⏱ 신청일시: ${nowTime}\n\n` +
-            `👉 [국민은행 93043922640 유영무] 입금 확인 후 PDF를 발송하세요.`
+            `👉 [국민은행 93043922640 유영무] 입금 확인 후 PDF 발송 및 홈택스 영수증/계산서를 발행하세요.`
         } else {
           msg = `🎁 [무료 리드 마그넷 신청 접수 - ${toolSource.toUpperCase()}]\n\n` +
-            `📄 신청자료: ${metadata.docTitle || '전문직 광고법/마케팅 가이드'}\n` +
+            `📄 신청자료: ${metadata.docTitle || '[무료 퀵가이드] 네이버 플레이스 1위 세팅법 & 변호사·세무사 합법 수임 칼럼 템플릿 (PDF)'}\n` +
             `📧 수신 이메일: ${cleanEmail}\n` +
             `📱 연락처: ${cleanPhone || '미기재'}\n` +
             `⚖️ 업종/상호: ${industry || businessName || '일반'}\n` +
@@ -93,6 +104,7 @@ export async function POST(req: Request) {
                   <p><strong>이름/입금자명:</strong> ${cleanName}</p>
                   <p><strong>이메일:</strong> ${cleanEmail}</p>
                   <p><strong>연락처:</strong> ${cleanPhone || '미기재'}</p>
+                  <p><strong>증빙 요청:</strong> ${taxDeductionText}</p>
                   <p><strong>신청 일시:</strong> ${nowTime}</p>
                   ${metadata.amount ? `<p><strong>주문 금액:</strong> ${Number(metadata.amount).toLocaleString()}원</p>` : ''}
                 </div>

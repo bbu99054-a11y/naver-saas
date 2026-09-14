@@ -15,6 +15,7 @@ model User {
   plan_type         String    @default("free")
   credits           Int       @default(3)
   subscription_tier String    @default("FREE")
+  locked_until      DateTime?
   created_at        DateTime  @default(now())
 
   projects         Project[]
@@ -127,4 +128,59 @@ model CardImage {
 
   @@map("card_images")
 }
+
+model cross_posts_log {
+  id                String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  platform          String
+  target_keyword    String
+  post_title        String
+  image_url         String?
+  external_post_url String?
+  status            String?   @default("SUCCESS")
+  error_message     String?
+  published_at      DateTime? @default(now()) @db.Timestamptz(6)
+
+  @@index([platform], map: "idx_cross_posts_platform")
+}
+
+model marketing_leads {
+  id                     String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email                  String    @unique
+  name                   String?
+  industry               String?
+  store_name             String?
+  region                 String?
+  blog_url               String?
+  source                 String?   @default("outbound_scrape")
+  status                 String?   @default("PENDING")
+  prohibited_words_found String[]
+  last_sent_at           DateTime? @db.Timestamptz(6)
+  lead_magnet_sent       Boolean?  @default(false)
+  created_at             DateTime? @default(now()) @db.Timestamptz(6)
+  audit_post_title       String?
+  audit_score            Int?
+  audit_issues_count     Int?
+  audit_prohibited_words String[]
+
+  @@index([email], map: "idx_marketing_leads_email")
+  @@index([status], map: "idx_marketing_leads_status")
+}
+
+model Lead {
+  id           String   @id @default(cuid())
+  toolSource   String   // 'place', 'adcheck', 'crop', 'byte', 'hwpx', 'utm', 'convert', 'landing' 등
+  leadType     String   // 'audit_report', 'ebook', 'saas_trial', 'contact' 등
+  email        String?
+  phone        String?
+  businessName String?  // 상호명 또는 병원/법률사무소 이름
+  location     String?  // 지역/상권
+  industry     String?  // 업종 (변호사, 세무사, 병원, 학원 등)
+  metadata     Json?    // 검색 키워드, 진단 결과 등 부가 데이터
+  status       String   @default("NEW") // NEW, CONTACTED, CONVERTED, CLOSED
+  createdAt    DateTime @default(now())
+
+  @@map("leads")
+}
+
+
 

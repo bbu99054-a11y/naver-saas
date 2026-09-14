@@ -101,6 +101,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'daily',
       priority: 0.9,
     },
+    {
+      url: `${baseUrl}/convert`,
+      lastModified: new Date(),
+      changeFrequency: 'daily',
+      priority: 0.95,
+    },
   ]
 
   const blogRoutes: MetadataRoute.Sitemap = blogPosts.map((post) => ({

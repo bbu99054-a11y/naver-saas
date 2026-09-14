@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>[무료 퀵가이드] 네이버 플레이스 1위 세팅법 & 변호사·세무사 합법 수임 칼럼 템플릿 | PostSync</title>
+  
+  <!-- Fonts & Icons -->
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="/assets/monetization.css">
+
+  <style>
+    :root {
+      --primary: #065f46;
+      --primary-dark: #064e3b;
+      --accent: #2563eb;
+      --gold: #d97706;
+      --slate-900: #0f172a;
+      --slate-800: #1e293b;
+      --slate-700: #334155;
+      --slate-600: #475569;
+      --slate-200: #e2e8f0;
+      --slate-100: #f1f5f9;
+      --bg: #f8fafc;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    /* 한국어 단어 단위 줄바꿈 보장 */
+    body, h1, h2, h3, h4, p, li, span, div, td, th {
+      word-break: keep-all;
+      overflow-wrap: break-word;
+    }
+
+    body {
+      font-family: "Pretendard", -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--slate-800);
+      line-height: 1.85;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Top Bar */
+    .top-bar {
+      position: sticky;
+      top: 0;
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(8px);
+      color: #fff;
+      padding: 12px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1000;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    .top-bar-title {
+      font-size: 14px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .top-bar-badge {
+      background: #10b981;
+      color: #064e3b;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 4px;
+    }
+    .top-bar-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .btn-print {
+      background: rgba(255, 255, 255, 0.15);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      padding: 7px 14px;
+      border-radius: 6px;
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .btn-print:hover { background: rgba(255, 255, 255, 0.25); }
+    .btn-upgrade {
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: #fff;
+      border: none;
+      padding: 7px 15px;
+      border-radius: 6px;
+      font-size: 12.5px;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+      box-shadow: 0 2px 8px rgba(37,99,235,0.3);
+    }
+    .btn-upgrade:hover { background: #1e40af; transform: translateY(-1px); }
+
+    /* Book Container */
+    .book-container {
+      max-width: 880px;
+      margin: 40px auto;
+      background: #ffffff;
+      padding: 60px 75px;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+      border: 1px solid var(--slate-200);
+    }
+    @media (max-width: 768px) {
+      .book-container { padding: 30px 20px; margin: 10px; }
+    }
+
+    /* Book Cover */
+    .book-cover {
+      background: linear-gradient(135deg, #064e3b 0%, #0f172a 100%);
+      border-radius: 12px;
+      padding: 60px 36px;
+      color: #ffffff;
+      text-align: center;
+      margin-bottom: 36px;
+      position: relative;
+      overflow: hidden;
+    }
+    .book-cover::after {
+      content: "";
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .cover-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(16, 185, 129, 0.2);
+      border: 1px solid #10b981;
+      color: #6ee7b7;
+      font-size: 12px;
+      font-weight: 800;
+      padding: 6px 14px;
+      border-radius: 30px;
+      margin-bottom: 20px;
+      letter-spacing: 0.3px;
+    }
+    .cover-title {
+      font-family: "Noto Serif KR", serif;
+      font-size: 26px;
+      font-weight: 900;
+      line-height: 1.45;
+      margin-bottom: 18px;
+      letter-spacing: -0.5px;
+    }
+    .cover-title span {
+      color: #34d399;
+      display: inline-block;
+    }
+    .cover-subtitle {
+      font-size: 14.5px;
+      color: #cbd5e1;
+      max-width: 660px;
+      margin: 0 auto 26px auto;
+      line-height: 1.7;
+      font-weight: 400;
+    }
+    .cover-meta {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      font-size: 12px;
+      color: #94a3b8;
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+      padding-top: 18px;
+      flex-wrap: wrap;
+    }
+    .cover-meta span { display: flex; align-items: center; gap: 6px; }
+
+    /* Headings */
+    h2 {
+      font-size: 22px;
+      font-weight: 900;
+      color: var(--slate-900);
+      border-bottom: 2.5px solid var(--slate-200);
+      padding-bottom: 12px;
+      margin: 50px 0 20px 0;
+      letter-spacing: -0.5px;
+    }
+    h3 {
+      font-size: 17px;
+      font-weight: 800;
+      margin: 32px 0 14px 0;
+      color: var(--primary-dark);
+    }
+    h4 {
+      font-size: 15px;
+      font-weight: 800;
+      margin: 20px 0 10px 0;
+      color: var(--slate-800);
+    }
+    p {
+      margin-bottom: 16px;
+      font-size: 15px;
+      color: var(--slate-700);
+      line-height: 1.85;
+    }
+    ul, ol {
+      margin: 0 0 20px 22px;
+      font-size: 14.5px;
+      color: var(--slate-700);
+    }
+    li { margin-bottom: 8px; }
+
+    /* Callouts */
+    .callout {
+      padding: 16px 20px;
+      border-radius: 0 8px 8px 0;
+      margin: 22px 0;
+      font-size: 14px;
+      line-height: 1.75;
+    }
+    .callout-green { background: #f0fdf4; border-left: 4px solid #16a34a; color: #14532d; }
+    .callout-blue { background: #eff6ff; border-left: 4px solid #2563eb; color: #1e3a8a; }
+    .callout-gold { background: #fffbeb; border-left: 4px solid #f59e0b; color: #92400e; }
+
+    /* Template Code Box */
+    .template-card {
+      background: #0f172a;
+      color: #e2e8f0;
+      border-radius: 10px;
+      padding: 20px 22px;
+      margin: 20px 0 14px 0;
+      font-family: "Pretendard", -apple-system, sans-serif;
+      font-size: 13.5px;
+      line-height: 1.8;
+      border: 1px solid #1e293b;
+    }
+    .template-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+      padding-bottom: 10px;
+      margin-bottom: 14px;
+    }
+    .template-top .badge {
+      display: inline-block;
+      background: #059669;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 4px;
+    }
+    .btn-copy {
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      color: #fff;
+      padding: 5px 12px;
+      border-radius: 5px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.2s;
+    }
+    .btn-copy:hover { background: #059669; }
+    .template-content {
+      color: #e2e8f0;
+      white-space: pre-wrap;
+    }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0 28px 0;
+      font-size: 13.5px;
+    }
+    th, td {
+      border: 1px solid var(--slate-200);
+      padding: 12px 14px;
+      text-align: left;
+    }
+    th {
+      background: var(--slate-100);
+      font-weight: 800;
+      color: var(--slate-800);
+    }
+
+    /* Upsell Banner */
+    .upsell-box {
+      background: linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%);
+      border-radius: 12px;
+      padding: 36px 30px;
+      color: #ffffff;
+      margin-top: 50px;
+      border: 1px solid #3b82f6;
+      box-shadow: 0 10px 25px rgba(30, 58, 138, 0.2);
+    }
+    .upsell-title {
+      font-size: 20px;
+      font-weight: 900;
+      color: #93c5fd;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .upsell-desc {
+      font-size: 14px;
+      color: #e2e8f0;
+      line-height: 1.75;
+      margin-bottom: 20px;
+    }
+    .upsell-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .upsell-item {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      padding: 12px 14px;
+      font-size: 12.5px;
+      color: #f1f5f9;
+      line-height: 1.5;
+    }
+    .btn-upsell-action {
+      background: linear-gradient(135deg, #3b82f6, #60a5fa);
+      color: #0f172a;
+      font-weight: 900;
+      font-size: 15px;
+      padding: 14px 28px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+      box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4);
+    }
+    .btn-upsell-action:hover {
+      background: #ffffff;
+      transform: translateY(-2px);
+    }
+
+    /* Print Styles */
+    @media print {
+      .top-bar { display: none !important; }
+      body { background: #fff !important; }
+      .book-container { box-shadow: none !important; border: none !important; padding: 0 !important; max-width: 100% !important; margin: 0 !important; }
+      .book-cover { page-break-after: always; border: none !important; padding: 80px 30px !important; }
+      h2 { page-break-before: always; }
+      .template-card { background: #f8fafc !important; color: #0f172a !important; border: 1px solid #cbd5e1 !important; }
+      .template-top { border-bottom: 1px solid #cbd5e1 !important; }
+      .template-top .badge { background: #e2e8f0 !important; color: #0f172a !important; }
+      .btn-copy { display: none !important; }
+      .template-content { color: #0f172a !important; }
+      .upsell-box { page-break-before: always; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation Bar -->
+  <div class="top-bar">
+    <div class="top-bar-title">
+      <i class="fa-solid fa-bolt-lightning" style="color: #34d399;"></i>
+      <span>PostSync AI 전략연구소</span>
+      <span class="top-bar-badge">공식 무료 증정본</span>
+    </div>
+    <div class="top-bar-actions">
+      <button class="btn-print" onclick="window.print()">
+        <i class="fa-solid fa-print"></i> <span>A4 인쇄 / PDF 저장</span>
+      </button>
+      <button class="btn-upgrade" onclick="openEbookOrderModal()">
+        <i class="fa-solid fa-crown"></i> <span>정식 실전 지침서 (39,000원)</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="book-container">
+
+    <!-- BOOK COVER -->
+    <div class="book-cover">
+      <div class="cover-badge">
+        <i class="fa-solid fa-shield-halved"></i> [대행사 위약금 날리기 전 필독] 과태료 0원 · 마케팅 비용 0원
+      </div>
+      <h1 class="cover-title">
+        단 10분 만에 끝내는<br>
+        <span>[2026 네이버 스마트플레이스 1위 세팅법 & 변호사·세무사 합법 수임 칼럼 템플릿]</span>
+      </h1>
+      <p class="cover-subtitle">
+        마케팅 대행사에 매달 300만 원씩 주는데도 수임 전화 한 통 없으셨습니까? 불법 슬롯 없이 지도 1~3위 장악하는 3분 세팅법과 징계 0건 합법 칼럼 복붙 서식을 지금 즉시 적용하십시오.
+      </p>
+      <div class="cover-meta">
+        <span><i class="fa-solid fa-building"></i> 발행처: PostSync AI 전략연구소</span>
+        <span><i class="fa-solid fa-file-shield"></i> 버전: 2026 최신 개정판</span>
+        <span><i class="fa-solid fa-gift"></i> 배포: 공식 무료 증정본</span>
+      </div>
+    </div>
+
+    <!-- LEGAL DISCLAIMER -->
+    <div style="background:#f8fafc; border:1px solid #cbd5e1; border-left:4px solid #64748b; padding:14px 18px; border-radius:6px; font-size:12px; color:#475569; line-height:1.65; margin-bottom:36px;">
+      ⚖️ <b>[법적 고지 및 면책 조항 (Legal Disclaimer)]</b><br>
+      • 본 가이드에 수록된 칼럼 서식 및 플레이스 설정 예시는 법률·세무 전문직의 이해를 돕기 위해 업계 규정을 바탕으로 재구성한 '견본 모델(Template Model)'입니다.<br>
+      • 본 저작물은 개별 사건에 대한 법률·세무 자문이나 소송/환급 결과를 보장하지 않으며, 실제 포스팅 시에는 각 사무소의 사실관계와 담당 전문가의 책임하에 검토·수정하여 사용하여야 합니다.
+    </div>
+
+    <!-- PROLOGUE / 30-SEC SUMMARY -->
+    <h2>📌 읽기 전에 (30초 핵심 요약)</h2>
+    <ul>
+      <li><b>대행사에 월 300만 원씩 주는데도 수임 전화가 안 오는 이유:</b> 의뢰인은 단순 '블로그 글'만 보고 계약하지 않습니다. <b>[스마트플레이스(지도)]</b>에서 가까운지, 진짜 전문성이 있는지 확인하고, <b>[블로그 칼럼]</b>에서 판례와 세법 소명 능력을 검증한 뒤 <b>[스마트콜]</b>로 전화를 겁니다.</li>
+      <li><b>이 가이드의 약속:</b> 단 10분 만에 읽고 사무실 플레이스에 바로 적용할 수 있는 <b>'지도 상위노출 세팅법'</b>과 내일 아침 복사해 쓰는 <b>'변호사·세무사 실전 수임 템플릿 각 1종'</b>을 제공합니다.</li>
+    </ul>
+
+    <!-- PART 1 -->
+    <h2>📍 PART 1. 네이버 스마트플레이스 1~3위 장악 3분 체크리스트</h2>
+    <p>
+      대행사의 '불법 슬롯(트래픽 조작)'이나 '가짜 영수증 리뷰'는 2026 네이버 클린봇에 의해 100% 영구 패널티를 받습니다. 네이버 검색 로봇이 합법적으로 점수를 퍼주는 <b>[정석 세팅 3단계]</b>입니다.
+    </p>
+
+    <h3>1. [절대 주의] 업체명에 키워드를 억지로 쑤셔 넣지 마세요</h3>
+    <ul>
+      <li>❌ <b>감점/제재:</b> <code>서초동 형사전문 변호사 홍길동 법률사무소 음주운전 구제</code> ➔ <b>어뷰징 단속 대상</b></li>
+      <li>✅ <b>합법 정석:</b> <code>법률사무소 청람</code> 또는 <code>세무회계 바른 대표세무사 김철수</code><br>
+      <span style="font-size:12.5px; color:#64748b;">(사업자등록증 상의 정식 명칭을 사용해야 네이버 알고리즘 신뢰도 점수가 유지됩니다.)</span></li>
+    </ul>
+
+    <h3>2. 대표 키워드 5개: [지역 + 상황] 조합으로 세팅</h3>
+    <p>
+      의뢰인은 '변호사', '세무사'라는 광범위한 단어만 치지 않습니다. 내 사무실로 찾아올 수 있는 <b>관할 기관/지역명</b>을 엮으세요.
+    </p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>직역</th>
+          <th>추천 대표 키워드 조합 5선 (예시)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><b>변호사</b></td>
+          <td>
+            1. <code>[관할법원/경찰서명]변호사</code> (서초동변호사, 수원지방법원변호사)<br>
+            2. <code>[주력분야]전문변호사</code> (음주운전변호사, 상속전문변호사)<br>
+            3. <code>[세부지역]형사변호사</code> (강남형사변호사, 송파이혼변호사)<br>
+            4. <code>[사건키워드]상담</code> (개인회생상담, 전세사기고소)<br>
+            5. <code>[역세권/지역명]법률사무소</code> (교대역법률사무소)
+          </td>
+        </tr>
+        <tr>
+          <td><b>세무사</b></td>
+          <td>
+            1. <code>[세무서명/지역명]세무사</code> (역삼세무사, 가산디지털단지세무사)<br>
+            2. <code>[주력분야]세무기장</code> (IT법인기장, 병의원세무기장)<br>
+            3. <code>[고단가분야]상담</code> (상속세전문세무사, 양도소득세상담)<br>
+            4. <code>[산업단지/지역]세무회계</code> (판교세무사, 마곡세무회계)<br>
+            5. <code>[리스크대응]전문</code> (세무조사소명세무사)
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>3. 상세설명 2,000자: 검색 로봇과 의뢰인을 동시에 홀리는 법</h3>
+    <p>
+      상세설명란 첫 3줄에 <b>[관할 지역 + 주력 사건 수임 경험 + 직통 전화]</b>가 들어가야 네이버 AI가 검색어와 매칭합니다.
+    </p>
+
+    <!-- Template Box 1: Place Description -->
+    <div class="template-card">
+      <div class="template-top">
+        <span class="badge">플레이스 2,000자 표준 서식</span>
+        <button class="btn-copy" onclick="copySnippet(this)">
+          <i class="fa-regular fa-copy"></i> <span>복사하기</span>
+        </button>
+      </div>
+      <div class="template-content">"안녕하십니까, [서울중앙지방법원 / 강남세무서] 맞은편에서 의뢰인의 권리를 지키는 [사무소명] 대표 [변호사/세무사] [이름]입니다.
+
+저희는 단순 서면 대행이 아닌, [음주운전 면허구제 / IT스타트업 법인기장] 분야에서 [OO건 이상의 실전 해결 노하우]를 축적해 왔습니다.
+
+억울한 혐의나 예상치 못한 세금 고지서로 막막하시다면, 사건 초기 골든타임을 놓치지 마시고 아래 직통 스마트콜로 사전 상담을 예약해 주시기 바랍니다.
+
+■ 주력 상담 분야
+1. [주력 분야 1]: 경찰 첫 출석 동행 및 법리 검토
+2. [주력 분야 2]: 맞춤형 절세 플랜 및 소명 자료 구축
+3. [주력 분야 3]: 1:1 비밀 보장 직접 상담
+
+■ 오시는 길 및 주차 안내
+- [지하철역 O번 출구 도보 O분]
+- 건물 내 무료 주차 2시간 지원"</div>
+    </div>
+
+    <!-- PART 2 -->
+    <h2>🏛️ PART 2. 변협·세무사회 징계 0건! 1초 단속 회피 족보</h2>
+    <p>
+      광고법을 위반하면 네이버 상위노출이 되어도 동료의 신고로 <b>과태료 500만~3,000만 원</b>과 <b>자격정지</b>를 당합니다. 아래 단어는 오늘 즉시 블로그와 플레이스에서 지우고 오른쪽 단어로 바꾸십시오.
+    </p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>직역</th>
+          <th>❌ 절대 금지어 (과태료/징계 대상)</th>
+          <th>✅ 합법 신뢰 치환어 (단속 0건)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><b>변호사</b></td>
+          <td>100% 승소 보장, 무조건 무죄</td>
+          <td><b>철저한 법리 검토 및 객관적 판례 소명</b></td>
+        </tr>
+        <tr>
+          <td><b>변호사</b></td>
+          <td>부장판사·검사장 출신 전관예우</td>
+          <td><b>법원 재판 실무 및 검찰 수사 실무 경험</b></td>
+        </tr>
+        <tr>
+          <td><b>변호사</b></td>
+          <td>서초동 1위, 최상의 결과</td>
+          <td><b>의뢰인 맞춤형 전담 TF 법률 조력</b></td>
+        </tr>
+        <tr>
+          <td><b>변호사</b></td>
+          <td>수임료 최저가, 착수금 0원</td>
+          <td><b>합리적이고 투명한 수임 절차 안내</b></td>
+        </tr>
+        <tr>
+          <td><b>세무사</b></td>
+          <td>세금 0원, 무조건 100% 환급</td>
+          <td><b>세법상 적법한 공제 요건 심층 검토</b></td>
+        </tr>
+        <tr>
+          <td><b>세무사</b></td>
+          <td>세무조사 무마, 국세청 인맥</td>
+          <td><b>과세관청의 소명 요구에 객관적 입증 대응</b></td>
+        </tr>
+        <tr>
+          <td><b>세무사</b></td>
+          <td>업계 최저 기장료 (월 3만 원)</td>
+          <td><b>업종별 특화 맞춤 기장 및 정기 세무 브리핑</b></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- PART 3 -->
+    <h2>📝 PART 3. 복사해 쓰는 실전 수임 칼럼 템플릿 2선</h2>
+    <p>
+      의뢰인이 글을 읽고 자연스럽게 스마트콜을 누르게 만드는 <b>Answer-First(결론 우선)</b> 칼럼 서식입니다. 그대로 복사하여 <code>[괄호]</code> 속 내용만 수정해 포스팅하세요.
+    </p>
+
+    <!-- Template Box 2: Lawyer Column -->
+    <h3>① [변호사] 형사/음주운전: 의뢰인이 읽고 당장 전화하는 칼럼</h3>
+    <div class="template-card">
+      <div class="template-top">
+        <span class="badge">변호사 복붙 칼럼 서식</span>
+        <button class="btn-copy" onclick="copySnippet(this)">
+          <i class="fa-regular fa-copy"></i> <span>복사하기</span>
+        </button>
+      </div>
+      <div class="template-content">[서초/강남] 음주운전 2진 아웃 적발, 경찰 첫 조사 전 반드시 챙겨야 할 3가지 양형자료
+
+음주운전 단속에 적발되어 면허 취소와 실형 선고의 위기에 놓이셨습니까? 
+혼자서 인터넷 글을 찾아보며 시간을 지체하는 지금 이 순간에도 수사 절차는 시작되고 있습니다.
+
+법원 재판 실무 및 경찰 수사 실무 경험을 바탕으로, 음주운전 2진 아웃 사건에서 불리한 진술을 피하고 유리한 양형을 이끌어내기 위한 객관적 대응 절차를 안내해 드립니다.
+
+■ 1. 경찰 첫 출석 전 '블랙박스 및 대리운전 호출 내역' 확보
+경찰 조사에서 당황하여 잘못된 진술을 남기면 번복하기 어렵습니다. 당시 운전 경위와 대리운전 기사와의 대화, 최종 정차 경위를 객관적 자료로 소명해야 합니다.
+
+■ 2. 객관적 양형 소명자료 5종 조기 준비
+단순한 반성문만으로는 재판부를 설득하기 어렵습니다. 재범 방지를 위한 차량 매각 증명, 정기 교육 이수 내역, 부양가족의 실질적 생계 상황을 증빙 서류로 구조화해야 합니다.
+
+■ 3. 사법 실무 노하우를 갖춘 법률 조력의 필요성
+음주운전 사건은 초기 수사 단계에서의 법리 검토가 재판 결과에 중대한 영향을 미칩니다.
+
+지금 즉시 아래 네이버 스마트콜 또는 예약으로 현재 혈중알코올농도와 적발 경위를 남겨주시면, 담당 변호사가 직접 초기 골든타임 대응 전략을 진단해 드립니다.
+
+[📞 네이버 스마트콜로 1:1 직통 상담 예약하기]
+[📍 사무실 오시는 길 (네이버 플레이스 지도)]</div>
+    </div>
+
+    <!-- Template Box 3: Tax Column -->
+    <h3>② [세무사] 법인 기장: 덤핑 없이 고단가 계약 따내는 칼럼</h3>
+    <div class="template-card">
+      <div class="template-top">
+        <span class="badge">세무사 복붙 칼럼 서식</span>
+        <button class="btn-copy" onclick="copySnippet(this)">
+          <i class="fa-regular fa-copy"></i> <span>복사하기</span>
+        </button>
+      </div>
+      <div class="template-content">가산디지털단지 IT 법인 대표님이 기장 세무사를 바꾸고 연 1,800만 원 절세한 비결
+
+"기장료 매달 10만 원씩 꼬박꼬박 나가는데, 정작 세무사 얼굴은 1년에 한 번도 못 보고 직원하고만 통화합니다."
+최근 저희 사무실로 기장 대리를 변경하신 IT 스타트업 대표님의 하소연이었습니다.
+
+단순 영수증 입력만 하는 기장 대리는 세금을 줄여주지 못합니다. 오히려 정부 고용지원금과 연구개발(R&D) 세액공제를 놓쳐 수천만 원의 세금을 더 내는 경우가 허다합니다.
+
+■ 1. 우리 회사가 놓치고 있는 '조세특례제한법' 세액감면 진단
+청년 고용 증대 세액공제, 벤처기업 인증 감면 등 법인 업종에 맞는 특화 공제를 사전에 챙기지 않으면 결산 때 소급 적용이 어렵습니다.
+
+■ 2. 대표이사 가지급금과 급여·배당 최적화 설계
+회사의 잉여금을 가장 적은 세금으로 회수할 수 있는 종합 플랜을 분기별로 점검받고 계십니까?
+
+■ 3. 세무사가 직접 결산 브리핑을 진행하는 이유
+저희 세무회계는 직원이 아닌 담당 세무사가 직접 분기별 가결산 리포트를 제공하며, 예상 세액을 사전에 고지해 자금 계획에 차질이 없도록 조력합니다.
+
+현재 기장료 대비 어떤 세무 관리를 받고 계신지 무료로 진단해 드립니다. 아래 플레이스 예약을 통해 사업자등록증 사본을 남겨주시면 1:1 절세 진단표를 보내드립니다.
+
+[📞 세무사 직통 스마트콜 상담 신청]
+[📍 세무회계 사무소 위치 및 방문 예약]</div>
+    </div>
+
+    <!-- UPSELL BRIDGE BANNER -->
+    <div class="upsell-box">
+      <div class="upsell-title">
+        <i class="fa-solid fa-crown" style="color: #fbbf24;"></i>
+        <span>더 깊은 수임 비결이 필요하신가요?</span>
+      </div>
+      <div class="upsell-desc">
+        본 무료 퀵가이드는 전체 지침서의 <b>10% 핵심 요약본</b>입니다. 대행사 없이 매달 수임 사건과 고단가 기장 업체를 물어오는 완전한 24시간 인바운드 수임 파이프라인을 구축하세요.
+      </div>
+      <div class="upsell-grid">
+        <div class="upsell-item">
+          <b>📖 6대 실전 칼럼 전문 수록</b><br>
+          이혼 재산분할, 전세사기, 상속증여 3년 플랜, 세무조사 소명 칼럼 전문
+        </div>
+        <div class="upsell-item">
+          <b>⚖️ 1초 치환 족보 30선</b><br>
+          변호사법 제23조·세무사법 제12조 전수 대응 합법 대체어 완비
+        </div>
+        <div class="upsell-item">
+          <b>📞 3단계 인바운드 콜 설계</b><br>
+          손실 회피 트리거 & 첫 1분 통화로 방문 수임 성사시키는 실전 스크립트
+        </div>
+        <div class="upsell-item">
+          <b>📊 황금 키워드 50선 & 자가점검표</b><br>
+          변호사 25개 + 세무사 25개 즉시 수임 키워드 및 25제 점검 체크리스트
+        </div>
+      </div>
+      <div style="text-align: center;">
+        <button class="btn-upsell-action" onclick="openEbookOrderModal()">
+          <i class="fa-solid fa-cart-shopping"></i> <span>39,000원에 실전 지침서 마스터본 평생 소장하기</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div style="text-align: center; margin-top: 50px; padding: 24px; border-top: 1px solid var(--slate-200); color: var(--slate-500); font-size: 12.5px;">
+      © 2026 PostSync AI 전략연구소. All rights reserved. 본 저작물의 무단 복제 및 상업적 재배포를 엄격히 금합니다.
+    </div>
+
+  </div>
+
+  <script src="/assets/monetization.js"></script>
+  <script>
+    function copySnippet(btn) {
+      const card = btn.closest('.template-card');
+      const content = card.querySelector('.template-content').innerText;
+      navigator.clipboard.writeText(content).then(() => {
+        const originalHtml = btn.innerHTML;
+        btn.innerHTML = '<i class="fa-solid fa-check" style="color:#10b981;"></i> 복사 완료!';
+        btn.style.background = '#059669';
+        setTimeout(() => {
+          btn.innerHTML = originalHtml;
+          btn.style.background = '';
+        }, 2000);
+      });
+    }
+  </script>
+
+</body>
+</html>

@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import prisma from '@/lib/prisma'
 
 export async function POST(req: Request) {
   try {
@@ -11,8 +12,30 @@ export async function POST(req: Request) {
 
     const cleanName = String(name).trim()
     const cleanEmail = String(email).trim().toLowerCase()
+    const cleanPhone = phone ? String(phone).trim() : null
     const targetIndustry = industry || (cleanName.includes('세무') || cleanName.includes('회계') ? '세무' : (cleanName.includes('치과') ? '치과' : (cleanName.includes('학원') ? '학원' : '변호사')))
     const nowTime = new Date().toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' })
+
+    // 0. DB leads 테이블에 안전 저장 (데이터 영구 보존)
+    let savedLeadId = leadId
+    try {
+      const savedLead = await prisma.lead.create({
+        data: {
+          toolSource: 'place',
+          leadType: 'audit_report',
+          email: cleanEmail,
+          phone: cleanPhone,
+          businessName: cleanName,
+          location: location ? String(location).trim() : '반경 2km',
+          industry: targetIndustry,
+          metadata: { originalLeadId: leadId || null },
+          status: 'NEW'
+        }
+      })
+      savedLeadId = savedLead.id
+    } catch (dbErr) {
+      console.error('[Place Apply DB Save Error]:', dbErr)
+    }
 
     // 1. Telegram Notification to Representative
     const tgToken = process.env.TELEGRAM_BOT_TOKEN || '8314703344:AAGoFyPTWjHCRjPWq32Pdq0dti0TG8zZahE';

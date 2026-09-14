@@ -525,57 +525,84 @@
       align-items: center;
     }
     .violation-item {
-      background: var(--slate-50);
-      border: 1px solid var(--slate-200);
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-left: 4px solid #ef4444;
       border-radius: var(--radius-sm);
-      padding: 12px 14px;
-      margin-bottom: 10px;
+      padding: 14px 16px;
+      margin-bottom: 12px;
       display: flex;
       flex-direction: column;
-      gap: 6px;
-      transition: all 0.15s;
+      gap: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+      transition: all 0.2s;
     }
-    .violation-item:hover { border-color: #cbd5e1; }
+    .violation-item:hover {
+      border-color: #cbd5e1;
+      border-left-color: #dc2626;
+      box-shadow: 0 4px 12px rgba(15,23,42,0.06);
+    }
     .violation-top {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 8px;
     }
     .violation-word {
       color: #b91c1c;
       font-weight: 800;
-      font-size: 14px;
+      font-size: 14.5px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
     }
     .violation-law {
       font-size: 11px;
-      background: #fee2e2;
+      background: #eff6ff;
+      color: #1d4ed8;
+      border: 1px solid #bfdbfe;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+    .violation-reason-box {
+      font-size: 11.5px;
       color: #991b1b;
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-weight: 600;
+      background: #fef2f2;
+      border: 1px solid #fee2e2;
+      padding: 6px 10px;
+      border-radius: 6px;
+      line-height: 1.5;
     }
     .violation-suggest {
-      font-size: 12px;
-      color: var(--slate-600);
+      font-size: 12.5px;
+      color: var(--slate-700);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-top: 2px;
+      margin-top: 4px;
+      padding-top: 6px;
+      border-top: 1px dashed #e2e8f0;
     }
     .btn-replace-single {
-      background: #fff;
-      border: 1px solid #bfdbfe;
-      color: var(--primary);
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      border: none;
+      color: #ffffff;
       font-size: 12px;
       font-weight: 700;
-      padding: 3px 10px;
-      border-radius: 4px;
+      padding: 4px 12px;
+      border-radius: 6px;
       cursor: pointer;
+      box-shadow: 0 2px 6px rgba(37,99,235,0.25);
       transition: all 0.15s;
     }
     .btn-replace-single:hover {
-      background: #eff6ff;
-      border-color: var(--primary);
+      background: #1e40af;
+      transform: translateY(-1px);
     }
     .empty-violations {
       text-align: center;
@@ -876,17 +903,17 @@
           <div class="lead-magnet-header">
             <div class="lead-magnet-icon"><i class="fa-solid fa-file-pdf"></i></div>
             <div>
-              <div class="lead-magnet-title">🎁 2026 복지부·변협 공인 광고법 금칙어 500제 모음집 (PDF)</div>
+              <div class="lead-magnet-title">🎁 [무료 퀵가이드] 네이버 플레이스 1위 세팅법 & 변호사·세무사 합법 수임 칼럼 템플릿 (PDF)</div>
               <div class="lead-magnet-desc">
-                실제 협회 징계 사례와 과태료 5천만 원을 원천 방어하는 전문직 4대 직역별 합법 대체어 500제를 무료로 전송해 드립니다.
+                대행사 위약금 날리기 전 필독! 단 10분 만에 지도 1~3위 장악하는 3분 체크리스트와 즉시 복사해 쓰는 합법 수임 칼럼 템플릿 2선을 무료로 전송해 드립니다.
               </div>
             </div>
           </div>
-          <form class="lead-magnet-form" onsubmit="handleLeadMagnetSubmit(event, 'adcheck', '2026 전문직 법정 광고 금칙어 500제 모음집 (PDF)')">
+          <form class="lead-magnet-form" onsubmit="handleLeadMagnetSubmit(event, 'adcheck', '[무료 퀵가이드] 네이버 플레이스 1위 세팅법 & 변호사·세무사 합법 수임 칼럼 템플릿 (PDF)')">
             <input type="email" class="lead-magnet-input" placeholder="가이드북을 받아보실 이메일 주소" required>
             <input type="tel" class="lead-magnet-input" placeholder="연락처 (선택 - 알림용)" style="flex: 0 1 180px;">
             <button type="submit" class="btn-lead-submit">
-              <i class="fa-solid fa-paper-plane"></i> <span>무료 가이드북 즉시 받기</span>
+              <i class="fa-solid fa-paper-plane"></i> <span>무료 퀵가이드 즉시 받기</span>
             </button>
           </form>
           <div class="lead-magnet-notice">
@@ -942,16 +969,16 @@
         </div>
 
         <!-- Ebook Promo Card (Sidebar) -->
-        <div class="ebook-promo-card">
-          <div class="ebook-promo-badge"><i class="fa-solid fa-crown"></i> 2026 추천 필독서</div>
+        <div class="ebook-promo-card" style="margin-top: 16px;">
+          <div class="ebook-promo-badge"><i class="fa-solid fa-crown"></i> 2026 추천 필독 실전서</div>
           <div class="ebook-book-wrap">
             <div class="ebook-cover-thumb">
-              <div class="ebook-cover-title">2026 전문직<br>상위 1%<br>실전 공략집</div>
+              <div class="ebook-cover-title" style="font-size: 9.5px; line-height: 1.25;">2026 변호사·세무사<br><span style="color:#60a5fa; font-size: 10.5px;">네이버 1%</span><br>실전 지침서</div>
               <div class="ebook-cover-author">PostSync Lab</div>
             </div>
             <div>
-              <div class="ebook-info-title">2026 네이버 상위 1% 실전 공략집</div>
-              <div class="ebook-info-desc">변호사·의사·세무사 광고법 판례 및 C-Rank 최적화 완벽 해설서</div>
+              <div class="ebook-info-title">2026 변호사·세무사 네이버 상위 1% 인바운드 마케팅 실전 지침서</div>
+              <div class="ebook-info-desc">스마트플레이스 1위 선점 & 복붙 칼럼 6종 & 징계 0건 완벽 매뉴얼</div>
             </div>
           </div>
           <div class="ebook-price-row">
@@ -966,19 +993,22 @@
               <i class="fa-solid fa-book-open"></i> 핵심 목차 미리보기
             </button>
           </div>
+          <div style="text-align: center; margin-top: 10px; font-size: 11.5px; color: #64748b;">
+            먼저 요약본이 필요하신가요? <a href="javascript:void(0)" onclick="openLeadMagnetModal('adcheck', '[무료 퀵가이드] 네이버 플레이스 1위 세팅법 & 변호사·세무사 합법 수임 칼럼 템플릿 (PDF)')" style="color: #2563eb; font-weight: 700; text-decoration: underline;">[무료] 3분 퀵가이드 맛보기</a>
+          </div>
         </div>
 
         <!-- SaaS Bridge Banner (Sidebar) -->
         <div class="saas-bridge-card">
           <div class="saas-bridge-header">
-            <div class="saas-bridge-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
-            <div class="saas-bridge-title">PostSync AI 올인원 솔루션</div>
+            <div class="saas-bridge-icon"><i class="fa-solid fa-robot"></i></div>
+            <div class="saas-bridge-title">PostSync AI: 24시간 인바운드 수임 머신</div>
           </div>
           <p class="saas-bridge-desc">
-            전문직·로컬 사업자를 위한 무인 인바운드 고객 획득 OS. AI가 법령 RAG로 100% 합법 칼럼과 인포그래픽을 자동 완성해 신규 상담 문의를 이끌어냅니다.
+            대표 변호사님, 세무사님은 재판과 절세 상담에만 집중하십시오. PostSync AI가 365일 24시간 네이버 상위 1% 잠재 의뢰인을 낚아채서 수임 전화를 대표님 스마트폰으로 직접 물어다 드립니다.
           </p>
           <a href="https://postsyncapp.com" target="_blank" class="btn-saas-bridge">
-            무료체험 시작하기 <i class="fa-solid fa-arrow-right"></i>
+            수임 자동화 무료체험 <i class="fa-solid fa-arrow-right"></i>
           </a>
         </div>
 
@@ -1054,6 +1084,47 @@
         </div>
       </div>
     </div>
+  <!-- 1-Second Compliance PASS Report Modal -->
+  <div id="replaceReportModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(15,23,42,0.75); backdrop-filter:blur(8px); z-index:9999; justify-content:center; align-items:center; padding:20px;">
+    <div style="background:#ffffff; border-radius:20px; max-width:520px; width:100%; padding:36px 30px; box-shadow:0 25px 50px -12px rgba(0,0,0,0.3); position:relative; text-align:center;">
+      <div style="width:64px; height:64px; border-radius:50%; background:#ecfdf5; border:3px solid #10b981; color:#059669; display:inline-flex; align-items:center; justify-content:center; font-size:30px; margin-bottom:16px; box-shadow:0 10px 20px rgba(16,185,129,0.2);">
+        <i class="fa-solid fa-circle-check"></i>
+      </div>
+      <div style="font-size:11.5px; font-weight:800; color:#2563eb; letter-spacing:1px; text-transform:uppercase; margin-bottom:4px;">PostSync Compliance Engine</div>
+      <h3 style="font-size:22px; font-weight:900; color:#0f172a; margin-bottom:8px; letter-spacing:-0.5px;">사전점검 100% PASS</h3>
+      <p style="font-size:13.5px; color:#64748b; margin-bottom:20px; line-height:1.6;" id="reportSummaryText">
+        총 <b style="color:#059669;" id="reportReplacedCount">0</b>건의 법정 위반 단어가 2026 협회 공인 합법 어휘로 교체되었으며, 한국어 조사까지 완벽하게 보정되었습니다.
+      </p>
+
+      <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:16px; text-align:left; margin-bottom:22px; font-size:12.5px; line-height:1.8;">
+        <div style="font-weight:800; color:#334155; margin-bottom:8px; display:flex; align-items:center; gap:6px;">
+          <i class="fa-solid fa-shield-halved" style="color:#2563eb;"></i> 적용 법령 및 준수 기준
+        </div>
+        <div style="display:flex; justify-content:space-between;">
+          <span style="color:#64748b;">• 근거 법률:</span>
+          <strong id="reportAppliedLaw" style="color:#0f172a;">-</strong>
+        </div>
+        <div style="display:flex; justify-content:space-between;">
+          <span style="color:#64748b;">• 잔여 위반 건수:</span>
+          <strong style="color:#059669;">0건 (안전도 100점 만점)</strong>
+        </div>
+        <div style="display:flex; justify-content:space-between;">
+          <span style="color:#64748b;">• 문맥 조사 보정:</span>
+          <strong style="color:#2563eb;">한국어 조사(을/를, 으로/로) 자동 수선 완료</strong>
+        </div>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <button type="button" class="btn-action-primary" onclick="openCertFromReport()" style="width:100%; height:46px; font-size:14px; border-radius:10px; box-shadow:0 4px 14px rgba(37,99,235,0.25);">
+          <i class="fa-solid fa-file-shield"></i> <span>사전점검 확인서 발급 (A4 인쇄/PDF)</span>
+        </button>
+        <button type="button" class="btn-action-secondary" onclick="closeReplaceReportModal()" style="width:100%; height:42px; font-size:13px; border-radius:10px;">
+          <span>원고 편집 계속하기</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- Certificate Modal for Agency & Client Report -->
   <div id="certModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(15,23,42,0.7); backdrop-filter:blur(6px); z-index:9999; justify-content:center; align-items:center; padding:20px;">
     <div style="background:#ffffff; border-radius:16px; max-width:640px; width:100%; padding:36px; box-shadow:0 25px 50px -12px rgba(0,0,0,0.25); position:relative; max-height:90vh; overflow-y:auto;" id="printableCertArea">
@@ -1136,54 +1207,209 @@
     // 2026 Profession Compliance Dictionaries
     const COMPLIANCE_RULES = {
       lawyer: [
+        // 1. 전관예우 및 사적 연고 암시 (변호사법 제23조 제2항 제5호, 변협 광고규정 제4조)
+        { word: '전관예우', replace: '사법 실무 경험', law: '변호사법 제23조', reason: '전관예우 표방 및 사적 연고 암시 금지' },
+        { word: '전관 변호사', replace: '경험이 풍부한 변호사', law: '변호사법 제23조', reason: '전관 변호사 표방 및 부당 우월성 선전 금지' },
+        { word: '전관', replace: '실무 경험', law: '변호사법 제23조', reason: '전관예우 및 사적 연고 암시 금지' },
+        { word: '지검장 출신', replace: '검찰 실무 경력', law: '변호사법 제23조', reason: '퇴직 기관 부당 강조 및 전관 암시 금지' },
+        { word: '검사장 출신', replace: '검찰 실무 경력', law: '변호사법 제23조', reason: '퇴직 기관 부당 강조 및 전관 암시 금지' },
+        { word: '법원장 출신', replace: '재판 실무 경력', law: '변호사법 제23조', reason: '퇴직 기관 부당 강조 및 전관 암시 금지' },
+        { word: '부장판사 출신', replace: '재판 실무 경력', law: '변호사법 제23조', reason: '전관예우 및 사적 연고 암시 금지' },
+        { word: '부장검사 출신', replace: '수사 실무 경력', law: '변호사법 제23조', reason: '전관예우 및 사적 연고 암시 금지' },
+        { word: '부장 출신', replace: '실무 경력', law: '변호사법 제23조', reason: '전관예우 암시 금지' },
+        { word: '판검사 출신', replace: '사법 실무 경험', law: '변호사법 제23조', reason: '전관예우 및 사적 연고 선전 금지' },
+        { word: '판사 출신', replace: '법원 실무 경력', law: '변호사법 제23조', reason: '전관예우 암시 금지' },
+        { word: '검사 출신', replace: '검찰 실무 경력', law: '변호사법 제23조', reason: '전관예우 암시 금지' },
+
+        // 2. 최상급 표현 및 우월성 비교 (변호사법 제23조 제2항 제2호, 변협 광고규정 제4조)
         { word: '최고의', replace: '신뢰할 수 있는', law: '변호사법 제23조', reason: '최고/유일 등 최상급 표현 금지' },
         { word: '최고', replace: '우수', law: '변호사법 제23조', reason: '최상급 표현 금지' },
+        { word: '최상의', replace: '수준 높은', law: '변호사법 제23조', reason: '최상급 비교 우위 표현 금지' },
+        { word: '최상', replace: '우수', law: '변호사법 제23조', reason: '최상급 표현 금지' },
+        { word: '제일의', replace: '정성을 다하는', law: '변호사 광고규정 제4조', reason: '객관적 근거 없는 제일/우월 표현 금지' },
+        { word: '제일', replace: '우수', law: '변호사 광고규정 제4조', reason: '우월적 비교 표현 금지' },
+        { word: '국내 1위', replace: '풍부한 사건 수행 경험', law: '변호사 광고규정 제4조', reason: '순위 표방 및 과장 광고 금지' },
+        { word: '업계 1위', replace: '다수의 사건을 수행한', law: '변호사 광고규정 제4조', reason: '순위 표방 금지' },
+        { word: '1위', replace: '선도적', law: '변호사 광고규정 제4조', reason: '순위 표방 금지' },
+        { word: '유일한', replace: '차별화된', law: '변호사법 제23조', reason: '유일 등 단정적 비교 표현 금지' },
+        { word: '유일', replace: '특화', law: '변호사법 제23조', reason: '유일 표현 금지' },
+        { word: '독보적인', replace: '심층적인', law: '변호사 광고규정 제4조', reason: '객관적 근거 없는 독보적 우월성 표방 금지' },
+        { word: '압도적인', replace: '충실한', law: '변호사 광고규정 제4조', reason: '우월적 비교 표현 금지' },
+        { word: '완벽한 승소', replace: '철저한 법리 대응', law: '변호사 광고규정 제4조', reason: '완벽 표방 및 결과 장담 금지' },
+        { word: '완벽한 해결', replace: '체계적인 사건 진행', law: '변호사 광고규정 제4조', reason: '완벽 표방 금지' },
+        { word: '완벽한', replace: '철저한', law: '변호사 광고규정 제4조', reason: '완벽 등 과장 표현 금지' },
+        { word: '가장 빠르게', replace: '신속하게', law: '변호사법 제23조', reason: '비교 우위 최상급 표현 금지' },
+        { word: '가장 빠른', replace: '신속한', law: '변호사법 제23조', reason: '비교 우위 최상급 표현 금지' },
+        { word: '최우수', replace: '우수', law: '변호사 광고규정 제4조', reason: '최우수 표방 금지' },
+
+        // 3. 승소율 장담 및 결과 확약 (변호사법 제23조 제2항 제3호, 변협 광고규정 제4조)
         { word: '100% 승소', replace: '철저한 법리 검토', law: '변호사 광고규정 제4조', reason: '승소율 장담 및 결과 보장 금지' },
+        { word: '100% 무죄', replace: '치밀한 무죄 변론', law: '변호사 광고규정 제4조', reason: '결과 확약 표현 금지' },
         { word: '100%', replace: '철저한', law: '변호사 광고규정 제4조', reason: '절대적 성공 보장 금지' },
         { word: '무조건 승소', replace: '객관적 판례 분석', law: '변호사 광고규정 제4조', reason: '승소 확약 표현 금지' },
         { word: '무조건', replace: '체계적으로', law: '변호사 광고규정 제4조', reason: '단정적 판단 유도 금지' },
-        { word: '가장 빠르게', replace: '신속하게', law: '변호사법 제23조', reason: '비교 우위 최상급 표현 금지' },
-        { word: '가장 빠른', replace: '신속한', law: '변호사법 제23조', reason: '비교 우위 최상급 표현 금지' },
-        { word: '부장판사 출신', replace: '재판 실무 경력', law: '변호사법 제23조', reason: '전관예우 및 사적 연고 암시 금지' },
-        { word: '부장검사 출신', replace: '수사 실무 경력', law: '변호사법 제23조', reason: '전관예우 및 사적 연고 암시 금지' },
-        { word: '판검사 출신', replace: '사법 실무 경험', law: '변호사법 제23조', reason: '전관예우 선전 금지' },
+        { word: '승소 보장', replace: '의뢰인 맞춤 변호', law: '변호사 광고규정 제4조', reason: '승소 보장 표현 원천 금지' },
+        { word: '무죄 보장', replace: '적극적인 법리 소명', law: '변호사 광고규정 제4조', reason: '무죄 보장 표현 원천 금지' },
+        { word: '확실한 승소', replace: '면밀한 법리 검토', law: '변호사 광고규정 제4조', reason: '승소 단정 표현 금지' },
+        { word: '석방 장담', replace: '영장실질심사 적극 대응', law: '변호사 광고규정 제4조', reason: '석방 결과 장담 금지' },
+        { word: '구속 면제', replace: '불구속 수사 유도', law: '변호사 광고규정 제4조', reason: '결과 장담 금지' },
+        { word: '승소 확약', replace: '최선의 변론', law: '변호사 광고규정 제4조', reason: '결과 약속 금지' },
+        { word: '필승', replace: '진심을 다한 변론', law: '변호사 광고규정 제4조', reason: '결과 확약 금지' },
+
+        // 4. 부당 염가 표방 및 사건 유인 (변호사 광고규정 제4조, 제5조)
         { word: '최저 수임료', replace: '합리적인 수임 기준', law: '변호사 광고규정', reason: '부당 염가 표방 금지' },
-        { word: '무료 변호', replace: '법률 상담 절차 안내', law: '변호사 광고규정', reason: '부당 유인성 무료 표방 금지' }
+        { word: '최저가 수임료', replace: '합리적인 수임 기준', law: '변호사 광고규정', reason: '부당 염가 표방 금지' },
+        { word: '최저가', replace: '합리적인 비용', law: '변호사 광고규정', reason: '부당 염가 표방 금지' },
+        { word: '반값 수임료', replace: '부담을 낮춘 보수 기준', law: '변호사 광고규정', reason: '부당 염가 유인 금지' },
+        { word: '수임료 파괴', replace: '합리적인 보수 책정', law: '변호사 광고규정', reason: '가격 파괴 표방 금지' },
+        { word: '착수금 0원', replace: '사건 맞춤 수임 안내', law: '변호사 광고규정', reason: '부당 유인성 무료 표방 금지' },
+        { word: '무료 변호', replace: '법률 상담 절차 안내', law: '변호사 광고규정', reason: '부당 유인성 무료 표방 금지' },
+        { word: '수임료 무료', replace: '상담 절차 안내', law: '변호사 광고규정', reason: '무료 표방 금지' },
+
+        // 5. 미등록 임의 전문 표기
+        { word: '승소 전문', replace: '주요 취급 분야', law: '변호사 광고규정 제4조', reason: '변협 미등록 승소 전문 표기 금지' },
+        { word: '합의 전문', replace: '합의 절차 조력', law: '변호사 광고규정 제4조', reason: '미등록 전문 표기 금지' },
+        { word: '사건 해결 전문', replace: '풍부한 사건 해결 경험', law: '변호사 광고규정 제4조', reason: '미등록 전문 표기 금지' }
       ],
       doctor: [
+        // 1. 치료 효과 보장 및 완치 표방 (의료법 제56조 제2항 제2호)
+        { word: '치료 효과 100% 보장', replace: '전문의의 심층 진료', law: '의료법 제56조', reason: '치료 효과 보장 금지' },
+        { word: '효과 100% 보장', replace: '체계적인 진료', law: '의료법 제56조', reason: '효과 보장 확약 금지' },
         { word: '완치율 100%', replace: '임상 데이터 중심 관리', law: '의료법 제56조', reason: '치료 결과 확약 금지' },
+        { word: '1회 시술로 완치', replace: '단계별 맞춤 치료', law: '의료법 제56조', reason: '1회 완치 과장 금지' },
         { word: '완치', replace: '체계적인 증상 개선', law: '의료법 제56조', reason: '치료 효과 보장 및 과장 광고 금지' },
-        { word: '부작용 없는', replace: '안전성 중심 관리', law: '의료법 제56조 제2항', reason: '부작용 부존재 표방 금지' },
+        { word: '재발 없는', replace: '지속적인 사후 관리', law: '의료법 제56조', reason: '재발 부존재 확약 금지' },
+        { word: '재발 제로', replace: '정기적인 경과 관찰', law: '의료법 제56조', reason: '재발 불가능 표방 금지' },
+        { word: '영구적인 효과', replace: '안정적인 유지 관리', law: '의료법 제56조', reason: '영구적 효과 과장 금지' },
+        { word: '영구적', replace: '지속적', law: '의료법 제56조', reason: '영구 표방 금지' },
+        { word: '100% 만족', replace: '정성을 다하는 진료', law: '의료법 제56조', reason: '만족도 장담 금지' },
+        { word: '100% 성공', replace: '면밀한 사전 검사', law: '의료법 제56조', reason: '성공률 확약 금지' },
+
+        // 2. 부작용 및 통증 부존재 과장 (의료법 제56조 제2항 제7호)
+        { word: '부작용 없는', replace: '안전성을 고려한', law: '의료법 제56조 제2항', reason: '부작용 부존재 표방 금지' },
         { word: '부작용 제로', replace: '철저한 사전 검사', law: '의료법 제56조', reason: '부작용 배제 과장 금지' },
-        { word: '효과 100% 보장', replace: '전문의의 심층 진료', law: '의료법 제56조', reason: '치료 효과 보장 금지' },
-        { word: '가격 파괴', replace: '적정 비급여 고지', law: '의료법 제56조', reason: '환자 유인성 가격 파괴 광고 금지' },
+        { word: '부작용 0%', replace: '안전 수칙 준수', law: '의료법 제56조', reason: '부작용 0% 표방 금지' },
+        { word: '통증 없는', replace: '통증 저감 케어', law: '의료법 제56조', reason: '통증 부존재 단정 금지' },
+        { word: '통증 제로', replace: '마취 전담 관리', law: '의료법 제56조', reason: '통증 배제 과장 금지' },
+        { word: '무통', replace: '통증 완화 관리', law: '의료법 제56조', reason: '무통 단정 표현 금지' },
+        { word: '흉터 없는', replace: '최소 절개 지향', law: '의료법 제56조', reason: '흉터 부존재 과장 금지' },
+        { word: '붓기 없는', replace: '체계적인 붓기 케어', law: '의료법 제56조', reason: '붓기 부존재 과장 금지' },
+        { word: '회복기간 제로', replace: '빠른 일상 복귀 지원', law: '의료법 제56조', reason: '회복기간 부존재 과장 금지' },
+        { word: '멍 없는', replace: '세심한 시술 관리', law: '의료법 제56조', reason: '멍 부존재 단정 금지' },
+
+        // 3. 환자 유인 및 가격 파괴 (의료법 제27조 제3항, 제56조 제2항 제13호)
+        { word: '가격 파괴', replace: '합리적 비급여 책정', law: '의료법 제56조', reason: '환자 유인성 가격 파괴 광고 금지' },
+        { word: '파격 할인', replace: '합리적인 진료 안내', law: '의료법 제27조 제3항', reason: '부당 환자 유인 할인 표방 금지' },
         { word: '할인 이벤트', replace: '진료 절차 안내', law: '의료법 제56조', reason: '의료법상 금지된 유인/할인 행사' },
+        { word: '반값 할인', replace: '비급여 고지 기준', law: '의료법 제27조 제3항', reason: '환자 유인성 반값 표방 금지' },
+        { word: '비급여 할인', replace: '비급여 항목 안내', law: '의료법 제27조 제3항', reason: '비급여 임의 할인 표방 금지' },
+        { word: '무료 시술', replace: '상담 및 검진 절차 안내', law: '의료법 제27조 제3항', reason: '무료 시술 유인 금지' },
+        { word: '시술비 0원', replace: '상료 기준 안내', law: '의료법 제27조 제3항', reason: '0원 표방 금지' },
+        { word: '초특가', replace: '투명한 비용 고지', law: '의료법 제56조', reason: '특가 호객 금지' },
+        { word: '최저가', replace: '적정 진료비 안내', law: '의료법 제56조', reason: '최저가 표방 금지' },
+
+        // 4. 전후 비교 사진 및 체험 후기 (의료법 제56조 제2항 제8호/제9호)
         { word: '전후 사진', replace: '의학적 정보 안내', law: '의료광고 심의기준', reason: '무단 치료 전후 비교 금지' },
-        { word: '국내 1위', replace: '임상 경험이 풍부한', law: '의료법 제56조', reason: '객관적 근거 없는 최고/1위 표방' }
+        { word: '비포애프터', replace: '임상 연구 사례', law: '의료광고 심의기준', reason: '비포애프터 비교 금지' },
+        { word: '체험단 후기', replace: '전문의 소견', law: '의료법 제56조', reason: '영리 목적 후기/체험단 광고 금지' },
+        { word: '연예인 협찬', replace: '공식 임상 센터', law: '의료광고 심의기준', reason: '연예인 협찬 선전 금지' },
+        { word: '셀럽 방문', replace: '전문 클리닉', law: '의료광고 심의기준', reason: '유명인 이용 유인 금지' },
+
+        // 5. 최상급 및 순위 표방 (의료법 제56조 제2항 제2호)
+        { word: '국내 1위', replace: '임상 경험이 풍부한', law: '의료법 제56조', reason: '객관적 근거 없는 최고/1위 표방' },
+        { word: '강남 1위', replace: '다수의 시술 케이스를 보유한', law: '의료법 제56조', reason: '순위 표방 금지' },
+        { word: '1위', replace: '선도적', law: '의료법 제56조', reason: '순위 표방 금지' },
+        { word: '최고의', replace: '신뢰할 수 있는', law: '의료법 제56조', reason: '최상급 표현 금지' },
+        { word: '최고', replace: '우수', law: '의료법 제56조', reason: '최상급 표현 금지' },
+        { word: '유일한', replace: '차별화된', law: '의료법 제56조', reason: '유일 표방 금지' },
+        { word: '독보적인', replace: '체계적인', law: '의료법 제56조', reason: '독보적 과장 금지' }
       ],
       tax: [
+        // 1. 환급율 및 절세율 순위/최고 표방 (세무사법 제12조, 세무사 광고규정)
         { word: '환급율 1위', replace: '세법 기준 정밀 검토', law: '세무사법 제12조', reason: '환급율 순위 표방 금지' },
+        { word: '환급 1위', replace: '정밀 세액 검토', law: '세무사법 제12조', reason: '순위 표방 금지' },
         { word: '절세율 최고', replace: '합법적 공제 항목 분석', law: '세무사법 제12조', reason: '최고 절세율 표방 금지' },
+        { word: '절세 1위', replace: '합법적 절세 방안 제시', law: '세무사 광고규정', reason: '순위 표방 금지' },
+        { word: '업계 1위', replace: '풍부한 실무 경험', law: '세무사 광고규정', reason: '순위 표방 금지' },
+        { word: '1위', replace: '선도적', law: '세무사 광고규정', reason: '순위 표방 금지' },
+        { word: '최대 환급', replace: '정당한 환급액 산정', law: '세무사법 제12조', reason: '최대 표방 과장 금지' },
+        { word: '최고의', replace: '신뢰할 수 있는', law: '세무사법 제12조', reason: '최상급 표현 금지' },
+        { word: '최고', replace: '우수', law: '세무사법 제12조', reason: '최상급 표현 금지' },
+
+        // 2. 단정적 결과 장담 및 세액 면제 (세무사법 제12조)
         { word: '무조건 절세', replace: '세법 개정안 기준 절세', law: '세무사 광고규정', reason: '단정적 절세 장담 금지' },
+        { word: '무조건', replace: '체계적으로', law: '세무사 광고규정', reason: '단정적 표현 금지' },
         { word: '100% 환급', replace: '적법한 경정청구 안내', law: '세무사법 제12조', reason: '환급 확약 및 결과 장담 금지' },
+        { word: '100% 절세', replace: '합법적 공제 요건 소명', law: '세무사법 제12조', reason: '결과 확약 금지' },
+        { word: '100%', replace: '철저한', law: '세무사법 제12조', reason: '절대적 표현 금지' },
+        { word: '세금 0원', replace: '합법적 세액 공제 극대화', law: '세무사법 제12조', reason: '0원 단정 표현 금지' },
+        { word: '세금 100% 감면', replace: '적법한 감면 혜택 검토', law: '세무사법 제12조', reason: '전액 감면 장담 금지' },
+        { word: '세무조사 무마', replace: '세무조사 입회 및 소명 지원', law: '세무사법 제12조', reason: '조사 무마 등 불법 행위 암시 금지' },
+        { word: '세무조사 면제', replace: '성실신고 사전 점검', law: '세무사법 제12조', reason: '조사 면제 확약 금지' },
+        { word: '100% 무혐의', replace: '치밀한 조세 불복 소명', law: '세무사법 제12조', reason: '결과 장담 금지' },
+
+        // 3. 부당 염가 및 타 세무사 비교 (세무사 광고규정)
         { word: '최저 수임료', replace: '투명한 보수 기준', law: '세무사 광고규정', reason: '부당 염가 및 타 세무사 비교 금지' },
-        { word: '무료 세무신고', replace: '신고 절차 안내', law: '세무사법 제12조', reason: '과열 유인 행위 금지' }
+        { word: '최저가 기장', replace: '합리적인 기장료 안내', law: '세무사 광고규정', reason: '최저가 기장 표방 금지' },
+        { word: '최저가', replace: '합리적인 비용', law: '세무사 광고규정', reason: '부당 염가 표방 금지' },
+        { word: '반값 기장', replace: '합리적인 맞춤 기장', law: '세무사 광고규정', reason: '부당 염가 호객 금지' },
+        { word: '기장료 무료', replace: '기장 서비스 절차 안내', law: '세무사법 제12조', reason: '무료 표방 금지' },
+        { word: '무료 세무신고', replace: '신고 절차 안내', law: '세무사법 제12조', reason: '과열 유인 행위 금지' },
+        { word: '착수금 0원', replace: '수임 절차 맞춤 안내', law: '세무사 광고규정', reason: '0원 유인 금지' },
+        { word: '수임료 파괴', replace: '정직한 보수 기준', law: '세무사 광고규정', reason: '가격 파괴 표방 금지' },
+
+        // 4. 국세청 사적 연고 암시
+        { word: '국세청 인맥', replace: '세무 행정 실무 경험', law: '세무사법 제12조', reason: '사적 연고 및 공무원 친분 선전 금지' },
+        { word: '세무서 로비', replace: '적법한 과세전적부심사 대응', law: '세무사법 제12조', reason: '부당 로비 암시 금지' }
       ],
       labor: [
+        // 1. 행정 구제 및 인가 결과 장담 (공인노무사법, 행정사법)
         { word: '100% 구제', replace: '구제 신청 요건 심층 검토', law: '공인노무사법', reason: '행정 구제 결과 장담 금지' },
         { word: '100% 인가', replace: '체계적인 인가 서류 소명', law: '행정사법', reason: '인가 승인 확약 금지' },
+        { word: '100% 승인', replace: '면밀한 법령 요건 분석', law: '공인노무사법', reason: '승인 결과 확약 금지' },
+        { word: '100%', replace: '철저한', law: '공인노무사법', reason: '절대적 표현 금지' },
+        { word: '무조건 구제', replace: '체계적인 부당해고 대응', law: '공인노무사법', reason: '단정적 결과 장담 금지' },
         { word: '무조건 인가', replace: '법령 요건 정밀 분석', law: '행정사법', reason: '결과 보장 표현 금지' },
-        { word: '노동부 인맥', replace: '풍부한 사건 수행 경험', law: '공인노무사법', reason: '사적 연고 및 공무원 친분 선전' },
-        { word: '공무원 출신 강조', replace: '행정 실무 경력', law: '행정사법', reason: '사적 영향력 암시 금지' }
+        { word: '무조건 승인', replace: '철저한 심사 서류 준비', law: '행정사법', reason: '결과 확약 금지' },
+        { word: '무조건', replace: '체계적으로', law: '공인노무사법', reason: '단정적 표현 금지' },
+        { word: '산재 100% 승인', replace: '업무상 재해 입증 법리 분석', law: '공인노무사법', reason: '산재 승인 장담 금지' },
+        { word: '산재 100%', replace: '산재 신청 철저 준비', law: '공인노무사법', reason: '산재 장담 금지' },
+        { word: '산재 승인 장담', replace: '의학적 소견 및 인과관계 소명', law: '공인노무사법', reason: '결과 확약 금지' },
+        { word: '고용 지원금 100% 수령', replace: '고용 지원금 요건 정밀 검토', law: '공인노무사법', reason: '지원금 수령 장담 금지' },
+        { word: '지원금 100% 수령', replace: '지원금 적격 요건 검토', law: '공인노무사법', reason: '지원금 수령 장담 금지' },
+        { word: '비자 100% 발급', replace: '출입국 관리법 기준 비자 검토', law: '행정사법', reason: '비자 발급 확약 금지' },
+        { word: '음주운전 100% 구제', replace: '행정심판 구제 요건 검토', law: '행정사법', reason: '행정심판 결과 장담 금지' },
+
+        // 2. 공무원 및 행정관청 사적 연고 선전 (공인노무사법, 행정사법)
+        { word: '노동부 인맥', replace: '풍부한 사건 수행 경험', law: '공인노무사법', reason: '사적 연고 및 공무원 친분 선전 금지' },
+        { word: '노동위원회 연고', replace: '노동위원회 심문회의 대응 노하우', law: '공인노무사법', reason: '사적 연고 암시 금지' },
+        { word: '공무원 출신 강조', replace: '행정 실무 경력', law: '행정사법', reason: '사적 영향력 암시 금지' },
+        { word: '출입국 인맥', replace: '출입국 행정 실무 경력', law: '행정사법', reason: '사적 친분 선전 금지' },
+        { word: '담당 공무원 친분', replace: '행정 절차 체계적 안내', law: '행정사법', reason: '사적 관계 과시 금지' },
+
+        // 3. 최상급 및 우월성 비교
+        { word: '최고의 노무사', replace: '신뢰할 수 있는 노무사', law: '공인노무사법', reason: '최상급 표현 금지' },
+        { word: '최고의 행정사', replace: '신뢰할 수 있는 행정사', law: '행정사법', reason: '최상급 표현 금지' },
+        { word: '최고의', replace: '신뢰할 수 있는', law: '공인노무사법', reason: '최상급 표현 금지' },
+        { word: '최고', replace: '우수', law: '공인노무사법', reason: '최상급 표현 금지' },
+        { word: '1위', replace: '선도적', law: '공인노무사법', reason: '순위 표방 금지' },
+        { word: '유일한', replace: '차별화된', law: '공인노무사법', reason: '유일 표방 금지' },
+        { word: '독보적인', replace: '체계적인', law: '공인노무사법', reason: '우월적 비교 금지' },
+
+        // 4. 부당 염가 및 호객
+        { word: '최저 수임료', replace: '투명한 수임 기준', law: '공인노무사법', reason: '부당 염가 표방 금지' },
+        { word: '무료 대행', replace: '행정 절차 상담 안내', law: '행정사법', reason: '부당 유인성 무료 표방 금지' },
+        { word: '착수금 0원', replace: '사건별 맞춤 수임 안내', law: '공인노무사법', reason: '0원 유인 금지' },
+        { word: '반값 보수', replace: '합리적인 보수 책정', law: '행정사법', reason: '부당 염가 표방 금지' }
       ]
     };
 
     // Profession Samples for 1-Click Testing
     const SAMPLES = {
-      lawyer: "저희 법무법인은 서초동 최고의 판검사 출신 변호사들이 모여 음주운전 면허취소 사건을 100% 승소로 이끌어냅니다. 부장판사 출신 대표 변호사가 직접 사건을 담당하여 가장 빠르게 무조건 승소를 약속드리며, 업계 최저 수임료로 최상의 법률 서비스를 제공합니다.",
-      doctor: "강남역 최고의 피부과에서 진행하는 특별 할인 이벤트! 부작용 없는 레이저 시술로 흉터를 완치해 드립니다. 치료 효과 100% 보장 및 놀라운 전후 사진을 지금 확인하세요. 파격적인 가격 파괴 혜택을 놓치지 마세요.",
-      tax: "대한민국 환급율 1위 세무법인! 국세청 출신 전문가가 무조건 절세를 실현해 드립니다. 100% 환급 보장과 절세율 최고를 약속드리며, 타 세무사 비교 불가의 최저 수임료로 상속세와 증여세를 완벽하게 해결합니다.",
-      labor: "부당해고 구제 전문! 노동위원회 100% 구제를 장담하며, 노동부 인맥을 활용하여 가장 빠르고 확실하게 복직 판정을 받아드립니다. 무조건 인가를 보장하는 독보적인 노무 솔루션을 경험하세요."
+      lawyer: "저희 법무법인은 서초동 최고의 전관 변호사들이 모여 음주운전 면허취소 사건을 100% 승소로 이끌어냅니다. 부장판사 출신 대표 변호사가 직접 사건을 담당하여 가장 빠르게 무조건 승소를 약속드리며, 업계 최저 수임료로 최상의 법률 서비스를 제공합니다.",
+      doctor: "강남역 최고의 피부과에서 진행하는 파격적인 가격 파괴 할인 이벤트! 독자적인 복합 레이저 시술로 흉터를 1회 시술로 완치해 드립니다. 부작용 없는 안전한 시술로 부작용 제로 및 재발 없는 영구적인 효과를 보장합니다. 놀라운 치료 효과 100% 보장과 시술 전후 사진을 지금 바로 확인하세요.",
+      tax: "대한민국 환급율 1위 세무법인! 국세청 출신 전문가가 무조건 절세를 실현해 드리며 세금 0원을 약속합니다. 100% 환급 보장과 절세율 최고를 약속드리며, 타 세무사 비교 불가의 최저 수임료 및 반값 기장 프로모션으로 세무조사 무마까지 완벽하게 해결합니다.",
+      labor: "부당해고 및 산재 100% 승인 보장! 노동위원회 100% 구제를 장담하며, 노동부 인맥을 활용하여 가장 빠르고 확실하게 무조건 인가를 받아드립니다. 고용 지원금 100% 수령을 약속하는 대한민국 최고의 노무 솔루션을 착수금 0원에 경험하세요."
     };
 
     // State
@@ -1375,13 +1601,15 @@
         html += `
           <div class="violation-item">
             <div class="violation-top">
-              <span class="violation-word"><i class="fa-solid fa-triangle-exclamation"></i> "${escapeHtml(item.word)}" ${item.count > 1 ? `(${item.count}회)` : ''}</span>
-              <span class="violation-law">${escapeHtml(item.law)}</span>
+              <span class="violation-word"><i class="fa-solid fa-triangle-exclamation"></i> "${escapeHtml(item.word)}" ${item.count > 1 ? `<span style="font-size:11px; background:#fecaca; color:#991b1b; padding:1px 6px; border-radius:10px; margin-left:2px;">${item.count}회</span>` : ''}</span>
+              <span class="violation-law"><i class="fa-solid fa-scale-balanced" style="font-size:10px;"></i> ${escapeHtml(item.law)}</span>
             </div>
-            <div style="font-size: 11px; color: #b91c1c;">사유: ${escapeHtml(item.reason)}</div>
+            <div class="violation-reason-box">
+              <i class="fa-solid fa-circle-exclamation" style="margin-right:4px;"></i> <b>심의 사유:</b> ${escapeHtml(item.reason)}
+            </div>
             <div class="violation-suggest">
-              <span>👉 추천: <b>"${escapeHtml(item.replace)}"</b></span>
-              <button class="btn-replace-single" onclick="replaceSpecificKeyword('${escapeJs(item.word)}', '${escapeJs(item.replace)}')">치환</button>
+              <span>👉 합법 추천: <b style="color:#059669;">"${escapeHtml(item.replace)}"</b></span>
+              <button class="btn-replace-single" onclick="replaceSpecificKeyword('${escapeJs(item.word)}', '${escapeJs(item.replace)}')">1초 치환</button>
             </div>
           </div>
         `;
@@ -1390,7 +1618,61 @@
       violationsContainer.innerHTML = html;
     }
 
-    // Replace All Violations From Right-to-Left to preserve index integrity!
+    /**
+     * Pure Vanilla Korean Josa Corrector
+     * Calculates Unicode codepoints to determine whether the last character has a final consonant (Jongseong),
+     * and automatically fixes following particles (은/는, 이/가, 을/를, 과/와, 으로/로) without external libraries!
+     */
+    function fixJosaAfterWord(replacedWord, followingText) {
+      if (!followingText || !replacedWord) return followingText;
+      const cleanWord = replacedWord.trim();
+      if (!cleanWord) return followingText;
+      const lastChar = cleanWord.slice(-1);
+      const code = lastChar.charCodeAt(0) - 0xAC00;
+      if (code < 0 || code > 11171) return followingText; // Not a complete Hangul syllable
+      const jongseong = code % 28;
+      const hasBatchim = jongseong !== 0;
+
+      // 1. 을/를
+      if (followingText.startsWith('를') && hasBatchim) {
+        return '을' + followingText.slice(1);
+      }
+      if (followingText.startsWith('을') && !hasBatchim) {
+        return '를' + followingText.slice(1);
+      }
+      // 2. 은/는
+      if (followingText.startsWith('는') && hasBatchim) {
+        return '은' + followingText.slice(1);
+      }
+      if (followingText.startsWith('은') && !hasBatchim) {
+        return '는' + followingText.slice(1);
+      }
+      // 3. 이/가
+      if (followingText.startsWith('가') && hasBatchim) {
+        return '이' + followingText.slice(1);
+      }
+      if (followingText.startsWith('이') && !hasBatchim && !/^[다며라나든면서]/i.test(followingText.slice(1))) {
+        return '가' + followingText.slice(1);
+      }
+      // 4. 과/와
+      if (followingText.startsWith('와') && hasBatchim) {
+        return '과' + followingText.slice(1);
+      }
+      if (followingText.startsWith('과') && !hasBatchim) {
+        return '와' + followingText.slice(1);
+      }
+      // 5. 으로/로 (종성이 8이면 'ㄹ' 받침 -> '로', 그 외 받침은 '으로', 받침 없으면 '로')
+      if (followingText.startsWith('으로') && (!hasBatchim || jongseong === 8)) {
+        return '로' + followingText.slice(2);
+      }
+      if (followingText.startsWith('로') && !followingText.startsWith('로그') && hasBatchim && jongseong !== 8) {
+        return '으로' + followingText.slice(1);
+      }
+
+      return followingText;
+    }
+
+    // Replace All Violations From Right-to-Left to preserve index integrity & fix Josa!
     document.getElementById('btnReplaceAll').addEventListener('click', () => {
       let rawText = editor.value;
       if (!rawText.trim()) return;
@@ -1404,21 +1686,57 @@
       // Replace from end to start so indices never shift
       for (let i = violations.length - 1; i >= 0; i--) {
         const v = violations[i];
-        rawText = rawText.substring(0, v.start) + v.replace + rawText.substring(v.end);
+        const before = rawText.substring(0, v.start);
+        let after = rawText.substring(v.end);
+        after = fixJosaAfterWord(v.replace, after);
+        rawText = before + v.replace + after;
       }
 
       editor.value = rawText;
       scanText();
 
-      alert(`✅ 총 ${violations.length}건의 금칙어가 합법적 권장 어휘로 깔끔하게 교체되었습니다!`);
+      // Open Sleek PASS Report Modal instead of primitive alert!
+      openReplaceReportModal(violations.length);
     });
 
-    // Replace Specific Keyword
+    // Replace Specific Keyword with Josa Correction
     window.replaceSpecificKeyword = function(targetWord, replacement) {
       let rawText = editor.value;
-      const regex = new RegExp(escapeRegex(targetWord), 'gi');
-      editor.value = rawText.replace(regex, replacement);
+      const violations = findNonOverlappingViolations(rawText).filter(v => v.word.toLowerCase() === targetWord.toLowerCase());
+      if (violations.length === 0) return;
+
+      for (let i = violations.length - 1; i >= 0; i--) {
+        const v = violations[i];
+        const before = rawText.substring(0, v.start);
+        let after = rawText.substring(v.end);
+        after = fixJosaAfterWord(replacement, after);
+        rawText = before + replacement + after;
+      }
+      editor.value = rawText;
       scanText();
+    };
+
+    // Open PASS Report Modal
+    function openReplaceReportModal(replacedCount) {
+      const lawNames = {
+        lawyer: '변호사법 제23조 및 2026 변협 광고규정 제4조',
+        doctor: '의료법 제56조 및 2026 의료광고 심의기준',
+        tax: '세무사법 제12조 및 2026 세무사 광고규정',
+        labor: '공인노무사법·행정사법 및 2026 심의기준'
+      };
+      document.getElementById('reportReplacedCount').textContent = replacedCount;
+      document.getElementById('reportAppliedLaw').textContent = lawNames[currentProf] || '2026 전문직 법정 광고 규정';
+      const modal = document.getElementById('replaceReportModal');
+      modal.style.display = 'flex';
+    }
+
+    window.closeReplaceReportModal = function() {
+      document.getElementById('replaceReportModal').style.display = 'none';
+    };
+
+    window.openCertFromReport = function() {
+      closeReplaceReportModal();
+      document.getElementById('btnPrintCertificate').click();
     };
 
     // Copy Text
