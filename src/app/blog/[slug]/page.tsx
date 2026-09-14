@@ -31,7 +31,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       title: post.title,
       description: post.excerpt,
       images: [post.imageUrl],
-      url: `https://postsyncapp.com/blog/${post.slug}`,
+      url: `https://www.postsyncapp.com/blog/${post.slug}`,
       type: 'article',
       publishedTime: post.date,
       authors: [post.author],
@@ -61,17 +61,21 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     description: post.excerpt,
     image: post.imageUrl,
     datePublished: post.date,
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': `https://www.postsyncapp.com/blog/${post.slug}`,
+    },
     author: {
       '@type': 'Organization',
       name: 'PostSync 마케팅 연구소',
-      url: 'https://postsyncapp.com',
+      url: 'https://www.postsyncapp.com',
     },
     publisher: {
       '@type': 'Organization',
       name: 'PostSync',
       logo: {
         '@type': 'ImageObject',
-        url: 'https://postsyncapp.com/favicon.ico',
+        url: 'https://www.postsyncapp.com/favicon.ico',
       },
     },
   }

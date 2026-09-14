@@ -13,6 +13,6 @@ export default function robots(): MetadataRoute.Robots {
         allow: '/',
       },
     ],
-    sitemap: 'https://postsyncapp.com/sitemap.xml',
+    sitemap: 'https://www.postsyncapp.com/sitemap.xml',
   }
 }

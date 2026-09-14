@@ -1122,6 +1122,18 @@ export default function LandingPage() {
               <Link href="/terms" className="hover:text-white transition-colors">이용약관</Link>
               <Link href="/privacy" className="hover:text-indigo-400 font-semibold transition-colors">개인정보 처리방침</Link>
             </div>
+
+            {/* 7대 무료 비즈니스 웹툴 바로가기 (SEO 내부 링크 크롤러 고속도로) */}
+            <div className="pt-4 border-t border-white/5 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-slate-400">
+              <span className="text-slate-500 font-bold">무료 웹툴 7종:</span>
+              <Link href="/place" className="hover:text-emerald-400 transition-colors">📍 플레이스 순위</Link>
+              <Link href="/crop" className="hover:text-blue-400 transition-colors">✂️ 상세 슬라이서</Link>
+              <Link href="/adcheck" className="hover:text-indigo-400 transition-colors">⚖️ 광고법 스캐너</Link>
+              <Link href="/byte" className="hover:text-amber-400 transition-colors">🔤 바이트 계산기</Link>
+              <Link href="/hwpx" className="hover:text-teal-400 transition-colors">📄 HWPX 뷰어</Link>
+              <Link href="/utm" className="hover:text-purple-400 transition-colors">🔗 UTM 빌더</Link>
+              <Link href="/convert" className="hover:text-rose-400 transition-colors">🔄 서식 변환기</Link>
+            </div>
           </div>
 
           <div className="pt-8 text-slate-500 leading-relaxed text-[11px] space-y-2">
