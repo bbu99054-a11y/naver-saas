@@ -8,6 +8,10 @@ export default function robots(): MetadataRoute.Robots {
         allow: '/',
         disallow: ['/dashboard/', '/api/', '/auth/'],
       },
+      {
+        userAgent: 'Mediapartners-Google',
+        allow: '/',
+      },
     ],
     sitemap: 'https://postsyncapp.com/sitemap.xml',
   }
