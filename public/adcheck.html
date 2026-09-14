@@ -33,7 +33,8 @@
 
   <!-- Fonts & Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  <link rel="stylesheet" href="/assets/monetization.css">
 
   <style>
     :root {
@@ -70,130 +71,118 @@
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; }
     body { background-color: #f8fafc; color: var(--slate-900); line-height: 1.6; -webkit-font-smoothing: antialiased; }
 
-    /* Header Nav */
+    /* Integrated Header Nav (Idea 1) */
     header {
       background: #0f172a;
       color: white;
-      padding: 14px 24px;
+      padding: 10px 20px;
       position: sticky;
       top: 0;
       z-index: 100;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
     .header-inner {
-      max-width: 1240px;
+      max-width: 1320px;
       margin: 0 auto;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 16px;
     }
     .brand {
-      font-size: 18px;
+      font-size: 17px;
       font-weight: 800;
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
       color: #ffffff;
       text-decoration: none;
       letter-spacing: -0.5px;
+      flex-shrink: 0;
     }
-    .brand i { color: #60a5fa; font-size: 20px; }
-    .brand-tag {
-      background: linear-gradient(135deg, #3b82f6, #6366f1);
-      font-size: 11px;
-      padding: 3px 8px;
-      border-radius: 6px;
-      font-weight: 800;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-    }
-    .header-right {
+    .brand i { color: #60a5fa; font-size: 18px; }
+    
+    /* Integrated 7 Tools Pills inside Header */
+    .header-tools-nav {
       display: flex;
       align-items: center;
-      gap: 12px;
-    }
-    .header-link {
-      color: #cbd5e1;
-      text-decoration: none;
-      font-size: 13px;
-      font-weight: 600;
-      transition: color 0.2s;
-    }
-    .header-link:hover { color: #ffffff; }
-    .header-btn {
-      background: #2563eb;
-      color: white;
-      padding: 7px 14px;
-      border-radius: 8px;
-      font-size: 13px;
-      font-weight: 700;
-      text-decoration: none;
-      transition: all 0.2s;
-    }
-    .header-btn:hover { background: #1d4ed8; }
-    @media (max-width: 640px) {
-      .header-link { display: none; }
-    }
-
-    /* Cross-Traffic 5 Micro-Tools Tab Bar */
-    .tools-nav-bar {
-      background: #ffffff;
-      border-bottom: 1px solid var(--slate-200);
+      gap: 6px;
       overflow-x: auto;
       white-space: nowrap;
-      padding: 6px 20px;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      padding: 2px 0;
     }
-    .tools-nav-inner {
-      max-width: 1240px;
-      margin: 0 auto;
-      display: flex;
-      gap: 8px;
-    }
-    .tool-tab {
+    .header-tools-nav::-webkit-scrollbar { display: none; }
+    
+    .nav-pill {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      padding: 8px 16px;
-      border-radius: var(--radius-sm);
-      font-size: 13px;
+      gap: 6px;
+      padding: 6px 13px;
+      border-radius: 20px;
+      font-size: 12.5px;
       font-weight: 600;
-      color: var(--slate-600);
+      color: #cbd5e1;
       text-decoration: none;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
       transition: all 0.2s;
+      flex-shrink: 0;
     }
-    .tool-tab:hover {
-      background: var(--slate-100);
-      color: var(--slate-900);
+    .nav-pill:hover {
+      background: rgba(255, 255, 255, 0.15);
+      color: #ffffff;
+      border-color: rgba(255, 255, 255, 0.2);
     }
-    .tool-tab.active {
-      background: #eff6ff;
-      color: var(--primary);
+    .nav-pill.active {
+      background: #2563eb;
+      color: #ffffff;
       font-weight: 700;
-      border: 1px solid #bfdbfe;
+      border-color: #60a5fa;
+      box-shadow: 0 0 12px rgba(37, 99, 235, 0.4);
     }
-    .tool-tab .soon-badge {
-      font-size: 10px;
-      background: var(--slate-200);
-      color: var(--slate-600);
-      padding: 1px 5px;
-      border-radius: 4px;
-      font-weight: 600;
+    
+    /* Header Right Trust Badge */
+    .header-badge-wrap {
+      flex-shrink: 0;
+    }
+    .trust-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #94a3b8;
+      background: rgba(255, 255, 255, 0.06);
+      padding: 5px 10px;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .trust-badge i { color: #10b981; }
+    
+    @media (max-width: 900px) {
+      .header-badge-wrap { display: none; }
+    }
+    @media (max-width: 640px) {
+      header { padding: 8px 12px; }
+      .brand span { display: none; }
     }
 
-    /* Ad Container */
-    .ad-slot-header {
-      max-width: 970px;
-      min-height: 90px;
-      margin: 20px auto 0;
-      background: #f1f5f9;
+    /* Ad Container (Bottom) */
+    .ad-slot-bottom {
+      max-width: 1200px;
+      min-height: 100px;
+      margin: 32px auto 0;
+      background: #f8fafc;
       border: 1px dashed #cbd5e1;
-      border-radius: 8px;
+      border-radius: 12px;
       display: flex;
       align-items: center;
       justify-content: center;
       color: #94a3b8;
-      font-size: 12px;
+      font-size: 13px;
       font-weight: 600;
     }
 
@@ -791,60 +780,27 @@
 </head>
 <body>
 
-  <!-- Top Global Header -->
-  <header>
+  <!-- Top Global Integrated Header (Idea 1) -->
+  <header class="header-integrated">
     <div class="header-inner">
-      <a href="#" onclick="window.scrollTo({top:0, behavior:'smooth'}); return false;" class="brand" title="페이지 상단으로 이동">
-        <i class="fa-solid fa-layer-group"></i>
-        <span>PostSync Tools</span>
-        <span class="brand-tag">Micro Hub</span>
+      <a href="/" class="brand" title="PostSync 메인으로 이동">
+        <i class="fa-solid fa-bolt-lightning"></i>
+        <span>PostSync AI</span>
       </a>
-      <div class="header-right">
-        <a href="/crop" class="header-link">✂️ 슬라이서</a>
-        <a href="/guide/ad-law-2026" class="header-link">📖 광고법 가이드</a>
-        <a href="https://postsyncapp.com" class="header-btn" target="_blank">PostSync AI 본체 <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:11px; margin-left:3px;"></i></a>
+      <nav class="header-tools-nav" aria-label="웹툴 7종 바로가기">
+        <a href="/crop" class="nav-pill">✂️ 슬라이서</a>
+        <a href="/adcheck" class="nav-pill active">⚖️ 광고법 스캐너</a>
+        <a href="/byte" class="nav-pill">🔤 바이트 계산기</a>
+        <a href="/hwpx" class="nav-pill">📄 HWPX 변환기</a>
+        <a href="/utm" class="nav-pill">🔗 UTM 링크</a>
+        <a href="/place" class="nav-pill">📍 플레이스</a>
+        <a href="/convert" class="nav-pill">🔄 서식 변환</a>
+      </nav>
+      <div class="header-badge-wrap">
+        <span class="trust-badge"><i class="fa-solid fa-shield-halved"></i> 100% 무료 · 무설치</span>
       </div>
     </div>
   </header>
-
-  <!-- 5 Micro-Tools Cross-Traffic Navigation Tab Bar -->
-  <nav class="tools-nav-bar" aria-label="Micro Tools List">
-    <div class="tools-nav-inner">
-      <a href="/crop" class="tool-tab">
-        <i class="fa-solid fa-scissors"></i>
-        <span>상세페이지 슬라이서</span>
-      </a>
-      <a href="/adcheck" class="tool-tab active">
-        <i class="fa-solid fa-scale-balanced"></i>
-        <span>광고법 금칙어 스캐너</span>
-      </a>
-      <a href="/byte" class="tool-tab">
-        <i class="fa-solid fa-font"></i>
-        <span>자소서 바이트 계산기</span>
-      </a>
-      <a href="/hwpx" class="tool-tab">
-        <i class="fa-solid fa-file-lines"></i>
-        <span>HWPX 안심 변환기</span>
-      </a>
-      <a href="/utm" class="tool-tab">
-        <i class="fa-solid fa-link"></i>
-        <span>유입 추적 링크 (UTM)</span>
-      </a>
-      <a href="/place" class="tool-tab">
-        <i class="fa-solid fa-location-dot"></i>
-        <span>플레이스 순위 조회</span>
-      </a>
-      <a href="/convert" class="tool-tab">
-        <i class="fa-solid fa-file-arrow-up"></i>
-        <span>네이버 서식 변환</span>
-      </a>
-    </div>
-  </nav>
-
-  <!-- Google AdSense Header Slot (728x90) -->
-  <div class="ad-slot-header">
-    <span>[Google AdSense Banner Area - 728x90]</span>
-  </div>
 
   <div class="main-wrapper">
     <!-- Hero -->
@@ -914,6 +870,30 @@
           </div>
           <span style="color: var(--slate-400);">단축키: 붙여넣기(Ctrl+V)</span>
         </div>
+
+        <!-- Lead Magnet Box (Inline Result Bottom) -->
+        <div class="lead-magnet-box">
+          <div class="lead-magnet-header">
+            <div class="lead-magnet-icon"><i class="fa-solid fa-file-pdf"></i></div>
+            <div>
+              <div class="lead-magnet-title">🎁 2026 복지부·변협 공인 광고법 금칙어 500제 모음집 (PDF)</div>
+              <div class="lead-magnet-desc">
+                실제 협회 징계 사례와 과태료 5천만 원을 원천 방어하는 전문직 4대 직역별 합법 대체어 500제를 무료로 전송해 드립니다.
+              </div>
+            </div>
+          </div>
+          <form class="lead-magnet-form" onsubmit="handleLeadMagnetSubmit(event, 'adcheck', '2026 전문직 법정 광고 금칙어 500제 모음집 (PDF)')">
+            <input type="email" class="lead-magnet-input" placeholder="가이드북을 받아보실 이메일 주소" required>
+            <input type="tel" class="lead-magnet-input" placeholder="연락처 (선택 - 알림용)" style="flex: 0 1 180px;">
+            <button type="submit" class="btn-lead-submit">
+              <i class="fa-solid fa-paper-plane"></i> <span>무료 가이드북 즉시 받기</span>
+            </button>
+          </form>
+          <div class="lead-magnet-notice">
+            <i class="fa-solid fa-shield-halved"></i> 스팸 없음 · 입력하신 정보는 리포트 발송 외 절대 사용되지 않습니다.
+          </div>
+          <div class="lead-magnet-success"></div>
+        </div>
       </div>
 
       <!-- Right: Inspector Sidebar -->
@@ -961,22 +941,57 @@
           </div>
         </div>
 
+        <!-- Ebook Promo Card (Sidebar) -->
+        <div class="ebook-promo-card">
+          <div class="ebook-promo-badge"><i class="fa-solid fa-crown"></i> 2026 추천 필독서</div>
+          <div class="ebook-book-wrap">
+            <div class="ebook-cover-thumb">
+              <div class="ebook-cover-title">2026 전문직<br>상위 1%<br>실전 공략집</div>
+              <div class="ebook-cover-author">PostSync Lab</div>
+            </div>
+            <div>
+              <div class="ebook-info-title">2026 네이버 상위 1% 실전 공략집</div>
+              <div class="ebook-info-desc">변호사·의사·세무사 광고법 판례 및 C-Rank 최적화 완벽 해설서</div>
+            </div>
+          </div>
+          <div class="ebook-price-row">
+            <span class="ebook-price-original">₩89,000</span>
+            <span class="ebook-price-final">₩39,000<span>(PDF)</span></span>
+          </div>
+          <div class="ebook-btn-group">
+            <button type="button" class="btn-ebook-order" onclick="openEbookOrderModal()">
+              <i class="fa-solid fa-bolt"></i> 1초 계좌이체 주문 (39,000원)
+            </button>
+            <button type="button" class="btn-ebook-preview" onclick="openEbookPreviewModal()">
+              <i class="fa-solid fa-book-open"></i> 핵심 목차 미리보기
+            </button>
+          </div>
+        </div>
+
+        <!-- SaaS Bridge Banner (Sidebar) -->
+        <div class="saas-bridge-card">
+          <div class="saas-bridge-header">
+            <div class="saas-bridge-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+            <div class="saas-bridge-title">PostSync AI 올인원 솔루션</div>
+          </div>
+          <p class="saas-bridge-desc">
+            전문직·로컬 사업자를 위한 무인 인바운드 고객 획득 OS. AI가 법령 RAG로 100% 합법 칼럼과 인포그래픽을 자동 완성해 신규 상담 문의를 이끌어냅니다.
+          </p>
+          <a href="https://postsyncapp.com" target="_blank" class="btn-saas-bridge">
+            무료체험 시작하기 <i class="fa-solid fa-arrow-right"></i>
+          </a>
+        </div>
+
         <!-- AdSense Sidebar Slot (300x250) -->
-        <div style="background: #f1f5f9; border: 1px dashed #cbd5e1; border-radius: 8px; min-height: 250px; display: flex; align-items: center; justify-content: center; color: #94a3b8; font-size: 12px; font-weight: 600;">
+        <div style="background: #f1f5f9; border: 1px dashed #cbd5e1; border-radius: 8px; min-height: 250px; display: flex; align-items: center; justify-content: center; color: #94a3b8; font-size: 12px; font-weight: 600; margin-top: 16px;">
           [Google AdSense 300x250]
         </div>
       </div>
     </div>
 
-    <!-- Self-Ad B2B Promo Banner -->
-    <div class="self-ad-card">
-      <div class="self-ad-content">
-        <h3>🚀 금칙어 하나하나 일일이 수정하기 번거로우신가요?</h3>
-        <p>
-          PostSync AI는 처음부터 100% 전문직 광고 규정을 준수하며, 최신 AEO(생성형 AI 인용 최적화)와 구글/네이버 C-Rank 표준에 맞춘 고품질 블로그 원고를 완전 자동으로 집필합니다.
-        </p>
-      </div>
-      <a href="/" class="btn-self-ad">PostSync 무인 엔진 3회 무료 체험</a>
+    <!-- Google AdSense Bottom Responsive Slot -->
+    <div class="ad-slot-bottom">
+      <span>[Google AdSense Responsive / Multiplex Banner Area]</span>
     </div>
 
     <!-- pSEO Law Guide & FAQ -->
@@ -1093,30 +1108,26 @@
     </div>
   </div>
 
-  <!-- Global Footer -->
-  <footer>
-    <div style="max-width:840px; margin:0 auto; padding:0 16px;">
-      <!-- Security & Privacy Disclaimer (애드센스 규정 충족) -->
-      <div style="background:var(--slate-50); border:1px solid var(--slate-200); border-radius:var(--radius-sm); padding:12px 18px; margin-bottom:20px; text-align:left; font-size:12px; color:var(--slate-600); line-height:1.65;">
-        <i class="fa-solid fa-shield-halved" style="color:var(--emerald); margin-right:6px;"></i>
-        <strong>100% 브라우저 로컬 연산 및 보안 보증:</strong> 본 도구는 브라우저 로컬 JavaScript 정규식 엔진으로만 동작하며, 입력하신 원고 및 상담 내용은 외부 서버로 전송되거나 저장되지 않고 사용자 기기 메모리상에서만 안전하게 처리된 후 자동 소멸합니다.
+  <!-- Global Footer (Integrated Standard) -->
+  <footer class="footer-integrated">
+    <div class="footer-inner">
+      <div class="footer-disclaimer">
+        <i class="fa-solid fa-shield-halved" style="color:#10b981; margin-right:6px;"></i>
+        <strong>100% 브라우저 로컬 연산 및 보안 보증:</strong> 본 도구는 클라이언트 브라우저 로컬 JavaScript 엔진으로 동작하며, 입력하신 데이터나 파일은 외부 서버로 1바이트도 전송되지 않고 사용자 기기 메모리에서만 안전하게 연산된 후 자동 소멸합니다.
       </div>
-
-      <p style="display:flex; justify-content:center; align-items:center; gap:16px; flex-wrap:wrap; font-size:13px; font-weight:600;">
-        <a href="https://postsyncapp.com/privacy" target="_blank" style="color:var(--slate-700); text-decoration:none;">개인정보처리방침</a>
-        <span style="color:var(--slate-300);">|</span>
-        <a href="https://postsyncapp.com/terms" target="_blank" style="color:var(--slate-700); text-decoration:none;">이용약관</a>
-        <span style="color:var(--slate-300);">|</span>
-        <a href="https://postsyncapp.com" target="_blank" style="color:var(--slate-700); text-decoration:none;">PostSync AI 공식홈</a>
-      </p>
-
-      <p style="margin-top:12px; color:var(--slate-500); font-size:12px;">
-        서비스 문의 & 제휴: <a href="mailto:contact@postsyncapp.com" style="color:var(--primary); font-weight:700; text-decoration:none;">contact@postsyncapp.com</a>
-      </p>
-
-      <p style="margin-top:8px; color:var(--slate-400); font-size:11.5px;">
-        © 2026 PostSync AI. All rights reserved. 본 도구는 전문직 광고 가이드라인 참조용이며, 법적 최종 효력은 각 관할 협회의 심의 결과에 따릅니다.
-      </p>
+      <div class="footer-links">
+        <a href="https://postsyncapp.com/privacy" target="_blank">개인정보처리방침</a>
+        <span class="sep">|</span>
+        <a href="https://postsyncapp.com/terms" target="_blank">이용약관</a>
+        <span class="sep">|</span>
+        <a href="https://postsyncapp.com" target="_blank">PostSync AI 공식홈</a>
+      </div>
+      <div class="footer-contact">
+        서비스 문의 & 제휴: <a href="mailto:contact@postsyncapp.com">contact@postsyncapp.com</a>
+      </div>
+      <div class="footer-copyright">
+        © 2026 PostSync AI. All rights reserved. 전문직·로컬 사업자를 위한 무인 AI 인바운드 고객 획득 OS.
+      </div>
     </div>
   </footer>
 
@@ -1514,5 +1525,6 @@
       }, 2500);
     }
   </script>
+  <script src="/assets/monetization.js"></script>
 </body>
 </html>

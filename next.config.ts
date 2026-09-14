@@ -15,6 +15,13 @@ const nextConfig: NextConfig = {
           ],
           destination: "/crop",
         },
+        { source: "/adcheck", destination: "/adcheck.html" },
+        { source: "/place", destination: "/place.html" },
+        { source: "/crop", destination: "/crop.html" },
+        { source: "/byte", destination: "/byte.html" },
+        { source: "/hwpx", destination: "/hwpx.html" },
+        { source: "/utm", destination: "/utm.html" },
+        { source: "/convert", destination: "/convert.html" },
       ],
     };
   },

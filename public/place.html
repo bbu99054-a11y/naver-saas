@@ -33,7 +33,8 @@
 
   <!-- Fonts & Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  <link rel="stylesheet" href="/assets/monetization.css">
 
   <style>
     :root {
@@ -70,78 +71,92 @@
     }
     body { background-color: #f8fafc; color: var(--slate-900); line-height: 1.6; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
 
-    /* Header Nav */
-    header {
+    /* Top Global Integrated Header */
+    header.header-integrated {
       background: #0f172a;
-      color: white;
-      padding: 14px 24px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 10px 20px;
       position: sticky;
       top: 0;
-      z-index: 100;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      z-index: 1000;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
     }
     .header-inner {
-      max-width: 1240px;
+      max-width: 1320px;
       margin: 0 auto;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 16px;
     }
     .brand {
-      font-size: 19px;
-      font-weight: 800;
-      display: flex;
+      display: inline-flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
       color: #ffffff;
+      font-size: 16px;
+      font-weight: 800;
       text-decoration: none;
       letter-spacing: -0.5px;
+      flex-shrink: 0;
     }
-    .brand i { color: #60a5fa; font-size: 20px; }
-    .header-badge {
-      display: inline-flex;
+    .brand i { color: #60a5fa; font-size: 18px; }
+    
+    /* Integrated 7 Tools Pills inside Header */
+    .header-tools-nav {
+      display: flex;
       align-items: center;
       gap: 6px;
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      color: #cbd5e1;
-      font-size: 12px;
-      font-weight: 600;
-      padding: 5px 12px;
-      border-radius: 20px;
-    }
-    .header-badge b { color: #60a5fa; }
-
-    /* Cross-Traffic 7 Micro-Tools Tab Bar */
-    .tools-nav-bar {
-      background: #ffffff;
-      border-bottom: 1px solid var(--slate-200);
       overflow-x: auto;
       white-space: nowrap;
-      padding: 6px 20px;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      padding: 2px 0;
     }
-    .tools-nav-inner {
-      max-width: 1240px;
-      margin: 0 auto;
-      display: flex;
-      gap: 6px;
-    }
-    .tool-tab {
+    .header-tools-nav::-webkit-scrollbar { display: none; }
+    
+    .nav-pill {
       display: inline-flex;
       align-items: center;
-      gap: 7px;
-      padding: 8px 14px;
-      border-radius: 8px;
+      gap: 6px;
+      padding: 6px 13px;
+      border-radius: 20px;
       font-size: 12.5px;
       font-weight: 600;
-      color: var(--slate-600);
+      color: #cbd5e1;
       text-decoration: none;
-      transition: all 0.15s;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      transition: all 0.2s;
+      flex-shrink: 0;
     }
-    .tool-tab:hover {
-      background: var(--slate-100);
-      color: var(--slate-900);
+    .nav-pill:hover {
+      background: rgba(255, 255, 255, 0.15);
+      color: #ffffff;
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+    .nav-pill.active {
+      background: #2563eb;
+      color: #ffffff;
+      font-weight: 700;
+      border-color: #60a5fa;
+      box-shadow: 0 0 12px rgba(37, 99, 235, 0.4);
+    }
+    
+    /* Header Right Trust Badge */
+    .header-badge-wrap {
+      flex-shrink: 0;
+    }
+    .trust-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #94a3b8;
+      background: rgba(255, 255, 255, 0.06);
+      padding: 5px 10px;
+      border-radius: 6px;
     }
     .tool-tab.active {
       background: #eff6ff;
@@ -819,52 +834,27 @@
 </head>
 <body>
 
-  <!-- Top Global Header -->
-  <header>
+  <!-- Top Global Integrated Header -->
+  <header class="header-integrated">
     <div class="header-inner">
-      <a href="/place" class="brand">
-        <i class="fa-solid fa-location-dot"></i>
-        <span>PostSync</span>
+      <a href="/" class="brand" title="PostSync 메인으로 이동">
+        <i class="fa-solid fa-bolt-lightning"></i>
+        <span>PostSync AI</span>
       </a>
-      <div class="header-badge">
-        <i class="fa-solid fa-user-doctor" style="color:#60a5fa;"></i> <span>스마트플레이스 <b>닥터</b></span>
+      <nav class="header-tools-nav" aria-label="웹툴 7종 바로가기">
+        <a href="/crop" class="nav-pill">✂️ 슬라이서</a>
+        <a href="/adcheck" class="nav-pill">⚖️ 광고법 스캐너</a>
+        <a href="/byte" class="nav-pill">🔤 바이트 계산기</a>
+        <a href="/hwpx" class="nav-pill">📄 HWPX 변환기</a>
+        <a href="/utm" class="nav-pill">🔗 UTM 링크</a>
+        <a href="/place" class="nav-pill active">📍 플레이스</a>
+        <a href="/convert" class="nav-pill">🔄 서식 변환</a>
+      </nav>
+      <div class="header-badge-wrap">
+        <span class="trust-badge"><i class="fa-solid fa-shield-halved"></i> 100% 무료 · 무설치</span>
       </div>
     </div>
   </header>
-
-  <!-- 7 Micro-Tools Cross-Traffic Navigation Tab Bar -->
-  <nav class="tools-nav-bar" aria-label="Micro Tools List">
-    <div class="tools-nav-inner">
-      <a href="/crop" class="tool-tab">
-        <i class="fa-solid fa-scissors"></i>
-        <span>상세페이지 슬라이서</span>
-      </a>
-      <a href="/adcheck" class="tool-tab">
-        <i class="fa-solid fa-scale-balanced"></i>
-        <span>광고법 금칙어 스캐너</span>
-      </a>
-      <a href="/byte" class="tool-tab">
-        <i class="fa-solid fa-font"></i>
-        <span>자소서 바이트 계산기</span>
-      </a>
-      <a href="/hwpx" class="tool-tab">
-        <i class="fa-solid fa-file-lines"></i>
-        <span>HWPX 안심 변환기</span>
-      </a>
-      <a href="/utm" class="tool-tab">
-        <i class="fa-solid fa-link"></i>
-        <span>유입 추적 링크 (UTM)</span>
-      </a>
-      <a href="/place" class="tool-tab active">
-        <i class="fa-solid fa-location-dot"></i>
-        <span>플레이스 순위 조회</span>
-      </a>
-      <a href="/convert" class="tool-tab">
-        <i class="fa-solid fa-file-arrow-up"></i>
-        <span>네이버 서식 변환</span>
-      </a>
-    </div>
-  </nav>
 
   <div class="main-wrapper">
     <!-- Hero -->
@@ -1033,6 +1023,55 @@
       </div>
     </section>
 
+    <!-- Monetization 2-Column Grid (Ebook & SaaS Bridge) -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; margin-top: 24px;">
+      <!-- Ebook Promo Card -->
+      <div class="ebook-promo-card" style="margin-top: 0;">
+        <div class="ebook-promo-badge"><i class="fa-solid fa-crown"></i> 2026 추천 필독서</div>
+        <div class="ebook-book-wrap">
+          <div class="ebook-cover-thumb">
+            <div class="ebook-cover-title">2026 네이버<br>상위 1%<br>실전 공략집</div>
+            <div class="ebook-cover-author">PostSync Lab</div>
+          </div>
+          <div>
+            <div class="ebook-info-title">2026 네이버 상위 1% 실전 공략집</div>
+            <div class="ebook-info-desc">플레이스 1위 진입 5대 지표 & 블로그 침투 연동 완벽 해설서</div>
+          </div>
+        </div>
+        <div class="ebook-price-row">
+          <span class="ebook-price-original">₩89,000</span>
+          <span class="ebook-price-final">₩39,000<span>(PDF)</span></span>
+        </div>
+        <div class="ebook-btn-group">
+          <button type="button" class="btn-ebook-order" onclick="openEbookOrderModal()">
+            <i class="fa-solid fa-bolt"></i> 1초 계좌이체 주문 (39,000원)
+          </button>
+          <button type="button" class="btn-ebook-preview" onclick="openEbookPreviewModal()">
+            <i class="fa-solid fa-book-open"></i> 핵심 목차 미리보기
+          </button>
+        </div>
+      </div>
+
+      <!-- SaaS Bridge Banner -->
+      <div class="saas-bridge-card" style="margin-top: 0;">
+        <div class="saas-bridge-header">
+          <div class="saas-bridge-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+          <div class="saas-bridge-title">PostSync AI 올인원 솔루션</div>
+        </div>
+        <p class="saas-bridge-desc">
+          전문직·로컬 사업자를 위한 무인 AI 인바운드 고객 획득 OS. AI가 법령 RAG로 100% 합법 칼럼과 플레이스 새소식을 자동 완성해 신규 고객 예약을 이끌어냅니다.
+        </p>
+        <a href="https://postsyncapp.com" target="_blank" class="btn-saas-bridge">
+          무료체험 시작하기 <i class="fa-solid fa-arrow-right"></i>
+        </a>
+      </div>
+    </div>
+
+    <!-- Google AdSense Bottom Responsive Slot -->
+    <div class="ad-slot-bottom">
+      <span>[Google AdSense Responsive / Multiplex Banner Area]</span>
+    </div>
+
 
 
     <!-- pSEO Deep Knowledge Section -->
@@ -1105,29 +1144,26 @@
     </div>
   </div>
 
-  <!-- Global Footer -->
-  <footer>
-    <div style="max-width:840px; margin:0 auto; padding:0 16px;">
-      <div style="background:var(--slate-50); border:1px solid var(--slate-200); border-radius:var(--radius-sm); padding:12px 18px; margin-bottom:20px; text-align:left; font-size:12px; color:var(--slate-600); line-height:1.65;">
-        <i class="fa-solid fa-shield-halved" style="color:var(--emerald); margin-right:6px;"></i>
-        <strong>실시간 공공 검색 데이터 안내:</strong> 본 서비스는 네이버 지도의 공개 검색 인덱스를 기반으로 실시간 순위를 산출하며, 특정 매장의 조작이나 편향 없이 객관적인 검색 순위만을 투명하게 제공합니다.
+  <!-- Global Footer (Integrated Standard) -->
+  <footer class="footer-integrated">
+    <div class="footer-inner">
+      <div class="footer-disclaimer">
+        <i class="fa-solid fa-shield-halved" style="color:#10b981; margin-right:6px;"></i>
+        <strong>100% 브라우저 로컬 연산 및 보안 보증:</strong> 본 도구는 클라이언트 브라우저 로컬 JavaScript 엔진으로 동작하며, 입력하신 데이터나 파일은 외부 서버로 1바이트도 전송되지 않고 사용자 기기 메모리에서만 안전하게 연산된 후 자동 소멸합니다.
       </div>
-
-      <p style="display:flex; justify-content:center; align-items:center; gap:16px; flex-wrap:wrap; font-size:13px; font-weight:600;">
-        <a href="https://postsyncapp.com/privacy" target="_blank" style="color:var(--slate-700); text-decoration:none;">개인정보처리방침</a>
-        <span style="color:var(--slate-300);">|</span>
-        <a href="https://postsyncapp.com/terms" target="_blank" style="color:var(--slate-700); text-decoration:none;">이용약관</a>
-        <span style="color:var(--slate-300);">|</span>
-        <a href="https://postsyncapp.com" target="_blank" style="color:var(--slate-700); text-decoration:none;">PostSync AI 공식홈</a>
-      </p>
-
-      <p style="margin-top:12px; color:var(--slate-500); font-size:12px;">
-        서비스 문의 & 제휴: <a href="mailto:contact@postsyncapp.com" style="color:var(--primary); font-weight:700; text-decoration:none;">contact@postsyncapp.com</a>
-      </p>
-
-      <p style="margin-top:8px; color:var(--slate-400); font-size:11.5px;">
-        © 2026 PostSync AI. All rights reserved. 본 도구는 네이버 스마트플레이스 마케팅 참조용 유틸리티입니다.
-      </p>
+      <div class="footer-links">
+        <a href="https://postsyncapp.com/privacy" target="_blank">개인정보처리방침</a>
+        <span class="sep">|</span>
+        <a href="https://postsyncapp.com/terms" target="_blank">이용약관</a>
+        <span class="sep">|</span>
+        <a href="https://postsyncapp.com" target="_blank">PostSync AI 공식홈</a>
+      </div>
+      <div class="footer-contact">
+        서비스 문의 & 제휴: <a href="mailto:contact@postsyncapp.com">contact@postsyncapp.com</a>
+      </div>
+      <div class="footer-copyright">
+        © 2026 PostSync AI. All rights reserved. 전문직·로컬 사업자를 위한 무인 AI 인바운드 고객 획득 OS.
+      </div>
     </div>
   </footer>
 
@@ -1375,19 +1411,24 @@
         btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> <span>신청 접수 중...</span>';
 
         try {
-          const res = await fetch('/api/place/apply', {
+          const res = await fetch('/api/leads', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              store_name: storeName,
-              target_keyword: keyword,
               email: email,
-              phone: phone
+              phone: phone || undefined,
+              leadType: 'lead_magnet',
+              sourceTool: 'place',
+              rewardName: '플레이스 닥터 1회 무료 정밀 진단서 & 1위 처방전',
+              details: {
+                store_name: storeName,
+                target_keyword: keyword
+              }
             })
           });
 
           const data = await res.json();
-          if (data.success) {
+          if (data.ok || data.success) {
             showToast('🎉 플레이스 닥터 정밀 진단서 신청이 정상 접수되었습니다!');
             
             // Switch form to success card
@@ -1419,5 +1460,6 @@
 
     })();
   </script>
+  <script src="/assets/monetization.js"></script>
 </body>
 </html>

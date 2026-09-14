@@ -44,4 +44,6 @@ next-env.d.ts
 scratch/
 local-helper/browser-profile/
 local-helper/temp-images/
+local-helper/node_modules/
+local-helper/package-lock.json
 blogauto-naver-main/
