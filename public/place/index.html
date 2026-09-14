@@ -975,67 +975,44 @@
       </div>
     </div>
 
-    <!-- Apply Section (PlaceDoctor Lead Magnet & Subscription Funnel) -->
-    <section class="apply-section" id="applySection">
-      <div class="apply-badge"><i class="fa-solid fa-user-doctor"></i> 🩺 플레이스 닥터 (PlaceDoctor)</div>
-      <h2 class="apply-title">우리 매장도 네이버 플레이스 정밀 진단 리포트 & 1위 처방전을 받아보시겠습니까?</h2>
-      <p class="apply-desc">
-        1위 경쟁사의 리뷰 급증 원인, 블로그 침투 키워드, 그리고 이번 주 우리 매장이 당장 실행해야 할 상위노출 처방전이 담긴 <b>A4 3장 실전 정밀 진단서 1회</b>를 무료로 이메일 발송해 드립니다.
-      </p>
-      
-      <form class="apply-form" id="placeApplyForm" onsubmit="handleApply(event)">
-        <div class="apply-field">
-          <label for="applyStoreName"><i class="fa-solid fa-store"></i> 내 매장 상호명</label>
-          <input type="text" id="applyStoreName" class="apply-input" placeholder="예: 법무법인 YK, 강남더블유치과" required>
+    <!-- Inline Lead Magnet Banner -->
+    <div class="lead-magnet-card" style="margin-top: 24px;">
+      <div class="lead-magnet-badge"><i class="fa-solid fa-gift"></i> 선착순 한정 무료 배포 · 2026 실전 시크릿</div>
+      <div class="lead-magnet-header">
+        <div class="lead-magnet-icon"><i class="fa-solid fa-file-pdf"></i></div>
+        <div>
+          <div class="lead-magnet-title">🎁 [무료 퀵가이드] 네이버 플레이스 1위 세팅법 & 변호사·세무사 합법 수임 칼럼 템플릿 (PDF)</div>
+          <div class="lead-magnet-desc">
+            대행사 위약금 날리기 전 필독! 단 10분 만에 지도 1~3위 장악하는 3분 체크리스트와 즉시 복사해 쓰는 합법 수임 칼럼 템플릿 2선을 무료로 전송해 드립니다.
+          </div>
         </div>
-        <!-- Hidden field retaining searched keyword if available -->
-        <input type="hidden" id="applyKeyword" value="">
-        <div class="apply-field">
-          <label for="applyEmail"><i class="fa-solid fa-envelope"></i> 리포트 받아볼 이메일</label>
-          <input type="email" id="applyEmail" class="apply-input" placeholder="name@example.com" required>
-        </div>
-        <div class="apply-field">
-          <label for="applyPhone"><i class="fa-solid fa-phone"></i> 대표 연락처 (선택)</label>
-          <input type="tel" id="applyPhone" class="apply-input" placeholder="010-0000-0000">
-        </div>
-        <button type="submit" class="btn-apply-submit" id="btnApplySubmit">
-          <i class="fa-solid fa-stethoscope"></i> <span>🩺 1회 무료 정밀 진단 & 처방전 받기</span>
+      </div>
+      <form class="lead-magnet-form" onsubmit="handleLeadMagnetSubmit(event, 'place', '[무료 퀵가이드] 네이버 플레이스 1위 세팅법 & 변호사·세무사 합법 수임 칼럼 템플릿 (PDF)')">
+        <input type="email" class="lead-magnet-input" placeholder="퀵가이드를 받아보실 이메일 주소" required>
+        <input type="tel" class="lead-magnet-input" placeholder="연락처 (선택 - 알림용)" style="flex: 0 1 180px;">
+        <button type="submit" class="btn-lead-submit">
+          <i class="fa-solid fa-paper-plane"></i> <span>무료 퀵가이드 즉시 받기</span>
         </button>
       </form>
-
-      <div class="apply-guarantee" id="applyGuarantee">
-        <span>🔒 100% 무료 1회 정밀 진단 (스팸 발송 없음)</span>
-        <span>⚡ 전문 진단 엔진이 분석한 맞춤 리포트 이메일 순차 발송</span>
-        <span>⭐ 매주 월요일 아침 정기 모니터링 구독 가능 (월 39,000원)</span>
+      <div class="lead-magnet-notice">
+        <i class="fa-solid fa-shield-halved"></i> 스팸 없음 · 입력하신 정보는 리포트 발송 외 절대 사용되지 않습니다.
       </div>
-
-      <!-- Apply Success Box (Replaces form on submit) -->
-      <div class="apply-success-box" id="applySuccessBox">
-        <div class="success-icon">🎉</div>
-        <h3 id="successStoreTitle">플레이스 닥터 정밀 진단 접수 완료!</h3>
-        <p id="successDesc">
-          신청하신 <b id="successTargetEmail" style="color:var(--primary);">이메일</b>로 1위 경쟁사 분석 및 상위노출 처방전이 순차 발송됩니다.<br>
-          (담당 매니저에게 실시간 알림이 전송되었습니다.)
-        </p>
-        <div style="display:inline-flex; align-items:center; gap:8px; background:#eff6ff; border:1px solid #bfdbfe; color:var(--primary); font-size:13px; font-weight:700; padding:8px 18px; border-radius:20px;">
-          <i class="fa-solid fa-check-circle"></i> 실시간 접수 승인 완료
-        </div>
-      </div>
-    </section>
+      <div class="lead-magnet-success"></div>
+    </div>
 
     <!-- Monetization 2-Column Grid (Ebook & SaaS Bridge) -->
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; margin-top: 24px;">
       <!-- Ebook Promo Card -->
       <div class="ebook-promo-card" style="margin-top: 0;">
-        <div class="ebook-promo-badge"><i class="fa-solid fa-crown"></i> 2026 추천 필독서</div>
+        <div class="ebook-promo-badge"><i class="fa-solid fa-crown"></i> 2026 추천 필독 실전서</div>
         <div class="ebook-book-wrap">
           <div class="ebook-cover-thumb">
-            <div class="ebook-cover-title">2026 네이버<br>상위 1%<br>실전 공략집</div>
+            <div class="ebook-cover-title" style="font-size: 9.5px; line-height: 1.25;">2026 네이버<br><span style="color:#60a5fa; font-size: 10.5px;">상위 1%</span><br>실전 지침서</div>
             <div class="ebook-cover-author">PostSync Lab</div>
           </div>
           <div>
-            <div class="ebook-info-title">2026 네이버 상위 1% 실전 공략집</div>
-            <div class="ebook-info-desc">플레이스 1위 진입 5대 지표 & 블로그 침투 연동 완벽 해설서</div>
+            <div class="ebook-info-title">2026 네이버 상위 1% 인바운드 마케팅 실전 지침서</div>
+            <div class="ebook-info-desc">스마트플레이스 1위 선점 & 복붙 칼럼 6종 & 징계 0건 완벽 매뉴얼</div>
           </div>
         </div>
         <div class="ebook-price-row">
@@ -1049,6 +1026,9 @@
           <button type="button" class="btn-ebook-preview" onclick="openEbookPreviewModal()">
             <i class="fa-solid fa-book-open"></i> 핵심 목차 미리보기
           </button>
+        </div>
+        <div style="text-align: center; margin-top: 10px; font-size: 11.5px; color: #64748b;">
+          먼저 요약본이 필요하신가요? <a href="javascript:void(0)" onclick="openLeadMagnetModal('place', '[무료 퀵가이드] 네이버 플레이스 1위 세팅법 & 변호사·세무사 합법 수임 칼럼 템플릿 (PDF)')" style="color: #2563eb; font-weight: 700; text-decoration: underline;">[무료] 3분 퀵가이드 맛보기</a>
         </div>
       </div>
 
