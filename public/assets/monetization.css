@@ -269,13 +269,31 @@
 }
 
 /* 3. Inline Lead Magnet Card (Results Bottom) */
-.lead-magnet-box {
+.lead-magnet-box,
+.lead-magnet-card {
   background: linear-gradient(145deg, #f0fdf4, #ffffff);
   border: 1.5px solid #86efac;
   border-radius: var(--mz-radius-lg);
   padding: 22px 24px;
   margin-top: 24px;
   box-shadow: 0 4px 14px rgba(22, 101, 52, 0.06);
+  position: relative;
+  overflow: hidden;
+}
+
+.lead-magnet-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #dcfce7;
+  color: #15803d;
+  border: 1px solid #86efac;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 3px 10px;
+  border-radius: 20px;
+  letter-spacing: -0.2px;
+  margin-bottom: 12px;
 }
 
 .lead-magnet-header {
