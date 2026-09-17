@@ -111,6 +111,7 @@ export default function HomePage() {
             <a href="#place" className="hover:text-[#0284C7] transition-colors">플레이스 관리</a>
             <a href="#compliance" className="hover:text-[#0284C7] transition-colors">광고 법규 안심 체크</a>
             <a href="#pipeline" className="hover:text-[#0284C7] transition-colors">수임 파이프라인</a>
+            <Link href="/pricing" className="hover:text-[#0284C7] transition-colors text-[#0284C7] font-extrabold">요금 안내</Link>
             <a href="#reviews" className="hover:text-[#0284C7] transition-colors">성공 사례</a>
             <a href="#faq" className="hover:text-[#0284C7] transition-colors">자주 묻는 질문</a>
           </nav>
@@ -907,6 +908,7 @@ export default function HomePage() {
           </div>
 
           <div className="flex flex-wrap items-center gap-6 font-semibold text-slate-600">
+            <Link href="/pricing" className="hover:text-[#0284C7] font-bold">요금제 안내</Link>
             <Link href="/terms" className="hover:text-slate-900">이용약관</Link>
             <Link href="/privacy" className="hover:text-slate-900">개인정보처리방침</Link>
             <Link href="/consult" target="_blank" className="hover:text-[#0284C7]">1분 안심 진단 센터</Link>

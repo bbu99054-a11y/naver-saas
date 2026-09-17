@@ -17,9 +17,11 @@ export default async function CheckoutPage({ searchParams }: PageProps) {
   }
 
   const resolvedParams = await searchParams
-  const planParam = (typeof resolvedParams.plan === 'string' ? resolvedParams.plan : 'basic') as 'basic' | 'pro'
+  const planParam = (typeof resolvedParams.plan === 'string' ? resolvedParams.plan : 'starter') as 'starter' | 'pro' | 'enterprise' | 'basic'
   const rawAmount = typeof resolvedParams.amount === 'string' ? Number(resolvedParams.amount) : null
-  const amount = rawAmount || (planParam === 'pro' ? 74500 : 49000)
+  
+  const defaultAmount = planParam === 'enterprise' ? 399000 : planParam === 'pro' ? 199000 : 99000
+  const amount = rawAmount || defaultAmount
 
   // 기본 계좌 정보 (환경변수 설정 시 최우선 반영)
   const bankInfo = {

@@ -326,12 +326,18 @@ export default function DepositsAdminClient({
                       <div className="flex items-center gap-2">
                         <Badge
                           className={`font-black text-[11px] ${
-                            deposit.plan_type === 'pro'
-                              ? 'bg-purple-600 text-white'
-                              : 'bg-indigo-600 text-white'
+                            deposit.plan_type === 'enterprise'
+                              ? 'bg-purple-700 text-white'
+                              : deposit.plan_type === 'pro'
+                              ? 'bg-[#0284C7] text-white'
+                              : 'bg-slate-700 text-white'
                           }`}
                         >
-                          {deposit.plan_type.toUpperCase()} ({deposit.plan_type === 'pro' ? '30회' : '10회'})
+                          {deposit.plan_type === 'enterprise'
+                            ? 'FIRM GROWTH (100회)'
+                            : deposit.plan_type === 'pro'
+                            ? 'PRO-PILOT (35회)'
+                            : 'STARTER (12회)'}
                         </Badge>
                         {isPending && (
                           <span className="px-2 py-0.5 rounded text-[10px] font-black bg-rose-600 text-white animate-pulse">

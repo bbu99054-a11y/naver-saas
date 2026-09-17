@@ -11,17 +11,20 @@ const ADMIN_EMAILS = [
   process.env.ADMIN_EMAIL || '',
 ].filter(Boolean)
 
-// 플랜별 공인 가격 및 크레딧
+// 플랜별 공인 가격 및 크레딧 (2026 전문직 B2B 요금제 기준)
 const PLAN_CREDITS: Record<string, { credits: number; name: string }> = {
+  starter: { credits: 12, name: 'Starter (12회)' },
+  pro: { credits: 35, name: 'Pro-Pilot (35회)' },
+  enterprise: { credits: 100, name: 'Firm Growth (100회)' },
+  // 레거시 하위 호환
   basic: { credits: 10, name: 'Basic (10회)' },
-  pro: { credits: 30, name: 'Pro (30회)' },
 }
 
 /**
  * 1. 일반 고객: 무통장 입금 신청 생성
  */
 export async function createDepositRequest(formData: {
-  plan: 'basic' | 'pro'
+  plan: 'starter' | 'pro' | 'enterprise' | 'basic'
   amount: number
   depositorName: string
   depositorPhone: string
