@@ -79,7 +79,7 @@ export default async function DashboardPage() {
         <div>
           <div className="flex items-center gap-2">
             <span className="px-2 py-0.5 rounded-md bg-[#E0F2FE] text-[#0284C7] text-[11px] font-black">
-              Lawmatics Professional Practice OS
+              PostSync Professional Practice OS
             </span>
           </div>
           <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900 mt-1 flex items-center gap-2">

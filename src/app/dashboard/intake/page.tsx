@@ -63,7 +63,7 @@ export default function IntakeManagementPage() {
           <div className="flex items-center gap-2">
             <span className="w-2.5 h-2.5 rounded-full bg-[#FF6B00]"></span>
             <span className="text-xs font-black text-[#FF6B00] tracking-wider uppercase">
-              Lawmatics Intake Widget System
+              PostSync Intake Widget System
             </span>
           </div>
           <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight mt-1">

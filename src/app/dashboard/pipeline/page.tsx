@@ -162,11 +162,11 @@ export default function PipelinePage() {
           <div className="flex items-center gap-2">
             <span className="w-2.5 h-2.5 rounded-full bg-[#0284C7] animate-pulse"></span>
             <span className="text-xs font-black text-[#0284C7] tracking-wider uppercase">
-              Lawmatics Intake & Retainer Pipeline
+              PostSync Intake & Retainer Pipeline
             </span>
           </div>
           <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight mt-1">
-            수임 파이프라인 관리 (칸반보드)
+            수임 파이프라인 관리 (단계별 상담·계약 현황)
           </h1>
           <p className="text-xs text-slate-500 mt-0.5">
             블로그와 1분 진단 폼에서 유입된 의뢰인을 수임 계약까지 한눈에 관리합니다.

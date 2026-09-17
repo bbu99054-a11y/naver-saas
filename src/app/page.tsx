@@ -78,7 +78,7 @@ const CLIENT_REVIEWS = [
     office: '노무법인 신의 (노동·산재)',
     role: '구로디지털단지 기업 자문',
     result: '월 기장 자문사 8곳 유치',
-    text: '수습기간 만료 통보, 부당해고 구제신청 등 실무 쟁점 글을 쓴 뒤 Lawmatics형 수임 파이프라인으로 일정을 관리하니 놓치는 의뢰인이 0건이 되었습니다. 마케팅과 CRM이 하나로 끝납니다.'
+    text: '수습기간 만료 통보, 부당해고 구제신청 등 실무 쟁점 글을 쓴 뒤 PostSync 수임 관리 시스템으로 일정을 관리하니 놓치는 의뢰인이 0건이 되었습니다. 마케팅과 의뢰인 관리가 하나로 끝납니다.'
   }
 ]
 
@@ -550,14 +550,14 @@ export default function HomePage() {
             {/* 우측: 텍스트 설명 */}
             <div className="lg:col-span-6 space-y-4">
               <div className="text-xs font-black text-[#FF6B00] tracking-wider uppercase">
-                LAWMATICS INTAKE CRM PIPELINE
+                REAL-TIME INTAKE & CASE PIPELINE
               </div>
               <h2 className="text-2xl sm:text-4xl font-black text-slate-900 tracking-tight leading-tight">
-                접수된 상담 문의가 실제 계약으로<br />
+                접수된 상담 문의가 실제 수임 계약으로<br />
                 체결될 때까지 원스톱 관리
               </h2>
               <p className="text-sm text-slate-600 leading-relaxed">
-                블로그와 1분 진단 폼에서 유입된 잠재 의뢰인을 엑셀이나 카카오톡 대신 Lawmatics 스타일의 시각적 칸반보드로 직관적으로 추적합니다. 미처리 상담 0건, 골든타임 10분 내 콜백을 실현하세요.
+                블로그와 스마트플레이스, 1분 안심 진단 폼으로 들어온 상담 문의를 흩어진 메모나 카톡 없이 [신규 접수 ➔ 1차 상담 ➔ 방문 예약 ➔ 수임 계약]까지 단계별로 한눈에 관리합니다. 놓치는 의뢰인 0건, 골든타임 10분 내 신속한 상담 연결로 실제 수임 전환율을 극대화하세요.
               </p>
               <div className="pt-2">
                 <Link href="/dashboard/pipeline" className="inline-flex items-center gap-1.5 text-xs font-black text-[#FF6B00] hover:text-[#E05D00]">
