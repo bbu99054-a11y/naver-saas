@@ -15,7 +15,8 @@ import {
   X,
   Coins,
   Briefcase,
-  Sparkles
+  Sparkles,
+  MapPin
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { SidebarItem } from '@/components/SidebarItem'
@@ -25,6 +26,7 @@ import { usePathname } from 'next/navigation'
 const sidebarLinks = [
   { href: '/dashboard', label: '수임 대시보드', icon: LayoutDashboard },
   { href: '/dashboard/pipeline', label: '수임 파이프라인 CRM', icon: Briefcase },
+  { href: '/dashboard/place', label: '네이버 플레이스 관리', icon: MapPin },
   { href: '/dashboard/write', label: '전문 칼럼 스튜디오', icon: PenTool },
   { href: '/dashboard/intake', label: '사건 1분 진단 폼 관리', icon: FileText },
   { href: '/dashboard/archive', label: '나의 원고 보관함', icon: BookOpen },

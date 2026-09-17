@@ -23,7 +23,8 @@ import {
   Layers,
   Scale,
   Calculator,
-  Check
+  Check,
+  MapPin
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
@@ -107,6 +108,7 @@ export default function HomePage() {
 
           <nav className="hidden lg:flex items-center gap-6 text-xs font-bold text-slate-600">
             <a href="#features" className="hover:text-[#0284C7] transition-colors">플랫폼 기능</a>
+            <a href="#place" className="hover:text-[#0284C7] transition-colors">플레이스 관리</a>
             <a href="#compliance" className="hover:text-[#0284C7] transition-colors">광고 법규 안심 체크</a>
             <a href="#pipeline" className="hover:text-[#0284C7] transition-colors">수임 파이프라인</a>
             <a href="#reviews" className="hover:text-[#0284C7] transition-colors">성공 사례</a>
@@ -343,6 +345,99 @@ export default function HomePage() {
               <div>
                 <p className="font-black text-sm text-white">박현우 대표 변호사</p>
                 <p className="text-xs text-sky-100 font-medium">법무법인 율정 · 형사 사건 전담</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ========================================================================= */}
+      {/* 🌟 4-1. 네이버 스마트플레이스 통합 관리 엔진 (Scorpion Local Engine) */}
+      {/* ========================================================================= */}
+      <section id="place" className="py-16 sm:py-20 bg-[#F4F8FC] border-y border-slate-200/70">
+        <div className="max-w-7xl mx-auto px-4 sm:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+            {/* 좌측: 실시간 순위 및 리뷰 목업 */}
+            <div className="lg:col-span-6 space-y-3">
+              <div className="bg-white border-2 border-[#0284C7] rounded-3xl p-6 shadow-sm space-y-4">
+                <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+                  <div className="flex items-center gap-2">
+                    <span className="w-3 h-3 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span className="text-xs font-black text-slate-900">네이버 플레이스 실시간 순위 추적</span>
+                  </div>
+                  <span className="px-2 py-0.5 rounded-full bg-[#E0F2FE] text-[#0284C7] text-[10px] font-black">
+                    서초동 변호사 1위 🏆
+                  </span>
+                </div>
+
+                <div className="space-y-2 text-xs">
+                  <div className="p-3 bg-[#F0F7FF] rounded-xl border border-[#0284C7]/20 flex items-center justify-between">
+                    <div className="flex items-center gap-2.5">
+                      <span className="w-6 h-6 rounded-lg bg-amber-400 text-slate-950 font-black flex items-center justify-center text-xs">1</span>
+                      <div>
+                        <p className="font-black text-slate-900">내 사무소 (법무법인 율정)</p>
+                        <p className="text-[10px] text-slate-500">네이버 예약 연동 · 상위 1%</p>
+                      </div>
+                    </div>
+                    <span className="text-[10px] font-bold text-emerald-600">▲ 순위 상승</span>
+                  </div>
+
+                  <div className="p-3 bg-white rounded-xl border border-slate-200 flex items-center justify-between text-slate-500">
+                    <div className="flex items-center gap-2.5">
+                      <span className="w-6 h-6 rounded-lg bg-slate-100 text-slate-600 font-bold flex items-center justify-center text-xs">2</span>
+                      <div>
+                        <p className="font-bold text-slate-700">경쟁 A 로펌</p>
+                        <p className="text-[10px] text-slate-400">방문자 리뷰 120개</p>
+                      </div>
+                    </div>
+                    <span className="text-[10px] text-slate-400">경쟁사 추적 중</span>
+                  </div>
+                </div>
+
+                {/* AI 리뷰 감사 답글 미리보기 */}
+                <div className="p-3.5 bg-emerald-50/60 rounded-xl border border-emerald-200 space-y-1">
+                  <div className="flex items-center justify-between text-[11px] font-bold text-emerald-800">
+                    <span>💬 방문자 영수증 리뷰 AI 감사 답글</span>
+                    <span className="text-[9px] bg-emerald-200 text-emerald-900 px-1.5 py-0.2 rounded">합법 검증</span>
+                  </div>
+                  <p className="text-[11px] text-emerald-900 leading-relaxed line-clamp-2">
+                    "의뢰인님께서 일관되게 신뢰해 주신 덕분에 좋은 결과를 이끌어낼 수 있었습니다. 앞으로 늘 평안하시기를 기원합니다."
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* 우측: 텍스트 설명 */}
+            <div className="lg:col-span-6 space-y-4">
+              <div className="text-xs font-black text-[#0284C7] tracking-wider uppercase">
+                NAVER SMARTPLACE LOCAL BOOSTER
+              </div>
+              <h2 className="text-2xl sm:text-4xl font-black text-slate-900 tracking-tight leading-tight">
+                내 지역 1위 선점,<br />
+                스마트플레이스 순위 & 리뷰 완벽 관리
+              </h2>
+              <p className="text-sm text-slate-600 leading-relaxed">
+                의뢰인의 60% 이상은 네이버 지도와 스마트플레이스에서 시작됩니다. 실시간 로컬 키워드 순위 추적부터 상위 경쟁사 분석, 전문직 광고 규정을 철저히 준수한 소개글 작성, 그리고 방문자 영수증 리뷰에 대한 고품격 AI 감사 답글까지 원스톱으로 관리하세요.
+              </p>
+              <div className="space-y-2 pt-1 text-xs font-bold text-slate-700">
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-[#0284C7] shrink-0" />
+                  <span>실시간 플레이스 키워드 순위 추적 및 경쟁사 비교 분석</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-[#0284C7] shrink-0" />
+                  <span>변호사법·세무사법 100% 준수 합법 플레이스 소개글 AI 생성</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-[#0284C7] shrink-0" />
+                  <span>방문자 리뷰에 대한 정중하고 신뢰감 높은 AI 감사 답글 원클릭 복사</span>
+                </div>
+              </div>
+              <div className="pt-2">
+                <Link href="/dashboard/place" className="inline-flex items-center gap-1.5 text-xs font-black text-[#0284C7] hover:text-[#0369A1]">
+                  <span>스마트플레이스 관리 센터 열기</span>
+                  <ChevronRight className="w-4 h-4" />
+                </Link>
               </div>
             </div>
           </div>
