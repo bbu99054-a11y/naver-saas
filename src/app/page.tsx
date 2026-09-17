@@ -137,7 +137,7 @@ export default function HomePage() {
           <div className="lg:col-span-7 space-y-6">
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#E0F2FE] text-[#0284C7] text-xs font-extrabold border border-[#0284C7]/20">
               <Sparkles className="w-3.5 h-3.5 text-[#0284C7]" />
-              <span>변호사 · 세무사 전용 AI 수임 성장 엔진</span>
+              <span>대행사 외주비(월 300만 원) 93% 절감 · 변호사·세무사 수임 성장 OS</span>
             </div>
 
             <h1 className="text-3xl sm:text-5xl lg:text-[54px] font-black text-slate-900 tracking-tight leading-[1.15]">
@@ -267,6 +267,143 @@ export default function HomePage() {
               <div className="mt-4 pt-3 border-t border-slate-200/80 flex items-center justify-between text-[11px] text-slate-500 font-medium">
                 <span>실시간 수임 파이프라인 연동</span>
                 <span className="text-[#0284C7] font-bold">평균 수임 전환율 +340%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ========================================================================= */}
+      {/* 🌟 2-1. 대행사 외주 vs PostSync Pro 비교 섹션 (비용 93% 절감 & 리스크 0%) */}
+      {/* ========================================================================= */}
+      <section className="py-12 sm:py-16 bg-white border-t border-slate-200/80">
+        <div className="max-w-7xl mx-auto px-4 sm:px-8 space-y-10">
+          <div className="text-center space-y-3 max-w-3xl mx-auto">
+            <span className="px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-black border border-emerald-200">
+              💰 스마트한 대표님들의 비용 혁신
+            </span>
+            <h2 className="text-2xl sm:text-4xl font-black text-slate-900 tracking-tight leading-snug">
+              매달 나가는 대행사 외주비 300만 원,<br />
+              <span className="text-[#0284C7]">아직도 관행처럼 지출하고 계신가요?</span>
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+              비전문가 아르바이트생의 위험한 복사-붙여넣기 글과 과태료(최대 5,000만 원) 불안을 끝내세요. 대행사 비용의 90% 이상을 절감하면서, 실제 사건 수임으로 연결되는 전자동 시스템을 갖출 수 있습니다.
+            </p>
+          </div>
+
+          {/* 직관적 2단 비교 카드 테이블 */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto items-stretch">
+            {/* 1. 기존 종합 마케팅 대행사 */}
+            <div className="bg-[#F8FAFC] border-2 border-slate-200 rounded-3xl p-6 sm:p-8 flex flex-col justify-between space-y-6">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between pb-3 border-b border-slate-200">
+                  <div>
+                    <span className="text-xs font-bold text-slate-400">기존 방식</span>
+                    <h3 className="text-xl font-black text-slate-700 mt-0.5">종합 마케팅 대행사 외주</h3>
+                  </div>
+                  <span className="px-2.5 py-1 rounded-full bg-slate-200 text-slate-600 text-xs font-bold">
+                    월 300~500만 원
+                  </span>
+                </div>
+
+                <div className="space-y-3.5 text-xs text-slate-600">
+                  <div className="flex items-start gap-2.5">
+                    <span className="text-rose-500 font-black text-base shrink-0">✕</span>
+                    <div>
+                      <strong className="text-slate-800">막대한 고정비 지출:</strong>
+                      <p className="text-slate-500 mt-0.5">연간 3,600만~6,000만 원의 큰 비용이 수임 성과와 무관하게 고정 지출됨.</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-2.5">
+                    <span className="text-rose-500 font-black text-base shrink-0">✕</span>
+                    <div>
+                      <strong className="text-slate-800">과태료(최대 5천만 원) & 징계 위험:</strong>
+                      <p className="text-slate-500 mt-0.5">법률·세무 비전공 알바생 작성으로 '100% 승소' 등 법률 광고 규정 위반 빈발.</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-2.5">
+                    <span className="text-rose-500 font-black text-base shrink-0">✕</span>
+                    <div>
+                      <strong className="text-slate-800">단순 블로그 방문자 유입에 그침:</strong>
+                      <p className="text-slate-500 mt-0.5">글만 쓸 뿐, 의뢰인을 상담으로 연결하는 진단 폼이나 수임 파이프라인 부재.</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-2.5">
+                    <span className="text-rose-500 font-black text-base shrink-0">✕</span>
+                    <div>
+                      <strong className="text-slate-800">플레이스·리뷰 관리는 별도 비용:</strong>
+                      <p className="text-slate-500 mt-0.5">네이버 플레이스 순위나 영수증 리뷰 관리는 매번 수십만 원의 추가 외주비 요구.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="p-3 bg-slate-100 rounded-xl text-center text-xs text-slate-500 font-medium">
+                결국 비싼 돈을 쓰고도 대표님이 직접 글을 고쳐야 하는 악순환
+              </div>
+            </div>
+
+            {/* 2. PostSync Pro (AI 수임 성장 OS) */}
+            <div className="bg-white border-2 border-[#0284C7] rounded-3xl p-6 sm:p-8 flex flex-col justify-between space-y-6 shadow-xl relative overflow-hidden">
+              <div className="absolute top-0 right-0 bg-[#0284C7] text-white text-[10px] font-black px-4 py-1 rounded-bl-xl uppercase tracking-wider">
+                RECOMMENDED SOLUTION
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+                  <div>
+                    <span className="text-xs font-bold text-[#0284C7]">2026 차세대 표준</span>
+                    <h3 className="text-xl font-black text-slate-900 mt-0.5">PostSync Pro 수임 관제 OS</h3>
+                  </div>
+                  <span className="px-2.5 py-1 rounded-full bg-[#E0F2FE] text-[#0284C7] text-xs font-black">
+                    월 9.9만~19.9만 원
+                  </span>
+                </div>
+
+                <div className="space-y-3.5 text-xs text-slate-700">
+                  <div className="flex items-start gap-2.5">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
+                    <div>
+                      <strong className="text-slate-900">외주비 93% 절감 (연 3,240만 원 순이익 방어):</strong>
+                      <p className="text-slate-500 mt-0.5">대행사 외주비의 10분의 1 수준으로 대표님의 마케팅 고정비를 압도적으로 절감.</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-2.5">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
+                    <div>
+                      <strong className="text-slate-900">광고 법규 안심 체크 100% 무결점 보장:</strong>
+                      <p className="text-slate-500 mt-0.5">변호사법 제23조 및 세무사법 제12조 금칙어를 실시간 감지하여 징계 위험 원천 차단.</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-2.5">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
+                    <div>
+                      <strong className="text-slate-900">1분 안심 진단 폼 + 수임 파이프라인 CRM 기본 탑재:</strong>
+                      <p className="text-slate-500 mt-0.5">글 하단 배너에서 접수된 의뢰인이 텔레그램 알림과 칸반 대시보드로 실시간 자동 유입.</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-2.5">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
+                    <div>
+                      <strong className="text-slate-900">네이버 스마트플레이스 순위 & AI 리뷰 올인원:</strong>
+                      <p className="text-slate-500 mt-0.5">로컬 키워드 실시간 순위 추적, 경쟁사 분석, 합법 소개글 및 AI 감사 답글 원클릭 제공.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="pt-2">
+                <Link href="/dashboard">
+                  <Button className="w-full h-12 rounded-full bg-[#FF6B00] hover:bg-[#E05D00] text-white font-black text-sm shadow-md cursor-pointer">
+                    대행사 해지하고 무료로 시작하기 ➔
+                  </Button>
+                </Link>
               </div>
             </div>
           </div>
