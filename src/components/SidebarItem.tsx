@@ -24,10 +24,10 @@ export function SidebarItem({
     <Link 
       href={href} 
       onClick={onClick}
-      className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-all cursor-pointer ${
+      className={`flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-all cursor-pointer ${
         isActive 
-          ? 'bg-indigo-50 text-indigo-700 font-extrabold shadow-2xs border-r-2 border-indigo-600' 
-          : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+          ? 'bg-[#E0F2FE] text-[#0284C7] font-black shadow-2xs border-r-2 border-[#0284C7]' 
+          : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 font-semibold'
       }`}
     >
       {children}

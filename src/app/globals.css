@@ -46,6 +46,13 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+  --color-lawmatics-sky: #0284c7;
+  --color-lawmatics-sky-hover: #0369a1;
+  --color-lawmatics-sky-light: #f0f7ff;
+  --color-lawmatics-sky-badge: #e0f2fe;
+  --color-lawmatics-orange: #ff6b00;
+  --color-lawmatics-orange-hover: #e05d00;
+  --color-lawmatics-soft-bg: #f4f8fc;
 }
 
 :root {

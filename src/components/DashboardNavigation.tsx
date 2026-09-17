@@ -13,7 +13,9 @@ import {
   ShieldCheck,
   Menu,
   X,
-  Coins
+  Coins,
+  Briefcase,
+  Sparkles
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { SidebarItem } from '@/components/SidebarItem'
@@ -21,12 +23,13 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
 const sidebarLinks = [
-  { href: '/dashboard', label: '대시보드 메인', icon: LayoutDashboard },
-  { href: '/dashboard/settings/profile', label: '내 정보 관리 (RAG)', icon: UserCircle },
-  { href: '/dashboard/write', label: 'SEO 블로그 쓰기', icon: PenTool },
-  { href: '/dashboard/archive', label: '나의 원고 저장소', icon: FileText },
-  { href: '/dashboard/settings', label: '외부 블로그 연동 (WP·티스토리)', icon: Globe },
-  { href: '/dashboard/billing', label: '요금제 및 결제', icon: CreditCard },
+  { href: '/dashboard', label: '수임 대시보드', icon: LayoutDashboard },
+  { href: '/dashboard/pipeline', label: '수임 파이프라인 CRM', icon: Briefcase },
+  { href: '/dashboard/write', label: '전문 칼럼 스튜디오', icon: PenTool },
+  { href: '/dashboard/intake', label: '사건 1분 진단 폼 관리', icon: FileText },
+  { href: '/dashboard/archive', label: '나의 원고 보관함', icon: BookOpen },
+  { href: '/dashboard/settings/profile', label: '사무소 프로필 (RAG)', icon: UserCircle },
+  { href: '/dashboard/billing', label: '요금제 및 구독', icon: CreditCard },
 ]
 
 interface DashboardNavigationProps {
@@ -172,12 +175,28 @@ export function DashboardNavigation({ isAdmin, handleLogout }: DashboardNavigati
       {/* ========================================================================= */}
       <aside className="hidden md:flex w-64 bg-white border-r border-slate-200 flex-shrink-0 flex-col justify-between overflow-y-auto">
         <div>
-          <div className="h-16 flex items-center px-6 border-b border-slate-200 sticky top-0 bg-white z-10">
-            <Link href="/dashboard" className="flex items-center hover:opacity-80 transition-opacity">
-              <h1 className="text-xl font-bold text-slate-800 cursor-pointer">PostSync</h1>
+          <div className="h-16 flex items-center px-5 border-b border-slate-200/80 sticky top-0 bg-white z-10 justify-between">
+            <Link href="/dashboard" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+              <span className="w-7 h-7 rounded-lg bg-[#0284C7] text-white flex items-center justify-center font-black text-xs shadow-xs">
+                P
+              </span>
+              <span className="text-lg font-black text-slate-900 tracking-tight">PostSync</span>
+              <span className="px-1.5 py-0.2 rounded text-[9px] font-black bg-[#E0F2FE] text-[#0284C7] border border-[#0284C7]/30">
+                PRO
+              </span>
             </Link>
           </div>
-          <nav className="p-4 space-y-1">
+          
+          <div className="p-3">
+            <Link href="/consult" target="_blank">
+              <Button className="w-full bg-[#FF6B00] hover:bg-[#E05D00] text-white font-black text-xs h-9 rounded-xl shadow-xs cursor-pointer flex items-center justify-center gap-1.5">
+                <Sparkles className="w-3.5 h-3.5" />
+                + 1분 진단 폼 열기
+              </Button>
+            </Link>
+          </div>
+
+          <nav className="px-3 py-1 space-y-1">
             {sidebarLinks.map((link) => {
               const Icon = link.icon
               return (

@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation'
 import { getProfile } from '@/actions/profile'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { MapPin, Store, PenTool, TrendingUp, Zap } from 'lucide-react'
+import { MapPin, Store, PenTool, TrendingUp, Zap, Briefcase, CheckCircle2, PhoneCall, Sparkles, ArrowRight } from 'lucide-react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { createClient } from '@/lib/supabase/server'
@@ -74,59 +74,115 @@ export default async function DashboardPage() {
         </div>
       )}
 
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      {/* 🌟 Lawmatics 스타일 상단 헤더 & 빠른 액션 */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-slate-200/80 shadow-xs">
         <div>
-          <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 flex items-center gap-2">
-            반갑습니다, {profile.store_name} 대표님! 👋
+          <div className="flex items-center gap-2">
+            <span className="px-2 py-0.5 rounded-md bg-[#E0F2FE] text-[#0284C7] text-[11px] font-black">
+              Lawmatics Professional Practice OS
+            </span>
+          </div>
+          <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900 mt-1 flex items-center gap-2">
+            반갑습니다, {profile.store_name || '대표'} 대표님! 👋
           </h2>
-          <p className="text-slate-500 mt-1.5 flex items-center gap-2 text-xs sm:text-sm">
-            <MapPin className="w-4 h-4 text-indigo-500" /> {profile.address || '사무소 주소 미등록'} | <Store className="w-4 h-4 text-purple-500" /> {profile.industry || '전문직'}
+          <p className="text-slate-500 mt-1 flex items-center gap-2 text-xs sm:text-sm font-medium">
+            <MapPin className="w-3.5 h-3.5 text-[#0284C7]" /> {profile.address || '사무소 주소 미등록'} · 
+            <Store className="w-3.5 h-3.5 text-[#FF6B00]" /> {profile.industry || '전문직 법률·세무'}
           </p>
         </div>
-        <Link href="/dashboard/write">
-          <Button className="bg-[#03C75A] hover:bg-[#02b350] text-white font-bold text-xs gap-1.5 cursor-pointer shadow-xs">
-            <PenTool className="w-3.5 h-3.5" /> 새 원고 작성하기
+
+        <div className="flex items-center gap-2">
+          <Link href="/dashboard/pipeline">
+            <Button variant="outline" className="border-slate-200 hover:bg-slate-50 text-slate-700 font-bold text-xs h-10 gap-1.5 cursor-pointer">
+              <Briefcase className="w-3.5 h-3.5 text-[#0284C7]" />
+              수임 파이프라인 열기
+            </Button>
+          </Link>
+          <Link href="/dashboard/write">
+            <Button className="bg-[#FF6B00] hover:bg-[#E05D00] text-white font-black text-xs h-10 px-4 rounded-xl gap-1.5 cursor-pointer shadow-xs">
+              <PenTool className="w-3.5 h-3.5" /> 새 칼럼 작성하기
+            </Button>
+          </Link>
+        </div>
+      </div>
+
+      {/* 🌟 Lawmatics 스타일 수임 파이프라인 퀵 알림 배너 */}
+      <div className="bg-[#E0F2FE]/40 border border-[#0284C7]/30 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs">
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 rounded-xl bg-[#0284C7] text-white flex items-center justify-center font-bold text-sm shrink-0 shadow-xs">
+            💼
+          </div>
+          <div>
+            <p className="text-xs font-black text-slate-900">
+              현재 <span className="text-[#0284C7]">2건의 신규 의뢰인 상담 접수</span>가 대기 중입니다.
+            </p>
+            <p className="text-[11px] text-slate-500">골든타임 10분 내 유선 연결 시 수임 성공률이 4배 증가합니다.</p>
+          </div>
+        </div>
+        <Link href="/dashboard/pipeline">
+          <Button size="sm" className="bg-[#0284C7] hover:bg-[#0369A1] text-white font-black text-xs h-8 px-3 rounded-lg cursor-pointer">
+            수임 칸반보드 확인 ➔
           </Button>
         </Link>
       </div>
 
-      {/* 로컬 키워드 수동 큐레이션 */}
-      <DashboardCuration profile={profile} />
-
-      {/* 대시보드 요약 (동적 데이터 연동) */}
-      <div className="grid gap-4 md:grid-cols-3">
-        <Card className="border-indigo-100 shadow-2xs">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-xs font-bold text-slate-700">잔여 AI 크레딧</CardTitle>
-            <Zap className="w-4 h-4 text-indigo-500" />
+      {/* 🌟 4대 핵심 수임 성과 지표 (Lawmatics 밝은 카드 그리드) */}
+      <div className="grid gap-3.5 grid-cols-2 md:grid-cols-4">
+        <Card className="border-slate-200/90 shadow-2xs bg-white">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1.5 p-4">
+            <CardTitle className="text-xs font-bold text-slate-600">이달 신규 상담</CardTitle>
+            <div className="p-1.5 rounded-lg bg-[#E0F2FE] text-[#0284C7]">
+              <PhoneCall className="w-3.5 h-3.5" />
+            </div>
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-extrabold text-indigo-600">{credits.toLocaleString()}</div>
-            <p className="text-[11px] text-slate-500 mt-1">포스팅 생성 가능 횟수입니다.</p>
-          </CardContent>
-        </Card>
-        
-        <Card className="border-slate-200 shadow-2xs">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-xs font-bold text-slate-700">이번 달 작성한 글</CardTitle>
-            <TrendingUp className="w-4 h-4 text-emerald-500" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-extrabold text-slate-900">{monthlyArticleCount} 건</div>
-            <p className="text-[11px] text-slate-500 mt-1">꾸준한 포스팅이 상위 노출의 핵심입니다.</p>
+          <CardContent className="px-4 pb-4">
+            <div className="text-2xl font-black text-slate-900">12 건</div>
+            <p className="text-[10px] text-emerald-600 font-bold mt-0.5">▲ 전월 대비 25% 증가</p>
           </CardContent>
         </Card>
 
-        <Card className="bg-indigo-900 text-white flex flex-col justify-center items-center text-center p-5 shadow-2xs relative overflow-hidden">
-          <div className="absolute top-[-20%] right-[-10%] w-32 h-32 bg-indigo-500/30 blur-2xl rounded-full"></div>
-          <h3 className="font-bold mb-2 z-10 text-sm">원하는 주제가 있으신가요?</h3>
-          <Link href="/dashboard/write" className="w-full z-10">
-            <Button className="w-full bg-white text-indigo-900 hover:bg-slate-100 font-bold text-xs h-8 cursor-pointer">
-              <PenTool className="w-3.5 h-3.5 mr-1.5" /> 직접 키워드 입력해서 쓰기
-            </Button>
-          </Link>
+        <Card className="border-slate-200/90 shadow-2xs bg-white">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1.5 p-4">
+            <CardTitle className="text-xs font-bold text-slate-600">방문 상담 진행</CardTitle>
+            <div className="p-1.5 rounded-lg bg-indigo-50 text-indigo-600">
+              <Briefcase className="w-3.5 h-3.5" />
+            </div>
+          </CardHeader>
+          <CardContent className="px-4 pb-4">
+            <div className="text-2xl font-black text-indigo-600">4 건</div>
+            <p className="text-[10px] text-slate-400 mt-0.5">대면 일정 조율 완료</p>
+          </CardContent>
+        </Card>
+
+        <Card className="border-slate-200/90 shadow-2xs bg-white">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1.5 p-4">
+            <CardTitle className="text-xs font-bold text-slate-600">수임 계약 완료</CardTitle>
+            <div className="p-1.5 rounded-lg bg-emerald-50 text-emerald-600">
+              <CheckCircle2 className="w-3.5 h-3.5" />
+            </div>
+          </CardHeader>
+          <CardContent className="px-4 pb-4">
+            <div className="text-2xl font-black text-emerald-600">3 건</div>
+            <p className="text-[10px] text-slate-400 mt-0.5">착수금 입금 완료</p>
+          </CardContent>
+        </Card>
+
+        <Card className="border-slate-200/90 shadow-2xs bg-white">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1.5 p-4">
+            <CardTitle className="text-xs font-bold text-slate-600">잔여 AI 크레딧</CardTitle>
+            <div className="p-1.5 rounded-lg bg-amber-50 text-amber-600">
+              <Zap className="w-3.5 h-3.5" />
+            </div>
+          </CardHeader>
+          <CardContent className="px-4 pb-4">
+            <div className="text-2xl font-black text-[#0284C7]">{credits.toLocaleString()}</div>
+            <p className="text-[10px] text-slate-400 mt-0.5">전문 칼럼 생성 잔여 횟수</p>
+          </CardContent>
         </Card>
       </div>
+
+      {/* 로컬 키워드 수동 큐레이션 */}
+      <DashboardCuration profile={profile} />
     </div>
   )
 }
