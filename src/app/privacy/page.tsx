@@ -1,5 +1,14 @@
+import { Metadata } from 'next'
 import Link from 'next/link'
 import { Sparkles, ArrowLeft, ShieldCheck } from 'lucide-react'
+
+export const metadata: Metadata = {
+  title: '개인정보 처리방침 | PostSync',
+  description: 'PostSync AI 서비스의 개인정보 처리방침 및 보호 조치 안내.',
+  alternates: {
+    canonical: 'https://www.postsyncapp.com/privacy',
+  },
+}
 
 export default function PrivacyPage() {
   return (

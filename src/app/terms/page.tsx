@@ -1,5 +1,14 @@
+import { Metadata } from 'next'
 import Link from 'next/link'
 import { Sparkles, ArrowLeft } from 'lucide-react'
+
+export const metadata: Metadata = {
+  title: '서비스 이용약관 | PostSync',
+  description: 'PostSync AI 서비스 이용약관 및 운영 정책 안내.',
+  alternates: {
+    canonical: 'https://www.postsyncapp.com/terms',
+  },
+}
 
 export default function TermsPage() {
   return (
