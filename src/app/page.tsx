@@ -106,13 +106,20 @@ export default function HomePage() {
             </span>
           </Link>
 
-          <nav className="hidden lg:flex items-center gap-6 text-xs font-bold text-slate-600">
+          <nav className="hidden lg:flex items-center gap-5 text-xs font-bold text-slate-600">
             <a href="#features" className="hover:text-[#0284C7] transition-colors">플랫폼 기능</a>
             <a href="#place" className="hover:text-[#0284C7] transition-colors">플레이스 관리</a>
             <a href="#compliance" className="hover:text-[#0284C7] transition-colors">광고 법규 안심 체크</a>
             <a href="#pipeline" className="hover:text-[#0284C7] transition-colors">수임 파이프라인</a>
-            <Link href="/pricing" className="hover:text-[#0284C7] transition-colors text-[#0284C7] font-extrabold">요금 안내</Link>
-            <a href="#reviews" className="hover:text-[#0284C7] transition-colors">성공 사례</a>
+            <Link href="/pricing" className="hover:text-[#0284C7] transition-colors">요금 안내</Link>
+            <Link href="/blog" className="hover:text-[#0284C7] transition-colors text-slate-800 font-extrabold flex items-center gap-1">
+              <span>인사이트 칼럼</span>
+              <span className="w-1.5 h-1.5 rounded-full bg-[#0284C7]"></span>
+            </Link>
+            <Link href="/tools" className="hover:text-emerald-600 transition-colors text-emerald-600 font-extrabold flex items-center gap-1">
+              <span>무료 웹툴 7종</span>
+              <span className="px-1.5 py-0.5 rounded-full text-[9px] bg-emerald-100 text-emerald-700">무료</span>
+            </Link>
             <a href="#faq" className="hover:text-[#0284C7] transition-colors">자주 묻는 질문</a>
           </nav>
         </div>
@@ -1058,10 +1065,13 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-6 font-semibold text-slate-600">
+          <div className="flex flex-wrap items-center gap-5 font-semibold text-slate-600">
             <Link href="/pricing" className="hover:text-[#0284C7] font-bold">요금제 안내</Link>
+            <Link href="/blog" className="hover:text-[#0284C7] font-bold text-slate-800">인사이트 칼럼</Link>
+            <Link href="/tools" className="hover:text-emerald-600 font-bold text-emerald-700">무료 웹툴 7종</Link>
             <Link href="/terms" className="hover:text-slate-900">이용약관</Link>
             <Link href="/privacy" className="hover:text-slate-900">개인정보처리방침</Link>
+            <Link href="/contact" className="hover:text-[#0284C7]">고객지원</Link>
             <Link href="/consult" target="_blank" className="hover:text-[#0284C7]">1분 안심 진단 센터</Link>
             <Link href="/dashboard" className="hover:text-[#FF6B00]">대표 변호사 로그인</Link>
           </div>

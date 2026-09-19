@@ -9,6 +9,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { blogPosts, CATEGORIES, BlogPost } from '@/lib/blogData'
+import GoogleAdSlot from '@/components/monetization/GoogleAdSlot'
 
 export default function BlogListClient() {
   const [selectedCategory, setSelectedCategory] = useState<string>('all')
@@ -125,6 +126,11 @@ export default function BlogListClient() {
         </div>
       </section>
 
+      {/* Top AdSense Slot */}
+      <div className="max-w-4xl mx-auto px-6 mb-4">
+        <GoogleAdSlot adFormat="horizontal" className="max-w-[728px] mx-auto" />
+      </div>
+
       {/* Blog Cards Grid */}
       <section className="py-8 px-6 relative z-10 max-w-7xl mx-auto">
         {filteredPosts.length === 0 ? (
@@ -232,6 +238,11 @@ export default function BlogListClient() {
           </div>
         </div>
       </section>
+
+      {/* Bottom AdSense Slot */}
+      <div className="max-w-4xl mx-auto px-6 mb-12">
+        <GoogleAdSlot adFormat="auto" className="mx-auto" />
+      </div>
 
       {/* Footer */}
       <footer className="py-12 border-t border-white/10 text-center text-xs text-slate-500 relative z-10">

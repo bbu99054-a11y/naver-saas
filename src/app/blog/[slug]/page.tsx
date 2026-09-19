@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button'
 import { blogPosts, getPostBySlug } from '@/lib/blogData'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import GoogleAdSlot from '@/components/monetization/GoogleAdSlot'
 
 export async function generateStaticParams() {
   return blogPosts.map((post) => ({
@@ -160,6 +161,11 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             style={{ backgroundImage: `url(${post.imageUrl})` }}
           />
 
+          {/* In-Article Top AdSense Slot */}
+          <div className="my-8">
+            <GoogleAdSlot adFormat="horizontal" className="max-w-[728px] mx-auto" />
+          </div>
+
           {/* Rich Markdown Custom Component Rendered Area */}
           <div className="blog-content">
             <ReactMarkdown
@@ -274,6 +280,11 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             </ReactMarkdown>
           </div>
 
+          {/* In-Article Bottom AdSense Slot */}
+          <div className="my-10 pt-6 border-t border-slate-100">
+            <GoogleAdSlot adFormat="auto" className="mx-auto" />
+          </div>
+
           {/* Bottom Article CTA Card */}
           <div className="mt-14 p-8 sm:p-10 rounded-2xl bg-gradient-to-br from-[#0F172A] via-[#1E1B4B] to-[#1E293B] text-white shadow-xl border border-indigo-500/20">
             <div className="flex items-center gap-2 text-xs font-bold text-indigo-300 mb-3">
@@ -355,6 +366,11 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                   </Link>
                 ))}
               </div>
+            </div>
+
+            {/* Sidebar AdSense Slot */}
+            <div className="bg-white p-3 rounded-2xl border border-slate-200/80 shadow-sm flex items-center justify-center overflow-hidden">
+              <GoogleAdSlot adFormat="rectangle" />
             </div>
 
           </div>
