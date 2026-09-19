@@ -121,7 +121,7 @@ export default async function DashboardPage() {
         </div>
         <Link href="/dashboard/pipeline">
           <Button size="sm" className="bg-[#0284C7] hover:bg-[#0369A1] text-white font-black text-xs h-8 px-3 rounded-lg cursor-pointer">
-            수임 칸반보드 확인 ➔
+            수임 현황판 확인 ➔
           </Button>
         </Link>
       </div>

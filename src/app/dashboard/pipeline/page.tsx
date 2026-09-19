@@ -48,12 +48,12 @@ const INITIAL_LEADS: LeadCard[] = [
     id: 'lead-2',
     name: '이*우 의뢰인',
     phone: '010-3321-****',
-    specialty: '상속세 감정평가 절세',
-    source: '블로그 [송파 아파트 상속세]',
+    specialty: '상간자 위자료 청구 소송',
+    source: '블로그 [상간 소송 승소 요건]',
     stage: 'NEW',
-    estimatedFee: '8,000,000원',
+    estimatedFee: '5,500,000원',
     createdAt: '45분 전',
-    summary: '송파구 아파트 상속 개시, 시가 24억 원 상당으로 감정평가 사업 활용 절세 플랜 문의'
+    summary: '배우자 부정행위 증거(메신저/차량 블랙박스) 확보 완료, 위자료 3,000만 원 청구 소송 상담 희망'
   },
   {
     id: 'lead-3',
@@ -70,12 +70,12 @@ const INITIAL_LEADS: LeadCard[] = [
     id: 'lead-4',
     name: '최*민 의뢰인',
     phone: '010-4491-****',
-    specialty: '법인 세무조사 방어',
-    source: '블로그 [세무조사 대응 가이드]',
+    specialty: '업무상 횡령 피의사건 방어',
+    source: '블로그 [횡령죄 성립요건 및 양형]',
     stage: 'VISITING',
     estimatedFee: '15,000,000원',
     createdAt: '2일 전',
-    summary: '서울지방국세청 조사4국 착수 통지서 수령. 내일 오후 2시 대표세무사 대면 미팅 확정'
+    summary: '법인 자금 2억 5천만 원 횡령 혐의 피소. 내일 오후 2시 대표변호사 대면 미팅 및 구속영장 실질심사 대비'
   },
   {
     id: 'lead-5',

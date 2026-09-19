@@ -6,20 +6,21 @@ import { ShieldCheck, CheckCircle2, Clock, Lock, ArrowLeft, PhoneCall, Send } fr
 import { Button } from '@/components/ui/button'
 
 const SPECIALTIES = [
-  { id: 'criminal', label: '형사 사건 (음주운전, 사기 등)', icon: '⚖️' },
-  { id: 'family', label: '이혼 · 상속재산분할', icon: '👨‍👩‍👧' },
-  { id: 'tax_inherit', label: '상속세 · 증여세 절세', icon: '📊' },
-  { id: 'tax_audit', label: '세무조사 대응 · 양도소득세', icon: '🏢' },
-  { id: 'realestate', label: '부동산 · 명도소송 · 손해배상', icon: '🏠' },
-  { id: 'labor', label: '부당해고 · 임금체불 (노무)', icon: '💼' },
-  { id: 'other', label: '기타 법률 · 세무 상담', icon: '📝' }
+  { id: 'criminal_dui', label: '형사 사건 (음주운전, 사기, 마약 등)', icon: '⚖️' },
+  { id: 'family_divorce', label: '가사 · 이혼 · 상간자 · 재산분할', icon: '👨‍👩‍👧' },
+  { id: 'realestate_lease', label: '부동산 · 명도소송 · 전세사기 · 보증금', icon: '🏠' },
+  { id: 'corporate_crime', label: '기업법무 · 횡령/배임 · 영업비밀', icon: '🏢' },
+  { id: 'warrant_urgent', label: '긴급 구속영장 실질심사 · 압수수색', icon: '🚨' },
+  { id: 'civil_tort', label: '민사소송 · 손해배상 · 대여금 반환', icon: '📝' }
 ]
 
 const STAGES = [
-  '아직 관공서(경찰/세무서) 연락 전 (사전 대비 필요)',
-  '조사 출석 요구서 / 세무조사 통지서를 받음',
-  '1차 조사를 마친 상태 (불리한 진술 우려)',
-  '처분 결과 통지 수령 후 이의신청/재판 준비 중'
+  '경찰/검찰 출석 통보 전 (사전 대응 및 양형자료 준비)',
+  '경찰 출석 요구서 수령 / 피의자 신문 조사 예정',
+  '1차 경찰 조사 완료 (불리한 진술 번복/방어 필요)',
+  '구속영장 청구 / 긴급체포 등 영장실질심사 대기',
+  '검찰 송치 및 기소 / 법원 1심 재판 진행 중',
+  '소장(민사/이혼) 수령 후 30일 답변서 제출 기한 임박'
 ]
 
 export default function ConsultIntakePage() {
@@ -105,7 +106,7 @@ export default function ConsultIntakePage() {
                 사건 상담 신청이 정상 접수되었습니다!
               </h2>
               <p className="text-sm text-slate-600 leading-relaxed max-w-md mx-auto">
-                담당 변호사·세무사 사무실로 실시간 전달되었습니다.<br />
+                담당 변호사 사무실로 실시간 전달되었습니다.<br />
                 골든타임 내에 남겨주신 연락처(<strong className="text-slate-900">{clientPhone}</strong>)로 비밀 보장 유선 안내를 드립니다.
               </p>
               <div className="pt-4">
@@ -128,7 +129,7 @@ export default function ConsultIntakePage() {
                   현재 처하신 상황을 선택해 주세요
                 </h1>
                 <p className="text-xs sm:text-sm text-slate-500">
-                  사무소 방문 전, 법률·세무 전문가가 1차 쟁점을 신속히 사전 검토해 드립니다.
+                  사무소 방문 전, 전담 변호사가 1차 법적 쟁점을 신속히 사전 검토해 드립니다.
                 </p>
               </div>
 

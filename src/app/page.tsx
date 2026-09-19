@@ -30,24 +30,24 @@ import { Button } from '@/components/ui/button'
 
 const FAQ_ITEMS = [
   {
-    q: '변호사법 제23조 및 세무사법 제12조 광고 규정에 정말 안전한가요?',
-    a: '네, 100% 안전합니다. PostSync Pro는 "100% 승소 보장", "환급율 1위", "최고/유일", "전관예우 암시" 등 대한변호사협회 및 한국세무사회 광고 규정상 금지된 표현을 실시간으로 감지하여 안전하고 객관적인 전문직 언어로 자동 순화합니다.'
+    q: '변호사법 제23조 및 대한변협 광고 규정에 정말 안전한가요?',
+    a: '네, 100% 안전합니다. PostSync Pro는 "100% 승소 보장", "최고/유일", "전관예우 암시", "부당 염가 표방" 등 대한변호사협회 광고 규정상 금지된 위험 표현을 실시간으로 자동 감지하여 품격 있고 합법적인 변호사 전문 언어로 순화합니다.'
   },
   {
-    q: '생성된 글을 네이버 블로그에 복사해서 붙여넣어도 저품질에 걸리지 않나요?',
-    a: '기계적인 단순 텍스트 나열이 아닌, 네이버 스마트블록과 C-Rank 로직에 맞춘 [상황 공감 ➔ 핵심 쟁점 ➔ 관련 법령·판례 ➔ 대응 절차] 4단 구조로 작성됩니다. 또한 네이버 스마트에디터 ONE 서식 그대로 원클릭 복사되어 저품질 위험 없이 검색 상위 노출에 최적화됩니다.'
+    q: '블로그 글만 쓴다고 실제 형사·이혼·민사 사건 수임으로 이어지나요?',
+    a: '단순 정보 전달 글은 의뢰인이 읽고 나가버립니다. PostSync Pro는 네이버 스마트블록 C-Rank 4단 구조로 의뢰인의 불안을 자극한 뒤, 본문 하단에 [1분 사건 안심 사전진단 폼]을 장착하여 30초 만에 연락처와 사건 경위를 남기게 만들어 실제 수임으로 직결시킵니다.'
   },
   {
     q: '사건 1분 안심 진단 폼은 제 블로그나 홈페이지에 어떻게 연결하나요?',
-    a: '대시보드에서 원클릭으로 제공되는 [네이버 블로그 본문 삽입용 HTML 배너 코드]를 복사하여 글 하단에 붙여넣기만 하시면 됩니다. 모바일과 PC 화면에 맞춰 자동으로 반응형 배너가 생성되며, 잠재 의뢰인이 30초 만에 비밀 상담을 남기게 됩니다.'
+    a: '대시보드에서 원클릭으로 제공되는 [네이버 블로그 본문 삽입용 배너 서식]을 복사하여 글 하단에 붙여넣기만 하시면 됩니다. 모바일과 PC 화면에 맞춰 자동으로 반응형 배너가 생성되며, 의뢰인이 사건 정보를 남기는 즉시 수임 파이프라인으로 연결됩니다.'
   },
   {
     q: '접수된 의뢰인 정보는 어떻게 저에게 실시간으로 전달되나요?',
-    a: '의뢰인이 진단 폼을 제출하는 즉시 대표님의 휴대폰(카카오 알림톡/문자/텔레그램)으로 실시간 알림이 전송됩니다. 동시에 PostSync Pro 수임 파이프라인 CRM 대시보드의 [신규 접수] 칸에 자동으로 카드가 등록되어 골든타임 10분 내 유선 연결이 가능합니다.'
+    a: '의뢰인이 진단 폼을 제출하는 즉시 대표 변호사님의 휴대폰(카카오 알림톡/문자/텔레그램)으로 실시간 알림이 전송됩니다. 동시에 PostSync Pro 수임 파이프라인 CRM의 [신규 접수] 칸에 자동으로 등록되어 골든타임 10분 내에 유선 상담 및 방문 예약을 잡을 수 있습니다.'
   },
   {
-    q: '이용 요금과 계약 조건은 어떻게 되나요?',
-    a: '별도의 장기 의무 약정 없이 언제든 자유롭게 시작하고 해지하실 수 있습니다. 가입 즉시 무료 크레딧이 제공되며, 1분 진단 폼과 수임 파이프라인 CRM의 핵심 기능을 무료로 즉시 체험해 보실 수 있습니다.'
+    q: '향후 스레드, 인스타그램, AI 쇼츠 영상 생성 기능도 지원되나요?',
+    a: '네, 적극 지원됩니다! 현재 정식 제공 중인 [네이버 블로그 칼럼 스튜디오]와 [스마트플레이스 로컬 관제]에 이어, 작성한 칼럼 1편으로 스레드 지식인 연속 글, 인스타그램 승소 카드뉴스, 그리고 AI 쇼츠 영상까지 1초 만에 원클릭 변환하여 모든 채널에서 수임을 끌어모으는 옴니채널 수임망 로드맵이 순차 오픈됩니다.'
   }
 ]
 
@@ -57,28 +57,28 @@ const CLIENT_REVIEWS = [
     office: '법무법인 율정 (형사 전문)',
     role: '서초동 형사 전문',
     result: '월 수임 5건 순증',
-    text: '월 200만 원씩 주던 마케팅 대행사를 해지하고 PostSync Pro로 바꿨습니다. 음주운전 구제 칼럼 하단에 1분 진단 폼을 붙였더니 한 달 만에 구속영장 기각 사건 등 알짜배기 사건 5건을 직접 수임했습니다.'
-  },
-  {
-    name: '정성훈 대표 세무사',
-    office: '세무회계 정인 (상속·양도 전문)',
-    role: '강남 상속세 전문',
-    result: '고액 상속세 3건 체결',
-    text: '세무사법 광고 규정 때문에 온라인 홍보를 망설였는데, 광고 법규 안심 체크 덕분에 마음 편히 포스팅하고 있습니다. 송파·강남 아파트 상속세 감정평가 글 하나로 자산가 상담이 매주 쏟아집니다.'
+    text: '월 300만 원씩 주던 마케팅 대행사를 해지하고 PostSync Pro로 바꿨습니다. 음주운전 구제 칼럼 하단에 1분 진단 폼을 붙였더니 한 달 만에 구속영장 기각 사건 등 알짜배기 사건 5건을 직접 수임했습니다.'
   },
   {
     name: '이지안 파트너 변호사',
     office: '법률사무소 다온 (가사/이혼)',
     role: '양재동 이혼·재산분할',
-    result: '상담 전환율 +310%',
-    text: '진단 폼을 거쳐서 들어오는 의뢰인들은 이미 본인의 상황과 원하는 점을 정리해서 남겨주기 때문에, 1차 유선 통화 5분 만에 방문 상담과 정식 수임 계약으로 곧바로 이어집니다.'
+    result: '방문 상담 전환율 +310%',
+    text: '진단 폼을 거쳐서 들어오는 의뢰인들은 이미 혼인 기간, 재산 규모, 유책 사유를 정리해서 남겨주기 때문에, 1차 유선 통화 5분 만에 대면 상담과 착수금 550만 원 계약으로 곧바로 이어집니다.'
   },
   {
-    name: '최원석 대표 노무사',
-    office: '노무법인 신의 (노동·산재)',
-    role: '구로디지털단지 기업 자문',
-    result: '월 기장 자문사 8곳 유치',
-    text: '수습기간 만료 통보, 부당해고 구제신청 등 실무 쟁점 글을 쓴 뒤 PostSync 수임 관리 시스템으로 일정을 관리하니 놓치는 의뢰인이 0건이 되었습니다. 마케팅과 의뢰인 관리가 하나로 끝납니다.'
+    name: '최민우 대표 변호사',
+    office: '법률사무소 정성 (부동산·민사)',
+    role: '수원·강남 부동산 전문',
+    result: '명도·보증금 4건 수임',
+    text: '변호사법 광고 규정 위반 걱정 없이 네이버 스마트블록 상위 노출을 잡았습니다. 스마트플레이스 순위 관리와 1분 진단 폼이 맞물리니 대행사 쓸 때보다 문의 전화가 3배 이상 쏟아집니다.'
+  },
+  {
+    name: '강태석 대표 변호사',
+    office: '법무법인 혜안 (기업·형사)',
+    role: '교대역 기업법무·영장',
+    result: '월 수임료 2,800만 순증',
+    text: '횡령·배임, 업무방해 등 까다로운 사건일수록 의뢰인은 신뢰를 찾습니다. 사건 파이프라인 CRM 덕분에 들어온 의뢰인을 놓치지 않고 골든타임 10분 내에 유선 연결하여 계약 체결률이 비약적으로 올랐습니다.'
   }
 ]
 
@@ -132,31 +132,34 @@ export default function HomePage() {
       {/* ========================================================================= */}
       {/* 🌟 2. 영웅 섹션 (Hero Section) - 사진 속 헤드라인 & 우측 인테이크 UI 목업 */}
       {/* ========================================================================= */}
-      <section className="pt-12 pb-16 sm:pt-20 sm:pb-24 px-4 sm:px-8 max-w-7xl mx-auto">
+      {/* ========================================================================= */}
+      {/* 🌟 2. 영웅 섹션 (Hero Section) - 옴니채널 수임 OS & 우측 인테이크 UI 목업 */}
+      {/* ========================================================================= */}
+      <section className="pt-12 pb-16 sm:pt-20 sm:pb-20 px-4 sm:px-8 max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           {/* 좌측: 타이틀 및 고전환 CTA */}
           <div className="lg:col-span-7 space-y-6">
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#E0F2FE] text-[#0284C7] text-xs font-extrabold border border-[#0284C7]/20">
               <Sparkles className="w-3.5 h-3.5 text-[#0284C7]" />
-              <span>대행사 외주비(월 300만 원) 93% 절감 · 변호사·세무사 수임 성장 OS</span>
+              <span>대행사 외주비(월 300만 원) 93% 절감 · 대한민국 1등 변호사 사건 수임 OS</span>
             </div>
 
-            <h1 className="text-3xl sm:text-5xl lg:text-[54px] font-black text-slate-900 tracking-tight leading-[1.15]">
-              더 많은 의뢰인을 끌어당기고,<br />
-              <span className="text-[#0284C7]">더 많은 사건을 수임하세요</span>
+            <h1 className="text-3xl sm:text-5xl lg:text-[54px] font-black text-slate-900 tracking-tight leading-[1.18]">
+              네이버 1위부터 SNS까지,<br />
+              대표님 로펌에 <span className="text-[#0284C7]">알짜 사건 수임을 물어다 드립니다</span>
             </h1>
 
             <p className="text-sm sm:text-base text-slate-600 leading-relaxed max-w-xl font-normal">
-              단순히 글자만 채우는 생성기는 끝났습니다. 네이버 상위 1% 전문 칼럼 발행부터 사건 1분 안심 진단, 그리고 실시간 수임 계약 파이프라인까지. 변호사·세무사 대표님의 실질적인 수임 매출을 자동으로 완성합니다.
+              네이버 상위 1% 전문 칼럼 발행부터 스마트플레이스 로컬 1위 선점, 사건 1분 안심 진단, 그리고 실시간 수임 관리 시스템까지. 앞으로 스레드, 인스타, 쇼츠 영상 생성까지 확장되는 옴니채널 수임망으로 대표님의 실질적인 수임 매출을 자동으로 완성합니다.
             </p>
 
-            {/* 분야별 태그 바 (Lawmatics 사진 속 태그 스타일) */}
+            {/* 분야별 태그 바 (Lawmatics 사진 속 태그 스타일 - 100% 변호사 핵심 사건) */}
             <div className="flex flex-wrap gap-2 pt-1">
-              <span className="px-3 py-1.5 rounded-xl bg-slate-100 text-slate-700 font-bold text-xs">⚖️ 형사 (음주운전/사기)</span>
-              <span className="px-3 py-1.5 rounded-xl bg-slate-100 text-slate-700 font-bold text-xs">👨‍👩‍👧 이혼 · 재산분할</span>
-              <span className="px-3 py-1.5 rounded-xl bg-slate-100 text-slate-700 font-bold text-xs">📊 상속세 · 증여세</span>
-              <span className="px-3 py-1.5 rounded-xl bg-slate-100 text-slate-700 font-bold text-xs">🏢 세무조사 대응</span>
-              <span className="px-3 py-1.5 rounded-xl bg-slate-100 text-slate-700 font-bold text-xs">🏠 부동산 · 명도</span>
+              <span className="px-3 py-1.5 rounded-xl bg-slate-100 text-slate-700 font-bold text-xs">⚖️ 형사 (음주운전/사기/마약)</span>
+              <span className="px-3 py-1.5 rounded-xl bg-slate-100 text-slate-700 font-bold text-xs">👨‍👩‍👧 가사 · 이혼 · 재산분할</span>
+              <span className="px-3 py-1.5 rounded-xl bg-slate-100 text-slate-700 font-bold text-xs">🏠 부동산 · 명도 · 전세사기</span>
+              <span className="px-3 py-1.5 rounded-xl bg-slate-100 text-slate-700 font-bold text-xs">🏢 기업법무 · 횡령 · 배임</span>
+              <span className="px-3 py-1.5 rounded-xl bg-slate-100 text-slate-700 font-bold text-xs">🛡️ 구속영장 실질심사 대응</span>
             </div>
 
             {/* 메인 오렌지 대형 버튼 (Lawmatics Signature) */}
@@ -169,7 +172,7 @@ export default function HomePage() {
               </Link>
               <Link href="/consult" target="_blank">
                 <Button variant="outline" className="h-14 px-6 rounded-full border-slate-300 hover:bg-slate-50 text-slate-700 font-bold text-sm cursor-pointer">
-                  1분 진단 폼 실물 체험하기 ➔
+                  1분 안심 진단 폼 체험하기 ➔
                 </Button>
               </Link>
             </div>
@@ -182,7 +185,7 @@ export default function HomePage() {
                 <Check className="w-4 h-4 text-emerald-500" /> 1분 무료 세팅
               </span>
               <span className="flex items-center gap-1">
-                <Check className="w-4 h-4 text-emerald-500" /> 광고 법규 100% 안심
+                <Check className="w-4 h-4 text-emerald-500" /> 변호사법 제23조 100% 안심
               </span>
             </div>
           </div>
@@ -268,6 +271,154 @@ export default function HomePage() {
               <div className="mt-4 pt-3 border-t border-slate-200/80 flex items-center justify-between text-[11px] text-slate-500 font-medium">
                 <span>실시간 수임 파이프라인 연동</span>
                 <span className="text-[#0284C7] font-bold">평균 수임 전환율 +340%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ========================================================================= */}
+      {/* 🌟 2-0. 옴니채널 수임 파이프라인 쇼케이스 (고급스러운 세룰리안 스카이 테마) */}
+      {/* ========================================================================= */}
+      <section className="py-16 sm:py-20 bg-gradient-to-b from-[#F0F7FD] via-[#E8F3FC] to-white border-y border-[#0284C7]/20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-8 space-y-10">
+          <div className="text-center space-y-3 max-w-3xl mx-auto">
+            <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#E0F2FE] text-[#0284C7] text-xs font-extrabold border border-[#0284C7]/30 shadow-2xs">
+              ⚡ 옴니채널 사건 수임 파이프라인
+            </span>
+            <h2 className="text-2xl sm:text-4xl font-black text-slate-900 tracking-tight leading-snug">
+              단 하나의 칼럼이 모든 채널로 뻗어나가<br />
+              <span className="text-[#0284C7]">대표님의 로펌에 24시간 수임을 물어다 줍니다</span>
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+              의뢰인은 글 하나만 보고 결정하지 않습니다. 네이버 블로그 검색부터 지도(플레이스), 그리고 소셜 미디어까지 전방위로 의뢰인을 포위하여 사건 문의를 최종 수임 계약으로 체결시킵니다.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {/* 1. 네이버 C-Rank 전문 칼럼 스튜디오 (LIVE) */}
+            <div className="bg-white border-2 border-[#0284C7]/40 rounded-3xl p-6 space-y-4 shadow-sm hover:shadow-md transition-all">
+              <div className="flex items-center justify-between">
+                <span className="px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 text-[11px] font-black border border-emerald-200">
+                  ● 즉시 이용 가능 (LIVE)
+                </span>
+                <span className="text-xs text-[#0284C7] font-bold">01. 유입 엔진</span>
+              </div>
+              <div className="space-y-1.5">
+                <h3 className="text-lg font-black text-slate-900 flex items-center gap-2">
+                  <span>⚖️ 네이버 4단 전문 칼럼 스튜디오</span>
+                </h3>
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  네이버 C-Rank 스마트블록 상위 노출에 맞춘 4단 구조(공감 ➔ 쟁점 ➔ 판례 ➔ 절차) 및 변호사법 제23조 100% 필터링 칼럼 자동 완성.
+                </p>
+              </div>
+              <div className="p-3 bg-[#F0F7FD] rounded-xl border border-[#0284C7]/20 text-[11px] text-[#0284C7] font-bold">
+                👉 음주운전, 재산분할 등 알짜 사건 키워드 자동 점유
+              </div>
+            </div>
+
+            {/* 2. 네이버 스마트플레이스 로컬 1위 관제 (LIVE) */}
+            <div className="bg-white border-2 border-[#0284C7]/40 rounded-3xl p-6 space-y-4 shadow-sm hover:shadow-md transition-all">
+              <div className="flex items-center justify-between">
+                <span className="px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 text-[11px] font-black border border-emerald-200">
+                  ● 즉시 이용 가능 (LIVE)
+                </span>
+                <span className="text-xs text-[#0284C7] font-bold">02. 지역 선점</span>
+              </div>
+              <div className="space-y-1.5">
+                <h3 className="text-lg font-black text-slate-900 flex items-center gap-2">
+                  <span>📍 스마트플레이스 로컬 1위 관제</span>
+                </h3>
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  내 지역(서초, 교대, 수원 등) 법률사무소 실시간 순위 추적, 네이버 예약 최적화 소개글, 방문자 영수증 리뷰 AI 감사 답글 원클릭 복사.
+                </p>
+              </div>
+              <div className="p-3 bg-[#F0F7FD] rounded-xl border border-[#0284C7]/20 text-[11px] text-[#0284C7] font-bold">
+                👉 지역 내 급한 의뢰인의 전화 문의 독점 장악
+              </div>
+            </div>
+
+            {/* 3. 1분 사건 안심 진단 폼 & 수임 관리 시스템 (LIVE) */}
+            <div className="bg-white border-2 border-[#0284C7]/40 rounded-3xl p-6 space-y-4 shadow-sm hover:shadow-md transition-all">
+              <div className="flex items-center justify-between">
+                <span className="px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 text-[11px] font-black border border-emerald-200">
+                  ● 즉시 이용 가능 (LIVE)
+                </span>
+                <span className="text-xs text-[#0284C7] font-bold">03. 수임 클로징</span>
+              </div>
+              <div className="space-y-1.5">
+                <h3 className="text-lg font-black text-slate-900 flex items-center gap-2">
+                  <span>📋 1분 안심 진단 폼 & 골든타임 현황판</span>
+                </h3>
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  블로그 본문 삽입용 반응형 배너에서 접수된 사건 정보가 10분 골든타임 알림과 [접수 ➔ 상담 ➔ 예약 ➔ 수임] 단계별 수임 현황판으로 자동 연결.
+                </p>
+              </div>
+              <div className="p-3 bg-[#F0F7FD] rounded-xl border border-[#0284C7]/20 text-[11px] text-[#0284C7] font-bold">
+                👉 30분 무료상담 허수 차단 & 실제 착수금 수임 체결
+              </div>
+            </div>
+
+            {/* 4. 스레드(Threads) 전문직 연속 글 연재 (ROADMAP) */}
+            <div className="bg-white/90 border border-slate-200 rounded-3xl p-6 space-y-4 hover:border-sky-300 shadow-2xs hover:shadow-sm transition-all">
+              <div className="flex items-center justify-between">
+                <span className="px-2.5 py-1 rounded-full bg-amber-50 text-amber-700 text-[11px] font-black border border-amber-200">
+                  🚀 2026 ROADMAP
+                </span>
+                <span className="text-xs text-slate-400 font-bold">04. 소셜 지식인</span>
+              </div>
+              <div className="space-y-1.5">
+                <h3 className="text-lg font-black text-slate-900 flex items-center gap-2">
+                  <span>🧵 스레드(Threads) 연속 글 자동 변환</span>
+                </h3>
+                <p className="text-xs text-slate-500 leading-relaxed">
+                  블로그 칼럼 1편을 2030 젊은 고소득 자산가가 열광하는 촌철살인 5~7개 스레드 연속 글로 1초 자동 재가공.
+                </p>
+              </div>
+              <div className="p-3 bg-slate-50 rounded-xl border border-slate-200/80 text-[11px] text-slate-600">
+                👉 소셜 미디어 내 퍼스널 지식인 포지셔닝 & DM 수임 유도
+              </div>
+            </div>
+
+            {/* 5. 인스타그램 판례 승소 카드뉴스 (ROADMAP) */}
+            <div className="bg-white/90 border border-slate-200 rounded-3xl p-6 space-y-4 hover:border-sky-300 shadow-2xs hover:shadow-sm transition-all">
+              <div className="flex items-center justify-between">
+                <span className="px-2.5 py-1 rounded-full bg-amber-50 text-amber-700 text-[11px] font-black border border-amber-200">
+                  🚀 2026 ROADMAP
+                </span>
+                <span className="text-xs text-slate-400 font-bold">05. 비주얼 신뢰</span>
+              </div>
+              <div className="space-y-1.5">
+                <h3 className="text-lg font-black text-slate-900 flex items-center gap-2">
+                  <span>📸 인스타그램 승소 사례 카드뉴스</span>
+                </h3>
+                <p className="text-xs text-slate-500 leading-relaxed">
+                  복잡한 판결문과 승소 스토리의 핵심 요지를 1080x1080 인스타그램 고화질 카드뉴스 이미지 세트로 1초 분할 추출.
+                </p>
+              </div>
+              <div className="p-3 bg-slate-50 rounded-xl border border-slate-200/80 text-[11px] text-slate-600">
+                👉 한눈에 들어오는 승소 결과로 의뢰인 신뢰도 극대화
+              </div>
+            </div>
+
+            {/* 6. AI 유튜브 쇼츠 영상 자동 생성 (ROADMAP) */}
+            <div className="bg-gradient-to-br from-white via-sky-50/40 to-sky-100/30 border-2 border-sky-300/60 rounded-3xl p-6 space-y-4 shadow-xs hover:shadow-sm transition-all">
+              <div className="flex items-center justify-between">
+                <span className="px-2.5 py-1 rounded-full bg-sky-100 text-[#0284C7] text-[11px] font-black border border-sky-200">
+                  🚀 2026 ROADMAP
+                </span>
+                <span className="text-xs text-[#0284C7] font-bold">06. 숏폼 영상</span>
+              </div>
+              <div className="space-y-1.5">
+                <h3 className="text-lg font-black text-slate-900 flex items-center gap-2">
+                  <span>🎬 AI 유튜브 쇼츠 영상 자동 생성</span>
+                </h3>
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  단순한 텍스트 대본이 아닙니다. 칼럼의 핵심 쟁점을 뽑아 AI 음성 더빙, 자동 자막, 하이라이트 비주얼이 결합된 1분 쇼츠 영상을 전자동 렌더링.
+                </p>
+              </div>
+              <div className="p-3 bg-sky-100/60 rounded-xl border border-sky-200 text-[11px] text-[#0284C7] font-bold">
+                👉 촬영 부담 0%로 유튜브·릴스 알고리즘을 통한 폭발적 수임 유입
               </div>
             </div>
           </div>
@@ -377,15 +528,15 @@ export default function HomePage() {
                     <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
                     <div>
                       <strong className="text-slate-900">광고 법규 안심 체크 100% 무결점 보장:</strong>
-                      <p className="text-slate-500 mt-0.5">변호사법 제23조 및 세무사법 제12조 금칙어를 실시간 감지하여 징계 위험 원천 차단.</p>
+                      <p className="text-slate-500 mt-0.5">변호사법 제23조 및 대한변협 광고 금칙어를 실시간 감지하여 징계 위험 원천 차단.</p>
                     </div>
                   </div>
 
                   <div className="flex items-start gap-2.5">
                     <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
                     <div>
-                      <strong className="text-slate-900">1분 안심 진단 폼 + 수임 파이프라인 CRM 기본 탑재:</strong>
-                      <p className="text-slate-500 mt-0.5">글 하단 배너에서 접수된 의뢰인이 텔레그램 알림과 칸반 대시보드로 실시간 자동 유입.</p>
+                      <strong className="text-slate-900">1분 안심 진단 폼 + 실시간 수임 관리 시스템 기본 탑재:</strong>
+                      <p className="text-slate-500 mt-0.5">글 하단 배너에서 접수된 의뢰인이 실시간 모바일 알림과 수임 현황판으로 자동 유입.</p>
                     </div>
                   </div>
 
@@ -428,15 +579,15 @@ export default function HomePage() {
                 </div>
                 <div className="space-y-2">
                   <h4 className="font-black text-slate-900 text-base">
-                    송파 아파트 상속세, 감정평가로 1.2억 절세한 실무 비결 및 주의사항
+                    음주운전 2진 아웃, 구속영장 기각 및 면허취소 구제 실전 판례 분석
                   </h4>
                   <p className="text-xs text-slate-500 leading-relaxed">
-                    국세청 상속세 감정평가 사업 확대에 대응하여, 사전 공인 감정평가를 통해 과세표준을 합법적으로 낮추고 양도세 이월과세를 방어한 실전 사례 분석...
+                    대법원 최신 양형 기준에 입각하여, 혈중알코올농도 0.082% 생계형 운전자의 구속영장 청구를 기각시키고 행정심판을 통해 110일 면허정지로 감경시킨 실제 승소 방어 논리 분석...
                   </p>
                 </div>
                 <div className="p-3 bg-amber-50 rounded-xl border border-amber-200 text-xs text-amber-800 font-semibold flex items-center gap-2">
                   <span className="text-amber-600 font-bold">💡 실전 포인트:</span>
-                  <span>최신 세법 개정안 및 국세청 예규 자동 반영 완료</span>
+                  <span>도로교통법 개정안 및 검찰 구형 기준 실시간 반영 완료</span>
                 </div>
               </div>
             </div>
@@ -591,23 +742,23 @@ export default function HomePage() {
             {/* 좌측: 텍스트 설명 */}
             <div className="lg:col-span-6 space-y-4 order-2 lg:order-1">
               <div className="text-xs font-black text-emerald-600 tracking-wider uppercase">
-                LEGAL & TAX ADVERTISING COMPLIANCE
+                LEGAL ADVERTISING COMPLIANCE (BAR ASSOC.)
               </div>
               <h2 className="text-2xl sm:text-4xl font-black text-slate-900 tracking-tight leading-tight">
-                광고 법규 위반 걱정 0%,<br />
-                변호사법과 세무사법을 100% 준수합니다
+                광고 규정 위반 걱정 0%,<br />
+                변호사법 제23조와 변협 규정을 100% 준수합니다
               </h2>
               <p className="text-sm text-slate-600 leading-relaxed">
-                '100% 승소', '환급율 1위', '전관예우 표방' 등 대한변호사협회 및 한국세무사회의 까다로운 광고 규정상 금지된 위험 표현을 작성 즉시 실시간 탐지하고 안전한 전문직 문장으로 자동 순화합니다.
+                '100% 승소 보장', '승소율 1위', '전관예우 표방', '부당 염가' 등 대한변호사협회의 엄격한 변호사 광고 규정상 금지된 위험 표현을 작성 즉시 실시간 탐지하고 품격 있는 전문직 문장으로 자동 순화합니다.
               </p>
               <div className="space-y-2 pt-2 text-xs font-bold text-slate-700">
                 <div className="flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
-                  <span>변호사법 제23조 및 변호사 광고에 관한 규정 100% 반영</span>
+                  <span>변호사법 제23조 및 변호사 광고에 관한 규정 100% 실시간 반영</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
-                  <span>세무사법 제12조 및 세무사 광고 가이드라인 필터링 탑재</span>
+                  <span>경쟁 로펌의 악의적 변협 징계 진정·고발 위험 원천 차단</span>
                 </div>
               </div>
             </div>
@@ -618,7 +769,7 @@ export default function HomePage() {
                 <div className="flex items-center justify-between pb-3 border-b border-slate-200">
                   <div className="flex items-center gap-2">
                     <ShieldCheck className="w-5 h-5 text-emerald-600" />
-                    <span className="font-black text-slate-900 text-sm">전문직 광고 법규 안심 체크</span>
+                    <span className="font-black text-slate-900 text-sm">변호사 광고 규정 안심 검수</span>
                   </div>
                   <span className="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-700 text-xs font-black">
                     안전도 100% 적법
@@ -637,7 +788,7 @@ export default function HomePage() {
                 </div>
 
                 <p className="text-[11px] text-slate-400 text-center pt-1">
-                  징계 위험 없이 신뢰받는 전문직 브랜딩을 구축하세요.
+                  징계 위험 없이 신뢰받는 법률사무소 브랜딩을 구축하세요.
                 </p>
               </div>
             </div>
@@ -665,21 +816,21 @@ export default function HomePage() {
                   <span className="text-[10px] font-black text-amber-700">2. 유선 상담 (2)</span>
                   <div className="bg-white p-2.5 rounded-xl border border-slate-200 text-xs space-y-1 shadow-2xs">
                     <p className="font-bold text-slate-900">이*우 의뢰인</p>
-                    <p className="text-[10px] text-slate-500">상속세 24억 감정평가</p>
+                    <p className="text-[10px] text-slate-500">재산분할 24억 이혼소송</p>
                   </div>
                 </div>
                 <div className="p-3 rounded-2xl bg-indigo-50 border border-indigo-200 space-y-2">
                   <span className="text-[10px] font-black text-indigo-700">3. 방문 상담 (1)</span>
                   <div className="bg-white p-2.5 rounded-xl border border-slate-200 text-xs space-y-1 shadow-2xs">
                     <p className="font-bold text-slate-900">최*민 대표</p>
-                    <p className="text-[10px] text-slate-500">세무조사 대응 미팅</p>
+                    <p className="text-[10px] text-slate-500">횡령 배임 영장실질심사</p>
                   </div>
                 </div>
                 <div className="p-3 rounded-2xl bg-emerald-50 border border-emerald-200 space-y-2">
                   <span className="text-[10px] font-black text-emerald-700">4. 수임 완료 (4)</span>
                   <div className="bg-white p-2.5 rounded-xl border border-slate-200 text-xs space-y-1 shadow-2xs">
                     <p className="font-bold text-slate-900">정*훈 의뢰인</p>
-                    <p className="text-[10px] text-emerald-600 font-bold">440만 원 수임 체결</p>
+                    <p className="text-[10px] text-emerald-600 font-bold">550만 원 수임 체결</p>
                   </div>
                 </div>
               </div>
@@ -691,11 +842,11 @@ export default function HomePage() {
                 REAL-TIME INTAKE & CASE PIPELINE
               </div>
               <h2 className="text-2xl sm:text-4xl font-black text-slate-900 tracking-tight leading-tight">
-                접수된 상담 문의가 실제 수임 계약으로<br />
-                체결될 때까지 원스톱 관리
+                접수된 상담 문의가 실제 사건 수임으로<br />
+                체결될 때까지 10분 골든타임 관리
               </h2>
               <p className="text-sm text-slate-600 leading-relaxed">
-                블로그와 스마트플레이스, 1분 안심 진단 폼으로 들어온 상담 문의를 흩어진 메모나 카톡 없이 [신규 접수 ➔ 1차 상담 ➔ 방문 예약 ➔ 수임 계약]까지 단계별로 한눈에 관리합니다. 놓치는 의뢰인 0건, 골든타임 10분 내 신속한 상담 연결로 실제 수임 전환율을 극대화하세요.
+                블로그와 스마트플레이스, 1분 안심 진단 폼으로 들어온 사건 문의를 흩어진 카톡이나 메모 없이 [신규 접수 ➔ 1차 상담 ➔ 대면 예약 ➔ 착수금 입금]까지 원스톱으로 관리합니다. 놓치는 의뢰인 0건, 골든타임 10분 내 신속한 유선 연결로 실제 수임 전환율을 3배 이상 극대화하세요.
               </p>
               <div className="pt-2">
                 <Link href="/dashboard/pipeline" className="inline-flex items-center gap-1.5 text-xs font-black text-[#FF6B00] hover:text-[#E05D00]">
@@ -717,16 +868,16 @@ export default function HomePage() {
           
           <div className="relative z-10 max-w-4xl space-y-6">
             <p className="text-lg sm:text-2xl font-bold leading-relaxed tracking-tight text-white">
-              "세무사 업무 특성상 신고 시즌마다 글 쓸 시간이 전혀 없었는데, PostSync Pro 덕분에 상속세와 양도세 전문 칼럼을 미리 비축하고 이번 시즌에만 자산가 상속세 사건 3건을 수임 완료했습니다."
+              "재산분할과 위자료 소송은 의뢰인의 심리적 불안을 어루만져 주는 것이 핵심입니다. PostSync Pro로 작성된 이혼 전문 칼럼과 1분 진단 폼 덕분에 사무실에 앉아서도 매달 알짜배기 고액 재산분할 사건을 4~5건씩 직접 수임하고 있습니다."
             </p>
             
             <div className="flex items-center gap-3 pt-2">
               <div className="w-11 h-11 rounded-full bg-white/20 border border-white/30 flex items-center justify-center font-black text-base text-white">
-                정
+                이
               </div>
               <div>
-                <p className="font-black text-sm text-white">정성훈 대표 세무사</p>
-                <p className="text-xs text-sky-100 font-medium">세무회계 정인 · 상속·양도세 전문</p>
+                <p className="font-black text-sm text-white">이지안 파트너 변호사</p>
+                <p className="text-xs text-sky-100 font-medium">법률사무소 다온 · 가사/이혼 전문</p>
               </div>
             </div>
           </div>
@@ -743,7 +894,7 @@ export default function HomePage() {
               자주 묻는 질문 (Frequently Asked Questions)
             </h2>
             <p className="text-xs sm:text-sm text-slate-500">
-              변호사·세무사 대표님들이 가장 많이 문의하시는 핵심 질문들입니다.
+              변호사 대표님들이 가장 많이 문의하시는 핵심 질문들입니다.
             </p>
           </div>
 
@@ -791,10 +942,10 @@ export default function HomePage() {
               CLIENT SUCCESS STORIES
             </div>
             <h2 className="text-2xl sm:text-4xl font-black text-slate-900 tracking-tight">
-              전국의 로펌과 세무법인이 PostSync Pro를 신뢰합니다
+              전국의 법률사무소와 로펌이 PostSync Pro를 신뢰합니다
             </h2>
             <p className="text-xs sm:text-sm text-slate-500 max-w-xl mx-auto">
-              수임을 직접 연결해 주는 AI 마케팅 OS를 도입한 대표님들의 실제 성과입니다.
+              수임을 직접 연결해 주는 AI 마케팅 OS를 도입한 대표 변호사님들의 실제 성과입니다.
             </p>
           </div>
 
@@ -841,7 +992,7 @@ export default function HomePage() {
           {/* 좌측: 비비드 세룰리안 블루 + 화이트 텍스트 + 오렌지 버튼 */}
           <div className="lg:col-span-7 space-y-5 text-white">
             <h2 className="text-2xl sm:text-4xl font-black tracking-tight leading-tight">
-              사무소의 수임 성장을<br />
+              법률사무소의 사건 수임 성장을<br />
               시작할 준비가 되셨나요?
             </h2>
             <p className="text-sky-100 text-xs sm:text-base leading-relaxed max-w-lg">
@@ -867,22 +1018,22 @@ export default function HomePage() {
                       <Star key={i} className="w-4 h-4 fill-current" />
                     ))}
                   </div>
-                  <p className="text-[10px] text-slate-400 font-bold">280+ 변호사·세무사 사무소 평가</p>
+                  <p className="text-[10px] text-slate-400 font-bold">280+ 변호사 및 법률사무소 평가</p>
                 </div>
               </div>
 
               <div className="space-y-2 pt-2 border-t border-slate-100 text-xs font-semibold text-slate-700">
                 <div className="flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-                  <span>수임 전환율 평균 +340% 증가</span>
+                  <span>사건 수임 전환율 평균 +340% 증가</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4 text-[#0284C7]" />
-                  <span>변호사법·세무사법 광고 규정 100% 검증</span>
+                  <span>변호사법 제23조 광고 규정 100% 검증</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4 text-[#FF6B00]" />
-                  <span>골든타임 10분 내 실시간 알림 연동</span>
+                  <span>골든타임 10분 내 실시간 유선 알림 연동</span>
                 </div>
               </div>
             </div>
@@ -903,7 +1054,7 @@ export default function HomePage() {
               <span className="font-black text-slate-900 text-sm">PostSync Pro</span>
             </div>
             <p className="text-[11px] text-slate-400">
-              대한민국 변호사·세무사 전문직 수임 성장 AI 플랫폼
+              대한민국 1등 변호사 사건 수임 전환 AI 플랫폼
             </p>
           </div>
 
@@ -912,11 +1063,11 @@ export default function HomePage() {
             <Link href="/terms" className="hover:text-slate-900">이용약관</Link>
             <Link href="/privacy" className="hover:text-slate-900">개인정보처리방침</Link>
             <Link href="/consult" target="_blank" className="hover:text-[#0284C7]">1분 안심 진단 센터</Link>
-            <Link href="/dashboard" className="hover:text-[#FF6B00]">대표님 로그인</Link>
+            <Link href="/dashboard" className="hover:text-[#FF6B00]">대표 변호사 로그인</Link>
           </div>
         </div>
         <div className="max-w-7xl mx-auto mt-6 pt-6 border-t border-slate-100 text-[11px] text-slate-400 text-center sm:text-left">
-          © 2026 PostSync Pro. All rights reserved. 본 서비스는 변호사법 및 세무사법 광고 규정을 준수합니다.
+          © 2026 PostSync Pro. All rights reserved. 본 서비스는 변호사법 제23조 및 대한변협 광고 규정을 준수합니다.
         </div>
       </footer>
     </div>

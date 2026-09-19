@@ -55,15 +55,15 @@ export default function PricingPage() {
         <div className="max-w-4xl mx-auto text-center">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-sky-100 border border-sky-200 text-sky-800 text-xs font-bold mb-5">
             <ShieldCheck className="w-4 h-4 text-[#0284C7]" />
-            전문직(변호사 · 세무사 · 병원) 맞춤형 인바운드 수임 솔루션
+            대한민국 1등 변호사 및 법률사무소 전용 사건 수임 OS
           </div>
           <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 mb-5 leading-tight">
             외주 대행비 월 300만 원 대비 <span className="text-[#0284C7]">93% 절감</span><br />
-            실제 의뢰인이 상담으로 이어지는 실속 요금제
+            실제 의뢰인이 사건 수임으로 이어지는 실속 요금제
           </h1>
           <p className="text-base md:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
-            단순 블로그 글 작성에 그치지 않고, 네이버 플레이스 상위 랭킹과 1분 진단 폼을 통한<br className="hidden sm:inline" />
-            실제 상담 의뢰인 유입까지 원스톱으로 관리하세요.
+            단순 블로그 글쓰기가 아닌, 네이버 블로그·플레이스부터 옴니채널 수임 파이프라인까지<br className="hidden sm:inline" />
+            대표님의 법률사무소에 알짜 사건 수임을 물어다 주는 원스톱 시스템을 누려보세요.
           </p>
         </div>
       </section>
@@ -111,7 +111,7 @@ export default function PricingPage() {
                 </li>
                 <li className="flex items-start gap-2.5 text-xs text-slate-700">
                   <CheckCircle2 className="w-4 h-4 text-[#0284C7] shrink-0 mt-0.5" />
-                  <span><strong>광고 법규 안심 체크</strong> (변호사법 제23조 · 세무사법)</span>
+                  <span><strong>광고 법규 안심 체크</strong> (변호사법 제23조 및 변협 규정)</span>
                 </li>
                 <li className="flex items-start gap-2.5 text-xs text-slate-700">
                   <CheckCircle2 className="w-4 h-4 text-[#0284C7] shrink-0 mt-0.5" />
@@ -210,7 +210,7 @@ export default function PricingPage() {
                 </span>
               </div>
               <p className="text-slate-500 text-xs mb-6">
-                복수 분사무소 및 전담 마케팅팀을 보유한 중대형 전문직 법인
+                복수 분사무소 및 송무팀을 보유한 중대형 법무법인
               </p>
 
               <div className="mb-6 pb-6 border-b border-slate-100">
