@@ -124,7 +124,11 @@ export default async function DashboardPage() {
       {/* 🌟 4대 KPI 하단 3열 나란히 균형 배치: [좌: 플레이스&경쟁사 ｜ 중앙: 최근 발행 글 노출 성과 ｜ 우: 실시간 의뢰인 상담 접수] */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 items-stretch">
         <div className="flex flex-col">
-          <LocalRadarPanel address={profile.address} />
+          <LocalRadarPanel 
+            storeName={profile.store_name}
+            targetKeyword={profile.industry || '전문 변호사'}
+            address={profile.address} 
+          />
         </div>
         <div className="flex flex-col">
           <PublishedArticleResults />

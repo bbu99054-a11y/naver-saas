@@ -31,28 +31,91 @@ export default function OnboardingPage() {
 
   const [formData, setFormData] = useState({
     store_name: '',
-    industry: '',
+    target_keyword: '',
+    reservation_link: '',
     address: '',
-    phone: '',
-    reservation_link: ''
   })
+  const [isSearchingPlace, setIsSearchingPlace] = useState(false)
+  const [placeStatusNotice, setPlaceStatusNotice] = useState<{ text: string; isSuccess: boolean } | null>(null)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
+  }
+
+  // 🔍 네이버 플레이스 링크 1초 자동 조회
+  const handleAutoFindPlace = async () => {
+    setPlaceStatusNotice(null)
+    const cleanStore = formData.store_name.trim()
+    const cleanKw = formData.target_keyword.trim()
+
+    if (!cleanStore) {
+      setErrorMessage('먼저 상호 / 사무소명을 입력해 주세요.')
+      return
+    }
+
+    setIsSearchingPlace(true)
+    setErrorMessage('')
+
+    try {
+      // 1차: 키워드 + 상호명 검색
+      const query = cleanKw || cleanStore
+      const res = await fetch(`/api/place/rank?query=${encodeURIComponent(query)}&target=${encodeURIComponent(cleanStore)}`)
+      const data = await res.json()
+
+      if (data.success && data.myPlace) {
+        const placeUrl = data.myPlace.placeUrl || `https://m.place.naver.com/place/${data.myPlace.id}`
+        setFormData(prev => ({ ...prev, reservation_link: placeUrl }))
+        setPlaceStatusNotice({
+          text: `✅ 네이버 플레이스 연동 완료! [${data.myPlace.name}] (현재 실시간 순위: ${data.myPlace.rank}위) 링크가 자동 입력되었습니다.`,
+          isSuccess: true
+        })
+      } else {
+        // 2차: 상호명만으로 단독 재검색
+        const fallbackRes = await fetch(`/api/place/rank?query=${encodeURIComponent(cleanStore)}&target=${encodeURIComponent(cleanStore)}`)
+        const fbData = await fallbackRes.json()
+
+        if (fbData.success && (fbData.myPlace || fbData.rankingList?.length > 0)) {
+          const matched = fbData.myPlace || fbData.rankingList[0]
+          const placeUrl = matched.placeUrl || `https://m.place.naver.com/place/${matched.id}`
+          setFormData(prev => ({ ...prev, reservation_link: placeUrl }))
+          setPlaceStatusNotice({
+            text: `✅ 네이버 플레이스 연동 완료! [${matched.name}] 링크가 자동 입력되었습니다.`,
+            isSuccess: true
+          })
+        } else {
+          setPlaceStatusNotice({
+            text: '💡 네이버 20위 내에서 정확히 일치하는 매장을 찾지 못했습니다. 네이버 지도 앱에서 [공유 ➔ URL 복사]를 붙여넣으셔도 됩니다.',
+            isSuccess: false
+          })
+        }
+      }
+    } catch {
+      setPlaceStatusNotice({
+        text: '💡 지도 링크 조회를 건너뛰고 진행하실 수 있습니다. 나중에 [내 정보 수정]에서 등록하셔도 됩니다.',
+        isSuccess: false
+      })
+    } finally {
+      setIsSearchingPlace(false)
+    }
   }
 
   // 1단계 프로필 저장 처리 후 2단계 연동 화면으로 전환
   const handleStep1Submit = async () => {
     setErrorMessage('')
 
-    if (!formData.store_name || !formData.industry || !formData.address) {
-      setErrorMessage('상호/사무소명, 전문 업종, 상세 주소는 필수 입력 항목입니다.')
+    if (!formData.store_name.trim() || !formData.target_keyword.trim()) {
+      setErrorMessage('상호/사무소명과 주력 관할 키워드는 필수 입력 항목입니다.')
       return
     }
 
     setIsLoading(true)
     try {
-      const res = await saveProfile(formData)
+      const res = await saveProfile({
+        store_name: formData.store_name.trim(),
+        industry: formData.target_keyword.trim(),
+        reservation_link: formData.reservation_link.trim(),
+        address: formData.address.trim() || `${formData.target_keyword.trim()} 관할 중심`,
+      })
       if (res.success) {
         setStep(2)
       } else {
@@ -77,7 +140,7 @@ export default function OnboardingPage() {
       const cleanId = naverBlogId.trim().replace(/^@/, '')
       localStorage.setItem('postsynk_naver_blog_id', cleanId)
     }
-    router.push('/dashboard/write')
+    router.push('/dashboard')
   }
 
   return (
@@ -92,7 +155,7 @@ export default function OnboardingPage() {
           >
             {step === 2 ? '✓' : '1'}
           </div>
-          <span className="text-xs font-bold text-slate-700">전문가 프로필</span>
+          <span className="text-xs font-bold text-slate-700">기본 사업장 정보</span>
         </div>
         <div className="flex-1 h-0.5 bg-slate-200 mx-4" />
         <div className="flex items-center gap-2">
@@ -114,82 +177,94 @@ export default function OnboardingPage() {
           <>
             <CardHeader className="text-center pb-5 border-b border-slate-100">
               <div className="inline-flex items-center justify-center gap-1.5 px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-700 text-[11px] font-bold mx-auto mb-1">
-                <Sparkles className="w-3 h-3 text-indigo-600" /> 맞춤형 SEO 세팅
+                <Sparkles className="w-3 h-3 text-indigo-600" /> 1초 맞춤형 관제 세팅
               </div>
               <CardTitle className="text-xl font-bold text-slate-900">
-                전문가 프로필 맞춤 설정
+                사업장 & 주력 키워드 설정
               </CardTitle>
               <CardDescription className="text-slate-500 text-xs mt-1">
-                블로그 하단에 노출될 사무소 정보와 전문 분야를 입력해 주세요. (언제든 수정 가능)
+                상호명과 대표 키워드 단 2가지만 입력하시면 네이버 플레이스 실시간 순위와 AI 맞춤 분석이 가동됩니다.
               </CardDescription>
             </CardHeader>
 
-            <CardContent className="pt-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-700 flex items-center gap-1">
-                    <Store className="w-3.5 h-3.5 text-indigo-500" /> 상호 / 사무소명 *
-                  </label>
-                  <Input
-                    name="store_name"
-                    placeholder="예: 법무법인 혜안 / 세무회계 정"
-                    value={formData.store_name}
-                    onChange={handleChange}
-                    className="text-xs h-9"
-                  />
-                </div>
+            <CardContent className="pt-6 space-y-4">
+              {/* 1. 상호 / 사무소명 */}
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold text-slate-700 flex items-center gap-1">
+                  <Store className="w-3.5 h-3.5 text-indigo-500" /> 상호 / 사무소명 *
+                </label>
+                <Input
+                  name="store_name"
+                  placeholder="예: 법무법인 엘케이에스 / 맑은피부과의원 / 세무회계 정"
+                  value={formData.store_name}
+                  onChange={handleChange}
+                  className="text-xs h-9"
+                />
+              </div>
 
-                <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-700 flex items-center gap-1">
-                    🏢 전문 업종 *
-                  </label>
-                  <Input
-                    name="industry"
-                    placeholder="예: 이혼전문변호사, 상속전문세무사"
-                    value={formData.industry}
-                    onChange={handleChange}
-                    className="text-xs h-9"
-                  />
-                </div>
+              {/* 2. 주력 관할 키워드 */}
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold text-slate-700 flex items-center justify-between">
+                  <span className="flex items-center gap-1">
+                    🎯 주력 관할 키워드 *
+                  </span>
+                  <span className="text-[11px] text-indigo-600 font-medium">네이버 지도 순위 관제 기준</span>
+                </label>
+                <Input
+                  name="target_keyword"
+                  placeholder="예: 문정역 변호사 / 송파구 형사전문변호사 / 강남역 피부과"
+                  value={formData.target_keyword}
+                  onChange={handleChange}
+                  className="text-xs h-9"
+                />
+                <p className="text-[11px] text-slate-400">
+                  내 매장의 실시간 지도 순위를 추적하고 경쟁사를 타겟팅할 핵심 키워드입니다.
+                </p>
+              </div>
 
-                <div className="space-y-1.5 md:col-span-2">
+              {/* 3. 네이버 스마트플레이스/지도 링크 (1초 자동 찾기 지원) */}
+              <div className="space-y-1.5 pt-1">
+                <div className="flex items-center justify-between">
                   <label className="text-xs font-bold text-slate-700 flex items-center gap-1">
-                    <MapPin className="w-3.5 h-3.5 text-indigo-500" /> 사무소 상세 주소 *
+                    <LinkIcon className="w-3.5 h-3.5 text-emerald-600" /> 네이버 스마트플레이스 링크
+                    <span className="text-[10px] text-slate-400 font-normal">(선택)</span>
                   </label>
-                  <Input
-                    name="address"
-                    placeholder="예: 서울 서초구 서초대로 123, 4층"
-                    value={formData.address}
-                    onChange={handleChange}
-                    className="text-xs h-9"
-                  />
+                  <button
+                    type="button"
+                    onClick={handleAutoFindPlace}
+                    disabled={isSearchingPlace}
+                    className="text-[11px] font-bold text-indigo-600 hover:text-indigo-700 bg-indigo-50 hover:bg-indigo-100 px-2.5 py-1 rounded-md transition-colors inline-flex items-center gap-1 cursor-pointer"
+                  >
+                    {isSearchingPlace ? <Loader2 className="w-3 h-3 animate-spin" /> : '🔍'} 내 지도 링크 1초 자동 찾기
+                  </button>
                 </div>
+                <Input
+                  name="reservation_link"
+                  placeholder="https://m.place.naver.com/place/..."
+                  value={formData.reservation_link}
+                  onChange={handleChange}
+                  className="text-xs h-9"
+                />
+                {placeStatusNotice && (
+                  <div className={`p-2.5 rounded-lg text-xs font-medium ${
+                    placeStatusNotice.isSuccess 
+                      ? 'bg-emerald-50 border border-emerald-200 text-emerald-800' 
+                      : 'bg-amber-50 border border-amber-200 text-amber-800'
+                  }`}>
+                    {placeStatusNotice.text}
+                  </div>
+                )}
+                <p className="text-[11px] text-slate-400">
+                  💡 네이버 지도 앱에서 내 매장 검색 후 [공유 ➔ URL 복사]를 붙여넣으셔도 됩니다.
+                </p>
+              </div>
 
-                <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-700 flex items-center gap-1">
-                    <Phone className="w-3.5 h-3.5 text-indigo-500" /> 상담 예약 전화번호
-                  </label>
-                  <Input
-                    name="phone"
-                    placeholder="예: 02-123-4567"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    className="text-xs h-9"
-                  />
-                </div>
-
-                <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-700 flex items-center gap-1">
-                    <LinkIcon className="w-3.5 h-3.5 text-indigo-500" /> 네이버 예약/지도 링크
-                  </label>
-                  <Input
-                    name="reservation_link"
-                    placeholder="https://map.naver.com/..."
-                    value={formData.reservation_link}
-                    onChange={handleChange}
-                    className="text-xs h-9"
-                  />
-                </div>
+              {/* RAG 및 디테일 안내 박스 */}
+              <div className="p-3 bg-slate-50 border border-slate-200/80 rounded-xl flex items-start gap-2 text-[11.5px] text-slate-600">
+                <Sparkles className="w-4 h-4 text-indigo-500 shrink-0 mt-0.5" />
+                <p className="leading-relaxed">
+                  💡 <strong>상세 주소, 대표 연락처, AI RAG 지식베이스</strong> 등 상세 정보는 가입 후 언제든 <strong>[사무소 프로필 (RAG)]</strong> 메뉴에서 자유롭게 수정하실 수 있습니다.
+                </p>
               </div>
 
               {errorMessage && (
@@ -202,7 +277,7 @@ export default function OnboardingPage() {
                 type="button"
                 onClick={handleStep1Submit}
                 disabled={isLoading}
-                className="w-full h-11 text-sm mt-6 text-white bg-indigo-600 hover:bg-indigo-700 font-bold rounded-xl shadow-md cursor-pointer"
+                className="w-full h-11 text-sm mt-4 text-white bg-indigo-600 hover:bg-indigo-700 font-bold rounded-xl shadow-md cursor-pointer"
               >
                 {isLoading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
                 다음 단계: 네이버 연동 설정하기 &rarr;

@@ -7,9 +7,9 @@ import { revalidatePath } from 'next/cache'
 export async function saveProfile(data: {
   store_name: string;
   industry: string;
-  address: string;
-  phone: string;
-  reservation_link: string;
+  address?: string;
+  phone?: string;
+  reservation_link?: string;
   tone?: string;
   about_us?: string;
 }) {
@@ -45,30 +45,38 @@ export async function saveProfile(data: {
     })
 
     let profile;
+    const finalAddress = data.address !== undefined && data.address.trim() !== '' 
+      ? data.address.trim() 
+      : (existingProfile?.address || `${data.industry || '전문 상권'} 관할 중심`);
+    const finalPhone = data.phone !== undefined ? data.phone.trim() : (existingProfile?.phone || '');
+    const finalReservationLink = data.reservation_link !== undefined 
+      ? data.reservation_link.trim() 
+      : (existingProfile?.reservation_link || '');
+
     if (existingProfile) {
       profile = await prisma.profile.update({
         where: { user_id: user.id },
         data: {
-          store_name: data.store_name,
-          industry: data.industry,
-          address: data.address,
-          phone: data.phone,
-          reservation_link: data.reservation_link,
+          store_name: data.store_name.trim(),
+          industry: data.industry.trim(),
+          address: finalAddress,
+          phone: finalPhone,
+          reservation_link: finalReservationLink,
           ...(data.tone !== undefined ? { tone: data.tone } : {}),
-          about_us: data.about_us,
+          ...(data.about_us !== undefined ? { about_us: data.about_us } : {}),
         }
       })
     } else {
       profile = await prisma.profile.create({
         data: {
           user_id: user.id,
-          store_name: data.store_name,
-          industry: data.industry,
-          address: data.address,
-          phone: data.phone,
-          reservation_link: data.reservation_link,
+          store_name: data.store_name.trim(),
+          industry: data.industry.trim(),
+          address: finalAddress,
+          phone: finalPhone,
+          reservation_link: finalReservationLink,
           tone: data.tone || null,
-          about_us: data.about_us,
+          about_us: data.about_us || null,
         }
       })
     }
@@ -87,6 +95,8 @@ export async function saveProfile(data: {
     }
 
     revalidatePath('/dashboard')
+    revalidatePath('/dashboard/settings/profile')
+    revalidatePath('/dashboard/place')
     return { success: true, profile }
   } catch (error: any) {
     console.error('Save profile error:', error)

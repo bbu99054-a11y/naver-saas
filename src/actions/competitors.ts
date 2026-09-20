@@ -2,6 +2,7 @@
 
 import { createClient } from '@/lib/supabase/server'
 import prisma from '@/lib/prisma'
+import { fetchLiveNaverPlaceRanking } from '@/app/api/place/rank/route'
 
 export interface CompetitorAnalysisItem {
   id: string
@@ -73,6 +74,45 @@ export async function getCompetitorRadar(): Promise<CompetitorAnalysisItem[]> {
       const profile = await prisma.profile.findUnique({
         where: { user_id: user.id }
       })
+
+      const targetKw = (profile?.industry || '').trim()
+      const userStoreName = (profile?.store_name || '').trim().toLowerCase().replace(/\s+/g, '')
+
+      if (targetKw) {
+        try {
+          const liveData = await fetchLiveNaverPlaceRanking(targetKw)
+          if (liveData?.items && liveData.items.length > 0) {
+            // Filter out own store
+            const competitorsOnly = liveData.items.filter(item => {
+              const cleanItemName = item.name.toLowerCase().replace(/\s+/g, '')
+              return !userStoreName || (!cleanItemName.includes(userStoreName) && !userStoreName.includes(cleanItemName))
+            })
+
+            const topCompetitors = competitorsOnly.slice(0, 3)
+            if (topCompetitors.length > 0) {
+              return topCompetitors.map((item, idx) => ({
+                id: `comp-live-${item.id || idx}`,
+                name: item.name,
+                location: `${targetKw} 관할 권역 (실시간 1페이지 노출)`,
+                placeRank: item.rank,
+                rankChange: idx === 0 ? 'UP' : (idx === 1 ? 'SAME' : 'DOWN'),
+                recentArticleTitle: `[${targetKw}] 핵심 수임 성공 사례 및 법리 분석`,
+                publishedDaysAgo: idx + 1,
+                threatLevel: item.rank <= 3 ? 'HIGH' : (item.rank <= 5 ? 'MEDIUM' : 'LOW'),
+                threatScore: Math.max(65, 95 - idx * 8),
+                flaw: idx === 0 
+                  ? '법조문 위주 나열, \'의뢰인 상황별 구체적 실무 해결 프로세스 및 긴급 대응 가이드\' 누락' 
+                  : '원론적 판례만 언급, \'첫 조사/신고 단계에서의 1:1 골든타임 대응 요령\' 부재',
+                counterKeyword: `${targetKw} 1:1 신속 법률 상담 및 대응 전략`,
+                counterStrategy: `1위 경쟁사가 간과한 의뢰인 맞춤형 두괄식(Answer-First) 실무 체크리스트를 선점하여 스마트블록 1위 탈환`
+              }))
+            }
+          }
+        } catch (err) {
+          console.warn('[getCompetitorRadar] Live ranking fetch failed, using fallback:', err)
+        }
+      }
+
       // 사용자 주소/업종 기반 맞춤 키워드 매칭 가능
       if (profile?.industry && profile.industry.includes('세무')) {
         return [

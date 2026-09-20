@@ -30,7 +30,7 @@ const sidebarLinks = [
   { href: '/dashboard/write', label: '전문 칼럼 스튜디오', icon: PenTool },
   { href: '/dashboard/intake', label: '사건 1분 진단 폼 관리', icon: FileText },
   { href: '/dashboard/archive', label: '나의 원고 보관함', icon: BookOpen },
-  { href: '/dashboard/settings/profile', label: '사무소 프로필 (RAG)', icon: UserCircle },
+  { href: '/dashboard/settings/profile', label: '내 정보 수정 (프로필·RAG)', icon: UserCircle },
   { href: '/dashboard/billing', label: '요금제 및 구독', icon: CreditCard },
 ]
 

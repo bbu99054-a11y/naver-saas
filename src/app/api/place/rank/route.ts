@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { diagnosePlaceWithJev } from '@/lib/ai/jevClient';
 
-interface PlaceItem {
+export interface PlaceItem {
   rank: number;
   id: string;
   name: string;
@@ -23,7 +23,7 @@ interface CacheEntry {
 const cache = new Map<string, CacheEntry>();
 const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes cache
 
-async function fetchLiveNaverPlaceRanking(query: string): Promise<{ totalCount: number; items: PlaceItem[] }> {
+export async function fetchLiveNaverPlaceRanking(query: string): Promise<{ totalCount: number; items: PlaceItem[] }> {
   const cleanQuery = query.trim();
   if (!cleanQuery) throw new Error('검색할 키워드를 입력해주세요.');
 
