@@ -12,14 +12,22 @@ export interface RecommendedKeyword {
   competition: '낮음' | '보통'
   description: string
   category: 'SEASON' | 'LOCAL' | 'HIGH_VALUE'
+  retainerTier?: 'S' | 'A' | 'B'
+  retainerEstimate?: string
+  urgencyLevel?: 'CRITICAL' | 'HIGH' | 'MEDIUM'
+  urgencyReason?: string
 }
 
 const recommendedKeywordSchema = z.object({
-  title: z.string().describe('포스팅 제목/롱테일 키워드 (예: "송파 헬리오시티 1주택자 양도세 비과세 요건...")'),
+  title: z.string().describe('포스팅 제목/롱테일 키워드 (예: "서초 음주운전 2진 아웃 경찰 조사 전 선처 양형 요건")'),
   score: z.number().min(85).max(98).describe('AI 추천 점수 (85~98점 사이)'),
   competition: z.enum(['낮음', '보통']).describe('예상 경쟁 강도 (낮음 또는 보통)'),
   description: z.string().describe('마케팅 전환 목적 및 타깃 잠재고객 유입 설명 (1~2문장)'),
-  category: z.enum(['SEASON', 'LOCAL', 'HIGH_VALUE']).describe('키워드 카테고리: SEASON(시즌/이슈), LOCAL(지역 롱테일), HIGH_VALUE(고단가 수임)')
+  category: z.enum(['SEASON', 'LOCAL', 'HIGH_VALUE']).describe('키워드 카테고리: SEASON(시즌/이슈), LOCAL(지역 롱테일), HIGH_VALUE(고단가 수임)'),
+  retainerTier: z.enum(['S', 'A', 'B']).optional().describe('수임 가치 등급: S(1,000만원 이상), A(500만~1,000만원), B(300만~500만원)'),
+  retainerEstimate: z.string().optional().describe('사건당 추정 수임 가치 (예: "건당 500만~1,000만 원", "위자료 최대 5,000만 원")'),
+  urgencyLevel: z.enum(['CRITICAL', 'HIGH', 'MEDIUM']).optional().describe('의뢰인 절박도: CRITICAL(긴급 구속/압수수색/신고마감), HIGH(소송/분쟁 직면), MEDIUM(사전 대비)'),
+  urgencyReason: z.string().optional().describe('절박한 사유 및 골든타임 설명 (예: "경찰 1차 출석 72시간 전 선처 서류 확보")')
 })
 
 const clusterSchema = z.object({
@@ -142,7 +150,12 @@ ${trendingContext}
 2. **[LOCAL] 지역 롱테일 키워드 (정확히 4개)**:
    - ${region} 및 ${dong} 관내 실제 주요 상권, 랜드마크, 대단지, 지하철역, 관공서가 결합된 로컬 상위노출용 키워드
 3. **[HIGH_VALUE] 고단가 수임 키워드 (정확히 3개)**:
-   - 객단가가 높고 실제 유료 상담 및 고가치 계약으로 직결되는 핵심 쟁점 키워드
+   - 단순 잡상식이나 경미한 사안(단순 과태료, 단순 서식 문의)을 전면 배제하고, 실제 변호사/세무사 착수금이 최소 300만 원~1,000만 원 이상 발생하는 고관여 중대 사건 키워드로 구성하세요.
+   - [HIGH_VALUE 전용 필수 필드]:
+     - retainerTier: 'S' (1,000만원+), 'A' (500만~1,000만원), 'B' (300만~500만원)
+     - retainerEstimate: 구체적 예상 수임료 및 분쟁 규모 (예: "건당 500만~1,200만 원 상당", "위자료 최대 5,000만 원")
+     - urgencyLevel: 'CRITICAL' 또는 'HIGH' 지정
+     - urgencyReason: 의뢰인의 긴급한 골든타임 사유 (예: "경찰 1차 출석 72시간 전 선처 서류 세팅", "세무조사 사전통지 수령 10일 이내 소명")
 
 [제약 사항]
 - title: 단순 명사가 아니라 검색자가 네이버에 검색할 법한 '구체적인 질문이나 문제 해결형 롱테일 제목' (예: "${industry} 선택 시 실수하기 쉬운 항목")
@@ -191,7 +204,27 @@ ${trendingContext}
       return { clusters: [], error: null }
     }
 
-    return { clusters: generatedResult.clusters, error: null }
+    // 5. 고단가 수임 메타데이터 무결성 보장 및 정규화
+    const normalizedClusters: RecommendedKeyword[] = generatedResult.clusters.map((item: RecommendedKeyword) => {
+      if (item.category === 'HIGH_VALUE') {
+        const score = item.score || 90
+        const defaultTier: 'S' | 'A' | 'B' = score >= 95 ? 'S' : (score >= 90 ? 'A' : 'B')
+        const defaultEstimate = defaultTier === 'S' 
+          ? '건당 1,000만 원 이상 고액 사건'
+          : (defaultTier === 'A' ? '건당 500만~1,000만 원 상당' : '건당 300만~500만 원 상당')
+        
+        return {
+          ...item,
+          retainerTier: item.retainerTier || defaultTier,
+          retainerEstimate: item.retainerEstimate || defaultEstimate,
+          urgencyLevel: item.urgencyLevel || (score >= 93 ? 'CRITICAL' : 'HIGH'),
+          urgencyReason: item.urgencyReason || '의뢰인의 직접적인 권리/재산상 불이익 방어를 위한 골든타임 쟁점'
+        }
+      }
+      return item
+    })
+
+    return { clusters: normalizedClusters, error: null }
   } catch (error: any) {
     console.error('getCurationClusters error:', error)
     return { clusters: [], error: error.message || error.toString() }

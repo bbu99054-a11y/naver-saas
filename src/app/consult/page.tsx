@@ -2,16 +2,16 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { ShieldCheck, CheckCircle2, Clock, Lock, ArrowLeft, PhoneCall, Send } from 'lucide-react'
+import { ShieldCheck, CheckCircle2, Clock, Lock, ArrowLeft, PhoneCall, Send, Sparkles } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
 const SPECIALTIES = [
-  { id: 'criminal_dui', label: '형사 사건 (음주운전, 사기, 마약 등)', icon: '⚖️' },
-  { id: 'family_divorce', label: '가사 · 이혼 · 상간자 · 재산분할', icon: '👨‍👩‍👧' },
-  { id: 'realestate_lease', label: '부동산 · 명도소송 · 전세사기 · 보증금', icon: '🏠' },
-  { id: 'corporate_crime', label: '기업법무 · 횡령/배임 · 영업비밀', icon: '🏢' },
-  { id: 'warrant_urgent', label: '긴급 구속영장 실질심사 · 압수수색', icon: '🚨' },
-  { id: 'civil_tort', label: '민사소송 · 손해배상 · 대여금 반환', icon: '📝' }
+  { id: 'criminal_dui', title: '형사 사건', desc: '음주운전 · 사기 · 교통사고 · 마약', icon: '⚖️' },
+  { id: 'family_divorce', title: '이혼 · 가사', desc: '재산분할 · 상간자소송 · 양육권', icon: '👨‍👩‍👧' },
+  { id: 'realestate_lease', title: '부동산 · 전세', desc: '명도소송 · 보증금 반환 · 전세사기', icon: '🏠' },
+  { id: 'corporate_crime', title: '기업법무', desc: '횡령/배임 · 계약 분쟁 · 영업비밀', icon: '🏢' },
+  { id: 'warrant_urgent', title: '구속영장 실질심사', desc: '긴급체포 · 압수수색 긴급 대응', icon: '🚨' },
+  { id: 'civil_tort', title: '민사소송', desc: '손해배상 · 대여금 반환 · 채권추심', icon: '📝' }
 ]
 
 const STAGES = [
@@ -33,6 +33,7 @@ export default function ConsultIntakePage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
+  const [triageResult, setTriageResult] = useState<any>(null)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -68,6 +69,28 @@ export default function ConsultIntakePage() {
       const data = await res.json()
       if (res.ok && data.success) {
         setIsSuccess(true)
+        if (data.triage) {
+          setTriageResult(data.triage)
+          try {
+            // 대시보드 IntakeCrmPanel과 실시간 연동을 위해 로컬 스토리지에 최신 접수 건 저장
+            const newLeadItem = {
+              id: Date.now().toString(),
+              name: clientName ? `${clientName.charAt(0)}** 의뢰인` : '익명 의뢰인',
+              phoneMasked: clientPhone.replace(/(\d{3})\d{4}(\d{4})/, '$1-****-$2'),
+              category: `${selectedSpecialty || '법률 상담'}`,
+              stage: selectedStage || '초기 접수',
+              minutesAgo: 1,
+              status: data.triage.isUrgent ? 'URGENT' : 'REVIEWING',
+              summary: caseSummary || '의뢰인 상세 사연 접수 완료',
+              contractAmount: data.triage.retainerAmountLabel || '440만 원',
+              jevScore: data.triage.urgencyScore
+            }
+            const existing = JSON.parse(localStorage.getItem('postsync_recent_leads') || '[]')
+            localStorage.setItem('postsync_recent_leads', JSON.stringify([newLeadItem, ...existing].slice(0, 10)))
+          } catch (e) {
+            console.warn('LocalStorage save error:', e)
+          }
+        }
       } else {
         setErrorMessage(data.error || '접수 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.')
       }
@@ -109,6 +132,29 @@ export default function ConsultIntakePage() {
                 담당 변호사 사무실로 실시간 전달되었습니다.<br />
                 골든타임 내에 남겨주신 연락처(<strong className="text-slate-900">{clientPhone}</strong>)로 비밀 보장 유선 안내를 드립니다.
               </p>
+
+              {triageResult && (
+                <div className="p-4 rounded-2xl bg-sky-50/70 border border-sky-100/90 text-left space-y-2 max-w-md mx-auto mt-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                      <Sparkles className="w-3.5 h-3.5 text-[#0284C7]" />
+                      Jev AI 사전 진단 트리아지 완료
+                    </span>
+                    <span className={`text-[10px] font-black px-2.5 py-0.5 rounded-full ${
+                      triageResult.isUrgent ? 'bg-rose-100 text-rose-700' : 'bg-sky-100 text-[#0284C7]'
+                    }`}>
+                      {triageResult.isUrgent ? '🚨 골든타임 긴급' : '⚖️ 일반 상담'}
+                    </span>
+                  </div>
+                  <div className="text-xs text-slate-600 font-medium space-y-0.5">
+                    <p>• {triageResult.actionText}</p>
+                    <p className="text-[11px] text-slate-400">
+                      AI 추정 사건 규모: <strong className="text-slate-700">{triageResult.retainerAmountLabel}</strong>
+                    </p>
+                  </div>
+                </div>
+              )}
+
               <div className="pt-4">
                 <Link href="/">
                   <Button className="bg-[#0284C7] hover:bg-[#0369A1] text-white rounded-full px-6 text-xs font-bold h-10">
@@ -139,22 +185,32 @@ export default function ConsultIntakePage() {
                   <span>1. 상담 분야를 선택해 주세요</span>
                   <span className="text-[#FF6B00]">*</span>
                 </label>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                  {SPECIALTIES.map((item) => (
-                    <button
-                      key={item.id}
-                      type="button"
-                      onClick={() => setSelectedSpecialty(item.label)}
-                      className={`p-3 rounded-2xl border text-left text-xs font-bold transition-all flex items-center gap-2.5 cursor-pointer ${
-                        selectedSpecialty === item.label
-                          ? 'border-[#0284C7] bg-[#E0F2FE]/50 text-[#0284C7] ring-1 ring-[#0284C7]'
-                          : 'border-slate-200 bg-white hover:bg-slate-50 text-slate-700'
-                      }`}
-                    >
-                      <span className="text-base">{item.icon}</span>
-                      <span className="truncate">{item.label}</span>
-                    </button>
-                  ))}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                  {SPECIALTIES.map((item) => {
+                    const isSelected = selectedSpecialty === item.title
+                    return (
+                      <button
+                        key={item.id}
+                        type="button"
+                        onClick={() => setSelectedSpecialty(item.title)}
+                        className={`p-3.5 rounded-2xl border text-left transition-all flex items-start gap-3 cursor-pointer ${
+                          isSelected
+                            ? 'border-[#0284C7] bg-[#E0F2FE]/50 ring-2 ring-[#0284C7]/30 shadow-xs'
+                            : 'border-slate-200 bg-white hover:bg-slate-50 hover:border-slate-300'
+                        }`}
+                      >
+                        <span className="text-xl shrink-0 mt-0.5">{item.icon}</span>
+                        <div className="space-y-0.5 min-w-0 flex-1">
+                          <p className={`text-xs font-black leading-tight ${isSelected ? 'text-[#0284C7]' : 'text-slate-900'}`}>
+                            {item.title}
+                          </p>
+                          <p className="text-[11px] text-slate-500 font-medium leading-tight break-keep">
+                            {item.desc}
+                          </p>
+                        </div>
+                      </button>
+                    )
+                  })}
                 </div>
               </div>
 
@@ -181,7 +237,7 @@ export default function ConsultIntakePage() {
                         onChange={() => setSelectedStage(stg)}
                         className="text-[#0284C7] focus:ring-[#0284C7]"
                       />
-                      <span>{stg}</span>
+                      <span className="break-keep leading-relaxed">{stg}</span>
                     </label>
                   ))}
                 </div>
@@ -250,7 +306,7 @@ export default function ConsultIntakePage() {
               <div className="flex items-center justify-center gap-4 text-[11px] text-slate-400 font-medium">
                 <span className="flex items-center gap-1">
                   <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
-                  변호사법·세무사법 비밀보장
+                  변호사법 제26조 비밀유지의무 100% 보장
                 </span>
                 <span className="flex items-center gap-1">
                   <Clock className="w-3.5 h-3.5 text-[#0284C7]" />

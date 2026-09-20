@@ -24,7 +24,14 @@ import {
   Scale,
   Calculator,
   Check,
-  MapPin
+  MapPin,
+  Clock,
+  BarChart3,
+  Building2,
+  Eye,
+  MousePointerClick,
+  Send,
+  RefreshCw
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
@@ -84,6 +91,7 @@ const CLIENT_REVIEWS = [
 
 export default function HomePage() {
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0)
+  const [activeEngineTab, setActiveEngineTab] = useState<number>(0)
 
   const toggleFaq = (idx: number) => {
     setOpenFaqIndex(openFaqIndex === idx ? null : idx)
@@ -197,87 +205,127 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* 우측: 사진 속 Lawmatics 인터랙티브 수임 단계 카드 목업 */}
+          {/* 우측: 초정밀 macOS 스타일 Lawmatics급 실시간 수임 윈도우 프레임 목업 */}
           <div className="lg:col-span-5">
-            <div className="relative bg-[#F4F8FC] border border-[#0284C7]/20 rounded-3xl p-6 shadow-xl">
-              <div className="flex items-center justify-between pb-4 border-b border-slate-200/80 mb-4">
+            <div className="relative rounded-3xl border border-slate-700/10 shadow-2xl bg-white/95 backdrop-blur-xl overflow-hidden ring-1 ring-slate-900/5">
+              {/* 상단 macOS 브라우저 헤더 */}
+              <div className="bg-slate-100/90 px-4 py-3 border-b border-slate-200/80 flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <span className="w-3 h-3 rounded-full bg-rose-400"></span>
-                  <span className="w-3 h-3 rounded-full bg-amber-400"></span>
-                  <span className="w-3 h-3 rounded-full bg-emerald-400"></span>
-                  <span className="text-[11px] font-mono text-slate-400 ml-2">intake.postsync.pro</span>
+                  <span className="w-3 h-3 rounded-full bg-[#FF5F56] border border-[#E0443E]"></span>
+                  <span className="w-3 h-3 rounded-full bg-[#FFBD2E] border border-[#DEA123]"></span>
+                  <span className="w-3 h-3 rounded-full bg-[#27C93F] border border-[#1AAB29]"></span>
+                  <div className="ml-2 flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-white border border-slate-200/80 text-[10px] font-mono text-slate-500 shadow-2xs">
+                    <Lock className="w-2.5 h-2.5 text-emerald-600" />
+                    <span>intake.postsync.pro/서초-형사·이혼</span>
+                  </div>
                 </div>
-                <span className="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 text-[10px] font-black">
-                  LIVE INTAKE
-                </span>
+                <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-extrabold border border-emerald-200">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                  <span>LIVE 접수 중</span>
+                </div>
               </div>
 
-              {/* 4단계 카드 흐름 (신규 ➔ 진단 ➔ 상담 ➔ 수임) */}
-              <div className="space-y-3">
-                <div className="bg-white p-3.5 rounded-2xl border border-[#0284C7] shadow-xs flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-xl bg-[#E0F2FE] text-[#0284C7] flex items-center justify-center font-bold text-xs">
+              {/* 브라우저 내부: 4단계 실시간 수임 흐름 */}
+              <div className="p-5 space-y-3 bg-gradient-to-b from-slate-50/50 to-white">
+                {/* 1. 신규 접수 */}
+                <div className="bg-white p-3.5 rounded-2xl border-2 border-[#0284C7] shadow-sm flex items-start justify-between gap-3">
+                  <div className="flex items-start gap-3">
+                    <div className="w-8 h-8 rounded-xl bg-[#E0F2FE] text-[#0284C7] flex items-center justify-center font-black text-xs shrink-0 mt-0.5">
                       1
                     </div>
-                    <div>
-                      <p className="text-xs font-black text-slate-900">신규 의뢰인 실시간 접수</p>
-                      <p className="text-[11px] text-[#0284C7] font-semibold">음주운전 2진 면허취소 구제 문의 (방금 전)</p>
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-2">
+                        <p className="text-xs font-black text-slate-900">신규 의뢰인 실시간 접수</p>
+                        <span className="text-[9px] font-mono text-slate-400">방금 전</span>
+                      </div>
+                      <p className="text-[11px] text-[#0284C7] font-bold">음주운전 2진 면허취소 구제 문의</p>
+                      <div className="flex items-center gap-1.5 pt-0.5">
+                        <span className="px-1.5 py-0.5 rounded bg-rose-50 text-rose-600 text-[9px] font-black border border-rose-200 flex items-center gap-0.5">
+                          <Clock className="w-2.5 h-2.5" /> 골든타임 08:42
+                        </span>
+                        <span className="px-1.5 py-0.5 rounded bg-slate-100 text-slate-600 text-[9px] font-bold">
+                          블로그 1위 유입
+                        </span>
+                      </div>
                     </div>
                   </div>
-                  <span className="text-[10px] font-black text-white bg-[#FF6B00] px-2 py-0.5 rounded-full">
+                  <span className="text-[10px] font-black text-white bg-[#FF6B00] px-2 py-0.5 rounded-full shrink-0 shadow-xs">
                     NEW
                   </span>
                 </div>
 
-                <div className="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-2xs flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center font-bold text-xs">
+                {/* 2. 1분 진단 완료 */}
+                <div className="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-2xs flex items-start justify-between gap-3 hover:border-slate-300 transition-colors">
+                  <div className="flex items-start gap-3">
+                    <div className="w-8 h-8 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center font-black text-xs shrink-0 mt-0.5">
                       2
                     </div>
-                    <div>
+                    <div className="space-y-1">
                       <p className="text-xs font-black text-slate-900">사건 1분 안심 진단 완료</p>
-                      <p className="text-[11px] text-slate-500">생계형 운전자, 혈중농도 0.082%, 양형서류 확인</p>
+                      <p className="text-[11px] text-slate-600 font-medium">생계형 운전자 · 혈중농도 0.082% · 3년 무사고</p>
+                      <div className="flex items-center gap-1.5 pt-0.5">
+                        <span className="px-1.5 py-0.5 rounded bg-amber-50 text-amber-700 text-[9px] font-bold">
+                          수임 적격도 HIGH (94%)
+                        </span>
+                        <span className="px-1.5 py-0.5 rounded bg-slate-100 text-slate-600 text-[9px]">
+                          양형 서류 첨부
+                        </span>
+                      </div>
                     </div>
                   </div>
-                  <span className="text-[10px] font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full">
+                  <span className="text-[10px] font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full shrink-0 border border-amber-200">
                     진단 완료
                   </span>
                 </div>
 
-                <div className="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-2xs flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold text-xs">
+                {/* 3. 유선 상담 및 방문 예약 */}
+                <div className="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-2xs flex items-start justify-between gap-3 hover:border-slate-300 transition-colors">
+                  <div className="flex items-start gap-3">
+                    <div className="w-8 h-8 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-black text-xs shrink-0 mt-0.5">
                       3
                     </div>
-                    <div>
+                    <div className="space-y-1">
                       <p className="text-xs font-black text-slate-900">유선 상담 및 방문 예약</p>
-                      <p className="text-[11px] text-slate-500">골든타임 10분 내 콜백 ➔ 내일 오후 2시 대면</p>
+                      <p className="text-[11px] text-slate-600 font-medium">골든타임 7분 내 콜백 ➔ 내일 14:00 대면 상담</p>
+                      <span className="inline-block px-1.5 py-0.5 rounded bg-indigo-50 text-indigo-700 text-[9px] font-bold">
+                        서초동 대표 변호사실 확정
+                      </span>
                     </div>
                   </div>
-                  <span className="text-[10px] font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-full">
+                  <span className="text-[10px] font-bold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-full shrink-0 border border-indigo-200">
                     예약 확정
                   </span>
                 </div>
 
-                <div className="bg-white p-3.5 rounded-2xl border border-emerald-300 shadow-xs flex items-center justify-between bg-gradient-to-r from-emerald-50/40 to-white">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-xs">
+                {/* 4. 수임 완료 */}
+                <div className="bg-gradient-to-r from-emerald-50/60 via-white to-white p-3.5 rounded-2xl border-2 border-emerald-400 shadow-sm flex items-start justify-between gap-3">
+                  <div className="flex items-start gap-3">
+                    <div className="w-8 h-8 rounded-xl bg-emerald-500 text-white flex items-center justify-center font-black text-xs shrink-0 mt-0.5 shadow-xs">
                       4
                     </div>
-                    <div>
-                      <p className="text-xs font-black text-slate-900">수임 계약 체결 완료</p>
-                      <p className="text-[11px] text-emerald-600 font-bold">착수금 5,500,000원 입금 및 정식 위임</p>
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-2">
+                        <p className="text-xs font-black text-slate-900">정식 수임 계약 체결 완료</p>
+                        <span className="text-[10px] font-black text-emerald-600">착수금 5,500,000원 입금</span>
+                      </div>
+                      <p className="text-[11px] text-slate-600">정식 소송 위임장 날인 및 전담 변호사 배정 완료</p>
                     </div>
                   </div>
-                  <span className="text-[10px] font-black text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full">
+                  <span className="text-[10px] font-black text-emerald-800 bg-emerald-100 px-2.5 py-1 rounded-full shrink-0 shadow-2xs">
                     수임 완료 🎉
                   </span>
                 </div>
               </div>
 
-              <div className="mt-4 pt-3 border-t border-slate-200/80 flex items-center justify-between text-[11px] text-slate-500 font-medium">
-                <span>실시간 수임 파이프라인 연동</span>
-                <span className="text-[#0284C7] font-bold">평균 수임 전환율 +340%</span>
+              {/* 하단 인터랙티브 상태 바 */}
+              <div className="px-5 py-3 bg-slate-50 border-t border-slate-200/80 flex items-center justify-between text-[11px] text-slate-500">
+                <span className="flex items-center gap-1.5 font-semibold text-slate-700">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+                  실시간 수임 파이프라인 연동
+                </span>
+                <span className="text-[#0284C7] font-black bg-[#E0F2FE] px-2 py-0.5 rounded-md">
+                  평균 수임 전환율 +340%
+                </span>
               </div>
             </div>
           </div>
@@ -285,10 +333,40 @@ export default function HomePage() {
       </section>
 
       {/* ========================================================================= */}
-      {/* 🌟 2-0. 옴니채널 수임 파이프라인 쇼케이스 (고급스러운 세룰리안 스카이 테마) */}
+      {/* 🌟 2-A. 로펌 신뢰 지표 & 소셜 프루프 바 (Social Proof Bar) */}
       {/* ========================================================================= */}
-      <section className="py-16 sm:py-20 bg-gradient-to-b from-[#F0F7FD] via-[#E8F3FC] to-white border-y border-[#0284C7]/20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-8 space-y-10">
+      <section className="border-y border-slate-200/80 bg-slate-50/70 py-8 px-4 sm:px-8">
+        <div className="max-w-7xl mx-auto space-y-4">
+          <p className="text-center text-xs font-extrabold text-slate-500 tracking-wider uppercase">
+            서초 · 교대 · 강남 등 대한민국 140+ 로펌 및 법률사무소 실전 도입
+          </p>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 pt-2">
+            <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-2xs text-center space-y-1">
+              <div className="text-2xl sm:text-3xl font-black text-[#0284C7] tracking-tight">1,840건+</div>
+              <div className="text-xs text-slate-600 font-bold">누적 사건 의뢰 접수</div>
+            </div>
+            <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-2xs text-center space-y-1">
+              <div className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">94.8%</div>
+              <div className="text-xs text-slate-600 font-bold">10분 골든타임 연결률</div>
+            </div>
+            <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-2xs text-center space-y-1">
+              <div className="text-2xl sm:text-3xl font-black text-emerald-600 tracking-tight">+340%</div>
+              <div className="text-xs text-slate-600 font-bold">방문 및 착수금 계약 전환율</div>
+            </div>
+            <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-2xs text-center space-y-1">
+              <div className="text-2xl sm:text-3xl font-black text-[#FF6B00] tracking-tight">0건</div>
+              <div className="text-xs text-slate-600 font-bold">변호사법 제23조 위반 제재</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ========================================================================= */}
+      {/* 🌟 2-0. 옴니채널 수임 파이프라인 쇼케이스 (인터랙티브 3-in-1 라이브 뷰) */}
+      {/* ========================================================================= */}
+      <section className="py-16 sm:py-24 bg-gradient-to-b from-[#F0F7FD] via-[#E8F3FC] to-white border-y border-[#0284C7]/20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-8 space-y-12">
+          {/* 섹션 헤더 (1줄 펀치라인 + 시원한 여백) */}
           <div className="text-center space-y-3 max-w-3xl mx-auto">
             <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#E0F2FE] text-[#0284C7] text-xs font-extrabold border border-[#0284C7]/30 shadow-2xs">
               ⚡ 옴니채널 사건 수임 파이프라인
@@ -297,135 +375,405 @@ export default function HomePage() {
               단 하나의 칼럼이 모든 채널로 뻗어나가<br />
               <span className="text-[#0284C7]">대표님의 로펌에 24시간 수임을 물어다 줍니다</span>
             </h2>
-            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-              의뢰인은 글 하나만 보고 결정하지 않습니다. 네이버 블로그 검색부터 지도(플레이스), 그리고 소셜 미디어까지 전방위로 의뢰인을 포위하여 사건 문의를 최종 수임 계약으로 체결시킵니다.
+            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed max-w-2xl mx-auto">
+              의뢰인은 글 하나만 보고 결정하지 않습니다. 네이버 블로그 검색부터 지도(플레이스), 그리고 실시간 수임 파이프라인까지 전방위로 의뢰인을 포위하여 실제 착수금 계약을 체결시킵니다.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* 1. 네이버 C-Rank 전문 칼럼 스튜디오 (LIVE) */}
-            <div className="bg-white border-2 border-[#0284C7]/40 rounded-3xl p-6 space-y-4 shadow-sm hover:shadow-md transition-all">
-              <div className="flex items-center justify-between">
-                <span className="px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 text-[11px] font-black border border-emerald-200">
-                  ● 즉시 이용 가능 (LIVE)
-                </span>
-                <span className="text-xs text-[#0284C7] font-bold">01. 유입 엔진</span>
+          {/* 🌟 인터랙티브 3대 LIVE 엔진 탭 네비게이션 */}
+          <div className="flex flex-wrap items-center justify-center gap-2 p-1.5 bg-slate-200/70 backdrop-blur rounded-2xl max-w-2xl mx-auto border border-slate-300/70 shadow-inner">
+            <button
+              type="button"
+              onClick={() => setActiveEngineTab(0)}
+              className={`flex-1 min-w-[170px] py-3 px-4 rounded-xl text-xs font-black transition-all cursor-pointer flex items-center justify-center gap-2 ${
+                activeEngineTab === 0
+                  ? 'bg-white text-[#0284C7] shadow-md ring-1 ring-slate-900/5 scale-[1.02]'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-white/50'
+              }`}
+            >
+              <Scale className="w-4 h-4" />
+              <span>01. 4단 칼럼 스튜디오</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveEngineTab(1)}
+              className={`flex-1 min-w-[170px] py-3 px-4 rounded-xl text-xs font-black transition-all cursor-pointer flex items-center justify-center gap-2 ${
+                activeEngineTab === 1
+                  ? 'bg-white text-[#0284C7] shadow-md ring-1 ring-slate-900/5 scale-[1.02]'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-white/50'
+              }`}
+            >
+              <MapPin className="w-4 h-4" />
+              <span>02. 플레이스 1위 관제</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveEngineTab(2)}
+              className={`flex-1 min-w-[170px] py-3 px-4 rounded-xl text-xs font-black transition-all cursor-pointer flex items-center justify-center gap-2 ${
+                activeEngineTab === 2
+                  ? 'bg-white text-[#0284C7] shadow-md ring-1 ring-slate-900/5 scale-[1.02]'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-white/50'
+              }`}
+            >
+              <BarChart3 className="w-4 h-4" />
+              <span>03. 골든타임 수임 현황판</span>
+            </button>
+          </div>
+
+          {/* 🌟 탭별 실제 소프트웨어 구동 화면 프리뷰 (Interactive Showcase View) */}
+          <div className="bg-white rounded-3xl border-2 border-[#0284C7]/30 shadow-xl overflow-hidden">
+            {/* 탭 0: 네이버 4단 칼럼 스튜디오 구동 뷰 */}
+            {activeEngineTab === 0 && (
+              <div className="p-6 sm:p-10 space-y-6">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-200/80">
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2">
+                      <span className="px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-black border border-emerald-200">
+                        ● 즉시 이용 가능 (LIVE ENGINE)
+                      </span>
+                      <span className="text-xs font-mono text-slate-400">네이버 C-Rank 스마트블록 최적화</span>
+                    </div>
+                    <h3 className="text-xl sm:text-2xl font-black text-slate-900">
+                      네이버 상위 1% 4단 구조 전문 칼럼 자동 완성
+                    </h3>
+                  </div>
+                  <Link href="/dashboard/write">
+                    <Button className="h-10 px-5 rounded-full bg-[#0284C7] hover:bg-[#0369A1] text-white text-xs font-black shadow-sm cursor-pointer flex items-center gap-1.5">
+                      <span>직접 칼럼 써보기</span>
+                      <ArrowRight className="w-4 h-4" />
+                    </Button>
+                  </Link>
+                </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                  {/* 좌측: 컨트롤 파라미터 패널 */}
+                  <div className="lg:col-span-4 bg-slate-50 p-5 rounded-2xl border border-slate-200/80 space-y-4">
+                    <p className="text-xs font-black text-slate-700 uppercase tracking-wider">
+                      🎯 사건 타깃팅 설정
+                    </p>
+                    <div className="space-y-2.5 text-xs">
+                      <div className="bg-white p-3 rounded-xl border border-slate-200 space-y-1">
+                        <span className="text-slate-400 text-[10px] font-bold">수임 타깃 키워드</span>
+                        <p className="font-bold text-slate-900">음주운전 2진 면허취소 구제 행정심판</p>
+                      </div>
+                      <div className="bg-white p-3 rounded-xl border border-slate-200 space-y-1">
+                        <span className="text-slate-400 text-[10px] font-bold">전문 분야 및 직역</span>
+                        <p className="font-bold text-slate-900">형사 전문 변호사 (교통범죄 전담)</p>
+                      </div>
+                      <div className="bg-emerald-50 p-3 rounded-xl border border-emerald-200 space-y-1 text-emerald-800">
+                        <span className="text-emerald-600 text-[10px] font-bold flex items-center gap-1">
+                          <CheckCircle2 className="w-3 h-3" /> 변호사법 제23조 사전 필터링
+                        </span>
+                        <p className="font-extrabold text-[11px]">금칙어 0건 · 승소율 과장 차단 통과 완료</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* 우측: 4단 완성 칼럼 프리뷰 */}
+                  <div className="lg:col-span-8 bg-white p-6 rounded-2xl border border-slate-200 shadow-2xs space-y-4">
+                    <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+                      <span className="text-xs font-bold text-slate-500">생성된 네이버 블로그 원고 미리보기</span>
+                      <span className="text-xs font-mono text-[#0284C7] font-bold">2,480자 (공백 제외)</span>
+                    </div>
+
+                    <div className="space-y-3 text-xs leading-relaxed text-slate-700">
+                      <div className="p-3 bg-slate-50 rounded-xl border-l-4 border-[#0284C7]">
+                        <span className="font-bold text-[#0284C7]">[1단: 의뢰인 절박함 공감]</span>
+                        <p className="mt-1 text-slate-600">
+                          "출퇴근과 생계가 걸린 상황에서 갑작스러운 음주운전 2진 적발로 면허 취소 통지를 받으셨다면, 지금 1분이 얼마나 초조하실지 잘 알고 있습니다..."
+                        </p>
+                      </div>
+                      <div className="p-3 bg-slate-50 rounded-xl border-l-4 border-indigo-500">
+                        <span className="font-bold text-indigo-600">[2단: 도로교통법 제148조의2 핵심 쟁점]</span>
+                        <p className="mt-1 text-slate-600">
+                          "단순 반성문 제출만으로는 기소유예나 벌금형 감경을 이끌어내기 어렵습니다. 당시 혈중알코올농도 수치와 운전 거리, 생계 필수성 입증 자료가 승패를 가릅니다."
+                        </p>
+                      </div>
+                      <div className="p-3 bg-slate-50 rounded-xl border-l-4 border-emerald-500">
+                        <span className="font-bold text-emerald-600">[3단: 대법원 양형 기준 & 유사 구제 판례]</span>
+                        <p className="mt-1 text-slate-600">
+                          "서울중앙지방법원 2025고단**** 사건에서 의뢰인의 부양가족 생계 곤란 및 차량 운행 불가피성을 체계적으로 소명하여 면허취소 처분 집행정지 결정을 이끌어낸 바 있습니다."
+                        </p>
+                      </div>
+                      <div className="p-3.5 bg-gradient-to-r from-[#E0F2FE] to-white rounded-xl border-2 border-[#0284C7] flex items-center justify-between">
+                        <div>
+                          <span className="font-black text-[#0284C7]">[4단: 1분 안심 진단 폼 삽입 배너]</span>
+                          <p className="text-[11px] text-slate-700 font-bold mt-0.5">
+                            👉 내 사건 구제 가능성 및 예상 벌금 1분 무료 사전 진단하기
+                          </p>
+                        </div>
+                        <span className="px-2.5 py-1 rounded-full bg-[#FF6B00] text-white text-[10px] font-black shrink-0">
+                          수임 낚싯바늘
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div className="space-y-1.5">
-                <h3 className="text-lg font-black text-slate-900 flex items-center gap-2">
-                  <span>⚖️ 네이버 4단 전문 칼럼 스튜디오</span>
-                </h3>
+            )}
+
+            {/* 탭 1: 스마트플레이스 로컬 1위 관제 구동 뷰 */}
+            {activeEngineTab === 1 && (
+              <div className="p-6 sm:p-10 space-y-6">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-200/80">
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2">
+                      <span className="px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-black border border-emerald-200">
+                        ● 즉시 이용 가능 (LIVE ENGINE)
+                      </span>
+                      <span className="text-xs font-mono text-slate-400">지역 로펌 지도 1위 선점 관제탑</span>
+                    </div>
+                    <h3 className="text-xl sm:text-2xl font-black text-slate-900">
+                      내 지역 법률사무소 스마트플레이스 실시간 순위 & 리뷰 장악
+                    </h3>
+                  </div>
+                  <Link href="/dashboard/place">
+                    <Button className="h-10 px-5 rounded-full bg-[#0284C7] hover:bg-[#0369A1] text-white text-xs font-black shadow-sm cursor-pointer flex items-center gap-1.5">
+                      <span>플레이스 순위 확인</span>
+                      <ArrowRight className="w-4 h-4" />
+                    </Button>
+                  </Link>
+                </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                  {/* 좌측: 실시간 랭킹 카드 */}
+                  <div className="lg:col-span-5 bg-slate-50 p-5 rounded-2xl border border-slate-200/80 space-y-4">
+                    <div className="flex items-center justify-between">
+                      <p className="text-xs font-black text-slate-700">📍 실시간 지역 선점 랭킹</p>
+                      <span className="px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-700 text-[10px] font-black">
+                        서초동 1위 유지 중 👑
+                      </span>
+                    </div>
+
+                    <div className="space-y-2">
+                      <div className="p-3 bg-white rounded-xl border-2 border-emerald-400 flex items-center justify-between shadow-2xs">
+                        <div className="flex items-center gap-2.5">
+                          <span className="w-6 h-6 rounded-lg bg-emerald-500 text-white flex items-center justify-center font-black text-xs">
+                            1
+                          </span>
+                          <div>
+                            <p className="text-xs font-black text-slate-900">대표님 법률사무소</p>
+                            <p className="text-[10px] text-slate-400">교대역 1번 출구 · 플레이스 점유율 41.2%</p>
+                          </div>
+                        </div>
+                        <span className="text-[11px] font-black text-emerald-600">+18% 유입</span>
+                      </div>
+
+                      <div className="p-3 bg-white/70 rounded-xl border border-slate-200 flex items-center justify-between opacity-70">
+                        <div className="flex items-center gap-2.5">
+                          <span className="w-6 h-6 rounded-lg bg-slate-200 text-slate-600 flex items-center justify-center font-bold text-xs">
+                            2
+                          </span>
+                          <span className="text-xs font-medium text-slate-700">A 법무법인 (서초)</span>
+                        </div>
+                        <span className="text-[10px] text-rose-500 font-bold">순위 하락 ▼</span>
+                      </div>
+
+                      <div className="p-3 bg-white/70 rounded-xl border border-slate-200 flex items-center justify-between opacity-70">
+                        <div className="flex items-center gap-2.5">
+                          <span className="w-6 h-6 rounded-lg bg-slate-200 text-slate-600 flex items-center justify-center font-bold text-xs">
+                            3
+                          </span>
+                          <span className="text-xs font-medium text-slate-700">B 변호사사무실</span>
+                        </div>
+                        <span className="text-[10px] text-slate-400">변동 없음</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* 우측: 방문자 리뷰 AI 감사 답글 자동화 */}
+                  <div className="lg:col-span-7 bg-white p-6 rounded-2xl border border-slate-200 shadow-2xs space-y-4">
+                    <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+                      <span className="text-xs font-bold text-slate-500">방문자 영수증 리뷰 AI 품격 답글 생성기</span>
+                      <span className="text-xs text-emerald-600 font-bold">1초 원클릭 복사</span>
+                    </div>
+
+                    <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
+                      <div className="flex items-center gap-2">
+                        <span className="text-amber-500 text-xs">★★★★★</span>
+                        <span className="text-xs font-bold text-slate-900">실제 의뢰인 네이버 영수증 리뷰</span>
+                      </div>
+                      <p className="text-xs text-slate-600">
+                        "구속영장 기각 결정 소식 듣고 가족들과 울었습니다. 대표 변호사님께서 직접 주말 늦은 시간까지 접견 와주셔서 진심으로 든든했습니다."
+                      </p>
+                    </div>
+
+                    <div className="p-4 bg-[#F0F7FD] rounded-xl border-2 border-[#0284C7] space-y-2">
+                      <span className="text-[11px] font-black text-[#0284C7]">AI 변호사 명의 감사 답글 추천</span>
+                      <p className="text-xs text-slate-700 leading-relaxed font-medium">
+                        "의뢰인님, 당시 가족분들의 간절하셨던 눈빛을 기억하기에 온 힘을 다해 영장실질심사를 준비했습니다. 무사히 일상으로 복귀하셔서 진심으로 다행입니다. 언제나 의뢰인 곁을 지키는 든든한 조력자가 되겠습니다. - 대표 변호사 올림"
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* 탭 2: 골든타임 수임 현황판 CRM 구동 뷰 */}
+            {activeEngineTab === 2 && (
+              <div className="p-6 sm:p-10 space-y-6">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-200/80">
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2">
+                      <span className="px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-black border border-emerald-200">
+                        ● 즉시 이용 가능 (LIVE ENGINE)
+                      </span>
+                      <span className="text-xs font-mono text-slate-400">사건 수임 파이프라인 CRM</span>
+                    </div>
+                    <h3 className="text-xl sm:text-2xl font-black text-slate-900">
+                      골든타임 10분 알림 & [접수 ➔ 상담 ➔ 예약 ➔ 수임] 통합 현황판
+                    </h3>
+                  </div>
+                  <Link href="/dashboard/pipeline">
+                    <Button className="h-10 px-5 rounded-full bg-[#0284C7] hover:bg-[#0369A1] text-white text-xs font-black shadow-sm cursor-pointer flex items-center gap-1.5">
+                      <span>수임 현황판 열기</span>
+                      <ArrowRight className="w-4 h-4" />
+                    </Button>
+                  </Link>
+                </div>
+
+                {/* 4열 실시간 수임 단계 파이프라인 목업 */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                  {/* 1열: 신규 접수 */}
+                  <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200/80 space-y-3">
+                    <div className="flex items-center justify-between pb-2 border-b border-slate-200">
+                      <span className="text-xs font-black text-slate-800">1. 신규 접수 (3)</span>
+                      <span className="w-2 h-2 rounded-full bg-[#FF6B00]"></span>
+                    </div>
+                    <div className="space-y-2">
+                      <div className="bg-white p-3 rounded-xl border border-slate-200 shadow-2xs space-y-1">
+                        <span className="text-[10px] font-black text-rose-600 bg-rose-50 px-1.5 py-0.5 rounded">
+                          골든타임 08:42
+                        </span>
+                        <p className="text-xs font-black text-slate-900">음주 2진 면허취소 구제</p>
+                        <p className="text-[10px] text-slate-400">네이버 블로그 유입 · 3분 전</p>
+                      </div>
+                      <div className="bg-white p-3 rounded-xl border border-slate-200 shadow-2xs space-y-1">
+                        <span className="text-[10px] font-black text-slate-600 bg-slate-100 px-1.5 py-0.5 rounded">
+                          형사
+                        </span>
+                        <p className="text-xs font-black text-slate-900">통신매체이용음란 무혐의</p>
+                        <p className="text-[10px] text-slate-400">18분 전 접수</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* 2열: 1분 진단 완료 */}
+                  <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200/80 space-y-3">
+                    <div className="flex items-center justify-between pb-2 border-b border-slate-200">
+                      <span className="text-xs font-black text-slate-800">2. 1분 진단 완료 (4)</span>
+                      <span className="w-2 h-2 rounded-full bg-amber-400"></span>
+                    </div>
+                    <div className="space-y-2">
+                      <div className="bg-white p-3 rounded-xl border border-slate-200 shadow-2xs space-y-1">
+                        <span className="text-[10px] font-black text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded">
+                          적격도 HIGH
+                        </span>
+                        <p className="text-xs font-black text-slate-900">상간소송 위자료 3천만 원</p>
+                        <p className="text-[10px] text-slate-500">외도 증거(블랙박스) 제출 확인</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* 3열: 방문 상담 예약 */}
+                  <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200/80 space-y-3">
+                    <div className="flex items-center justify-between pb-2 border-b border-slate-200">
+                      <span className="text-xs font-black text-slate-800">3. 방문 상담 예약 (2)</span>
+                      <span className="w-2 h-2 rounded-full bg-indigo-500"></span>
+                    </div>
+                    <div className="space-y-2">
+                      <div className="bg-white p-3 rounded-xl border border-slate-200 shadow-2xs space-y-1">
+                        <span className="text-[10px] font-black text-indigo-700 bg-indigo-50 px-1.5 py-0.5 rounded">
+                          내일 14:00 대면
+                        </span>
+                        <p className="text-xs font-black text-slate-900">업무상 횡령 2억 무죄 소명</p>
+                        <p className="text-[10px] text-slate-500">서초동 대표실 미팅 확정</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* 4열: 정식 수임 완료 */}
+                  <div className="bg-emerald-50/50 p-4 rounded-2xl border-2 border-emerald-300 space-y-3">
+                    <div className="flex items-center justify-between pb-2 border-b border-emerald-200">
+                      <span className="text-xs font-black text-emerald-900">4. 수임 완료 (5) 🎉</span>
+                      <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+                    </div>
+                    <div className="space-y-2">
+                      <div className="bg-white p-3 rounded-xl border border-emerald-300 shadow-xs space-y-1">
+                        <span className="text-[10px] font-black text-emerald-800 bg-emerald-100 px-1.5 py-0.5 rounded">
+                          착수금 550만 원 입금
+                        </span>
+                        <p className="text-xs font-black text-slate-900">이혼 및 재산분할 청구</p>
+                        <p className="text-[10px] text-emerald-700 font-bold">정식 소송 위임장 체결</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* 🚀 2026 ROADMAP 3대 확장 (스레드, 인스타, 유튜브 쇼츠) */}
+          <div className="space-y-4 pt-4">
+            <div className="text-center space-y-1">
+              <span className="text-xs font-extrabold text-[#0284C7] uppercase tracking-wider">
+                🚀 2026 ROADMAP: 소셜 미디어 확장
+              </span>
+              <h3 className="text-xl sm:text-2xl font-black text-slate-900">
+                칼럼 하나로 모든 SNS 채널을 동시 점유합니다
+              </h3>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {/* 4. 스레드 연속 글 */}
+              <div className="bg-white border border-slate-200 rounded-3xl p-6 space-y-3 shadow-2xs hover:border-[#0284C7]/40 hover:shadow-md transition-all">
+                <div className="flex items-center justify-between">
+                  <span className="px-2.5 py-1 rounded-full bg-amber-50 text-amber-700 text-[11px] font-black border border-amber-200">
+                    2026 ROADMAP
+                  </span>
+                  <span className="text-xs text-slate-400 font-bold">04. 소셜 지식인</span>
+                </div>
+                <h4 className="text-base font-black text-slate-900">🧵 스레드(Threads) 연속 글 자동 변환</h4>
                 <p className="text-xs text-slate-600 leading-relaxed">
-                  네이버 C-Rank 스마트블록 상위 노출에 맞춘 4단 구조(공감 ➔ 쟁점 ➔ 판례 ➔ 절차) 및 변호사법 제23조 100% 필터링 칼럼 자동 완성.
+                  블로그 칼럼 1편을 2030 고소득 자산가가 열광하는 촌철살인 5~7개 스레드 연속 글로 1초 자동 재가공.
                 </p>
+                <div className="p-2.5 bg-slate-50 rounded-xl border border-slate-200/80 text-[11px] text-slate-600 font-medium">
+                  👉 퍼스널 브랜딩 & DM 사건 상담 유도
+                </div>
               </div>
-              <div className="p-3 bg-[#F0F7FD] rounded-xl border border-[#0284C7]/20 text-[11px] text-[#0284C7] font-bold">
-                👉 음주운전, 재산분할 등 알짜 사건 키워드 자동 점유
-              </div>
-            </div>
 
-            {/* 2. 네이버 스마트플레이스 로컬 1위 관제 (LIVE) */}
-            <div className="bg-white border-2 border-[#0284C7]/40 rounded-3xl p-6 space-y-4 shadow-sm hover:shadow-md transition-all">
-              <div className="flex items-center justify-between">
-                <span className="px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 text-[11px] font-black border border-emerald-200">
-                  ● 즉시 이용 가능 (LIVE)
-                </span>
-                <span className="text-xs text-[#0284C7] font-bold">02. 지역 선점</span>
-              </div>
-              <div className="space-y-1.5">
-                <h3 className="text-lg font-black text-slate-900 flex items-center gap-2">
-                  <span>📍 스마트플레이스 로컬 1위 관제</span>
-                </h3>
+              {/* 5. 인스타그램 카드뉴스 */}
+              <div className="bg-white border border-slate-200 rounded-3xl p-6 space-y-3 shadow-2xs hover:border-[#0284C7]/40 hover:shadow-md transition-all">
+                <div className="flex items-center justify-between">
+                  <span className="px-2.5 py-1 rounded-full bg-amber-50 text-amber-700 text-[11px] font-black border border-amber-200">
+                    2026 ROADMAP
+                  </span>
+                  <span className="text-xs text-slate-400 font-bold">05. 비주얼 신뢰</span>
+                </div>
+                <h4 className="text-base font-black text-slate-900">📸 인스타그램 승소 사례 카드뉴스</h4>
                 <p className="text-xs text-slate-600 leading-relaxed">
-                  내 지역(서초, 교대, 수원 등) 법률사무소 실시간 순위 추적, 네이버 예약 최적화 소개글, 방문자 영수증 리뷰 AI 감사 답글 원클릭 복사.
+                  복잡한 판결문과 승소 스토리를 1080x1080 인스타그램 고화질 카드뉴스 이미지 세트로 1초 분할 추출.
                 </p>
+                <div className="p-2.5 bg-slate-50 rounded-xl border border-slate-200/80 text-[11px] text-slate-600 font-medium">
+                  👉 승소 결과로 의뢰인 신뢰도 극대화
+                </div>
               </div>
-              <div className="p-3 bg-[#F0F7FD] rounded-xl border border-[#0284C7]/20 text-[11px] text-[#0284C7] font-bold">
-                👉 지역 내 급한 의뢰인의 전화 문의 독점 장악
-              </div>
-            </div>
 
-            {/* 3. 1분 사건 안심 진단 폼 & 수임 관리 시스템 (LIVE) */}
-            <div className="bg-white border-2 border-[#0284C7]/40 rounded-3xl p-6 space-y-4 shadow-sm hover:shadow-md transition-all">
-              <div className="flex items-center justify-between">
-                <span className="px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 text-[11px] font-black border border-emerald-200">
-                  ● 즉시 이용 가능 (LIVE)
-                </span>
-                <span className="text-xs text-[#0284C7] font-bold">03. 수임 클로징</span>
-              </div>
-              <div className="space-y-1.5">
-                <h3 className="text-lg font-black text-slate-900 flex items-center gap-2">
-                  <span>📋 1분 안심 진단 폼 & 골든타임 현황판</span>
-                </h3>
+              {/* 6. 유튜브 쇼츠 영상 자동 생성 */}
+              <div className="bg-gradient-to-br from-white via-sky-50/50 to-[#E0F2FE]/40 border-2 border-[#0284C7]/40 rounded-3xl p-6 space-y-3 shadow-sm hover:shadow-md transition-all">
+                <div className="flex items-center justify-between">
+                  <span className="px-2.5 py-1 rounded-full bg-[#E0F2FE] text-[#0284C7] text-[11px] font-black border border-[#0284C7]/30">
+                    2026 ROADMAP
+                  </span>
+                  <span className="text-xs text-[#0284C7] font-bold">06. 숏폼 영상</span>
+                </div>
+                <h4 className="text-base font-black text-slate-900">🎬 AI 유튜브 쇼츠 영상 자동 생성</h4>
                 <p className="text-xs text-slate-600 leading-relaxed">
-                  블로그 본문 삽입용 반응형 배너에서 접수된 사건 정보가 10분 골든타임 알림과 [접수 ➔ 상담 ➔ 예약 ➔ 수임] 단계별 수임 현황판으로 자동 연결.
+                  칼럼 핵심 쟁점을 60초 분량의 임팩트 있는 AI 쇼츠 영상으로 즉시 렌더링하여 유튜브 검색 장악.
                 </p>
-              </div>
-              <div className="p-3 bg-[#F0F7FD] rounded-xl border border-[#0284C7]/20 text-[11px] text-[#0284C7] font-bold">
-                👉 30분 무료상담 허수 차단 & 실제 착수금 수임 체결
-              </div>
-            </div>
-
-            {/* 4. 스레드(Threads) 전문직 연속 글 연재 (ROADMAP) */}
-            <div className="bg-white/90 border border-slate-200 rounded-3xl p-6 space-y-4 hover:border-sky-300 shadow-2xs hover:shadow-sm transition-all">
-              <div className="flex items-center justify-between">
-                <span className="px-2.5 py-1 rounded-full bg-amber-50 text-amber-700 text-[11px] font-black border border-amber-200">
-                  🚀 2026 ROADMAP
-                </span>
-                <span className="text-xs text-slate-400 font-bold">04. 소셜 지식인</span>
-              </div>
-              <div className="space-y-1.5">
-                <h3 className="text-lg font-black text-slate-900 flex items-center gap-2">
-                  <span>🧵 스레드(Threads) 연속 글 자동 변환</span>
-                </h3>
-                <p className="text-xs text-slate-500 leading-relaxed">
-                  블로그 칼럼 1편을 2030 젊은 고소득 자산가가 열광하는 촌철살인 5~7개 스레드 연속 글로 1초 자동 재가공.
-                </p>
-              </div>
-              <div className="p-3 bg-slate-50 rounded-xl border border-slate-200/80 text-[11px] text-slate-600">
-                👉 소셜 미디어 내 퍼스널 지식인 포지셔닝 & DM 수임 유도
-              </div>
-            </div>
-
-            {/* 5. 인스타그램 판례 승소 카드뉴스 (ROADMAP) */}
-            <div className="bg-white/90 border border-slate-200 rounded-3xl p-6 space-y-4 hover:border-sky-300 shadow-2xs hover:shadow-sm transition-all">
-              <div className="flex items-center justify-between">
-                <span className="px-2.5 py-1 rounded-full bg-amber-50 text-amber-700 text-[11px] font-black border border-amber-200">
-                  🚀 2026 ROADMAP
-                </span>
-                <span className="text-xs text-slate-400 font-bold">05. 비주얼 신뢰</span>
-              </div>
-              <div className="space-y-1.5">
-                <h3 className="text-lg font-black text-slate-900 flex items-center gap-2">
-                  <span>📸 인스타그램 승소 사례 카드뉴스</span>
-                </h3>
-                <p className="text-xs text-slate-500 leading-relaxed">
-                  복잡한 판결문과 승소 스토리의 핵심 요지를 1080x1080 인스타그램 고화질 카드뉴스 이미지 세트로 1초 분할 추출.
-                </p>
-              </div>
-              <div className="p-3 bg-slate-50 rounded-xl border border-slate-200/80 text-[11px] text-slate-600">
-                👉 한눈에 들어오는 승소 결과로 의뢰인 신뢰도 극대화
-              </div>
-            </div>
-
-            {/* 6. AI 유튜브 쇼츠 영상 자동 생성 (ROADMAP) */}
-            <div className="bg-gradient-to-br from-white via-sky-50/40 to-sky-100/30 border-2 border-sky-300/60 rounded-3xl p-6 space-y-4 shadow-xs hover:shadow-sm transition-all">
-              <div className="flex items-center justify-between">
-                <span className="px-2.5 py-1 rounded-full bg-sky-100 text-[#0284C7] text-[11px] font-black border border-sky-200">
-                  🚀 2026 ROADMAP
-                </span>
-                <span className="text-xs text-[#0284C7] font-bold">06. 숏폼 영상</span>
-              </div>
-              <div className="space-y-1.5">
-                <h3 className="text-lg font-black text-slate-900 flex items-center gap-2">
-                  <span>🎬 AI 유튜브 쇼츠 영상 자동 생성</span>
-                </h3>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  단순한 텍스트 대본이 아닙니다. 칼럼의 핵심 쟁점을 뽑아 AI 음성 더빙, 자동 자막, 하이라이트 비주얼이 결합된 1분 쇼츠 영상을 전자동 렌더링.
-                </p>
-              </div>
-              <div className="p-3 bg-sky-100/60 rounded-xl border border-sky-200 text-[11px] text-[#0284C7] font-bold">
-                👉 촬영 부담 0%로 유튜브·릴스 알고리즘을 통한 폭발적 수임 유입
+                <div className="p-2.5 bg-white rounded-xl border border-[#0284C7]/30 text-[11px] text-[#0284C7] font-bold">
+                  👉 영상 알고리즘 수임 문의 자동 유입
+                </div>
               </div>
             </div>
           </div>
@@ -722,7 +1070,7 @@ export default function HomePage() {
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4 text-[#0284C7] shrink-0" />
-                  <span>변호사법·세무사법 100% 준수 합법 플레이스 소개글 AI 생성</span>
+                  <span>변호사법 제23조 100% 준수 합법 플레이스 소개글 AI 생성</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4 text-[#0284C7] shrink-0" />

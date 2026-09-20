@@ -1,4 +1,6 @@
 import { NextResponse } from 'next/server'
+import prisma from '@/lib/prisma'
+import { triageConsultLead, LeadTriageResult } from '@/lib/ai/jevClient'
 
 export async function POST(req: Request) {
   try {
@@ -14,14 +16,19 @@ export async function POST(req: Request) {
       metadata = {},
     } = body
 
-    if (!email || !String(email).includes('@')) {
-      return NextResponse.json(
-        { error: '올바른 이메일 주소를 입력해 주세요.' },
-        { status: 400 }
-      )
+    let validEmail = email
+    if (!validEmail || !String(validEmail).includes('@')) {
+      if (leadType === 'consulting' && phone) {
+        validEmail = `${String(phone).replace(/[^0-9]/g, '') || 'client'}@postsync.consult`
+      } else {
+        return NextResponse.json(
+          { error: '올바른 이메일 주소를 입력해 주세요.' },
+          { status: 400 }
+        )
+      }
     }
 
-    const cleanEmail = String(email).trim().toLowerCase()
+    const cleanEmail = String(validEmail).trim().toLowerCase()
     const cleanPhone = String(phone).trim()
     const cleanName = String(name).trim() || String(businessName).trim() || '고객'
     const nowTime = new Date().toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' })
@@ -36,6 +43,18 @@ export async function POST(req: Request) {
       taxDeductionText = `사업자 지출증빙용 세금계산서 (${taxNum || '사업자번호 미기재'})`
     }
 
+    // 🧠 Jev (TypeSafe AI System One) 초고속 실시간 긴급도/수임가치 판별 (0.05초)
+    let jevTriage: LeadTriageResult | null = null
+    if (leadType === 'consulting') {
+      jevTriage = await triageConsultLead({
+        specialty: metadata.specialty || industry,
+        stage: metadata.stage,
+        summary: metadata.summary,
+        name: cleanName,
+        phone: cleanPhone,
+      })
+    }
+
     // 1. Telegram 실시간 알림 발송 (대표님 텔레그램 봇)
     const tgToken = process.env.TELEGRAM_BOT_TOKEN || '8314703344:AAGoFyPTWjHCRjPWq32Pdq0dti0TG8zZahE'
     const tgChatId = process.env.TELEGRAM_CHAT_ID || '8650197247'
@@ -43,7 +62,22 @@ export async function POST(req: Request) {
     if (tgToken && tgChatId) {
       try {
         let msg = ''
-        if (leadType === 'ebook_order') {
+        if (leadType === 'consulting') {
+          const urgentBadge = jevTriage?.isUrgent ? '🚨 [골든타임 긴급]' : '⚖️ [일반 상담]'
+          msg = `${urgentBadge} 사건 1분 안심 진단 접수 - ${toolSource.toUpperCase()}\n\n` +
+            `🧠 [Jev AI 실시간 긴급도 판별 결과]\n` +
+            `• 긴급도 지수: ${jevTriage ? jevTriage.urgencyScore : 85}% (${jevTriage?.isUrgent ? '골든타임 대응 요망' : '일반 대응'})\n` +
+            `• 추정 수임 가치: ${jevTriage ? jevTriage.retainerAmountLabel : '상담 후 산정'}\n` +
+            `• 권장 액션: ${jevTriage ? jevTriage.actionText : '10분 내 유선 연결 권장'}\n\n` +
+            `⚖️ 상담 분야: ${metadata.specialty || industry || '미선택'}\n` +
+            `📍 진행 단계: ${metadata.stage || '미선택'}\n` +
+            `👤 의뢰인: ${cleanName}\n` +
+            `📱 연락처: ${cleanPhone || '미기재'}\n` +
+            `📧 이메일: ${cleanEmail}\n` +
+            `📝 사건 요약: ${metadata.summary || '상세 사연 미기재'}\n` +
+            `⏱ 신청일시: ${nowTime}\n\n` +
+            `🔥 [수임 골든타임 10분] 지금 바로 의뢰인에게 유선 전화를 연결하여 방문 상담을 확정하세요!`
+        } else if (leadType === 'ebook_order') {
           msg = `💰 [전자책 계좌이체 주문 접수 - ${toolSource.toUpperCase()}]\n\n` +
             `📚 상품명: ${metadata.bookTitle || '2026 변호사·세무사 네이버 상위 1% 인바운드 마케팅 실전 지침서 (PDF)'}\n` +
             `💵 결제금액: ${metadata.amount ? Number(metadata.amount).toLocaleString() + '원' : '39,000원'}\n` +
@@ -82,9 +116,16 @@ export async function POST(req: Request) {
 
     if (resendKey) {
       try {
-        const subject = leadType === 'ebook_order'
-          ? `[전자책 주문] ${cleanName}님 39,000원 계좌이체 신청 (${cleanEmail})`
-          : `[신규 리드] ${cleanEmail} - ${toolSource} 가이드북 신청`
+        let subject = `[신규 리드] ${cleanEmail} - ${toolSource} 가이드북 신청`
+        let titleText = '신규 리드 마그넷 신청'
+
+        if (leadType === 'consulting') {
+          subject = `🚨 [사건 진단 접수] ${cleanName}님 (${cleanPhone}) - ${metadata.specialty || '법률 상담'}`
+          titleText = '사건 1분 안심 진단 접수 (골든타임)'
+        } else if (leadType === 'ebook_order') {
+          subject = `[전자책 주문] ${cleanName}님 39,000원 계좌이체 신청 (${cleanEmail})`
+          titleText = '전자책 무통장 입금 신청'
+        }
 
         await fetch('https://api.resend.com/emails', {
           method: 'POST',
@@ -98,7 +139,7 @@ export async function POST(req: Request) {
             subject: subject,
             html: `
               <div style="font-family: sans-serif; font-size: 15px; line-height: 1.7; color: #334155; padding: 20px;">
-                <h2 style="color: #1e3a8a;">🔔 ${leadType === 'ebook_order' ? '전자책 무통장 입금 신청' : '신규 리드 마그넷 신청'}</h2>
+                <h2 style="color: #1e3a8a;">🔔 ${titleText}</h2>
                 <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; margin: 16px 0;">
                   <p><strong>유입 출처:</strong> ${toolSource}</p>
                   <p><strong>이름/입금자명:</strong> ${cleanName}</p>
@@ -117,6 +158,44 @@ export async function POST(req: Request) {
       }
     }
 
+    // 3. PostgreSQL leads 테이블에 영구 보존
+    let savedLeadId: string | null = null
+    try {
+      const createdLead = await prisma.lead.create({
+        data: {
+          toolSource: String(toolSource),
+          leadType: String(leadType),
+          email: cleanEmail,
+          phone: cleanPhone || null,
+          businessName: cleanName || null,
+          industry: metadata.specialty || industry || null,
+          location: metadata.location || null,
+          status: 'NEW',
+          metadata: {
+            ...metadata,
+            clientName: cleanName,
+            clientPhone: cleanPhone,
+            cleanEmail,
+            taxDeductionText,
+            jevTriage: jevTriage ? {
+              isUrgent: jevTriage.isUrgent,
+              urgencyScore: jevTriage.urgencyScore,
+              retainerTier: jevTriage.retainerTier,
+              retainerAmountLabel: jevTriage.retainerAmountLabel,
+              recommendedAction: jevTriage.recommendedAction,
+              actionText: jevTriage.actionText,
+              confidence: jevTriage.confidence,
+              model: jevTriage.model
+            } : null,
+          }
+        }
+      })
+      savedLeadId = createdLead.id
+      console.log(`[Leads API] Lead successfully saved to DB: ${savedLeadId}`)
+    } catch (dbErr) {
+      console.error('[Leads API] DB save error (continuing response):', dbErr)
+    }
+
     return NextResponse.json({
       success: true,
       message: leadType === 'ebook_order'
@@ -124,6 +203,8 @@ export async function POST(req: Request) {
         : '신청이 정상 완료되었습니다. 기재하신 이메일로 가이드북이 순차 발송됩니다.',
       email: cleanEmail,
       leadType,
+      leadId: savedLeadId,
+      triage: jevTriage,
     })
   } catch (err: any) {
     console.error('[Leads API Exception]:', err)

@@ -10,8 +10,10 @@ import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { 
   Loader2, Sparkles, PenTool, Monitor, Smartphone, 
-  Copy, Check, FileText, Clock, BookOpen, ArrowRight, ShieldCheck 
+  Copy, Check, FileText, Clock, BookOpen, ArrowRight, ShieldCheck, AlertCircle, RefreshCw, Search,
+  Swords, X
 } from 'lucide-react'
+import type { ComplianceInspectionResult, ComplianceViolation } from '@/lib/adcheck/lawyerCompliance'
 import { CopyToNaverBtn } from '@/components/CopyToNaverBtn'
 import { NaverAutoPublishBtn } from '@/components/NaverAutoPublishBtn'
 import { MultiPublishBtn } from '@/components/MultiPublishBtn'
@@ -35,8 +37,13 @@ import { stripInternalMetadata } from '@/lib/utils/postSanitizer'
 export default function WritePage() {
   const searchParams = useSearchParams()
   const initialKeyword = searchParams.get('keyword') || ''
+  const initialCompetitor = searchParams.get('competitor') || ''
+  const initialGap = searchParams.get('gap') || ''
 
   const [keyword, setKeyword] = useState(initialKeyword)
+  const [competitorContext, setCompetitorContext] = useState<{ competitor: string; gap: string } | null>(
+    initialCompetitor && initialGap ? { competitor: initialCompetitor, gap: initialGap } : null
+  )
   const [tone, setTone] = useState('신뢰형 전문가 칼럼 (법리·판례 중심의 차분하고 명쾌한 분석)')
   const [experience, setExperience] = useState('')
   const [isTitleCopied, setIsTitleCopied] = useState(false)
@@ -72,6 +79,12 @@ export default function WritePage() {
   const [isImagesReady, setIsImagesReady] = useState(false)
   const [showQuotaModal, setShowQuotaModal] = useState(false)
   const [quotaMessage, setQuotaMessage] = useState('')
+  
+  // 🛡️ Jev 변호사법 제23조 실시간 안심 검역 상태
+  const [complianceResult, setComplianceResult] = useState<ComplianceInspectionResult | null>(null)
+  const [isInspectingCompliance, setIsInspectingCompliance] = useState(false)
+  const [showComplianceModal, setShowComplianceModal] = useState(false)
+  const [editedHtml, setEditedHtml] = useState<string | null>(null)
   const { toast } = useToast()
 
   const { completion, complete, isLoading, error } = useCompletion({
@@ -237,9 +250,69 @@ export default function WritePage() {
     };
   }, [isLoading, parsedHtml]);
 
+  // 🛡️ 원고 생성 완료 또는 수정 시 Jev AI 변호사법 제23조 실시간 검역 (디바운스 500ms)
+  useEffect(() => {
+    const targetHtml = editedHtml || parsedHtml
+    if (!isLoading && targetHtml && targetHtml.length > 50) {
+      setIsInspectingCompliance(true)
+      const timer = setTimeout(async () => {
+        try {
+          const plainText = targetHtml.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim()
+          const res = await fetch('/api/adcheck/analyze', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text: plainText })
+          })
+          if (res.ok) {
+            const data: ComplianceInspectionResult = await res.json()
+            setComplianceResult(data)
+          }
+        } catch (e) {
+          console.warn('AdCheck compliance analyze warning:', e)
+        } finally {
+          setIsInspectingCompliance(false)
+        }
+      }, 500)
+      return () => clearTimeout(timer)
+    }
+  }, [isLoading, parsedHtml, editedHtml])
+
+  // 위반 단어 개별 1-클릭 합법 치환
+  const handleReplaceViolation = (violation: ComplianceViolation) => {
+    const current = editedHtml || parsedHtml
+    const regex = new RegExp(violation.word.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), 'g')
+    const replaced = current.replace(regex, violation.replacement)
+    setEditedHtml(replaced)
+    toast({
+      title: '합법 대체어로 치환 완료',
+      description: `"${violation.word}" ➔ "${violation.replacement}"으로 안전하게 교체되었습니다.`
+    })
+  }
+
+  // 전체 위반 단어 일괄 원클릭 합법 치환
+  const handleBatchReplaceAll = () => {
+    if (!complianceResult || complianceResult.violations.length === 0) return
+    let current = editedHtml || parsedHtml
+    let replacedCount = 0
+    for (const v of complianceResult.violations) {
+      if (v.word.startsWith('[')) continue // 문맥성 감지는 수동 확인 권장
+      const regex = new RegExp(v.word.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), 'g')
+      if (regex.test(current)) {
+        current = current.replace(regex, v.replacement)
+        replacedCount++
+      }
+    }
+    setEditedHtml(current)
+    toast({
+      title: '일괄 합법 치환 완료',
+      description: `총 ${replacedCount}건의 위반 표현이 변호사법 제23조 합법 문구로 전원 교체되었습니다.`
+    })
+    setShowComplianceModal(false)
+  }
+
   const ensurePreUploadReady = async (): Promise<string> => {
     if (readyHtml) return readyHtml;
-    const { updatedHtml } = await preUploadCardImages(parsedHtml);
+    const { updatedHtml } = await preUploadCardImages(editedHtml || parsedHtml);
     setReadyHtml(updatedHtml);
     setIsImagesReady(true);
     return updatedHtml;
@@ -267,7 +340,11 @@ export default function WritePage() {
     complete(keyword, {
       body: {
         tone,
-        experience
+        experience,
+        competitorContext: competitorContext ? {
+          competitor: competitorContext.competitor,
+          counterGap: competitorContext.gap
+        } : undefined
       }
     })
   }
@@ -347,6 +424,32 @@ export default function WritePage() {
           )}
 
           <div className="space-y-3">
+            {/* ⚔️ 경쟁사 맞불 타깃 모드 가동 배너 */}
+            {competitorContext && (
+              <div className="p-3 bg-gradient-to-r from-rose-50 via-indigo-50/50 to-white rounded-xl border border-rose-200 text-xs space-y-1.5 shadow-2xs animate-in fade-in">
+                <div className="flex items-center justify-between">
+                  <span className="font-extrabold text-rose-700 flex items-center gap-1.5 text-[11px]">
+                    <Swords className="w-3.5 h-3.5 text-rose-600" />
+                    ⚔️ 경쟁사 맞불 타깃 모드 가동
+                  </span>
+                  <button 
+                    type="button"
+                    onClick={() => setCompetitorContext(null)} 
+                    className="text-[10px] text-slate-400 hover:text-slate-700 underline cursor-pointer"
+                  >
+                    일반 모드로 전환
+                  </button>
+                </div>
+                <p className="text-[11px] text-slate-800 leading-snug">
+                  공략 대상: <strong className="text-slate-900">{competitorContext.competitor}</strong>
+                </p>
+                <div className="text-[11px] text-rose-950 bg-white/90 p-2 rounded-lg border border-rose-100/90 leading-relaxed">
+                  <strong className="text-rose-700 font-bold block mb-0.5">🧠 Jev 간파 허점 (우리가 메울 빈틈):</strong>
+                  {competitorContext.gap}
+                </div>
+              </div>
+            )}
+
             <div className="space-y-1">
               <label className="text-xs font-bold text-slate-700">타겟 키워드</label>
               <Input 
@@ -418,7 +521,7 @@ export default function WritePage() {
           >
             {isLoading ? (
               !completion ? (
-                <><Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin" /> 상위 블로그 분석 중...</>
+                <><Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin" /> 네이버 상위 10개 SERP 수집 & Jev 팩트 정제 중...</>
               ) : (
                 <><Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin" /> AI 원고 작성 중...</>
               )
@@ -452,6 +555,37 @@ export default function WritePage() {
               <span className="text-[11px] text-indigo-600 font-semibold animate-pulse ml-1 bg-indigo-50 px-1.5 py-0.5 rounded border border-indigo-100">
                 ● 실시간 스트리밍 중...
               </span>
+            )}
+            {/* 🛡️ 변호사법 제23조 안심 검역 인디케이터 배지 */}
+            {parsedHtml && !isLoading && (
+              <div className="ml-1 flex items-center gap-1.5">
+                {/* 🔍 네이버 상위 10개 SERP 역설계 & Jev 정제 완료 뱃지 */}
+                <span className="hidden md:inline-flex items-center gap-1 text-[10px] font-bold text-slate-700 bg-slate-100 px-2 py-0.5 rounded-full border border-slate-200 shadow-2xs">
+                  <Search className="w-2.5 h-2.5 text-indigo-500" />
+                  상위 10사 역설계 완료 (정예 4건 벤치마크)
+                </span>
+
+                {isInspectingCompliance ? (
+                  <span className="inline-flex items-center gap-1 text-[10px] font-bold text-[#0284C7] bg-[#E0F2FE] px-2 py-0.5 rounded-full border border-sky-200">
+                    <Loader2 className="w-2.5 h-2.5 animate-spin" /> Jev 광고법 23조 심사 중...
+                  </span>
+                ) : complianceResult ? (
+                  complianceResult.isCompliant ? (
+                    <span className="inline-flex items-center gap-1 text-[10px] font-extrabold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200 shadow-2xs">
+                      <ShieldCheck className="w-3 h-3 text-emerald-600" />
+                      변호사법 제23조 안심 통과 (위반율 0%)
+                    </span>
+                  ) : (
+                    <button
+                      onClick={() => setShowComplianceModal(true)}
+                      className="inline-flex items-center gap-1 text-[10px] font-extrabold text-rose-700 bg-rose-50 px-2 py-0.5 rounded-full border border-rose-200 animate-pulse hover:bg-rose-100 transition-all cursor-pointer shadow-2xs"
+                    >
+                      <AlertCircle className="w-3 h-3 text-rose-600" />
+                      징계 위험 감지 ({complianceResult.violations.length}건 · 확인 ➔)
+                    </button>
+                  )
+                ) : null}
+              </div>
             )}
           </div>
 
@@ -528,6 +662,40 @@ export default function WritePage() {
             )}
           </Button>
         </div>
+
+        {/* 🚨 변호사법 제23조 위반 감지 시 즉시 노출되는 1-클릭 조치 알림 바 */}
+        {complianceResult && !complianceResult.isCompliant && !isLoading && (
+          <div className="bg-rose-50/90 border-b border-rose-200 px-3.5 py-2 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+            <div className="flex items-center gap-2">
+              <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
+              <div>
+                <span className="font-black text-rose-900">
+                  변호사법 제23조 위반 위험 {complianceResult.violations.length}건 감지:
+                </span>
+                <span className="text-slate-600 ml-1.5 text-[11px]">
+                  결과 보장, 최상급 우월성 또는 사적 연고 암시 표현이 포함되어 있습니다.
+                </span>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
+              <Button
+                size="sm"
+                onClick={handleBatchReplaceAll}
+                className="h-7 px-2.5 text-[11px] font-black bg-emerald-600 hover:bg-emerald-700 text-white rounded-md cursor-pointer shadow-2xs"
+              >
+                1-클릭 일괄 합법 치환
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => setShowComplianceModal(true)}
+                className="h-7 px-2.5 text-[11px] font-bold border-rose-300 text-rose-700 hover:bg-rose-100 rounded-md cursor-pointer"
+              >
+                상세 조문 검토 ➔
+              </Button>
+            </div>
+          </div>
+        )}
 
         {/* 중앙 본문 렌더링 영역 (세로 공간 극대화 및 좌측 정렬) */}
         <CardContent className="p-0 flex-1 overflow-auto bg-slate-100/50">
@@ -639,6 +807,113 @@ export default function WritePage() {
                 className="w-full text-xs text-slate-500 hover:text-slate-800 h-8 font-medium cursor-pointer"
               >
                 다음에 하기 (닫기)
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 🛡️ 변호사법 제23조 위반 정밀 심사 및 원클릭 합법 치환 모달 */}
+      {showComplianceModal && complianceResult && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4 animate-in fade-in duration-200">
+          <div className="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-2xl border border-slate-100 text-left space-y-4 relative animate-in zoom-in-95 duration-200 max-h-[85vh] flex flex-col">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+              <div className="flex items-center gap-2">
+                <span className="w-8 h-8 rounded-xl bg-rose-50 flex items-center justify-center text-rose-600">
+                  <ShieldCheck className="w-5 h-5" />
+                </span>
+                <div>
+                  <h3 className="text-base font-black text-slate-900">
+                    변호사법 제23조 & 대한변협 광고규정 심사 결과
+                  </h3>
+                  <p className="text-xs text-slate-500">
+                    총 {complianceResult.violations.length}건의 규정 위반 소지가 발견되었습니다.
+                  </p>
+                </div>
+              </div>
+              <Button
+                size="sm"
+                onClick={handleBatchReplaceAll}
+                className="bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs px-3 h-8 rounded-lg cursor-pointer"
+              >
+                전체 일괄 합법 치환
+              </Button>
+            </div>
+
+            {/* Jev 4대 지표 요약 바 */}
+            {complianceResult.jevAnalysis && (
+              <div className="grid grid-cols-4 gap-2 bg-slate-50 p-3 rounded-xl text-center text-xs">
+                <div>
+                  <span className="text-[10px] text-slate-500 block">결과보장 우려</span>
+                  <strong className={`text-xs ${complianceResult.jevAnalysis.isResultGuaranteed > 50 ? 'text-rose-600' : 'text-slate-800'}`}>
+                    {complianceResult.jevAnalysis.isResultGuaranteed}%
+                  </strong>
+                </div>
+                <div>
+                  <span className="text-[10px] text-slate-500 block">최상급 과장</span>
+                  <strong className={`text-xs ${complianceResult.jevAnalysis.isSuperlative > 50 ? 'text-rose-600' : 'text-slate-800'}`}>
+                    {complianceResult.jevAnalysis.isSuperlative}%
+                  </strong>
+                </div>
+                <div>
+                  <span className="text-[10px] text-slate-500 block">전관예우 암시</span>
+                  <strong className={`text-xs ${complianceResult.jevAnalysis.isInfluencePeddling > 50 ? 'text-rose-600' : 'text-slate-800'}`}>
+                    {complianceResult.jevAnalysis.isInfluencePeddling}%
+                  </strong>
+                </div>
+                <div>
+                  <span className="text-[10px] text-slate-500 block">부당염가 유인</span>
+                  <strong className={`text-xs ${complianceResult.jevAnalysis.isPredatoryPricing > 50 ? 'text-rose-600' : 'text-slate-800'}`}>
+                    {complianceResult.jevAnalysis.isPredatoryPricing}%
+                  </strong>
+                </div>
+              </div>
+            )}
+
+            {/* 위반 내역 리스트 */}
+            <div className="flex-1 overflow-y-auto space-y-2.5 pr-1">
+              {complianceResult.violations.map((item, idx) => (
+                <div key={idx} className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="px-2 py-0.5 rounded-md bg-rose-100 text-rose-800 text-[10px] font-black">
+                        {item.law}
+                      </span>
+                      <span className="text-xs font-black text-rose-700">
+                        &quot;{item.word}&quot;
+                      </span>
+                    </div>
+                    {!item.word.startsWith('[') && (
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => handleReplaceViolation(item)}
+                        className="h-7 px-2.5 text-[11px] font-extrabold border-emerald-300 text-emerald-700 hover:bg-emerald-50 rounded-md cursor-pointer"
+                      >
+                        합법 치환 ➔
+                      </Button>
+                    )}
+                  </div>
+                  <p className="text-xs text-slate-600">
+                    <strong className="text-slate-800">사유:</strong> {item.reason}
+                  </p>
+                  <div className="p-2 bg-emerald-50/60 rounded-lg text-xs text-emerald-900 flex items-center justify-between">
+                    <span>
+                      <strong className="text-emerald-800">추천 합법 표현:</strong> &quot;{item.replacement}&quot;
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="pt-2 border-t border-slate-100 flex justify-end">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowComplianceModal(false)}
+                className="text-xs font-bold"
+              >
+                닫기
               </Button>
             </div>
           </div>

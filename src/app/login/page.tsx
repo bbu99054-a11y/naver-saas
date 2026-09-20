@@ -5,7 +5,7 @@ import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useRouter } from 'next/navigation'
-import { Sparkles, ArrowRight, ShieldAlert, CheckCircle2, Loader2, Lock, Mail, UserPlus, LogIn } from 'lucide-react'
+import { Sparkles, ArrowRight, ShieldAlert, ShieldCheck, CheckCircle2, Loader2, Lock, Mail, UserPlus, LogIn } from 'lucide-react'
 import Link from 'next/link'
 import { validateSignUpInput, isDisposableEmail } from '@/lib/disposableEmailBlocker'
 
@@ -139,36 +139,58 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen w-full flex bg-white selection:bg-indigo-200">
-      {/* 좌측: 브랜딩 및 마케팅 영역 (데스크탑에서만 표시) */}
-      <div className="hidden lg:flex w-1/2 bg-slate-900 relative overflow-hidden flex-col justify-between p-12 text-white">
-        <div className="absolute top-[-10%] left-[-10%] w-[120%] h-[120%] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-indigo-900/40 via-slate-900 to-slate-900 pointer-events-none" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-indigo-600/30 blur-[100px] rounded-full pointer-events-none" />
+    <div className="min-h-screen w-full flex bg-white selection:bg-[#E0F2FE] selection:text-[#0284C7]">
+      {/* 좌측: 브랜딩 및 마케팅 영역 (100% 변호사 사건 수임 OS 테마) */}
+      <div className="hidden lg:flex w-1/2 bg-[#0B1527] relative overflow-hidden flex-col justify-between p-12 text-white border-r border-slate-800">
+        <div className="absolute top-[-10%] left-[-10%] w-[120%] h-[120%] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#0284C7]/20 via-[#0B1527] to-[#0B1527] pointer-events-none" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-[#0284C7]/15 blur-[120px] rounded-full pointer-events-none" />
         
-        <Link href="/" className="relative z-10 flex items-center gap-2 text-2xl font-black tracking-tighter hover:opacity-90 transition-opacity">
-          <span className="bg-indigo-600 text-white p-1.5 rounded-lg"><Sparkles size={22} /></span>
-          PostSync
+        <Link href="/" className="relative z-10 flex items-center gap-2.5 text-2xl font-black tracking-tight hover:opacity-90 transition-opacity">
+          <span className="w-9 h-9 rounded-xl bg-[#0284C7] text-white flex items-center justify-center font-black text-lg shadow-sm">
+            P
+          </span>
+          <span className="text-white tracking-tight">PostSync</span>
+          <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-[#E0F2FE] text-[#0284C7] border border-[#0284C7]/30">
+            PRO
+          </span>
         </Link>
 
-        <div className="relative z-10 space-y-6 max-w-lg mt-20">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 text-xs font-bold">
-            <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-            신규 가입 시 3회 무료 체험 크레딧 즉시 지급
+        <div className="relative z-10 space-y-6 max-w-lg mt-16">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#0284C7]/20 text-[#38BDF8] border border-[#0284C7]/30 text-xs font-bold">
+            <Sparkles className="w-3.5 h-3.5 text-[#38BDF8]" />
+            <span>대한민국 1등 로펌 3-in-1 사건 수임 OS</span>
           </div>
-          <h1 className="text-4xl lg:text-5xl font-extrabold leading-tight tracking-tight">
-            가장 스마트하게<br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-violet-300 to-emerald-400">
-              상위 노출을 점령하세요.
+
+          <h1 className="text-4xl lg:text-[44px] font-black leading-[1.2] tracking-tight text-white">
+            네이버 1위부터 SNS까지,<br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#38BDF8] via-[#7DD3FC] to-white">
+              대표님 로펌에 알짜 수임을 물어다 드립니다
             </span>
           </h1>
-          <p className="text-base text-slate-300 leading-relaxed">
-            2026년형 네이버 C-Rank 완벽 대응. 전문직 특화 AI가 법률/세무/의료 광고법을 준수하며 1위 상위노출 원고와 인포그래픽을 3초 만에 완성합니다.
+
+          <p className="text-sm text-slate-300 leading-relaxed font-normal">
+            네이버 4단 전문 칼럼 스튜디오부터 스마트플레이스 로컬 1위 관제, 1분 사건 안심 진단 폼, 그리고 실시간 수임 파이프라인 CRM까지. 로펌의 24시간 수임 엔진을 가동하세요.
           </p>
+
+          <div className="space-y-2.5 pt-2 text-xs text-slate-300 font-semibold border-t border-white/10">
+            <div className="flex items-center gap-2.5">
+              <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
+              <span>변호사법 제23조 광고 규정 100% 안심 필터링</span>
+            </div>
+            <div className="flex items-center gap-2.5">
+              <CheckCircle2 className="w-4 h-4 text-[#38BDF8] shrink-0" />
+              <span>블로그 1분 안심 진단 폼 ➔ 10분 골든타임 수임 알림</span>
+            </div>
+            <div className="flex items-center gap-2.5">
+              <Lock className="w-4 h-4 text-amber-400 shrink-0" />
+              <span>의뢰인 접수 정보 암호화 및 100% 비밀 보장 연동</span>
+            </div>
+          </div>
         </div>
 
         <div className="relative z-10 mt-auto pt-8 border-t border-white/10">
           <p className="text-xs text-slate-400 font-medium">
-            © 2026 와이엠랩스 (YM Labs). Empowering Professionals with Advanced AI SEO.
+            © 2026 PostSync Pro. Empowering Law Firms with Legal Client Acquisition OS.
           </p>
         </div>
       </div>
@@ -176,16 +198,15 @@ export default function LoginPage() {
       {/* 우측: 로그인 / 회원가입 폼 영역 */}
       <div className="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12 overflow-y-auto">
         <div className="w-full max-w-[420px] space-y-6 py-8">
-          
           {/* Header Text */}
           <div className="text-center space-y-2">
-            <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900">
-              {mode === 'login' ? '로그인' : '무료 회원가입'}
+            <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900">
+              {mode === 'login' ? '로펌 계정 로그인' : '무료로 수임 시작하기'}
             </h2>
             <p className="text-xs sm:text-sm text-slate-500">
               {mode === 'login'
-                ? '계정에 로그인하여 AI 포스팅을 시작하세요.'
-                : '가입 즉시 3회 무료 포스팅 크레딧이 충전됩니다.'}
+                ? '계정에 로그인하여 로펌 수임 파이프라인을 가동하세요.'
+                : '가입 즉시 3회 무료 수임 시스템 크레딧이 충전됩니다.'}
             </p>
           </div>
 
@@ -197,7 +218,7 @@ export default function LoginPage() {
                 setMode('login')
                 setErrorMessage(null)
               }}
-              className={`py-2 text-xs font-bold rounded-lg transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
+              className={`py-2.5 text-xs font-black rounded-lg transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
                 mode === 'login'
                   ? 'bg-white text-slate-900 shadow-xs'
                   : 'text-slate-500 hover:text-slate-900'
@@ -212,9 +233,9 @@ export default function LoginPage() {
                 setMode('signup')
                 setErrorMessage(null)
               }}
-              className={`py-2 text-xs font-bold rounded-lg transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
+              className={`py-2.5 text-xs font-black rounded-lg transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
                 mode === 'signup'
-                  ? 'bg-indigo-600 text-white shadow-xs'
+                  ? 'bg-[#0284C7] text-white shadow-xs'
                   : 'text-slate-500 hover:text-slate-900'
               }`}
             >
@@ -241,7 +262,7 @@ export default function LoginPage() {
           {/* 1클릭 소셜 로그인 */}
           <div className="grid gap-2.5">
             <Button 
-              type="button"
+              type="button" 
               variant="outline" 
               className="h-11 border-slate-200 text-slate-700 hover:bg-slate-50 font-bold text-xs cursor-pointer shadow-2xs"
               onClick={handleGoogleLogin}
@@ -256,7 +277,7 @@ export default function LoginPage() {
             </Button>
 
             <Button 
-              type="button"
+              type="button" 
               className="h-11 bg-[#FEE500] hover:bg-[#FADA0A] text-[#000000] font-bold text-xs border-none shadow-none cursor-pointer"
               onClick={handleKakaoLogin}
             >
@@ -271,7 +292,7 @@ export default function LoginPage() {
                 <span className="w-full border-t border-slate-200" />
               </div>
               <div className="relative flex justify-center text-[11px] uppercase">
-                <span className="bg-white px-2 text-slate-400 font-semibold">
+                <span className="bg-white px-2 text-slate-400 font-bold">
                   또는 이메일로 {mode === 'login' ? '로그인' : '가입'}
                 </span>
               </div>
@@ -286,10 +307,10 @@ export default function LoginPage() {
                   <Input
                     id="email"
                     type="email"
-                    placeholder="name@naver.com"
+                    placeholder="name@lawfirm.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="h-11 pl-9 bg-slate-50/70 border-slate-200 focus:bg-white text-xs focus-visible:ring-indigo-500"
+                    className="h-11 pl-9 bg-slate-50/70 border-slate-200 focus:bg-white text-xs focus-visible:ring-[#0284C7]"
                     required
                   />
                 </div>
@@ -305,7 +326,7 @@ export default function LoginPage() {
                     placeholder={mode === 'signup' ? '최소 6자리 이상 입력' : '비밀번호 입력'}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="h-11 pl-9 bg-slate-50/70 border-slate-200 focus:bg-white text-xs focus-visible:ring-indigo-500"
+                    className="h-11 pl-9 bg-slate-50/70 border-slate-200 focus:bg-white text-xs focus-visible:ring-[#0284C7]"
                     required
                   />
                 </div>
@@ -323,7 +344,7 @@ export default function LoginPage() {
                       placeholder="비밀번호를 한 번 더 입력해 주세요"
                       value={passwordConfirm}
                       onChange={(e) => setPasswordConfirm(e.target.value)}
-                      className="h-11 pl-9 bg-slate-50/70 border-slate-200 focus:bg-white text-xs focus-visible:ring-indigo-500"
+                      className="h-11 pl-9 bg-slate-50/70 border-slate-200 focus:bg-white text-xs focus-visible:ring-[#0284C7]"
                       required
                     />
                   </div>
@@ -333,21 +354,21 @@ export default function LoginPage() {
               <Button 
                 type="submit" 
                 disabled={loading} 
-                className={`w-full h-11 text-white font-extrabold text-xs shadow-md cursor-pointer transition-transform hover:scale-[1.01] ${
+                className={`w-full h-12 text-white font-black text-xs shadow-md cursor-pointer transition-transform hover:scale-[1.01] active:scale-[0.99] ${
                   mode === 'signup'
-                    ? 'bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 shadow-indigo-200'
-                    : 'bg-indigo-600 hover:bg-indigo-700 shadow-indigo-100'
+                    ? 'bg-[#FF6B00] hover:bg-[#E05D00] shadow-orange-100'
+                    : 'bg-[#0284C7] hover:bg-[#0369A1] shadow-sky-100'
                 }`}
               >
                 {loading ? (
                   <>
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    처리 중...
+                    인증 확인 중...
                   </>
                 ) : mode === 'signup' ? (
-                  '🎁 3회 무료 크레딧 받고 시작하기'
+                  '🎁 3회 무료 수임 크레딧 받고 시작하기 ➔'
                 ) : (
-                  '이메일로 로그인'
+                  '수임 시스템 로그인 ➔'
                 )}
               </Button>
             </form>
@@ -364,7 +385,7 @@ export default function LoginPage() {
                     setMode('signup')
                     setErrorMessage(null)
                   }}
-                  className="font-bold text-indigo-600 hover:underline cursor-pointer ml-1"
+                  className="font-bold text-[#0284C7] hover:underline cursor-pointer ml-1"
                 >
                   무료 회원가입 (3회 무료)
                 </button>
@@ -378,7 +399,7 @@ export default function LoginPage() {
                     setMode('login')
                     setErrorMessage(null)
                   }}
-                  className="font-bold text-indigo-600 hover:underline cursor-pointer ml-1"
+                  className="font-bold text-[#0284C7] hover:underline cursor-pointer ml-1"
                 >
                   로그인하기
                 </button>

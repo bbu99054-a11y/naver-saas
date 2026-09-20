@@ -12,6 +12,9 @@ export interface ScrapedData {
     useQuote: boolean;
     useDivider: boolean;
   };
+  totalScrapedCount?: number;
+  filteredOutSpamCount?: number;
+  benchmarkedCount?: number;
 }
 
 const MOBILE_HEADERS = {
@@ -59,7 +62,7 @@ async function scrapeNaverSerpContextImpl(keyword: string): Promise<ScrapedData 
           logNo = pathParts[1];
         }
 
-        if (blogId && logNo && !seenLinks.has(`${blogId}_${logNo}`) && blogLinks.length < 5) {
+        if (blogId && logNo && !seenLinks.has(`${blogId}_${logNo}`) && blogLinks.length < 10) {
           seenLinks.add(`${blogId}_${logNo}`);
           blogLinks.push({ blogId, logNo });
         }
@@ -72,7 +75,7 @@ async function scrapeNaverSerpContextImpl(keyword: string): Promise<ScrapedData 
       return null;
     }
 
-    // 3. 상위 5개 블로그 본문 병렬 비동기 조회 (Promise.all + 2초 타임아웃)
+    // 3. 상위 10개 블로그 본문 병렬 비동기 조회 (Promise.all + 2초 타임아웃)
     const postResults = await Promise.all(
       blogLinks.map(async ({ blogId, logNo }) => {
         try {
@@ -115,6 +118,7 @@ async function scrapeNaverSerpContextImpl(keyword: string): Promise<ScrapedData 
 
           return {
             textLength: text.length,
+            previewText: text.slice(0, 800),
             imageCount,
             hasTable,
             hasQuote,
@@ -133,17 +137,80 @@ async function scrapeNaverSerpContextImpl(keyword: string): Promise<ScrapedData 
       return null;
     }
 
-    const totalTextLength = validPosts.reduce((acc, cur) => acc + cur.textLength, 0);
-    const totalImageCount = validPosts.reduce((acc, cur) => acc + cur.imageCount, 0);
-    const avgLength = Math.round(totalTextLength / validPosts.length);
-    const avgImages = Math.round(totalImageCount / validPosts.length);
+    // 4. Jev System One AI 기반 대행사 양산형 스팸글 0.05초 필터링 & 정예 4~5개 선별
+    const apiKey = process.env.TYPESAFE_API_KEY || process.env.JEV_API_KEY;
+    let benchmarkedPosts = validPosts;
+    let filteredOutSpamCount = 0;
+
+    if (apiKey && validPosts.length >= 4) {
+      try {
+        const scoredPosts = await Promise.all(
+          validPosts.map(async (post) => {
+            try {
+              const res = await fetch('https://api.typesafe.ai/v1/systemone', {
+                method: 'POST',
+                headers: {
+                  'Authorization': `Bearer ${apiKey}`,
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  model: 'jev-latest',
+                  state: {
+                    post_sample: post.previewText,
+                    target_keyword: keyword,
+                  },
+                  questions: {
+                    is_spam_agency_post: {
+                      type: 'noul',
+                      instructions:
+                        'Is this blog post an obvious marketing agency spam, keyword-stuffed promotion, or repetitive fluff rather than a professional substantive informative column?',
+                    },
+                  },
+                }),
+                signal: AbortSignal.timeout(1200),
+              });
+
+              if (res.ok) {
+                const data = await res.json();
+                const spamProb =
+                  typeof data?.answers?.is_spam_agency_post?.noul === 'number'
+                    ? data.answers.is_spam_agency_post.noul
+                    : 0.2;
+                return { ...post, spamProb };
+              }
+            } catch {}
+            return { ...post, spamProb: 0.2 };
+          })
+        );
+
+        const clean = scoredPosts.filter((p) => p.spamProb < 0.65);
+        if (clean.length >= 3) {
+          benchmarkedPosts = clean.slice(0, 5);
+          filteredOutSpamCount = scoredPosts.length - clean.length;
+        }
+      } catch (err) {
+        console.warn('[Scraper Jev Filter] Falling back to heuristics:', err);
+      }
+    }
+
+    // Heuristics Fallback (Jev 미작동 시)
+    if (filteredOutSpamCount === 0 && validPosts.length > 5) {
+      const sortedByQuality = [...validPosts].sort((a, b) => b.textLength - a.textLength);
+      benchmarkedPosts = sortedByQuality.slice(0, 5);
+      filteredOutSpamCount = validPosts.length - benchmarkedPosts.length;
+    }
+
+    const totalTextLength = benchmarkedPosts.reduce((acc, cur) => acc + cur.textLength, 0);
+    const totalImageCount = benchmarkedPosts.reduce((acc, cur) => acc + cur.imageCount, 0);
+    const avgLength = Math.round(totalTextLength / benchmarkedPosts.length);
+    const avgImages = Math.round(totalImageCount / benchmarkedPosts.length);
 
     const headersCount: Record<string, number> = {};
     let tableCount = 0;
     let quoteCount = 0;
     let dividerCount = 0;
 
-    for (const post of validPosts) {
+    for (const post of benchmarkedPosts) {
       if (post.hasTable) tableCount++;
       if (post.hasQuote) quoteCount++;
       if (post.hasDivider) dividerCount++;
@@ -159,7 +226,6 @@ async function scrapeNaverSerpContextImpl(keyword: string): Promise<ScrapedData 
 
     return {
       averageTextLength: avgLength,
-      // 상위 글 평균 수준으로 작성 유도 (최소 2,300자 보장)
       recommendedTextLength: Math.max(avgLength, 2300),
       averageImageCount: Math.max(avgImages, 5),
       commonHeaders,
@@ -169,6 +235,9 @@ async function scrapeNaverSerpContextImpl(keyword: string): Promise<ScrapedData 
         useQuote: quoteCount >= 1,
         useDivider: dividerCount >= 1,
       },
+      totalScrapedCount: validPosts.length,
+      filteredOutSpamCount,
+      benchmarkedCount: benchmarkedPosts.length,
     };
   } catch (error) {
     console.error('Scraping Naver SERP failed:', error);
