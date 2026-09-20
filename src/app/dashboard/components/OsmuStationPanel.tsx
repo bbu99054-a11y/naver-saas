@@ -10,11 +10,9 @@ import {
   Copy, 
   Check, 
   Download, 
-  ShieldCheck, 
-  Sparkles,
-  ArrowRight
+  Sparkles
 } from 'lucide-react'
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
+import { CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 
@@ -22,21 +20,33 @@ type ChannelTab = 'BLOG' | 'PLACE' | 'INSTA' | 'THREADS' | 'SHORTS'
 
 interface Topic {
   id: string
+  shortLabel: string
   title: string
   category: string
   caseQuote: string
 }
 
-const SAMPLE_TOPICS: Topic[] = [
-  { id: '1', title: '음주운전 2진 아웃 경찰 조사 전 선처 양형 판례', category: '형사 사건', caseQuote: '대법원 2024도12891 판결' },
-  { id: '2', title: '상간자 위자료 청구 소송 3,500만 원 승소 인용', category: '이혼·가사', caseQuote: '서울가정법원 2024드단5541 판결' },
-  { id: '3', title: '전세보증금 미반환 명도 및 강제집행 신속 회수', category: '부동산', caseQuote: '대법원 2023다28419 판결' },
-  { id: '4', title: '기업 횡령·배임 혐의 불송치 무혐의 종결', category: '기업법무', caseQuote: '검찰 불기소 결정례' }
-]
+interface OsmuStationPanelProps {
+  profile?: any
+}
 
-export function OsmuStationPanel() {
-  const [topics, setTopics] = useState<Topic[]>(SAMPLE_TOPICS)
-  const [selectedTopic, setSelectedTopic] = useState<Topic>(SAMPLE_TOPICS[0])
+export function OsmuStationPanel({ profile }: OsmuStationPanelProps) {
+  const cleanStore = (profile?.store_name || '우리 로펌').trim()
+  const cleanKeyword = (profile?.industry || '전문 변호사').trim()
+  const address = profile?.address || ''
+  const regionMatch = cleanKeyword.match(/^([가-힣]+(?:역|구|동|시|군|읍|면)?)/)
+  const regionName = regionMatch ? regionMatch[1] : (address ? address.split(' ')[1] || '관할' : '문정동')
+
+  const initialTopics: Topic[] = [
+    { id: '1', shortLabel: '🚨 음주운전 2진', title: `${regionName} 음주운전 2진 아웃 경찰 조사 전 선처 양형 판례`, category: '형사 긴급', caseQuote: '대법원 2024도12891 판결' },
+    { id: '2', shortLabel: '⚖️ 이혼 재산분할', title: `${regionName} 이혼 특유재산 45% 기여도 인정 및 재산분할 판례`, category: '이혼·가사', caseQuote: '서울가정법원 2024드단5541 판결' },
+    { id: '3', shortLabel: '🏠 전세금 명도', title: `${regionName} 전세보증금 미반환 명도 단행가처분 및 강제집행`, category: '부동산', caseQuote: '대법원 2023다28419 판결' },
+    { id: '4', shortLabel: '🏢 기업 횡령·배임', title: `${regionName} 기업 횡령·배임 혐의 불송치 무혐의 종결 전략`, category: '기업법무', caseQuote: '검찰 불기소 결정례' },
+    { id: '5', shortLabel: '🛡️ 보이스피싱', title: `${regionName} 보이스피싱 수거책 단순가담 무죄·집행유예 방어`, category: '고단가 수임', caseQuote: '서울동부지법 2024고단1829 판결' }
+  ]
+
+  const [topics, setTopics] = useState<Topic[]>(initialTopics)
+  const [selectedTopic, setSelectedTopic] = useState<Topic>(initialTopics[0])
   const [activeTab, setActiveTab] = useState<ChannelTab>('BLOG')
   const [copiedChannel, setCopiedChannel] = useState<string | null>(null)
 
@@ -47,6 +57,7 @@ export function OsmuStationPanel() {
       if (!title) return
       const newTopic: Topic = {
         id: `curation-${Date.now()}`,
+        shortLabel: title.slice(0, 10),
         title,
         category: category === 'HIGH_VALUE' ? '고단가 수임' : (category === 'SEASON' ? '시즌·이슈' : '지역 롱테일'),
         caseQuote: caseQuote || '대법원 실무 판례 요지 연동'
@@ -59,69 +70,94 @@ export function OsmuStationPanel() {
     return () => window.removeEventListener('postsynk:select-topic', handleCustomTopic)
   }, [])
 
+  // 채널별 완성 텍스트 생성
+  const getChannelContent = (channel: ChannelTab) => {
+    switch (channel) {
+      case 'BLOG':
+        return `[네이버 블로그 전문 칼럼]\n제목: ${selectedTopic.title}: 초기 출석 전 필수 법리 쟁점 3원칙\n\n1. 서론: 수사기관 통보 또는 소장 수령 직후 72시간은 향후 결과를 가르는 결정적 골든타임입니다. 단순 감정적 호소만으로는 재판부의 참작을 이끌어내기 어렵습니다.\n\n2. 판례 법리 분석 (${selectedTopic.caseQuote}): 판결례에 따르면 사건 초기 피의자/의뢰인이 자발적으로 피해 회복을 위한 물리적 조치를 완료하고 객관적 입증 자료를 선제 제출한 경우 유리한 양형 및 인용 결정이 내려집니다.\n\n3. 실무 대응 전략: 1차 조사 전 진술 번복 위험을 차단하고, 조서 날인 전 변호인 조력을 통해 불리한 문구를 사전 정정해야 합니다.\n\n[1분 안심 진단 배너 자동 포함됨]`
+      
+      case 'PLACE':
+        return `[네이버 플레이스 소식]\n제목: [긴급 안내] ${cleanStore} — ${selectedTopic.title} 1차 사전 검토 접수\n\n안녕하세요, ${regionName} 법조타운 ${cleanStore} 대표 변호사입니다.\n\n최근 '${selectedTopic.title}' 관련 법적 분쟁으로 인해 긴급 상담 문의가 급증하고 있습니다. 경찰 조사 전 쟁점 정리와 변호인 동석이 필요하신 분들을 위해 야간 및 주말 긴급 사전 검토를 운영합니다.\n\n📍 오시는 길: ${regionName} 법조타운 중심\n⚖️ 100% 비밀 보장 1차 사전 검토 신청 가능`
+      
+      case 'INSTA':
+        return `[인스타그램 4컷 벤토 인포그래픽 기획안]\n1컷 (문제 제기): ${selectedTopic.category} | ${selectedTopic.title} - 긴급 위기, 어떻게 대응해야 할까요?\n2컷 (법리 분석): 대법원 판례 기준 | ${selectedTopic.caseQuote} 핵심 요건\n3컷 (대응 전략): 골든타임 72시간 | 필수 증거 확보 및 탄원서 준비 체크리스트\n4컷 (상담 연결): 비밀 보장 검토 | 프로필 링크에서 1분 비밀 사건 진단 (변호사법 제26조)`
+      
+      case 'THREADS':
+        return `[스레드 5연속 글]\n1/5\n어제 한 의뢰인분이 손을 파르르 떨며 저희 사무실 문을 열었습니다. "${selectedTopic.title} 문제로 소장/출석통보를 받았는데 어떻게 해야 하나요?"\n\n2/5\n결론부터 말씀드리면, 초기 골든타임 72시간 대응에 따라 결과가 80% 결정됩니다. 많은 분들이 '알아서 잘 되겠지' 하고 안일하게 대처했다가 돌이킬 수 없는 불이익을 받습니다.\n\n3/5\n재판부와 수사기관이 실제로 집중하는 핵심 요건은 (${selectedTopic.caseQuote}) 법리에 명시된 객관적 입증 자료입니다.\n\n4/5\n실제 저희 ${cleanStore}에서 최근 성공적으로 인용·방어한 실무 대응 핵심 3원칙을 정리해 두었습니다.\n\n5/5 (댓글로 계속 👇)\n지금 비슷한 사안으로 고민 중이시라면 혼자 끙끙 앓지 마시고 프로필 링크의 [1분 안심 진단]에 남겨주세요. 대표 변호사가 직접 1차 법리 쟁점을 비밀 보장으로 검토해 드립니다.`
+      
+      case 'SHORTS':
+        return `[유튜브 숏츠 59초 대본]\n[00:00 - 00:03 시선 집중]\n"${selectedTopic.title} 때문에 밤잠 설치고 계신가요? 지금 당장 이것부터 확인하세요!"\n\n[00:04 - 00:48 해결 방안]\n${selectedTopic.caseQuote}에 따르면 법정에서 판사를 설득하는 건 감정적 호소가 아니라 구체적이고 객관적인 입증 자료입니다. 초기 72시간 내에 첫째, 사실관계 타임라인 정리, 둘째, 불리한 진술 차단, 셋째, 전문가의 사전 모의 검토가 필수입니다.\n\n[00:49 - 00:59 상담 안내]\n"내 사건에 적용되는 구체적 법리 검토는 고정 댓글의 1분 안심 진단 링크에서 바로 확인해 보세요."`
+    }
+  }
+
   const handleCopy = (channelName: string, text: string) => {
     navigator.clipboard.writeText(text)
     setCopiedChannel(channelName)
     setTimeout(() => setCopiedChannel(null), 2000)
   }
 
+  const handleCopyAll = () => {
+    const fullBundle = [
+      getChannelContent('BLOG'),
+      '\n' + '='.repeat(40) + '\n',
+      getChannelContent('PLACE'),
+      '\n' + '='.repeat(40) + '\n',
+      getChannelContent('INSTA'),
+      '\n' + '='.repeat(40) + '\n',
+      getChannelContent('THREADS'),
+      '\n' + '='.repeat(40) + '\n',
+      getChannelContent('SHORTS')
+    ].join('\n')
+
+    handleCopy('all', fullBundle)
+  }
+
   return (
-    <div id="osmu-station" className="bg-white rounded-2xl shadow-[0_4px_25px_-4px_rgba(0,0,0,0.05)] flex flex-col h-full overflow-hidden">
+    <div id="osmu-station" className="bg-white rounded-2xl shadow-[0_4px_25px_-4px_rgba(0,0,0,0.05)] flex flex-col h-full overflow-hidden border border-slate-200">
       {/* 🌟 헤더 & 쟁점 선택 */}
-      <div className="p-5 pb-3 bg-gradient-to-r from-sky-50/50 via-blue-50/30 to-white space-y-3">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-          <div>
-            <div className="flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-[#0284C7]" />
-              <span className="text-[11px] font-bold text-[#0284C7] uppercase tracking-wider">
-                1-Click Multi-Channel
-              </span>
-              <span className="text-[10px] text-slate-400 font-mono">
-                · 변호사법 제23조 광고 규정 준수
-              </span>
-            </div>
-            <CardTitle className="text-sm font-bold text-slate-900 mt-0.5">
-              1-클릭 5대 채널 동시 제작 스튜디오
-            </CardTitle>
-            <p className="text-[11px] text-slate-500 mt-0.5">
-              사건 쟁점 1회 선택으로 블로그 · 플레이스 · 인스타그램 · 스레드 · 숏츠 콘텐츠가 한 번에 완성됩니다.
-            </p>
+      <div className="p-4 sm:p-5 pb-3 bg-white border-b border-slate-100 space-y-3">
+        <div className="flex flex-row items-center justify-between gap-2">
+          <div className="flex items-center gap-2">
+            <h3 className="text-sm font-bold text-slate-900">
+              OSMU 멀티 콘텐츠 생성
+            </h3>
+            <span className="text-[10px] font-medium text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full border border-slate-200/70">
+              변호사법 제23조 준수
+            </span>
           </div>
 
-          <div className="flex items-center gap-1.5 shrink-0">
-            <Link href="/dashboard/write">
-              <Button size="sm" className="h-9 px-4 text-xs font-bold bg-[#FF6B00] hover:bg-[#E05D00] text-white rounded-xl shadow-sm cursor-pointer transition-all active:scale-[0.98]">
-                <Sparkles className="w-3.5 h-3.5 mr-1" /> 새 칼럼 작성
-              </Button>
-            </Link>
-          </div>
+          <Link href={`/dashboard/write?keyword=${encodeURIComponent(selectedTopic.title)}`}>
+            <Button size="sm" className="h-8 px-3.5 text-xs font-bold bg-[#FF6B00] hover:bg-[#E05D00] text-white rounded-xl shadow-2xs cursor-pointer transition-all active:scale-[0.98]">
+              <Sparkles className="w-3.5 h-3.5 mr-1" /> 새 칼럼 작성
+            </Button>
+          </Link>
         </div>
 
         {/* 쟁점 선택 칩 */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-0.5 scrollbar-none">
-          <span className="text-[11px] text-slate-400 shrink-0 mr-1 font-mono">쟁점:</span>
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
+          <span className="text-[11px] text-slate-400 shrink-0 mr-1 font-mono">추천 쟁점:</span>
           {topics.map((topic) => (
             <button
               key={topic.id}
               onClick={() => setSelectedTopic(topic)}
-              className={`text-xs px-3.5 py-1.5 rounded-xl shrink-0 transition-all cursor-pointer ${
+              className={`text-[11px] sm:text-xs px-3 py-1.5 rounded-xl shrink-0 transition-all cursor-pointer flex items-center gap-1.5 ${
                 selectedTopic.id === topic.id
                   ? 'bg-[#0284C7] text-white font-bold shadow-2xs'
-                  : 'bg-slate-100/80 text-slate-600 hover:bg-slate-200 font-medium'
+                  : 'bg-slate-50 border border-slate-200/80 text-slate-600 hover:bg-slate-100 font-medium'
               }`}
             >
-              {topic.title}
+              <span className="font-semibold">{topic.shortLabel || topic.title}</span>
             </button>
           ))}
         </div>
       </div>
 
       {/* 🌟 무테두리 세그먼트 컨트롤 탭 */}
-      <div className="p-3 bg-slate-50/50 flex items-center justify-between gap-2">
+      <div className="p-3 bg-slate-50/50 flex items-center justify-between gap-2 border-b border-slate-100">
         <div className="inline-flex p-1 bg-slate-200/60 rounded-xl text-xs font-medium overflow-x-auto scrollbar-none">
           <button
             onClick={() => setActiveTab('BLOG')}
-            className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg transition-all cursor-pointer ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
               activeTab === 'BLOG'
                 ? 'bg-white text-[#0284C7] shadow-2xs font-bold'
                 : 'text-slate-500 hover:text-slate-900 font-medium'
@@ -133,7 +169,7 @@ export function OsmuStationPanel() {
 
           <button
             onClick={() => setActiveTab('PLACE')}
-            className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg transition-all cursor-pointer ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
               activeTab === 'PLACE'
                 ? 'bg-white text-[#0284C7] shadow-2xs font-bold'
                 : 'text-slate-500 hover:text-slate-900 font-medium'
@@ -145,19 +181,20 @@ export function OsmuStationPanel() {
 
           <button
             onClick={() => setActiveTab('INSTA')}
-            className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg transition-all cursor-pointer ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
               activeTab === 'INSTA'
                 ? 'bg-white text-[#0284C7] shadow-2xs font-bold'
                 : 'text-slate-500 hover:text-slate-900 font-medium'
             }`}
           >
             <Camera className="w-3.5 h-3.5" />
-            <span>인스타 벤토</span>
+            <span>인스타그램</span>
+            <span className="text-[9px] px-1.5 py-0.2 rounded bg-slate-100 text-slate-500 font-normal">준비중</span>
           </button>
 
           <button
             onClick={() => setActiveTab('THREADS')}
-            className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg transition-all cursor-pointer ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
               activeTab === 'THREADS'
                 ? 'bg-white text-[#0284C7] shadow-2xs font-bold'
                 : 'text-slate-500 hover:text-slate-900 font-medium'
@@ -165,30 +202,32 @@ export function OsmuStationPanel() {
           >
             <MessageSquare className="w-3.5 h-3.5" />
             <span>스레드</span>
+            <span className="text-[9px] px-1.5 py-0.2 rounded bg-slate-100 text-slate-500 font-normal">준비중</span>
           </button>
 
           <button
             onClick={() => setActiveTab('SHORTS')}
-            className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg transition-all cursor-pointer ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
               activeTab === 'SHORTS'
                 ? 'bg-white text-[#0284C7] shadow-2xs font-bold'
                 : 'text-slate-500 hover:text-slate-900 font-medium'
             }`}
           >
             <Video className="w-3.5 h-3.5" />
-            <span>유튜브 숏츠</span>
+            <span>숏츠</span>
+            <span className="text-[9px] px-1.5 py-0.2 rounded bg-slate-100 text-slate-500 font-normal">준비중</span>
           </button>
         </div>
 
         <Button
           size="sm"
           variant="ghost"
-          onClick={() => handleCopy('all', `${selectedTopic.title}\n\n${selectedTopic.caseQuote}`)}
+          onClick={handleCopyAll}
           className="h-8 text-xs font-bold text-[#0284C7] hover:bg-sky-50 px-3 rounded-xl cursor-pointer shrink-0"
         >
           {copiedChannel === 'all' ? (
             <span className="flex items-center gap-1 text-emerald-600">
-              <Check className="w-3.5 h-3.5" /> 복사됨
+              <Check className="w-3.5 h-3.5" /> 5채널 복사됨
             </span>
           ) : (
             <span className="flex items-center gap-1">
@@ -199,51 +238,60 @@ export function OsmuStationPanel() {
       </div>
 
       {/* 🌟 탭별 미리보기 콘텐츠 영역 */}
-      <div className="p-5 flex-1 overflow-y-auto">
+      <div className="p-5 flex-1 overflow-y-auto space-y-3">
         {/* 1. 네이버 블로그 탭 */}
         {activeTab === 'BLOG' && (
           <div className="space-y-3">
-            <div className="p-4 rounded-lg border border-slate-200/80 bg-white space-y-3">
+            <div className="p-4 rounded-xl border border-slate-200/80 bg-white space-y-3 shadow-2xs">
               <div className="flex items-center justify-between text-[11px] text-slate-400">
-                <span className="font-mono">2,500자 전문 칼럼</span>
+                <span className="font-mono text-[#0284C7] font-semibold">블로그 핵심 쟁점 골격 (요약)</span>
                 <span>{selectedTopic.caseQuote}</span>
               </div>
 
-              <h3 className="text-base font-semibold text-slate-900 leading-snug">
-                {selectedTopic.title}: 경찰 1차 피의자 신문 출석 전 필수 선처 양형 3원칙
+              <h3 className="text-sm sm:text-base font-bold text-slate-900 leading-snug">
+                {selectedTopic.title}: 초기 출석 전 필수 법리 쟁점 3원칙
               </h3>
 
-              <div className="text-xs text-slate-600 space-y-2 leading-relaxed bg-slate-50/50 p-3.5 rounded-md border border-slate-100 font-mono">
+              <div className="text-xs text-slate-600 space-y-2 leading-relaxed bg-slate-50/70 p-3.5 rounded-lg border border-slate-100 font-mono">
                 <p>
-                  <strong>1. 서론:</strong> 수사기관의 출석 통보를 받은 직후 72시간은 향후 기소유예 또는 집행유예를 가르는 결정적 골든타임입니다. 단순 반성문 제출만으로는 재판부의 양형 참작을 이끌어내기 어렵습니다.
+                  <strong>1. 서론:</strong> 수사기관 통보 또는 소장 수령 직후 72시간은 향후 결과를 가르는 결정적 골든타임입니다. 단순 감정적 호소만으로는 재판부의 참작을 이끌어내기 어렵습니다.
                 </p>
                 <p>
-                  <strong>2. 대법원 판례 법리 분석 ({selectedTopic.caseQuote}):</strong> 대법원 판결례에 따르면 피의자가 범행 직후 자발적으로 알코올 치료 프로그램에 등록하고 차량 매각 등 재범 방지를 위한 물리적 조치를 완료한 경우...
+                  <strong>2. 대법원 판례 법리 분석 ({selectedTopic.caseQuote}):</strong> 판결례에 따르면 사건 초기 피의자/의뢰인이 자발적으로 피해 회복을 위한 물리적 조치를 완료하고 객관적 입증 자료를 선제 제출한 경우 유리한 양형 및 인용 결정이 내려집니다.
                 </p>
                 <p>
-                  <strong>3. 실무 대응 전략:</strong> 경찰 1차 신문 시 진술 번복 위험을 차단하고, 피의자 신문 조서 날인 전 변호인 조력을 통해 불리한 문구를 사전 정정해야 합니다.
+                  <strong>3. 실무 대응 전략:</strong> 1차 조사 전 진술 번복 위험을 차단하고, 조서 날인 전 변호인 조력을 통해 불리한 문구를 사전 정정해야 합니다.
                 </p>
               </div>
 
-              {/* 하단 1분 안심 진단 배너 자동 삽입 표시 */}
-              <div className="p-2.5 rounded-md bg-slate-50 border border-slate-200/70 flex items-center justify-between text-xs">
+              <div className="p-2.5 rounded-lg bg-sky-50/70 border border-sky-100 flex items-center justify-between text-xs">
                 <div className="flex items-center gap-2">
-                  <span className="text-slate-400">🔒</span>
+                  <span className="text-[#0284C7]">🔒</span>
                   <span className="font-medium text-slate-700">본문 하단 [1분 안심 진단 배너] 연동</span>
                 </div>
-                <span className="text-[11px] font-mono text-slate-400">자동 포함됨 ✓</span>
+                <span className="text-[11px] font-mono text-[#0284C7] font-bold">자동 포함됨 ✓</span>
               </div>
             </div>
 
             <div className="flex items-center justify-between pt-1">
-              <span className="text-[11px] text-slate-400 font-mono">스마트에디터 ONE 서식 지원</span>
-              <Button
-                size="sm"
-                onClick={() => handleCopy('blog', `${selectedTopic.title}\n\n${selectedTopic.caseQuote}`)}
-                className="bg-slate-900 hover:bg-slate-800 text-white font-medium text-xs h-8 px-3 rounded-md cursor-pointer"
-              >
-                {copiedChannel === 'blog' ? '복사 완료!' : '블로그 원고 복사'}
-              </Button>
+              <span className="text-[11px] text-slate-400 font-mono">스마트에디터 ONE 서식 호환</span>
+              <div className="flex items-center gap-2">
+                <Link
+                  href={`/dashboard/write?keyword=${encodeURIComponent(selectedTopic.title)}`}
+                  className="inline-flex items-center gap-1 text-xs font-bold text-white bg-[#FF6B00] hover:bg-[#E05D00] h-8 px-3 rounded-lg shadow-2xs transition-all cursor-pointer"
+                >
+                  <Sparkles className="w-3 h-3" />
+                  <span>2,500자 본문 완성하기 ➔</span>
+                </Link>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => handleCopy('blog', getChannelContent('BLOG'))}
+                  className="border-slate-200 text-slate-700 hover:bg-slate-50 font-medium text-xs h-8 px-3 rounded-lg cursor-pointer"
+                >
+                  {copiedChannel === 'blog' ? '복사 완료!' : '요약본 복사'}
+                </Button>
+              </div>
             </div>
           </div>
         )}
@@ -251,21 +299,21 @@ export function OsmuStationPanel() {
         {/* 2. 네이버 플레이스 소식 탭 */}
         {activeTab === 'PLACE' && (
           <div className="space-y-3">
-            <div className="p-4 rounded-lg border border-slate-200/80 bg-white space-y-3">
+            <div className="p-4 rounded-xl border border-slate-200/80 bg-white space-y-3 shadow-2xs">
               <div className="flex items-center justify-between text-[11px] text-slate-400">
-                <span className="font-mono">400자 로컬 소식</span>
+                <span className="font-mono text-[#0284C7] font-semibold">400자 로컬 소식</span>
                 <span>지도 예약 딥링크 결합</span>
               </div>
 
-              <h3 className="text-sm font-semibold text-slate-900">
-                [긴급 공지] 서초역 법무법인 — 음주운전 피의자 신문 출석 동석 긴급 접수
+              <h3 className="text-sm font-bold text-slate-900">
+                [긴급 안내] {cleanStore} — {selectedTopic.title} 1차 사전 검토 접수
               </h3>
 
-              <div className="text-xs text-slate-600 bg-slate-50/50 p-3.5 rounded-md border border-slate-100 leading-relaxed font-sans">
-                안녕하세요, 서초역 3번 출구 인근 법무법인 대표 변호사입니다.<br /><br />
-                최근 음주운전 단속 강화로 인해 경찰 1차 출석 요구서를 받고 당황하신 의뢰인분들의 문의가 급증하고 있습니다. 
-                경찰 신문 전 쟁점 정리와 변호인 동석이 필요하신 분들을 위해 이번 주 평일 야간 및 주말 긴급 사전 검토를 운영합니다.<br /><br />
-                📍 오시는 길: 서초역 3번 출구 도보 2분<br />
+              <div className="text-xs text-slate-600 bg-slate-50/70 p-3.5 rounded-lg border border-slate-100 leading-relaxed font-sans">
+                안녕하세요, {regionName} 법조타운 {cleanStore} 대표 변호사입니다.<br /><br />
+                최근 &lsquo;{selectedTopic.title}&rsquo; 관련 법적 분쟁으로 인해 긴급 상담 문의가 급증하고 있습니다. 
+                경찰 신문 전 쟁점 정리와 변호인 동석이 필요하신 분들을 위해 야간 및 주말 긴급 사전 검토를 운영합니다.<br /><br />
+                📍 오시는 길: {regionName} 법조타운 중심<br />
                 ⚖️ 100% 비밀 보장 1차 사전 검토 신청 가능
               </div>
             </div>
@@ -274,8 +322,8 @@ export function OsmuStationPanel() {
               <span className="text-[11px] text-slate-400 font-mono">플레이스 소식란 포맷</span>
               <Button
                 size="sm"
-                onClick={() => handleCopy('place', '플레이스 소식 복사')}
-                className="bg-slate-900 hover:bg-slate-800 text-white font-medium text-xs h-8 px-3 rounded-md cursor-pointer"
+                onClick={() => handleCopy('place', getChannelContent('PLACE'))}
+                className="bg-slate-900 hover:bg-slate-800 text-white font-medium text-xs h-8 px-3.5 rounded-lg cursor-pointer"
               >
                 {copiedChannel === 'place' ? '복사 완료!' : '플레이스 소식 복사'}
               </Button>
@@ -283,63 +331,72 @@ export function OsmuStationPanel() {
           </div>
         )}
 
-        {/* 3. 인스타그램 벤토 4장 인포그래픽 탭 (Linear 다크/모노톤 미학) */}
+        {/* 3. 인스타그램 탭 (준비 중 모드) */}
         {activeTab === 'INSTA' && (
           <div className="space-y-3">
+            <div className="py-2 px-3 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-between text-xs text-slate-500">
+              <span className="flex items-center gap-1.5 font-medium">
+                <span className="w-1.5 h-1.5 rounded-full bg-slate-400" />
+                <span>인스타그램 카드뉴스 템플릿 미리보기 (자동 연동 기능 준비 중)</span>
+              </span>
+              <span className="text-[10px] font-medium px-2 py-0.5 rounded-md bg-slate-200/70 text-slate-600">
+                출시 예정
+              </span>
+            </div>
+
             <div className="flex items-center justify-between text-[11px] text-slate-400">
-              <span className="font-mono">1080x1080 4장 세트</span>
+              <span className="font-mono text-[#0284C7] font-semibold">1080x1080 4장 정규격</span>
               <span>피드 최적화</span>
             </div>
 
-            {/* 4장 벤토 카드 그리드 (Linear 다크/모노톤) */}
+            {/* 4장 벤토 카드 그리드 */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
               {/* 카드 1 */}
-              <div className="bg-[#0B1527] text-white p-3.5 rounded-lg aspect-square flex flex-col justify-between border border-slate-800 shadow-2xs">
-                <span className="text-[9px] font-mono text-slate-400 uppercase">01 / PROBLEM</span>
+              <div className="bg-[#0B1527] text-white p-3.5 rounded-xl aspect-square flex flex-col justify-between border border-slate-800 shadow-2xs">
+                <span className="text-[9px] font-mono text-slate-400 uppercase">01 / ISSUE</span>
                 <div>
-                  <p className="text-[11px] text-slate-300">음주운전 2진 아웃</p>
-                  <p className="text-xs font-semibold text-white mt-1 leading-snug">
-                    경찰 조사 통보,<br />
-                    실형 위기인가요?
+                  <p className="text-[11px] text-sky-400 font-semibold">{selectedTopic.category}</p>
+                  <p className="text-xs font-bold text-white mt-1 leading-snug line-clamp-3">
+                    {selectedTopic.title}
                   </p>
                 </div>
                 <p className="text-[9px] text-slate-500 font-mono">LEGAL BRIEF</p>
               </div>
 
               {/* 카드 2 */}
-              <div className="bg-white p-3.5 rounded-lg aspect-square flex flex-col justify-between border border-slate-200 shadow-2xs">
+              <div className="bg-white p-3.5 rounded-xl aspect-square flex flex-col justify-between border border-slate-200 shadow-2xs">
                 <span className="text-[9px] font-mono text-slate-400 uppercase">02 / ANALYSIS</span>
                 <div>
-                  <p className="text-[11px] text-slate-500">대법원 판례 기준</p>
-                  <p className="text-xs font-semibold text-slate-900 mt-1 leading-snug">
-                    집행유예 인용을 가르는<br />
+                  <p className="text-[11px] text-slate-500">법원 판례 기준</p>
+                  <p className="text-xs font-bold text-slate-900 mt-1 leading-snug">
+                    인용·감경을 가르는<br />
                     3대 핵심 요건
                   </p>
                 </div>
-                <p className="text-[9px] text-slate-400 font-mono">{selectedTopic.caseQuote}</p>
+                <p className="text-[9px] text-slate-400 font-mono truncate">{selectedTopic.caseQuote}</p>
               </div>
 
               {/* 카드 3 */}
-              <div className="bg-white p-3.5 rounded-lg aspect-square flex flex-col justify-between border border-slate-200 shadow-2xs">
+              <div className="bg-white p-3.5 rounded-xl aspect-square flex flex-col justify-between border border-slate-200 shadow-2xs">
                 <span className="text-[9px] font-mono text-slate-400 uppercase">03 / ACTION</span>
                 <div>
-                  <p className="text-[11px] text-slate-500">출석 72시간 전</p>
-                  <p className="text-xs font-semibold text-slate-900 mt-1 leading-snug">
-                    차량 매각 및<br />
-                    치료 증빙 제출 전략
+                  <p className="text-[11px] text-slate-500">골든타임 72시간</p>
+                  <p className="text-xs font-bold text-slate-900 mt-1 leading-snug">
+                    불리한 진술 방어 및<br />
+                    필수 입증 자료 준비
                   </p>
                 </div>
                 <p className="text-[9px] text-slate-400 font-mono">CHECKLIST</p>
               </div>
 
               {/* 카드 4 */}
-              <div className="bg-slate-900 text-white p-3.5 rounded-lg aspect-square flex flex-col justify-between border border-slate-800 shadow-2xs">
+              <div className="bg-slate-900 text-white p-3.5 rounded-xl aspect-square flex flex-col justify-between border border-slate-800 shadow-2xs">
                 <span className="text-[9px] font-mono text-slate-400 uppercase">04 / INTAKE</span>
                 <div>
                   <p className="text-[11px] text-slate-300">비밀 보장 검토</p>
-                  <p className="text-xs font-semibold text-white mt-1 leading-snug">
+                  <p className="text-xs font-bold text-white mt-1 leading-snug">
                     프로필 링크에서<br />
-                    1분 비밀 진단
+                    1분 안심 진단
                   </p>
                 </div>
                 <p className="text-[9px] text-slate-400 font-mono">변호사법 제26조</p>
@@ -347,48 +404,59 @@ export function OsmuStationPanel() {
             </div>
 
             <div className="flex items-center justify-between pt-1">
-              <span className="text-[11px] text-slate-400 font-mono">1080px 정규격 이미지</span>
+              <span className="text-[11px] text-slate-400 font-mono">1080px 정규격 이미지 기획안</span>
               <Button
                 size="sm"
                 variant="outline"
-                className="border-slate-200 text-slate-700 hover:bg-slate-50 font-medium text-xs h-8 px-3 rounded-md cursor-pointer gap-1"
+                onClick={() => handleCopy('insta', getChannelContent('INSTA'))}
+                className="border-slate-200 text-slate-700 hover:bg-slate-50 font-medium text-xs h-8 px-3 rounded-lg cursor-pointer gap-1"
               >
-                <Download className="w-3 h-3 text-slate-500" /> ZIP 다운로드
+                {copiedChannel === 'insta' ? '복사 완료!' : '인스타 기획 복사'}
               </Button>
             </div>
           </div>
         )}
 
-        {/* 4. 스레드 (Threads) 탭 */}
+        {/* 4. 스레드 (Threads) 탭 (준비 중 모드) */}
         {activeTab === 'THREADS' && (
           <div className="space-y-3">
-            <div className="p-4 rounded-lg border border-slate-200/80 bg-white space-y-3">
+            <div className="py-2 px-3 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-between text-xs text-slate-500">
+              <span className="flex items-center gap-1.5 font-medium">
+                <span className="w-1.5 h-1.5 rounded-full bg-slate-400" />
+                <span>스레드 5단계 연속 글 템플릿 미리보기 (자동 연동 기능 준비 중)</span>
+              </span>
+              <span className="text-[10px] font-medium px-2 py-0.5 rounded-md bg-slate-200/70 text-slate-600">
+                출시 예정
+              </span>
+            </div>
+
+            <div className="p-4 rounded-xl border border-slate-200/80 bg-white space-y-3 shadow-2xs">
               <div className="flex items-center justify-between text-[11px] text-slate-400">
-                <span className="font-mono">1인칭 구어체 5연속 글</span>
-                <span>바이럴 최적화</span>
+                <span className="font-mono text-[#0284C7] font-semibold">1인칭 구어체 5연속 글</span>
+                <span>스레드 최적화</span>
               </div>
 
               <div className="space-y-2 text-xs text-slate-700 font-sans divide-y divide-slate-100">
                 <div className="pb-2">
                   <span className="text-[10px] text-slate-400 font-mono block mb-0.5">1/5</span>
-                  어제 한 의뢰인분이 손을 파르르 떨면서 사무실 문을 열었습니다.<br />
-                  "변호사님, 5년 전 음주운전 전과가 있는데 이번에 또 단속에 걸렸습니다. 저 구속되나요?"
+                  어제 한 의뢰인분이 손을 파르르 떨며 저희 사무실 문을 열었습니다.<br />
+                  &ldquo;변호사님, {selectedTopic.title} 문제로 소장/출석통보를 받았는데 어떻게 해야 하나요?&rdquo;
                 </div>
                 <div className="py-2">
                   <span className="text-[10px] text-slate-400 font-mono block mb-0.5">2/5</span>
-                  결론부터 말씀드리면, 첫 경찰 조사를 어떻게 받느냐에 따라 실형 여부가 80% 결정됩니다. 많은 분들이 '반성문만 많이 써가면 선처해 주겠지' 하고 안일하게 출석했다가 구속영장 청구로 이어집니다.
+                  결론부터 말씀드리면, 초기 골든타임 72시간 대응에 따라 결과가 80% 결정됩니다. 많은 분들이 &lsquo;알아서 잘 되겠지&rsquo; 하고 안일하게 대처했다가 돌이킬 수 없는 불이익을 받습니다.
                 </div>
                 <div className="py-2">
                   <span className="text-[10px] text-slate-400 font-mono block mb-0.5">3/5</span>
-                  판사님이 실제로 중요하게 보는 건 단순 반성이 아니라 '재범 가능성의 물리적 차단'입니다. (1) 차량 매각 증빙, (2) 알코올 치료 프로그램 등록서, (3) 부양가족 생계 탄원서가 조사 전 미리 세팅되어야 합니다.
+                  재판부와 수사기관이 실제로 집중하는 핵심 요건은 ({selectedTopic.caseQuote}) 법리에 명시된 객관적 입증 자료입니다.
                 </div>
                 <div className="py-2">
                   <span className="text-[10px] text-slate-400 font-mono block mb-0.5">4/5</span>
-                  실제 저희 로펌에서 최근 집행유예로 방어한 사건의 양형 체크리스트 핵심 3가지를 정리해 두었습니다.
+                  실제 저희 {cleanStore}에서 최근 성공적으로 인용·방어한 실무 대응 핵심 3원칙을 정리해 두었습니다.
                 </div>
                 <div className="pt-2">
                   <span className="text-[10px] text-slate-400 font-mono block mb-0.5">5/5 (댓글로 계속 👇)</span>
-                  지금 비슷한 위기에 놓여 계시다면, 혼자 불안해하지 마시고 프로필 링크의 [사건 1분 안심 진단]에 상황을 남겨주세요. 대표 변호사가 1차 법리 쟁점을 비밀 보장으로 즉시 검토해 드립니다.
+                  지금 비슷한 사안으로 고민 중이시라면 혼자 끙끙 앓지 마시고 프로필 링크의 [1분 안심 진단]에 남겨주세요. 대표 변호사가 직접 1차 법리 쟁점을 비밀 보장으로 검토해 드립니다.
                 </div>
               </div>
             </div>
@@ -397,8 +465,8 @@ export function OsmuStationPanel() {
               <span className="text-[11px] text-slate-400 font-mono">복사 후 바로 붙여넣기</span>
               <Button
                 size="sm"
-                onClick={() => handleCopy('threads', '스레드 5단계 연속글 복사')}
-                className="bg-slate-900 hover:bg-slate-800 text-white font-medium text-xs h-8 px-3 rounded-md cursor-pointer"
+                onClick={() => handleCopy('threads', getChannelContent('THREADS'))}
+                className="bg-slate-900 hover:bg-slate-800 text-white font-medium text-xs h-8 px-3.5 rounded-lg cursor-pointer"
               >
                 {copiedChannel === 'threads' ? '복사 완료!' : '스레드 연속 글 복사'}
               </Button>
@@ -406,32 +474,42 @@ export function OsmuStationPanel() {
           </div>
         )}
 
-        {/* 5. 유튜브 숏츠 탭 */}
+        {/* 5. 유튜브 숏츠 탭 (준비 중 모드) */}
         {activeTab === 'SHORTS' && (
           <div className="space-y-3">
-            <div className="p-4 rounded-lg border border-slate-200/80 bg-white space-y-3">
+            <div className="py-2 px-3 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-between text-xs text-slate-500">
+              <span className="flex items-center gap-1.5 font-medium">
+                <span className="w-1.5 h-1.5 rounded-full bg-slate-400" />
+                <span>숏츠 59초 영상 대본 템플릿 미리보기 (자동 연동 기능 준비 중)</span>
+              </span>
+              <span className="text-[10px] font-medium px-2 py-0.5 rounded-md bg-slate-200/70 text-slate-600">
+                출시 예정
+              </span>
+            </div>
+
+            <div className="p-4 rounded-xl border border-slate-200/80 bg-white space-y-3 shadow-2xs">
               <div className="flex items-center justify-between text-[11px] text-slate-400">
-                <span className="font-mono">59초 촬영용 대본 (자막 모드)</span>
+                <span className="font-mono text-[#0284C7] font-semibold">59초 촬영용 대본 (자막 모드)</span>
                 <span>3초 훅 — 45초 해법 — 10초 행동 안내</span>
               </div>
 
               <div className="space-y-2 text-xs text-slate-700">
-                <div className="p-2.5 bg-slate-50/70 rounded-md border border-slate-100">
+                <div className="p-2.5 bg-slate-50/70 rounded-lg border border-slate-100">
                   <span className="text-[10px] font-mono text-slate-400 block mb-0.5">00:00 - 00:03 [시선 집중]</span>
                   <p className="font-semibold text-slate-900">
-                    "음주운전 2진 아웃 걸리셨다고요? 지금 당장 반성문 쓰지 마세요!"
+                    &ldquo;{selectedTopic.title} 때문에 밤잠 설치고 계신가요? 지금 당장 이것부터 확인하세요!&rdquo;
                   </p>
                 </div>
-                <div className="p-2.5 bg-slate-50/70 rounded-md border border-slate-100">
+                <div className="p-2.5 bg-slate-50/70 rounded-lg border border-slate-100">
                   <span className="text-[10px] font-mono text-slate-400 block mb-0.5">00:04 - 00:48 [해결 방안]</span>
                   <p className="leading-relaxed">
-                    경찰 출석 전 딱 72시간이 선처 여부를 가릅니다. 경찰관에게 '앞으로 술 안 마시겠다'는 말 백 번 해봤자 조서에는 안 적힙니다. 지금 당장 준비해야 할 세 가지는 첫째, 차량 매각 증명서. 둘째, 알코올 상담 클리닉 등록증. 셋째, 1차 피의자 신문 전 변호인 사전 리허설입니다.
+                    {selectedTopic.caseQuote}에 따르면 법정에서 판사를 설득하는 건 감정적 호소가 아니라 구체적이고 객관적인 입증 자료입니다. 초기 72시간 내에 첫째, 사실관계 타임라인 정리, 둘째, 불리한 진술 차단, 셋째, 전문가의 사전 모의 검토가 필수입니다.
                   </p>
                 </div>
-                <div className="p-2.5 bg-slate-50/70 rounded-md border border-slate-100">
+                <div className="p-2.5 bg-slate-50/70 rounded-lg border border-slate-100">
                   <span className="text-[10px] font-mono text-slate-400 block mb-0.5">00:49 - 00:59 [상담 안내]</span>
                   <p className="font-medium text-slate-900">
-                    "상황별 구체적인 양형 체크리스트는 고정 댓글 링크의 1분 안심 진단 폼에서 확인하세요."
+                    &ldquo;내 사건에 적용되는 구체적 법리 검토는 고정 댓글의 1분 안심 진단 링크에서 바로 확인해 보세요.&rdquo;
                   </p>
                 </div>
               </div>
@@ -441,8 +519,8 @@ export function OsmuStationPanel() {
               <span className="text-[11px] text-slate-400 font-mono">1분 낭독 촬영용 대본</span>
               <Button
                 size="sm"
-                onClick={() => handleCopy('shorts', '숏츠 대본 복사')}
-                className="bg-slate-900 hover:bg-slate-800 text-white font-medium text-xs h-8 px-3 rounded-md cursor-pointer"
+                onClick={() => handleCopy('shorts', getChannelContent('SHORTS'))}
+                className="bg-slate-900 hover:bg-slate-800 text-white font-medium text-xs h-8 px-3.5 rounded-lg cursor-pointer"
               >
                 {copiedChannel === 'shorts' ? '복사 완료!' : '숏츠 대본 복사'}
               </Button>

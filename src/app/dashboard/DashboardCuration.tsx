@@ -124,6 +124,7 @@ export function DashboardCuration({ profile }: { profile: any }) {
 
     // 2. 60초 쿨다운 체크
     if (cooldownLeft > 0) {
+      setQuotaNotice(`안정적인 조회를 위해 ${cooldownLeft}초 후에 다시 발굴하실 수 있습니다.`)
       return
     }
 
@@ -132,7 +133,7 @@ export function DashboardCuration({ profile }: { profile: any }) {
     setQuotaNotice(null)
     
     try {
-      const result = await getCurationClusters(pillarKeyword, 'gpt-5.6-luna', {
+      const result = await getCurationClusters(pillarKeyword, 'gemini-3.6-flash', {
         address,
         industry,
       })
@@ -274,19 +275,16 @@ export function DashboardCuration({ profile }: { profile: any }) {
           <div>
             <div className="flex items-center gap-1.5 mb-1">
               <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
-              <span className="text-[11px] font-extrabold text-amber-700 uppercase tracking-wider">
-                High-Value Retainer Curation
-              </span>
               <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100/80 text-amber-800">
-                Jev AI 심사 연동
+                Jev AI 고단가 심사 연동
               </span>
             </div>
-            <CardTitle className="text-lg sm:text-xl flex items-center gap-2 text-slate-900 font-extrabold">
-              <Gem className="w-5 h-5 text-amber-600" />
+            <CardTitle className="text-lg sm:text-xl flex items-center gap-2 text-slate-900 font-extrabold break-keep">
+              <Gem className="w-5 h-5 text-amber-600 shrink-0" />
               오늘의 고단가 수임 키워드 자동 선별기
             </CardTitle>
-            <CardDescription className="text-slate-600 text-xs mt-0.5">
-              네이버 실시간 검색 시그널과 Jev 0.05초 감별 AI가 선별한 <strong>{profile?.address || '사업장 소재지'}</strong> 수임 직결 롱테일 키워드입니다.
+            <CardDescription className="text-slate-600 text-xs mt-0.5 break-keep">
+              네이버 실시간 검색 시그널과 Jev AI가 선별한 <strong>{profile?.address || '관할 지역'}</strong> 수임 직결 롱테일 키워드입니다.
             </CardDescription>
           </div>
           

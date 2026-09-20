@@ -12,9 +12,9 @@ export interface RecommendedKeyword {
   competition: '낮음' | '보통'
   description: string
   category: 'SEASON' | 'LOCAL' | 'HIGH_VALUE'
-  retainerTier?: 'S' | 'A' | 'B'
+  retainerTier?: 'S' | 'A' | 'B' | 'NONE'
   retainerEstimate?: string
-  urgencyLevel?: 'CRITICAL' | 'HIGH' | 'MEDIUM'
+  urgencyLevel?: 'CRITICAL' | 'HIGH' | 'MEDIUM' | 'NORMAL'
   urgencyReason?: string
 }
 
@@ -24,10 +24,10 @@ const recommendedKeywordSchema = z.object({
   competition: z.enum(['낮음', '보통']).describe('예상 경쟁 강도 (낮음 또는 보통)'),
   description: z.string().describe('마케팅 전환 목적 및 타깃 잠재고객 유입 설명 (1~2문장)'),
   category: z.enum(['SEASON', 'LOCAL', 'HIGH_VALUE']).describe('키워드 카테고리: SEASON(시즌/이슈), LOCAL(지역 롱테일), HIGH_VALUE(고단가 수임)'),
-  retainerTier: z.enum(['S', 'A', 'B']).optional().describe('수임 가치 등급: S(1,000만원 이상), A(500만~1,000만원), B(300만~500만원)'),
-  retainerEstimate: z.string().optional().describe('사건당 추정 수임 가치 (예: "건당 500만~1,000만 원", "위자료 최대 5,000만 원")'),
-  urgencyLevel: z.enum(['CRITICAL', 'HIGH', 'MEDIUM']).optional().describe('의뢰인 절박도: CRITICAL(긴급 구속/압수수색/신고마감), HIGH(소송/분쟁 직면), MEDIUM(사전 대비)'),
-  urgencyReason: z.string().optional().describe('절박한 사유 및 골든타임 설명 (예: "경찰 1차 출석 72시간 전 선처 서류 확보")')
+  retainerTier: z.enum(['S', 'A', 'B', 'NONE']).describe('수임 가치 등급: S(1,000만원 이상), A(500만~1,000만원), B(300만~500만원), NONE(해당없음)'),
+  retainerEstimate: z.string().describe('사건당 추정 수임 가치 (예: "건당 500만~1,000만 원", "위자료 최대 5,000만 원", "수임 연계")'),
+  urgencyLevel: z.enum(['CRITICAL', 'HIGH', 'MEDIUM', 'NORMAL']).describe('의뢰인 절박도: CRITICAL(긴급 구속/압수수색/신고마감), HIGH(소송/분쟁 직면), MEDIUM(사전 대비), NORMAL(일반)'),
+  urgencyReason: z.string().describe('절박한 사유 및 골든타임 설명 (예: "경찰 1차 출석 72시간 전 선처 서류 확보", "사전 대비")')
 })
 
 const clusterSchema = z.object({
@@ -165,11 +165,10 @@ ${trendingContext}
 - category: 해당 카테고리 코드('SEASON', 'LOCAL', 'HIGH_VALUE')를 정확히 지정할 것
     `
 
-    // 4. 3단계 AI Fallback 체인 (1순위 GPT-5.6 Luna 초고속 -> 2순위 Gemini 2.5 Flash -> 3순위 Gemini 3.6 Flash)
+    // 4. 2단계 AI Fallback 체인 (1순위 Gemini 3.6 Flash 초고속 -> 2순위 GPT-4o-mini)
     const candidateModels = [
-      { name: 'gpt-5.6-luna', getModel: () => (process.env.OPENAI_API_KEY ? openai('gpt-5.6-luna') : null) },
-      { name: 'gemini-2.5-flash', getModel: () => ((process.env.GOOGLE_GENERATIVE_AI_API_KEY || process.env.GOOGLE_API_KEY) ? google('gemini-2.5-flash') : null) },
       { name: 'gemini-3.6-flash', getModel: () => ((process.env.GOOGLE_GENERATIVE_AI_API_KEY || process.env.GOOGLE_API_KEY) ? google('gemini-3.6-flash') : null) },
+      { name: 'gpt-4o-mini', getModel: () => (process.env.OPENAI_API_KEY ? openai('gpt-4o-mini') : null) },
     ]
 
     let generatedResult: any = null
@@ -184,7 +183,7 @@ ${trendingContext}
           model: modelInstance,
           schema: clusterSchema,
           prompt: curationPrompt,
-          abortSignal: AbortSignal.timeout(20000),
+          abortSignal: AbortSignal.timeout(3500), // 3.5초 초고속 타임아웃
         })
 
         if (object && object.clusters && object.clusters.length > 0) {
@@ -198,10 +197,8 @@ ${trendingContext}
     }
 
     if (!generatedResult || !generatedResult.clusters || generatedResult.clusters.length === 0) {
-      if (lastCurationError) {
-        console.error('All curation models failed:', lastCurationError)
-      }
-      return { clusters: [], error: null }
+      console.warn('All curation models failed or timed out, applying instant curated fallback.')
+      return { clusters: getInstantCuratedFallback(dong || region, industry), error: null }
     }
 
     // 5. 고단가 수임 메타데이터 무결성 보장 및 정규화
@@ -229,4 +226,124 @@ ${trendingContext}
     console.error('getCurationClusters error:', error)
     return { clusters: [], error: error.message || error.toString() }
   }
+}
+
+function getInstantCuratedFallback(region: string, industry: string): RecommendedKeyword[] {
+  const loc = region || '지역'
+  let ind = (industry || '변호사').trim()
+  if (ind.includes(loc)) {
+    ind = ind.replace(loc, '').trim() || '변호사'
+  }
+  return [
+    {
+      title: `2026년 개정 법령/판례 기준 ${loc} ${ind} 1:1 심층 상담 절차`,
+      score: 95,
+      competition: '낮음',
+      description: `최근 개정된 실무 법령과 판례를 분석하여 ${loc} 관내 의뢰인의 긴급 문의를 유치합니다.`,
+      category: 'SEASON',
+      retainerTier: 'B',
+      retainerEstimate: '사건 수임 연계',
+      urgencyLevel: 'HIGH',
+      urgencyReason: '법령 개정 시행에 따른 초기 대응 및 권리 불이익 방지'
+    },
+    {
+      title: `하반기 분쟁 급증 시기 ${loc} ${ind} 사전 리스크 차단 방안`,
+      score: 93,
+      competition: '보통',
+      description: `분쟁 발생 초기 단계에서 신속한 합의 및 선처를 이끌어내기 위한 실전 대응 가이드입니다.`,
+      category: 'SEASON',
+      retainerTier: 'B',
+      retainerEstimate: '사건 수임 연계',
+      urgencyLevel: 'MEDIUM',
+      urgencyReason: '사전 내용증명 발송 및 증거 확보 골든타임'
+    },
+    {
+      title: `${loc} 관내 긴급 사건 피의자 신문 전 ${ind} 변호인 동석 요건`,
+      score: 94,
+      competition: '보통',
+      description: `수사기관 출석 통보를 받은 의뢰인에게 첫 진술의 결정적 중요성을 안내하여 선임을 유도합니다.`,
+      category: 'SEASON',
+      retainerTier: 'B',
+      retainerEstimate: '건당 300만~500만 원 상당',
+      urgencyLevel: 'CRITICAL',
+      urgencyReason: '경찰 첫 피의자 신문 조서 작성 전 72시간 내 변호인 조력'
+    },
+    {
+      title: `${loc} 중심 관할 법원 소송 및 지급명령 신속 진행 절차`,
+      score: 92,
+      competition: '낮음',
+      description: `${loc} 관내 거주 의뢰인이 가장 빈번하게 겪는 민·형사 분쟁 해결을 위한 실전 안내입니다.`,
+      category: 'LOCAL',
+      retainerTier: 'NONE',
+      retainerEstimate: '수임 연계',
+      urgencyLevel: 'NORMAL',
+      urgencyReason: '소송 소장 접수 전 입증자료 사전 정리'
+    },
+    {
+      title: `${loc} 인근 상가·부동산 계약 해지 분쟁 내용증명 작성 대행`,
+      score: 91,
+      competition: '낮음',
+      description: `임대차, 권리금, 명도 등 로컬 부동산 분쟁에서 법적 효력을 극대화하는 법률 조력입니다.`,
+      category: 'LOCAL',
+      retainerTier: 'NONE',
+      retainerEstimate: '수임 연계',
+      urgencyLevel: 'HIGH',
+      urgencyReason: '계약 만료 전 적법한 해지 통보 기한 엄수'
+    },
+    {
+      title: `${loc} 재개발·재건축 조합 분쟁 및 비대위 대응 법률 자문`,
+      score: 93,
+      competition: '보통',
+      description: `지역 내 재개발 추진 단지 조합원들이 겪는 분쟁 해결책을 제시하여 집단/고액 수임을 유치합니다.`,
+      category: 'LOCAL',
+      retainerTier: 'NONE',
+      retainerEstimate: '수임 연계',
+      urgencyLevel: 'MEDIUM',
+      urgencyReason: '조합 총회 결의 무효 확인 소송 제기 기한'
+    },
+    {
+      title: `${loc} 직장인 횡령·배임 의심 신고 전 ${ind} 긴급 소명 전략`,
+      score: 96,
+      competition: '보통',
+      description: `기업 내 징계 및 형사 고소 위기에 직면한 직장인/임원을 위한 초동 진술 방어입니다.`,
+      category: 'LOCAL',
+      retainerTier: 'B',
+      retainerEstimate: '건당 300만~500만 원 상당',
+      urgencyLevel: 'CRITICAL',
+      urgencyReason: '사내 감사 착수 전 계좌 거래 내역 소명 자료 정리'
+    },
+    {
+      title: `기업 영업비밀 유출 및 전직금지 가처분 ${loc} ${ind} 민형사 동시 대응`,
+      score: 98,
+      competition: '보통',
+      description: `기업의 존폐가 걸린 핵심 기술/고객 데이터 유출 사안으로, 건당 1,000만 원 이상 고액 수임으로 직결됩니다.`,
+      category: 'HIGH_VALUE',
+      retainerTier: 'S',
+      retainerEstimate: '건당 1,000만~3,000만 원 이상',
+      urgencyLevel: 'CRITICAL',
+      urgencyReason: '가처분 신청 전 72시간 내 침해 증거 디지털 포렌식 확보'
+    },
+    {
+      title: `이혼 시 배우자 특유재산 기여도 45% 인정 판례 분석 및 ${loc} ${ind} 상담`,
+      score: 97,
+      competition: '보통',
+      description: `고액 자산가 배우자와의 이혼 시 재산분할을 극대화하려는 의뢰인을 타깃으로 하는 최우선 고단가 키워드입니다.`,
+      category: 'HIGH_VALUE',
+      retainerTier: 'A',
+      retainerEstimate: '건당 500만~1,500만 원 (재산분할액 비례)',
+      urgencyLevel: 'HIGH',
+      urgencyReason: '소장 송달 전 배우자 명의 재산 가압류·가처분 선행 필수'
+    },
+    {
+      title: `특경법 사기·횡령 혐의 연루 ${loc} ${ind} 긴급 구속영장 실질심사 기각 방어`,
+      score: 98,
+      competition: '보통',
+      description: `피해액 5억 이상 중대 경제범죄로 긴급 구속 위기에 처한 의뢰인의 인신 구속을 방어하는 최상위 고단가 사건입니다.`,
+      category: 'HIGH_VALUE',
+      retainerTier: 'A',
+      retainerEstimate: '건당 700만~2,000만 원 이상',
+      urgencyLevel: 'CRITICAL',
+      urgencyReason: '구속영장 실질심사 청구 24시간 이내 영장 기각 사유서 제출'
+    }
+  ]
 }

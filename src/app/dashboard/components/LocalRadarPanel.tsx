@@ -1,44 +1,45 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { MapPin, TrendingUp, TrendingDown, Minus, Building2, RefreshCw, Sparkles, ArrowRight, ShieldAlert } from 'lucide-react'
-import Link from 'next/link'
+import { MapPin, RefreshCw, AlertTriangle, ExternalLink } from 'lucide-react'
 
-type KeywordCategory = 'PRIMARY' | 'SUBWAY' | 'HIGH_VALUE'
-
-interface KeywordRankItem {
+export interface ArticleItem {
   id: string
-  keyword: string
-  rankText: string
-  rankNumber: number | null
-  status: 'UP' | 'DOWN' | 'SAME'
-  searchVolume: string
-  topCompetitor: string
+  title: string
+  target_keyword: string
+  status: string
+  created_at: Date | string
+}
+
+interface PlaceCompetitor {
+  rank: number
+  id: string
+  name: string
+  category: string
+  address: string
+  placeUrl: string
 }
 
 export function LocalRadarPanel({
   storeName,
   targetKeyword,
   address,
+  articles = [],
 }: {
   storeName?: string | null
   targetKeyword?: string | null
   address?: string | null
+  articles?: ArticleItem[]
 }) {
-  const [selectedCategory, setSelectedCategory] = useState<KeywordCategory>('PRIMARY')
   const [isLoading, setIsLoading] = useState(false)
   const [livePlaceRank, setLivePlaceRank] = useState<number | null>(null)
-  const [top1Competitor, setTop1Competitor] = useState<string>('상위 매장')
-  const [jevDiagnosis, setJevDiagnosis] = useState<any>(null)
+  const [realCompetitors, setRealCompetitors] = useState<PlaceCompetitor[]>([])
+  const [top1Competitor, setTop1Competitor] = useState<string>('상위 로펌')
   const [lastRefreshedAt, setLastRefreshedAt] = useState<string>('방금 전')
 
   // Clean parameters
   const cleanStore = (storeName || '우리 사무소').trim()
   const cleanKeyword = (targetKeyword || '전문 변호사').trim()
-
-  // Extract region / station keyword
-  const regionMatch = cleanKeyword.match(/^([가-힣]+(?:역|구|동|시|군|읍|면)?)/)
-  const regionName = regionMatch ? regionMatch[1] : (address ? address.split(' ')[1] || '관할' : '관할')
 
   const fetchLivePlaceRank = async () => {
     setIsLoading(true)
@@ -54,12 +55,9 @@ export function LocalRadarPanel({
         }
 
         if (data.rankingList && data.rankingList.length > 0) {
+          setRealCompetitors(data.rankingList.slice(0, 5))
           const top1 = data.rankingList[0]
           setTop1Competitor(top1.name || '경쟁 로펌 1위')
-        }
-
-        if (data.jevDiagnosis) {
-          setJevDiagnosis(data.jevDiagnosis)
         }
 
         const now = new Date()
@@ -76,266 +74,156 @@ export function LocalRadarPanel({
     fetchLivePlaceRank()
   }, [cleanKeyword, cleanStore])
 
-  // Build dynamic categories tailored to real store and keyword
-  const rankText = livePlaceRank ? `${livePlaceRank}위` : '20위 밖'
-
-  const categoriesData: Record<KeywordCategory, { label: string; items: KeywordRankItem[] }> = {
-    PRIMARY: {
-      label: '🎯 주력 관할 키워드',
-      items: [
-        {
-          id: 'p-1',
-          keyword: cleanKeyword,
-          rankText: rankText,
-          rankNumber: livePlaceRank,
-          status: livePlaceRank && livePlaceRank <= 3 ? 'UP' : 'SAME',
-          searchVolume: '4.8k',
-          topCompetitor: livePlaceRank === 1 ? '우리 매장 1위 독점 🏆' : `${top1Competitor} (1위)`
-        },
-        {
-          id: 'p-2',
-          keyword: `${regionName} 형사전문변호사`,
-          rankText: livePlaceRank ? `${Math.min(20, livePlaceRank + 1)}위` : '20위 밖',
-          rankNumber: livePlaceRank ? Math.min(20, livePlaceRank + 1) : null,
-          status: 'UP',
-          searchVolume: '5.2k',
-          topCompetitor: `${top1Competitor} (1위)`
-        },
-        {
-          id: 'p-3',
-          keyword: `${regionName} 이혼 재산분할 상담`,
-          rankText: livePlaceRank ? `${Math.min(20, livePlaceRank + 2)}위` : '20위 밖',
-          rankNumber: livePlaceRank ? Math.min(20, livePlaceRank + 2) : null,
-          status: 'SAME',
-          searchVolume: '3.4k',
-          topCompetitor: '인근 대형 로펌 (1위)'
-        }
-      ]
-    },
-    SUBWAY: {
-      label: '🚇 역세권 / 상권 확장',
-      items: [
-        {
-          id: 's-1',
-          keyword: `${regionName} 법률사무소 추천`,
-          rankText: livePlaceRank ? `${Math.min(20, livePlaceRank + 1)}위` : '20위 밖',
-          rankNumber: livePlaceRank ? Math.min(20, livePlaceRank + 1) : null,
-          status: 'SAME',
-          searchVolume: '2.9k',
-          topCompetitor: `${top1Competitor} (1위)`
-        },
-        {
-          id: 's-2',
-          keyword: `${regionName} 24시 긴급 법률상담`,
-          rankText: livePlaceRank ? `${Math.min(20, livePlaceRank)}위` : '20위 밖',
-          rankNumber: livePlaceRank,
-          status: 'UP',
-          searchVolume: '3.1k',
-          topCompetitor: '야간상담 법무법인 (1위)'
-        },
-        {
-          id: 's-3',
-          keyword: `${regionName} 음주운전 구제 전문`,
-          rankText: livePlaceRank ? `${Math.min(20, livePlaceRank + 3)}위` : '20위 밖',
-          rankNumber: livePlaceRank ? Math.min(20, livePlaceRank + 3) : null,
-          status: 'DOWN',
-          searchVolume: '2.2k',
-          topCompetitor: '교통전문 법률사무소 (1위)'
-        }
-      ]
-    },
-    HIGH_VALUE: {
-      label: '💎 고수임단가 키워드',
-      items: [
-        {
-          id: 'h-1',
-          keyword: `${regionName} 구속영장 실질심사 긴급 대응`,
-          rankText: livePlaceRank && livePlaceRank <= 5 ? `${livePlaceRank}위` : '20위 밖',
-          rankNumber: livePlaceRank,
-          status: 'UP',
-          searchVolume: '2.4k',
-          topCompetitor: '형사전담 로펌 (1위)'
-        },
-        {
-          id: 'h-2',
-          keyword: `${regionName} 기업 횡령 배임 수사 입회`,
-          rankText: livePlaceRank ? `${Math.min(20, livePlaceRank + 2)}위` : '20위 밖',
-          rankNumber: livePlaceRank ? Math.min(20, livePlaceRank + 2) : null,
-          status: 'SAME',
-          searchVolume: '1.9k',
-          topCompetitor: '기업법무 전문법인 (1위)'
-        },
-        {
-          id: 'h-3',
-          keyword: `${regionName} 상간자 위자료 청구 소송`,
-          rankText: livePlaceRank ? `${Math.min(20, livePlaceRank + 1)}위` : '20위 밖',
-          rankNumber: livePlaceRank ? Math.min(20, livePlaceRank + 1) : null,
-          status: 'UP',
-          searchVolume: '4.5k',
-          topCompetitor: `${top1Competitor} (1위)`
-        }
-      ]
-    }
-  }
-
-  const currentData = categoriesData[selectedCategory]
-
   return (
-    <div className="bg-white rounded-2xl shadow-[0_4px_25px_-4px_rgba(0,0,0,0.05)] flex flex-col h-full overflow-hidden border border-slate-100">
+    <div className="bg-white rounded-2xl shadow-[0_4px_25px_-4px_rgba(0,0,0,0.05)] flex flex-col h-full overflow-hidden border border-slate-200">
       {/* 헤더 */}
-      <div className="p-5 pb-3 bg-gradient-to-r from-sky-50/60 via-blue-50/40 to-white flex flex-row items-center justify-between">
+      <div className="p-4 sm:p-5 pb-3 bg-white border-b border-slate-100 flex flex-row items-center justify-between">
         <div>
           <div className="flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-[#0284C7] animate-pulse" />
-            <span className="text-[11px] font-bold text-[#0284C7] uppercase tracking-wider">
-              Place & Competitor Radar
-            </span>
-            <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.2 rounded-full border border-emerald-200">
-              네이버 실시간 연동
+            <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+              실시간 연동
             </span>
           </div>
-          <h3 className="text-sm font-bold text-slate-900 mt-1 flex items-center gap-1.5">
-            <MapPin className="w-4 h-4 text-[#0284C7]" />
-            실시간 네이버 플레이스 순위 & 경쟁사 판세
+          <h3 className="text-sm font-bold text-slate-900 mt-1 flex items-center gap-1.5 break-keep">
+            <MapPin className="w-4 h-4 text-[#0284C7] shrink-0" />
+            플레이스 실시간 순위
           </h3>
-          <p className="text-[11px] text-slate-500 mt-0.5">
-            [{cleanStore}] 기준 실시간 지도 노출 순위와 1위 경쟁사 현황입니다.
+          <p className="text-[11px] text-slate-500 mt-0.5 break-keep">
+            기준 키워드: <strong className="text-slate-800">[{cleanKeyword}]</strong>
           </p>
         </div>
 
-        {/* 🔄 실시간 재조회 버튼 */}
         <div className="flex items-center gap-1.5">
           <button
-            type="button"
             onClick={fetchLivePlaceRank}
             disabled={isLoading}
-            title="실시간 네이버 지도 순위 재조회"
-            className="p-1.5 rounded-lg text-slate-400 hover:text-[#0284C7] hover:bg-sky-50 transition-all cursor-pointer flex items-center gap-1 text-[11px] font-medium"
+            title="실시간 네이버 재조회"
+            className="p-1.5 rounded-lg text-slate-400 hover:text-[#0284C7] hover:bg-slate-50 transition-all cursor-pointer"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? 'animate-spin text-[#0284C7]' : ''}`} />
-            <span className="hidden sm:inline text-slate-500">{lastRefreshedAt}</span>
           </button>
-          <Link href="/place">
-            <button
-              type="button"
-              className="text-[11px] font-semibold text-[#0284C7] hover:text-[#0369A1] px-2 py-1 rounded-md hover:bg-sky-50 transition-all cursor-pointer"
-            >
-              순위 툴 ➔
-            </button>
-          </Link>
+          <span className="text-[11px] font-medium px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">
+            {lastRefreshedAt}
+          </span>
         </div>
       </div>
 
-      {/* 🌟 3대 키워드 선택 세그먼트 버튼 */}
-      <div className="px-5 pt-3">
-        <div className="inline-flex p-1 bg-slate-100/90 rounded-xl text-xs font-medium w-full sm:w-auto">
-          {(Object.keys(categoriesData) as KeywordCategory[]).map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setSelectedCategory(cat)}
-              className={`flex-1 sm:flex-initial px-3.5 py-1.5 rounded-lg transition-all cursor-pointer text-center ${
-                selectedCategory === cat
-                  ? 'bg-white text-[#0284C7] shadow-xs font-bold'
-                  : 'text-slate-500 hover:text-slate-900 font-medium'
-              }`}
-            >
-              {categoriesData[cat].label}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* 순위 및 경쟁사 현황 테이블 */}
-      <div className="p-5 space-y-2.5 flex-1 flex flex-col justify-between">
-        <div className="space-y-2">
-          {currentData.items.map((item) => {
-            const isRanked = item.rankNumber !== null && item.rankNumber <= 20
-            return (
-              <div
-                key={item.id}
-                className="p-3.5 rounded-xl bg-slate-50/80 flex items-center justify-between gap-3 transition-colors hover:bg-slate-100/70"
-              >
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-2">
-                    <span className="font-bold text-slate-900 text-xs truncate">
-                      {item.keyword}
-                    </span>
-                    <span className="text-[10px] text-slate-400 font-mono shrink-0">
-                      월 {item.searchVolume}
-                    </span>
-                  </div>
-                  <p className="text-[11px] text-slate-500 mt-0.5 flex items-center gap-1">
-                    <Building2 className="w-3 h-3 text-slate-400 shrink-0" />
-                    <span className="truncate">경쟁사: {item.topCompetitor}</span>
-                  </p>
-                </div>
-
-                {/* 내 순위 배지 (실제 라이브 수치 반영) */}
-                <div className="flex items-center gap-2 shrink-0 tabular-nums">
-                  <div className="text-right">
-                    <span
-                      className={`text-sm sm:text-base font-extrabold ${
-                        item.rankNumber === 1
-                          ? 'text-[#0284C7]'
-                          : isRanked && item.rankNumber! <= 3
-                          ? 'text-emerald-700'
-                          : isRanked
-                          ? 'text-amber-700'
-                          : 'text-rose-600'
-                      }`}
-                    >
-                      {item.rankText}
-                    </span>
-                  </div>
-
-                  <span className="w-4 flex justify-center">
-                    {item.status === 'UP' && (
-                      <TrendingUp className="w-3.5 h-3.5 text-emerald-600" />
-                    )}
-                    {item.status === 'DOWN' && (
-                      <TrendingDown className="w-3.5 h-3.5 text-rose-500" />
-                    )}
-                    {item.status === 'SAME' && (
-                      <Minus className="w-3.5 h-3.5 text-slate-300" />
-                    )}
-                  </span>
-                </div>
-              </div>
-            )
-          })}
-        </div>
-
-        {/* 🧠 Jev AI 실시간 진단 상태 & 1위 탈환 액션 바 */}
-        <div className="mt-3 p-3.5 rounded-xl bg-gradient-to-r from-sky-50 to-indigo-50/40 border border-sky-100 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
-          <div className="flex items-center gap-2 min-w-0">
-            {livePlaceRank && livePlaceRank <= 5 ? (
-              <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
-            ) : (
-              <ShieldAlert className="w-4 h-4 text-amber-600 shrink-0" />
-            )}
-            <div className="min-w-0">
-              <span className="text-[11.5px] font-bold text-slate-800 block truncate">
-                {livePlaceRank === 1
-                  ? '🥇 전체 1위 최상위 독점존 (안정적 방어 중)'
-                  : livePlaceRank && livePlaceRank <= 5
-                  ? `⚡ 1페이지 ${livePlaceRank}위 상위권 (1위 탈환 가시권)`
-                  : '🚨 20위 밖 미노출 (모바일 잠재 의뢰인 유입 정체)'}
-              </span>
-              <span className="text-[10.5px] text-slate-500">
-                1위 경쟁사: <strong>{top1Competitor}</strong>
-                {jevDiagnosis?.score ? ` · SEO 건강도 ${jevDiagnosis.score}점` : ''}
-              </span>
+      <div className="p-4 sm:p-5 space-y-3.5 flex-1 flex flex-col justify-between">
+        {/* 내 사무소 실시간 순위 판정 배너 */}
+        <div className={`p-3.5 rounded-xl border flex items-center justify-between ${
+          livePlaceRank && livePlaceRank <= 5 
+            ? 'bg-emerald-50 border-emerald-200 text-emerald-950'
+            : 'bg-amber-50/70 border-amber-200/80 text-amber-950'
+        }`}>
+          <div className="space-y-0.5">
+            <div className="flex items-center gap-1.5 text-xs font-bold">
+              {livePlaceRank && livePlaceRank <= 5 ? (
+                <>
+                  <span className="text-emerald-600">🏆</span>
+                  <span>{cleanStore} 실시간 상위 {livePlaceRank}위 안착!</span>
+                </>
+              ) : (
+                <>
+                  <AlertTriangle className="w-4 h-4 text-amber-600" />
+                  <span>{cleanStore}: 현재 네이버 모바일 20위 밖 미노출</span>
+                </>
+              )}
             </div>
+            <p className="text-[11px] text-slate-600 break-keep">
+              {livePlaceRank && livePlaceRank <= 5 
+                ? '현재 1~5위 상위 노출 방어 중입니다. 지속적인 타겟 관리가 필요합니다.'
+                : `현재 1위는 "${top1Competitor}"입니다. 순위 진입을 위한 타겟 관리가 시급합니다.`}
+            </p>
           </div>
 
-          <Link
-            href={`/dashboard/write?keyword=${encodeURIComponent(cleanKeyword)}&competitor=${encodeURIComponent(top1Competitor)}`}
-            className="inline-flex items-center justify-center gap-1 text-[11px] font-extrabold text-white bg-[#0284C7] hover:bg-[#0369A1] px-3 py-1.5 rounded-lg shadow-xs transition-colors shrink-0"
+          <div className="text-right shrink-0 ml-2">
+            <span className={`text-lg font-black tabular-nums ${
+              livePlaceRank && livePlaceRank <= 5 ? 'text-emerald-700' : 'text-amber-700'
+            }`}>
+              {livePlaceRank ? `${livePlaceRank}위` : '20위 밖'}
+            </span>
+          </div>
+        </div>
+
+        {/* 네이버 플레이스 실제 TOP 5 목록 (순수 랭킹 뷰 & 풀네임 노출) */}
+        <div className="space-y-2 flex-1">
+          <div className="flex items-center justify-between px-0.5 text-[11px] font-bold text-slate-500">
+            <span>네이버 실제 노출 TOP 5</span>
+            <span className="text-[10px] text-slate-400 font-normal">클릭 시 네이버 지도로 이동</span>
+          </div>
+
+          {isLoading ? (
+            <div className="py-12 text-center text-xs text-slate-400">
+              <RefreshCw className="w-5 h-5 animate-spin mx-auto mb-2 text-[#0284C7]" />
+              네이버 실시간 플레이스 순위 조회 중...
+            </div>
+          ) : realCompetitors.length > 0 ? (
+            realCompetitors.map((comp) => {
+              const isMe = comp.name.includes(cleanStore) || cleanStore.includes(comp.name)
+              return (
+                <a
+                  key={comp.id || comp.rank}
+                  href={comp.placeUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`p-3 rounded-xl border flex items-center justify-between transition-all group cursor-pointer ${
+                    isMe 
+                      ? 'bg-emerald-50/90 border-emerald-300 ring-2 ring-emerald-500/20' 
+                      : 'bg-slate-50/70 border-slate-200/70 hover:bg-sky-50/60 hover:border-sky-200'
+                  }`}
+                >
+                  <div className="flex items-center gap-3 min-w-0 flex-1">
+                    <span className={`w-6 h-6 rounded-lg flex items-center justify-center text-xs font-black shrink-0 ${
+                      comp.rank === 1 
+                        ? 'bg-amber-400 text-amber-950 shadow-2xs' 
+                        : comp.rank === 2 
+                          ? 'bg-slate-300 text-slate-800' 
+                          : comp.rank === 3 
+                            ? 'bg-amber-700/20 text-amber-900' 
+                            : 'bg-slate-200 text-slate-600'
+                    }`}>
+                      {comp.rank}
+                    </span>
+                    <div className="min-w-0 flex-1 pr-1">
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <h4 className="text-xs font-bold text-slate-900 leading-snug break-keep group-hover:text-[#0284C7] transition-colors line-clamp-2">
+                          {comp.name}
+                        </h4>
+                        {isMe && (
+                          <span className="text-[9px] font-bold text-emerald-700 bg-emerald-100 px-1.5 py-0.2 rounded shrink-0">
+                            내 로펌
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-[11px] text-slate-400 truncate mt-0.5">
+                        {comp.category || '전문직 로펌'}
+                      </p>
+                    </div>
+                  </div>
+
+                  <ExternalLink className="w-3.5 h-3.5 text-slate-400 group-hover:text-[#0284C7] shrink-0 transition-colors ml-1" />
+                </a>
+              )
+            })
+          ) : (
+            <div className="py-8 text-center text-xs text-slate-400">
+              네이버 플레이스 검색 결과를 가져오는 중입니다.
+            </div>
+          )}
+        </div>
+
+        {/* 하단 네이버 검색 전체보기 링크 */}
+        <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400">
+          <span>네이버 모바일 플레이스 기준</span>
+          <a
+            href={`https://m.search.naver.com/search.naver?query=${encodeURIComponent(cleanKeyword)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[#0284C7] font-semibold hover:underline flex items-center gap-0.5"
           >
-            <Sparkles className="w-3 h-3" />
-            1위 탈환 글쓰기
-            <ArrowRight className="w-3 h-3" />
-          </Link>
+            네이버 검색 결과 전체보기 ↗
+          </a>
         </div>
       </div>
     </div>

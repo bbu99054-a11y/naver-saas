@@ -1,132 +1,119 @@
 'use client'
 
-import { Award, Eye, Users } from 'lucide-react'
+import { Award, Eye, Users, FileText, ArrowRight, PenTool } from 'lucide-react'
+import Link from 'next/link'
 
-interface PublishedResult {
+export interface ArticleItem {
   id: string
   title: string
-  category: string
-  publishedDate: string
-  rankingBadge: string
-  estimatedViews: number
-  leadContribution: number
-  thumbnailUrl: string
+  target_keyword: string
+  status: string
+  created_at: Date | string
 }
 
-const PUBLISHED_RESULTS: PublishedResult[] = [
-  {
-    id: '1',
-    title: '음주운전 2진 아웃 경찰 피의자 신문 전 선처 양형 3원칙',
-    category: '형사 · 음주운전',
-    publishedDate: '3일 전 발행',
-    rankingBadge: '스마트블록 3위 안착 🏆',
-    estimatedViews: 412,
-    leadContribution: 2,
-    thumbnailUrl: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=200&q=80'
-  },
-  {
-    id: '2',
-    title: '서초 상간자 위자료 청구 소송 3,500만 원 승소 인용 사례',
-    category: '이혼 · 상간자',
-    publishedDate: '5일 전 발행',
-    rankingBadge: 'VIEW탭 2위 노출 📈',
-    estimatedViews: 680,
-    leadContribution: 3,
-    thumbnailUrl: 'https://images.unsplash.com/photo-1450133064473-71024230f91b?w=200&q=80'
-  },
-  {
-    id: '3',
-    title: '전세보증금 미반환 명도 및 임차권등기명령 강제집행 절차',
-    category: '부동산 · 명도',
-    publishedDate: '1주일 전 발행',
-    rankingBadge: '플레이스 상단 노출 ✓',
-    estimatedViews: 290,
-    leadContribution: 1,
-    thumbnailUrl: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=200&q=80'
-  }
-]
+interface PublishedArticleResultsProps {
+  articles?: ArticleItem[]
+}
 
-export function PublishedArticleResults() {
+export function PublishedArticleResults({ articles = [] }: PublishedArticleResultsProps) {
   return (
-    <div className="bg-white rounded-2xl shadow-[0_4px_25px_-4px_rgba(0,0,0,0.05)] flex flex-col h-full overflow-hidden">
+    <div className="bg-white rounded-2xl shadow-[0_4px_25px_-4px_rgba(0,0,0,0.05)] flex flex-col h-full overflow-hidden border border-slate-100">
       {/* 헤더 */}
       <div className="p-5 pb-3 bg-gradient-to-r from-sky-50/50 via-blue-50/30 to-white flex flex-row items-center justify-between">
         <div>
           <div className="flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-emerald-500" />
-            <span className="text-[11px] font-bold text-emerald-700 uppercase tracking-wider">
-              Search Performance & ROI
+            <span className={`w-2 h-2 rounded-full ${articles.length > 0 ? 'bg-emerald-500' : 'bg-slate-300'}`} />
+            <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+              노출 관제
             </span>
           </div>
-          <h3 className="text-sm font-bold text-slate-900 mt-1 flex items-center gap-1.5">
-            <Award className="w-4 h-4 text-[#0284C7]" />
-            최근 발행한 글 네이버 검색 노출 성과
+          <h3 className="text-sm font-bold text-slate-900 mt-1 flex items-center gap-1.5 break-keep">
+            <Award className="w-4 h-4 text-[#0284C7] shrink-0" />
+            발행 글 검색 노출 성과
           </h3>
-          <p className="text-[11px] text-slate-500 mt-0.5">
-            네이버 스마트블록 및 검색 상위에 안착된 칼럼 랭킹입니다.
+          <p className="text-[11px] text-slate-500 mt-0.5 break-keep">
+            네이버 스마트블록 상위 노출 랭킹
           </p>
         </div>
 
         <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 shrink-0">
-          노출율 100%
+          이달 {articles.length}건
         </span>
       </div>
 
-      {/* 3열(1/3 너비) 환경에 최적화된 세로 컴팩트 카드 리스트 */}
+      {/* 본문 영역 */}
       <div className="p-5 space-y-2.5 flex-1 flex flex-col justify-between">
-        <div className="space-y-2">
-          {PUBLISHED_RESULTS.map((article) => (
-            <div
-              key={article.id}
-              className="p-3 rounded-xl bg-slate-50/80 hover:bg-slate-100/70 transition-all flex items-center gap-3"
-            >
-              {/* 미니 썸네일 */}
-              <div className="w-13 h-13 rounded-lg overflow-hidden bg-slate-200 shrink-0">
-                <img
-                  src={article.thumbnailUrl}
-                  alt={article.title}
-                  className="w-full h-full object-cover"
-                />
-              </div>
+        {articles.length > 0 ? (
+          <div className="space-y-2">
+            {articles.slice(0, 4).map((article) => {
+              const createdDate = new Date(article.created_at)
+              const dateText = `${createdDate.getMonth() + 1}월 ${createdDate.getDate()}일 발행`
 
-              {/* 본문 정보 */}
-              <div className="min-w-0 flex-1">
-                <div className="flex items-center justify-between gap-1">
-                  <span className="text-[10px] font-bold text-[#0284C7]">
-                    {article.category}
-                  </span>
-                  <span className="text-[9px] font-bold px-1.5 py-0.2 rounded-full bg-emerald-100 text-emerald-800 shrink-0">
-                    {article.rankingBadge}
-                  </span>
+              return (
+                <div
+                  key={article.id}
+                  className="p-3 rounded-xl bg-slate-50/80 hover:bg-slate-100/70 transition-all flex items-center justify-between gap-3"
+                >
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center justify-between gap-1">
+                      <span className="text-[10px] font-bold text-[#0284C7]">
+                        {article.target_keyword || '전문 칼럼'}
+                      </span>
+                      <span className="text-[9px] font-bold px-1.5 py-0.2 rounded-full bg-emerald-100 text-emerald-800 shrink-0">
+                        {article.status === 'PUBLISHED' ? '네이버 발행 완료 ✓' : '원고 보관 중 📄'}
+                      </span>
+                    </div>
+
+                    <h4 className="text-xs font-bold text-slate-900 truncate mt-0.5">
+                      {article.title}
+                    </h4>
+
+                    <div className="flex items-center justify-between text-[10px] text-slate-400 mt-1">
+                      <span>{dateText}</span>
+                      <Link 
+                        href={`/dashboard/archive/${article.id}`} 
+                        className="text-indigo-600 font-semibold hover:underline"
+                      >
+                        원고 보기 ➔
+                      </Link>
+                    </div>
+                  </div>
                 </div>
-
-                <h4 className="text-xs font-bold text-slate-900 truncate mt-0.5">
-                  {article.title}
-                </h4>
-
-                <div className="flex items-center justify-between text-[10px] text-slate-400 mt-1">
-                  <span className="flex items-center gap-1">
-                    <Eye className="w-3 h-3 text-slate-400" />
-                    {article.estimatedViews}회 조회
-                  </span>
-                  <span className="flex items-center gap-1 font-bold text-slate-600">
-                    <Users className="w-3 h-3 text-[#0284C7]" />
-                    상담 {article.leadContribution}건 기여
-                  </span>
-                </div>
-              </div>
+              )
+            })}
+          </div>
+        ) : (
+          /* 원고 0건일 때의 단정하고 신뢰감 있는 빈 화면 (Empty State) */
+          <div className="py-10 px-4 text-center space-y-3 bg-slate-50/60 rounded-xl border border-dashed border-slate-200 my-auto">
+            <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center mx-auto text-slate-400">
+              <FileText className="w-5 h-5 text-slate-400" />
             </div>
-          ))}
-        </div>
+            <div className="space-y-1">
+              <h4 className="text-xs font-bold text-slate-700">아직 발행된 전문 칼럼이 없습니다 (0건)</h4>
+              <p className="text-[11px] text-slate-400 max-w-xs mx-auto leading-relaxed">
+                전문 칼럼 스튜디오에서 고단가 수임 키워드로 첫 번째 칼럼을 발행해 보세요. 발행 즉시 네이버 검색 노출 성과가 추적됩니다.
+              </p>
+            </div>
+            <Link 
+              href="/dashboard/write"
+              className="inline-flex items-center gap-1.5 text-xs font-bold text-indigo-600 bg-indigo-50 hover:bg-indigo-100 px-3.5 py-1.5 rounded-lg transition-colors cursor-pointer"
+            >
+              <PenTool className="w-3.5 h-3.5" />
+              첫 전문 칼럼 작성하기 ➔
+            </Link>
+          </div>
+        )}
 
         {/* 하단 요약 안내 바 */}
         <div className="p-3 rounded-xl bg-sky-50/70 flex items-center justify-between text-xs mt-2">
           <span className="text-sky-950 font-bold text-[11px]">
-            📈 3건 모두 네이버 스마트블록 1페이지 상위 점유 중
+            {articles.length > 0 
+              ? `📈 총 ${articles.length}건의 전문 칼럼이 수임 파이프라인에 기여 중` 
+              : '💡 칼럼 1건 발행 시마다 대행사 외주비 15만 원 절감'}
           </span>
-          <span className="text-[11px] text-[#0284C7] font-semibold">
-            상담 전환 기여 ✓
-          </span>
+          <Link href="/dashboard/archive" className="text-[11px] text-[#0284C7] font-semibold hover:underline">
+            보관함 ➔
+          </Link>
         </div>
       </div>
     </div>

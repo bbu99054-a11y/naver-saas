@@ -2,6 +2,7 @@
 
 import prisma from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
+import { createClient } from '@/lib/supabase/server'
 
 export interface IntakeLeadItem {
   id: string
@@ -131,8 +132,25 @@ function generateSmartQuestions(category: string, stage: string, summary: string
 
 export async function getIntakeLeads(): Promise<IntakeLeadItem[]> {
   try {
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+
+    if (!user) {
+      return []
+    }
+
+    const dbUser = await prisma.user.findUnique({
+      where: { id: user.id },
+      select: { created_at: true }
+    })
+
+    const userCreatedAt = dbUser?.created_at || new Date()
+
     const dbLeads = await prisma.lead.findMany({
       where: {
+        createdAt: {
+          gte: userCreatedAt
+        },
         OR: [
           { leadType: 'consulting' },
           { leadType: 'contact' },
@@ -145,7 +163,7 @@ export async function getIntakeLeads(): Promise<IntakeLeadItem[]> {
     })
 
     if (!dbLeads || dbLeads.length === 0) {
-      return DEFAULT_DEMO_LEADS
+      return []
     }
 
     const now = Date.now()
@@ -202,8 +220,8 @@ export async function getIntakeLeads(): Promise<IntakeLeadItem[]> {
 
     return mapped
   } catch (error) {
-    console.warn('[getIntakeLeads] Error reading DB leads, returning default leads:', error)
-    return DEFAULT_DEMO_LEADS
+    console.warn('[getIntakeLeads] Error reading DB leads, returning empty leads:', error)
+    return []
   }
 }
 
