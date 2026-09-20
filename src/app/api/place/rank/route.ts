@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { diagnosePlaceWithJev } from '@/lib/ai/jevClient';
 
 interface PlaceItem {
   rank: number;
@@ -155,6 +156,19 @@ export async function GET(req: Request) {
       }
     }
 
+    // 🧠 Jev AI 0.05초 순위 정체 원인 & 1위 탈환 처방전 산출
+    let jevDiagnosis = null;
+    if (cleanTarget) {
+      const top1Item = rankingData.items.length > 0 ? rankingData.items[0] : null;
+      jevDiagnosis = await diagnosePlaceWithJev({
+        query: cleanQuery,
+        targetName: cleanTarget,
+        rank: myPlace ? myPlace.rank : null,
+        hasBooking: myPlace ? myPlace.hasBooking : false,
+        top1Name: top1Item ? top1Item.name : '',
+      });
+    }
+
     return NextResponse.json({
       success: true,
       query: cleanQuery,
@@ -162,6 +176,7 @@ export async function GET(req: Request) {
       totalCount: rankingData.totalCount,
       searchDate: new Date().toISOString(),
       myPlace,
+      jevDiagnosis,
       rankingList: rankingData.items,
     });
   } catch (error: any) {

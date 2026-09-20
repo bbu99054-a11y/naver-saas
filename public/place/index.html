@@ -920,6 +920,78 @@
       </div>
     </div>
 
+    <!-- 🧠 Jev AI 1위 탈환 1초 처방전 카드 (Jev Prescription Card) -->
+    <div class="diagnosis-card" id="jevPrescriptionCard" style="display:none; margin-top: 20px; border: 2px solid #6366f1; background: linear-gradient(135deg, #ffffff 0%, #f8faff 100%);">
+      <div class="diag-header" style="border-bottom: 1px solid #e0e7ff; padding-bottom: 12px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;">
+        <div style="display:flex; align-items:center; gap: 8px;">
+          <span style="background:#e0e7fe; color:#4338ca; font-size:11px; font-weight:800; padding:4px 11px; border-radius:20px; border:1px solid #c7d2fe; display:inline-flex; align-items:center; gap:5px;">
+            <i class="fa-solid fa-bolt"></i> Jev AI 0.05초 정밀 진단
+          </span>
+          <span id="jevThreatPill" style="font-size:11px; font-weight:800; padding:4px 11px; border-radius:20px;">
+            상태 분석 중
+          </span>
+        </div>
+        <div style="text-align:right;">
+          <span style="font-size:11px; color:#64748b; font-weight:600; display:block;">플레이스 SEO 점수</span>
+          <strong id="jevScoreText" style="font-size:22px; font-weight:900; color:#4338ca;">0점</strong>
+          <span style="font-size:12px; color:#94a3b8;"> / 100점</span>
+        </div>
+      </div>
+
+      <div style="margin-top: 14px; display:flex; flex-direction:column; gap:12px;">
+        <!-- 순위 정체 원인 박스 -->
+        <div style="background:#fff1f2; border:1px solid #fecdd3; border-radius:12px; padding:12px 14px;">
+          <div style="display:flex; align-items:center; gap:6px; font-size:12px; font-weight:800; color:#be123c; margin-bottom:4px;">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <span>1위 경쟁사 대비 순위 정체 핵심 원인</span>
+          </div>
+          <p id="jevCauseAnalysis" style="font-size:12.5px; color:#881337; line-height:1.55; margin:0; font-weight:500;">
+            -
+          </p>
+        </div>
+
+        <!-- 1위 탈환 1초 추천 소개글 카피 -->
+        <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:12px; padding:14px;">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; gap:8px;">
+            <div style="display:flex; align-items:center; gap:6px; font-size:12px; font-weight:800; color:#15803d;">
+              <i class="fa-solid fa-wand-magic-sparkles"></i>
+              <span>💊 1위 탈환 1초 처방전: 추천 플레이스 소개글 첫 줄</span>
+            </div>
+            <button type="button" id="btnCopyIntro" onclick="copyJevIntroCopy()" style="background:#16a34a; color:#fff; font-size:11px; font-weight:800; border:none; border-radius:6px; padding:5px 11px; cursor:pointer; display:inline-flex; align-items:center; gap:4px; transition:all 0.2s; box-shadow:0 1px 3px rgba(0,0,0,0.1);">
+              <i class="fa-solid fa-copy"></i> <span>카피 1초 복사</span>
+            </button>
+          </div>
+          <div id="jevIntroCopy" style="background:#ffffff; border:1px solid #86efac; border-radius:8px; padding:10px 12px; font-size:13px; font-weight:700; color:#14532d; line-height:1.5;">
+            -
+          </div>
+          <span style="font-size:11px; color:#16a34a; display:block; margin-top:6px; font-weight:600;">
+            💡 네이버 스마트플레이스 관리자 ➔ [정보수정 ➔ 소개란 첫 문장]에 그대로 붙여넣으세요.
+          </span>
+        </div>
+
+        <!-- 3대 실무 행동 체크리스트 -->
+        <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:12px 14px;">
+          <div style="font-size:12px; font-weight:800; color:#1e293b; margin-bottom:8px; display:flex; align-items:center; gap:6px;">
+            <i class="fa-solid fa-list-check" style="color:#6366f1;"></i>
+            <span>Jev AI 권장: 1위 안착을 위한 3대 긴급 액션 플랜</span>
+          </div>
+          <div id="jevChecklist" style="display:flex; flex-direction:column; gap:6px;">
+            <!-- Injected via JS -->
+          </div>
+        </div>
+
+        <!-- 하단 SaaS 전환 브릿지 -->
+        <div style="margin-top:4px; padding-top:12px; border-top:1px dashed #cbd5e1; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;">
+          <span style="font-size:11.5px; color:#64748b;">
+            🚀 플레이스 소개글 + 블로그 연동으로 1위 굳히기:
+          </span>
+          <a href="https://postsyncapp.com" target="_blank" style="display:inline-flex; align-items:center; gap:6px; background:#4338ca; color:#ffffff; font-size:11.5px; font-weight:800; padding:6px 14px; border-radius:8px; text-decoration:none; box-shadow:0 2px 6px rgba(67,56,202,0.25);">
+            PostSync AI로 1위 세팅하기 <i class="fa-solid fa-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+
     <!-- Ranking Table Card -->
     <div class="ranking-card" id="rankingCard">
       <div class="ranking-header">
@@ -1191,6 +1263,8 @@
         loadingContainer.style.display = 'block';
         diagnosisCard.style.display = 'none';
         rankingCard.style.display = 'none';
+        const jevCardEl = document.getElementById('jevPrescriptionCard');
+        if (jevCardEl) jevCardEl.style.display = 'none';
         const teaserCardEl = document.getElementById('teaserCard');
         if (teaserCardEl) teaserCardEl.style.display = 'none';
         const applySecEl = document.getElementById('applySection');
@@ -1285,6 +1359,50 @@
           }
         }
 
+        // Render Jev AI Prescription Card
+        const jevCard = document.getElementById('jevPrescriptionCard');
+        if (data.jevDiagnosis && data.target) {
+          const diag = data.jevDiagnosis;
+          const threatPill = document.getElementById('jevThreatPill');
+          const scoreText = document.getElementById('jevScoreText');
+          const causeEl = document.getElementById('jevCauseAnalysis');
+          const introEl = document.getElementById('jevIntroCopy');
+          const checklistEl = document.getElementById('jevChecklist');
+
+          if (threatPill) {
+            if (diag.threatLevel === 'SAFE') {
+              threatPill.style.background = '#dcfce7';
+              threatPill.style.color = '#15803d';
+              threatPill.textContent = '🏆 1위 방어 모드';
+            } else if (diag.threatLevel === 'WARN') {
+              threatPill.style.background = '#fef3c7';
+              threatPill.style.color = '#b45309';
+              threatPill.textContent = '⚡ 1위 탈환 가시권';
+            } else {
+              threatPill.style.background = '#ffe4e6';
+              threatPill.style.color = '#be123c';
+              threatPill.textContent = '🚨 순위 정체 긴급 처방';
+            }
+          }
+
+          if (scoreText) scoreText.textContent = `${diag.score}점`;
+          if (causeEl) causeEl.textContent = diag.causeAnalysis;
+          if (introEl) introEl.textContent = diag.recommendedIntroCopy;
+
+          if (checklistEl && Array.isArray(diag.actionChecklist)) {
+            checklistEl.innerHTML = diag.actionChecklist.map((item, idx) => `
+              <div style="display:flex; align-items:flex-start; gap:8px; font-size:12px; color:#334155; line-height:1.4;">
+                <span style="background:#6366f1; color:#fff; border-radius:50%; width:16px; height:16px; font-size:10px; font-weight:700; display:inline-flex; align-items:center; justify-content:center; shrink-0; margin-top:1px;">${idx + 1}</span>
+                <span>${escapeHtml(item)}</span>
+              </div>
+            `).join('');
+          }
+
+          if (jevCard) jevCard.style.display = 'block';
+        } else if (jevCard) {
+          jevCard.style.display = 'none';
+        }
+
         // 2. Render Table
         rankingCard.style.display = 'block';
         if (!data.rankingList || data.rankingList.length === 0) {
@@ -1372,6 +1490,21 @@
         toast.classList.add('show');
         setTimeout(() => toast.classList.remove('show'), 2500);
       }
+
+      window.copyJevIntroCopy = function() {
+        const introEl = document.getElementById('jevIntroCopy');
+        if (!introEl) return;
+        const text = introEl.textContent.trim();
+        navigator.clipboard.writeText(text);
+        const btn = document.getElementById('btnCopyIntro');
+        if (btn) {
+          btn.innerHTML = '<i class="fa-solid fa-check"></i> <span>복사 완료!</span>';
+          setTimeout(() => {
+            btn.innerHTML = '<i class="fa-solid fa-copy"></i> <span>카피 1초 복사</span>';
+          }, 2000);
+        }
+        showToast('소개글 추천 카피가 클립보드에 복사되었습니다. 스마트플레이스 소개란에 붙여넣으세요!');
+      };
 
       // Handle PlaceDoctor Report Lead Application
       window.handleApply = async function(e) {
