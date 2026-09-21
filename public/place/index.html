@@ -1043,9 +1043,56 @@
         </div>
       </div>
       <div class="teaser-cta-row">
-        <a href="#applySection" class="btn-teaser-unlock"><i class="fa-solid fa-stethoscope"></i> 우리 매장 1회 무료 정밀 진단 리포트 & 1위 처방전 신청하기</a>
+        <a href="#applySection" class="btn-teaser-unlock" onclick="openApplySection(event)"><i class="fa-solid fa-stethoscope"></i> 우리 매장 1회 무료 정밀 진단 리포트 & 1위 처방전 신청하기</a>
       </div>
     </div>
+
+    <!-- Apply Section (PlaceDoctor 3P Intelligence Report & 1st Rank Prescription) -->
+    <section class="apply-section" id="applySection">
+      <div class="apply-badge"><i class="fa-solid fa-stethoscope"></i> PlaceDoctor 3P 인텔리전스 리포트 & 1위 처방전</div>
+      <h2 class="apply-title">우리 매장도 네이버 플레이스 정밀 진단서 & 1위 처방전을 받아보시겠습니까?</h2>
+      <p class="apply-desc">
+        1위 경쟁사의 리뷰 급증 원인, 블로그 침투 키워드, 그리고 이번 주 우리 매장이 당장 실행해야 할 상위노출 처방전이 담긴 <b>실전 리포트 1회를 무료</b>로 이메일 발송해 드립니다.
+      </p>
+      <form class="apply-form" id="placeApplyForm" onsubmit="handleApply(event)">
+        <div class="apply-field">
+          <label for="applyStoreName"><i class="fa-solid fa-store"></i> 내 매장 상호명</label>
+          <input type="text" id="applyStoreName" class="apply-input" placeholder="예: 법무법인 YK, 강남더블유치과" required>
+        </div>
+        <div class="apply-field">
+          <label for="applyKeyword"><i class="fa-solid fa-magnifying-glass"></i> 분석 희망 키워드</label>
+          <input type="text" id="applyKeyword" class="apply-input" placeholder="예: 강남역 변호사, 서초동 치과">
+        </div>
+        <div class="apply-field">
+          <label for="applyEmail"><i class="fa-solid fa-envelope"></i> 리포트 받아볼 이메일</label>
+          <input type="email" id="applyEmail" class="apply-input" placeholder="name@example.com" required>
+        </div>
+        <div class="apply-field">
+          <label for="applyPhone"><i class="fa-solid fa-phone"></i> 대표 연락처 (선택)</label>
+          <input type="tel" id="applyPhone" class="apply-input" placeholder="010-0000-0000">
+        </div>
+        <button type="submit" class="btn-apply-submit" id="btnApplySubmit">
+          <i class="fa-solid fa-paper-plane"></i> <span>🩺 1회 무료 정밀 진단 & 처방전 받기</span>
+        </button>
+      </form>
+      <div class="apply-guarantee" id="applyGuarantee">
+        <span>🔒 100% 무료 1회 진단 (스팸 발송 없음)</span>
+        <span>⚡ 신청 후 전문 분석 리포트 순차 전송</span>
+        <span>⭐ 네이버 스마트플레이스 1위 탈환 솔루션</span>
+      </div>
+      <!-- 접수 완료 안내 박스 -->
+      <div id="applySuccessBox" style="display:none; background:#f0fdf4; border:2px solid #86efac; border-radius:12px; padding:24px; text-align:center; margin-top:20px;">
+        <div style="font-size:36px; margin-bottom:8px;">🎉</div>
+        <h3 id="applySuccessTitle" style="font-size:18px; font-weight:900; color:#15803d; margin-bottom:6px;">플레이스 닥터 정밀 진단 접수 완료!</h3>
+        <p style="font-size:13.5px; color:#166534; line-height:1.6; margin-bottom:12px;">
+          입력하신 이메일(<b id="applySuccessEmail"></b>)로 분석 리포트와 1위 처방전이 순차 발송됩니다.<br>
+          (담당 분석팀에 실시간 알림이 안전하게 접수되었습니다.)
+        </p>
+        <div style="display:inline-flex; align-items:center; gap:6px; background:#dcfce7; color:#15803d; font-size:12px; font-weight:700; padding:6px 14px; border-radius:20px;">
+          <i class="fa-solid fa-check-circle"></i> 접수 정상 완료 (DB 영구 보존)
+        </div>
+      </div>
+    </section>
 
     <!-- Inline Lead Magnet Banner -->
     <div class="lead-magnet-box">
@@ -1506,6 +1553,29 @@
         showToast('소개글 추천 카피가 클립보드에 복사되었습니다. 스마트플레이스 소개란에 붙여넣으세요!');
       };
 
+      window.openApplySection = function(e) {
+        if (e && e.preventDefault) e.preventDefault();
+        const sec = document.getElementById('applySection');
+        if (sec) {
+          sec.style.display = 'block';
+          const kwInput = document.getElementById('inputKeyword');
+          const targetInput = document.getElementById('inputTarget');
+          const storeEl = document.getElementById('applyStoreName');
+          const kwEl = document.getElementById('applyKeyword');
+          if (storeEl && !storeEl.value && targetInput && targetInput.value) {
+            storeEl.value = targetInput.value.trim();
+          }
+          if (kwEl && !kwEl.value && kwInput && kwInput.value) {
+            kwEl.value = kwInput.value.trim();
+          }
+          sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          const emailEl = document.getElementById('applyEmail');
+          if (emailEl) {
+            setTimeout(() => emailEl.focus(), 400);
+          }
+        }
+      };
+
       // Handle PlaceDoctor Report Lead Application
       window.handleApply = async function(e) {
         e.preventDefault();
@@ -1548,8 +1618,8 @@
             const formEl = document.getElementById('placeApplyForm');
             const guaranteeEl = document.getElementById('applyGuarantee');
             const successBox = document.getElementById('applySuccessBox');
-            const successStoreTitle = document.getElementById('successStoreTitle');
-            const successTargetEmail = document.getElementById('successTargetEmail');
+            const successStoreTitle = document.getElementById('applySuccessTitle') || document.getElementById('successStoreTitle');
+            const successTargetEmail = document.getElementById('applySuccessEmail') || document.getElementById('successTargetEmail');
 
             if (formEl) formEl.style.display = 'none';
             if (guaranteeEl) guaranteeEl.style.display = 'none';
