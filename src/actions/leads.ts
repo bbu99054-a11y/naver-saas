@@ -14,7 +14,7 @@ export interface IntakeLeadItem {
   category: string
   stage: string
   minutesAgo: number
-  status: 'NEW' | 'CONTACTED' | 'WON' | 'CLOSED'
+  status: 'NEW' | 'CONTACTED' | 'VISITING' | 'WON' | 'CLOSED'
   isUrgent: boolean
   summary: string
   contractAmount: string
@@ -146,28 +146,30 @@ export async function getIntakeLeads(): Promise<IntakeLeadItem[]> {
 
     const userCreatedAt = dbUser?.created_at || new Date()
 
+    // 내 계정 가입 시점 이후의 상담 리드 조회
     const dbLeads = await prisma.lead.findMany({
       where: {
         createdAt: {
           gte: userCreatedAt
         },
-        OR: [
-          { leadType: 'consulting' },
-          { leadType: 'contact' },
-          { toolSource: 'place' },
-          { toolSource: 'adcheck' }
-        ]
+        leadType: 'consulting',
       },
       orderBy: { createdAt: 'desc' },
-      take: 20
+      take: 50
     })
 
-    if (!dbLeads || dbLeads.length === 0) {
+    // 🔒 내 고유 식별자(?ref=내ID)로 접수된 의뢰인만 정확하게 필터링 (타 로펌 및 공용 웹툴 리드 격리)
+    const myLeads = dbLeads.filter(item => {
+      const meta = (item.metadata as any) || {}
+      return meta.targetUserId === user.id
+    })
+
+    if (!myLeads || myLeads.length === 0) {
       return []
     }
 
     const now = Date.now()
-    const mapped: IntakeLeadItem[] = dbLeads.map((item) => {
+    const mapped: IntakeLeadItem[] = myLeads.map((item) => {
       const meta = (item.metadata as any) || {}
       const jev = meta.jevTriage || {}
       const createdTime = new Date(item.createdAt).getTime()
@@ -191,8 +193,9 @@ export async function getIntakeLeads(): Promise<IntakeLeadItem[]> {
       const retainerTier = jev.retainerTier || (isUrgent ? 'high' : 'standard')
       const actionText = jev.actionText || (isUrgent ? '🚨 10분 내 긴급 유선 연결 필수 (골든타임)' : '📞 당일 내 유선 상담 권장')
 
-      let status: 'NEW' | 'CONTACTED' | 'WON' | 'CLOSED' = 'NEW'
+      let status: 'NEW' | 'CONTACTED' | 'VISITING' | 'WON' | 'CLOSED' = 'NEW'
       if (item.status === 'CONTACTED') status = 'CONTACTED'
+      else if (item.status === 'VISITING') status = 'VISITING'
       else if (item.status === 'CONVERTED' || item.status === 'WON') status = 'WON'
       else if (item.status === 'CLOSED') status = 'CLOSED'
 
@@ -227,7 +230,7 @@ export async function getIntakeLeads(): Promise<IntakeLeadItem[]> {
 
 export async function updateLeadStatus(
   leadId: string, 
-  status: 'NEW' | 'CONTACTED' | 'WON' | 'CLOSED'
+  status: 'NEW' | 'CONTACTED' | 'VISITING' | 'WON' | 'CLOSED'
 ): Promise<{ success: boolean; message?: string }> {
   try {
     if (leadId.startsWith('demo-')) {
@@ -243,6 +246,7 @@ export async function updateLeadStatus(
 
     revalidatePath('/dashboard')
     revalidatePath('/dashboard/intake')
+    revalidatePath('/dashboard/pipeline')
     return { success: true }
   } catch (error: any) {
     console.error('[updateLeadStatus] Error updating lead status:', error)

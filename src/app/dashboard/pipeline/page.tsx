@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { 
   Plus, 
   Phone, 
@@ -8,99 +8,47 @@ import {
   CheckCircle, 
   Clock, 
   ArrowRight, 
+  ArrowLeft,
   ShieldCheck, 
   FileText, 
   Search, 
-  Filter,
-  MoreHorizontal,
-  ChevronRight,
+  RefreshCw,
   TrendingUp,
-  Sparkles
+  Sparkles,
+  ExternalLink,
+  Flame,
+  CheckCircle2,
+  DollarSign,
+  AlertCircle
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
+import type { IntakeLeadItem } from '@/actions/leads'
+import { getIntakeLeads, updateLeadStatus } from '@/actions/leads'
+import { IntakeDetailModal } from '@/components/IntakeDetailModal'
 
-interface LeadCard {
-  id: string
-  name: string
-  phone: string
-  specialty: string
-  source: string
-  stage: 'NEW' | 'CONSULTING' | 'VISITING' | 'RETAINED'
-  estimatedFee: string
-  createdAt: string
-  summary: string
-}
+type PipelineStage = 'NEW' | 'CONTACTED' | 'VISITING' | 'WON'
 
-const INITIAL_LEADS: LeadCard[] = [
-  {
-    id: 'lead-1',
-    name: '김*현 의뢰인',
-    phone: '010-8472-****',
-    specialty: '음주운전 2진 구제',
-    source: '블로그 [음주운전 판례 분석]',
-    stage: 'NEW',
-    estimatedFee: '5,500,000원',
-    createdAt: '10분 전',
-    summary: '혈중알코올농도 0.082%, 생계형 화물 운전 기사로 면허취소 구제 행정심판 및 형사 조력 희망'
-  },
-  {
-    id: 'lead-2',
-    name: '이*우 의뢰인',
-    phone: '010-3321-****',
-    specialty: '상간자 위자료 청구 소송',
-    source: '블로그 [상간 소송 승소 요건]',
-    stage: 'NEW',
-    estimatedFee: '5,500,000원',
-    createdAt: '45분 전',
-    summary: '배우자 부정행위 증거(메신저/차량 블랙박스) 확보 완료, 위자료 3,000만 원 청구 소송 상담 희망'
-  },
-  {
-    id: 'lead-3',
-    name: '박*서 의뢰인',
-    phone: '010-9120-****',
-    specialty: '이혼 및 재산분할',
-    source: '네이버 스마트플레이스',
-    stage: 'CONSULTING',
-    estimatedFee: '7,000,000원',
-    createdAt: '어제',
-    summary: '1차 유선 통화 완료. 혼인 기간 14년, 특유재산 기여도 입증 관련 방문 일정 조율 중'
-  },
-  {
-    id: 'lead-4',
-    name: '최*민 의뢰인',
-    phone: '010-4491-****',
-    specialty: '업무상 횡령 피의사건 방어',
-    source: '블로그 [횡령죄 성립요건 및 양형]',
-    stage: 'VISITING',
-    estimatedFee: '15,000,000원',
-    createdAt: '2일 전',
-    summary: '법인 자금 2억 5천만 원 횡령 혐의 피소. 내일 오후 2시 대표변호사 대면 미팅 및 구속영장 실질심사 대비'
-  },
-  {
-    id: 'lead-5',
-    name: '정*훈 의뢰인',
-    phone: '010-6712-****',
-    specialty: '상가 명도 및 보증금 반환',
-    source: '블로그 [명도소송 3대 주의점]',
-    stage: 'RETAINED',
-    estimatedFee: '4,400,000원',
-    createdAt: '3일 전',
-    summary: '계약서 날인 및 착수금 입금 완료. 점유이전금지가처분 신청서 법원 접수 진행'
-  }
-]
+const STAGE_ORDER: PipelineStage[] = ['NEW', 'CONTACTED', 'VISITING', 'WON']
 
-const COLUMNS = [
+const COLUMNS: {
+  id: PipelineStage
+  title: string
+  badgeBg: string
+  badgeText: string
+  borderColor: string
+  subText: string
+}[] = [
   { 
     id: 'NEW', 
     title: '1. 신규 접수', 
     badgeBg: 'bg-[#E0F2FE]', 
     badgeText: 'text-[#0284C7]', 
     borderColor: 'border-[#0284C7]',
-    subText: '골든타임 10분 내 1차 전화 연결'
+    subText: '골든타임 10분 내 유선 연결'
   },
   { 
-    id: 'CONSULTING', 
+    id: 'CONTACTED', 
     title: '2. 1차 유선 상담', 
     badgeBg: 'bg-amber-50', 
     badgeText: 'text-amber-700', 
@@ -116,7 +64,7 @@ const COLUMNS = [
     subText: '사무소 대면 미팅 및 서류 확인'
   },
   { 
-    id: 'RETAINED', 
+    id: 'WON', 
     title: '4. 수임 계약 완료', 
     badgeBg: 'bg-emerald-50', 
     badgeText: 'text-emerald-700', 
@@ -126,54 +74,114 @@ const COLUMNS = [
 ]
 
 export default function PipelinePage() {
-  const [leads, setLeads] = useState<LeadCard[]>(INITIAL_LEADS)
-  const [selectedLead, setSelectedLead] = useState<LeadCard | null>(null)
+  const [leads, setLeads] = useState<IntakeLeadItem[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [selectedLead, setSelectedLead] = useState<IntakeLeadItem | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
 
-  // 다음 단계로 이동
-  const advanceStage = (id: string, currentStage: LeadCard['stage']) => {
-    const stageOrder: LeadCard['stage'][] = ['NEW', 'CONSULTING', 'VISITING', 'RETAINED']
-    const nextIndex = stageOrder.indexOf(currentStage) + 1
-    if (nextIndex < stageOrder.length) {
-      setLeads(prev => prev.map(l => l.id === id ? { ...l, stage: stageOrder[nextIndex] } : l))
+  const loadLeads = async () => {
+    setIsLoading(true)
+    try {
+      const data = await getIntakeLeads()
+      setLeads(data)
+    } catch (e) {
+      console.warn('Load pipeline leads error:', e)
+    } finally {
+      setIsLoading(false)
     }
   }
 
-  // 이전 단계로 이동
-  const rewindStage = (id: string, currentStage: LeadCard['stage']) => {
-    const stageOrder: LeadCard['stage'][] = ['NEW', 'CONSULTING', 'VISITING', 'RETAINED']
-    const prevIndex = stageOrder.indexOf(currentStage) - 1
-    if (prevIndex >= 0) {
-      setLeads(prev => prev.map(l => l.id === id ? { ...l, stage: stageOrder[prevIndex] } : l))
+  useEffect(() => {
+    loadLeads()
+  }, [])
+
+  // 단계 이동 및 DB 영구 저장
+  const handleAdvanceStage = async (id: string, currentStage: PipelineStage) => {
+    const currentIndex = STAGE_ORDER.indexOf(currentStage)
+    if (currentIndex < STAGE_ORDER.length - 1) {
+      const nextStage = STAGE_ORDER[currentIndex + 1]
+      // 낙관적 UI 업데이트
+      setLeads(prev => prev.map(l => l.id === id ? { ...l, status: nextStage } : l))
+      try {
+        await updateLeadStatus(id, nextStage)
+      } catch (err) {
+        console.error('Advance stage error:', err)
+        loadLeads()
+      }
     }
   }
 
-  const filteredLeads = leads.filter(l => 
-    l.name.includes(searchTerm) || 
-    l.specialty.includes(searchTerm) || 
-    l.summary.includes(searchTerm)
-  )
+  const handleRewindStage = async (id: string, currentStage: PipelineStage) => {
+    const currentIndex = STAGE_ORDER.indexOf(currentStage)
+    if (currentIndex > 0) {
+      const prevStage = STAGE_ORDER[currentIndex - 1]
+      // 낙관적 UI 업데이트
+      setLeads(prev => prev.map(l => l.id === id ? { ...l, status: prevStage } : l))
+      try {
+        await updateLeadStatus(id, prevStage)
+      } catch (err) {
+        console.error('Rewind stage error:', err)
+        loadLeads()
+      }
+    }
+  }
+
+  const handleModalStatusChange = (leadId: string, newStatus: IntakeLeadItem['status']) => {
+    setLeads(prev => prev.map(l => l.id === leadId ? { ...l, status: newStatus } : l))
+    if (selectedLead && selectedLead.id === leadId) {
+      setSelectedLead(prev => prev ? { ...prev, status: newStatus } : null)
+    }
+  }
+
+  // 검색 필터링
+  const filteredLeads = leads.filter(lead => {
+    const term = searchTerm.toLowerCase().trim()
+    if (!term) return true
+    return (
+      lead.name.toLowerCase().includes(term) ||
+      lead.rawName.toLowerCase().includes(term) ||
+      lead.phoneMasked.includes(term) ||
+      lead.category.toLowerCase().includes(term) ||
+      lead.summary.toLowerCase().includes(term)
+    )
+  })
+
+  // 상단 KPI 계산
+  const totalLeadsCount = leads.length
+  const newLeadsCount = leads.filter(l => l.status === 'NEW').length
+  const visitingLeadsCount = leads.filter(l => l.status === 'VISITING').length
+  const wonLeads = leads.filter(l => l.status === 'WON')
+  
+  // 수임 확정액 계산 (예: '550만 원' -> 5,500,000)
+  const wonTotalAmount = wonLeads.reduce((sum, l) => {
+    const match = l.contractAmount.replace(/[^0-9]/g, '')
+    const num = parseInt(match, 10) || 0
+    return sum + (num > 0 ? num * 10000 : 0)
+  }, 0)
 
   return (
     <div className="space-y-6 pb-12">
-      {/* 🌟 상단 타이틀 & Lawmatics 액션 바 */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs">
+      {/* 🌟 헤더 안내 바 */}
+      <div className="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200 shadow-2xs flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-[#0284C7] animate-pulse"></span>
+            <span className="w-2.5 h-2.5 rounded-full bg-[#0284C7] animate-pulse" />
             <span className="text-xs font-black text-[#0284C7] tracking-wider uppercase">
-              PostSync Intake & Retainer Pipeline
+              Lawmatics Style Intake Pipeline CRM
+            </span>
+            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700">
+              실시간 DB 직결 가동
             </span>
           </div>
           <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight mt-1">
-            수임 파이프라인 관리 (단계별 상담·계약 현황)
+            수임 파이프라인 관리 (단계별 상담·계약 관제)
           </h1>
           <p className="text-xs text-slate-500 mt-0.5">
-            블로그와 1분 진단 폼에서 유입된 의뢰인을 수임 계약까지 한눈에 관리합니다.
+            블로그, 플레이스, 1분 진단 폼에서 유입된 잠재 의뢰인을 수임 계약까지 4단계로 한눈에 추적합니다.
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 shrink-0">
           <Link href="/dashboard/intake">
             <Button variant="outline" size="sm" className="h-9 text-xs font-bold border-slate-200 text-slate-700 hover:bg-slate-50 cursor-pointer">
               📋 1분 진단 폼 배너 복사
@@ -184,108 +192,212 @@ export default function PipelinePage() {
               + 모바일 진단 폼 열기
             </Button>
           </Link>
+          <Button
+            size="sm"
+            onClick={loadLeads}
+            disabled={isLoading}
+            variant="ghost"
+            className="h-9 px-3 text-xs text-slate-500 hover:text-slate-800 cursor-pointer"
+          >
+            <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? 'animate-spin' : ''}`} />
+          </Button>
         </div>
       </div>
 
-      {/* 🌟 통계 지표 요약 바 */}
+      {/* 🌟 4대 실시간 수임 성과 요약 바 */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <div className="bg-white p-4 rounded-xl border border-slate-200/70 shadow-2xs">
+        {/* 1. 진행 중인 의뢰인 */}
+        <div className="bg-white p-4 rounded-xl border border-slate-200/80 shadow-2xs">
           <div className="text-[11px] font-bold text-slate-500">진행 중인 의뢰인</div>
-          <div className="text-xl font-black text-slate-900 mt-1">{leads.length}명</div>
+          <div className="text-xl font-black text-slate-900 mt-1 tabular-nums">
+            {totalLeadsCount}명
+          </div>
+          <span className="text-[10px] text-slate-400 mt-0.5 block">
+            전체 인바운드 접수 누계
+          </span>
         </div>
+
+        {/* 2. 신규 미처리 상담 */}
         <div className="bg-white p-4 rounded-xl border border-[#0284C7]/30 bg-[#E0F2FE]/20 shadow-2xs">
-          <div className="text-[11px] font-bold text-[#0284C7]">신규 미처리 상담</div>
-          <div className="text-xl font-black text-[#0284C7] mt-1">
-            {leads.filter(l => l.stage === 'NEW').length}건
+          <div className="text-[11px] font-bold text-[#0284C7] flex items-center gap-1">
+            <Clock className="w-3.5 h-3.5" />
+            <span>신규 미처리 상담</span>
           </div>
+          <div className="text-xl font-black text-[#0284C7] mt-1 tabular-nums">
+            {newLeadsCount}건
+          </div>
+          <span className="text-[10px] text-[#0284C7]/80 mt-0.5 block">
+            10분 내 유선 연결 골든타임
+          </span>
         </div>
-        <div className="bg-white p-4 rounded-xl border border-slate-200/70 shadow-2xs">
-          <div className="text-[11px] font-bold text-slate-500">방문 상담 확정</div>
-          <div className="text-xl font-black text-indigo-600 mt-1">
-            {leads.filter(l => l.stage === 'VISITING').length}건
+
+        {/* 3. 대면 방문 상담 예약 */}
+        <div className="bg-white p-4 rounded-xl border border-indigo-200/80 bg-indigo-50/20 shadow-2xs">
+          <div className="text-[11px] font-bold text-indigo-700 flex items-center gap-1">
+            <Calendar className="w-3.5 h-3.5" />
+            <span>방문 상담 예약</span>
           </div>
+          <div className="text-xl font-black text-indigo-900 mt-1 tabular-nums">
+            {visitingLeadsCount}건
+          </div>
+          <span className="text-[10px] text-indigo-600/80 mt-0.5 block">
+            사무소 대면 미팅 확정
+          </span>
         </div>
-        <div className="bg-white p-4 rounded-xl border border-emerald-200 bg-emerald-50/30 shadow-2xs">
-          <div className="text-[11px] font-bold text-emerald-700">이달 수임 계약액</div>
-          <div className="text-xl font-black text-emerald-600 mt-1">
-            {leads.filter(l => l.stage === 'RETAINED').length * 4.4}백만원
+
+        {/* 4. 이번 달 수임 확정액 */}
+        <div className="bg-white p-4 rounded-xl border border-emerald-200/80 bg-emerald-50/20 shadow-2xs">
+          <div className="text-[11px] font-bold text-emerald-700 flex items-center gap-1">
+            <DollarSign className="w-3.5 h-3.5" />
+            <span>수임 계약 확정</span>
           </div>
+          <div className="text-xl font-black text-emerald-900 mt-1 tabular-nums">
+            {wonTotalAmount > 0 ? `${(wonTotalAmount / 10000).toLocaleString()}만 원` : '₩0원'}
+          </div>
+          <span className="text-[10px] text-emerald-600/80 mt-0.5 block">
+            완료 사건 {wonLeads.length}건 착수금 기준
+          </span>
         </div>
       </div>
 
-      {/* 🌟 4단계 Lawmatics형 칸반 보드 컬럼 */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-start">
+      {/* 🔍 검색 바 */}
+      <div className="bg-white p-3 rounded-xl border border-slate-200 shadow-2xs flex items-center gap-2">
+        <Search className="w-4 h-4 text-slate-400 ml-2" />
+        <input
+          type="text"
+          placeholder="의뢰인 성함, 연락처, 사건 분야(음주운전, 이혼 등)로 검색..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="w-full text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none bg-transparent"
+        />
+        {searchTerm && (
+          <button 
+            onClick={() => setSearchTerm('')} 
+            className="text-xs text-slate-400 hover:text-slate-600 px-2 cursor-pointer font-bold"
+          >
+            초기화
+          </button>
+        )}
+      </div>
+
+      {/* 🌟 4단계 Lawmatics 스타일 칸반보드 (Drag & Click Stage Move) */}
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 items-start">
         {COLUMNS.map((col) => {
-          const colLeads = filteredLeads.filter(l => l.stage === col.id)
+          const colLeads = filteredLeads.filter(l => l.status === col.id)
+          const colAmount = colLeads.reduce((sum, l) => {
+            const match = l.contractAmount.replace(/[^0-9]/g, '')
+            return sum + (parseInt(match, 10) || 0)
+          }, 0)
+
           return (
             <div 
               key={col.id} 
-              className="bg-[#F8FAFC] border border-slate-200 rounded-2xl p-3.5 flex flex-col min-h-[480px]"
+              className="bg-[#F8FAFC] rounded-2xl border border-slate-200/90 flex flex-col min-h-[520px] shadow-2xs overflow-hidden"
             >
               {/* 컬럼 헤더 */}
-              <div className="flex items-center justify-between pb-3 border-b border-slate-200/80 mb-3">
-                <div>
-                  <h3 className="text-xs font-black text-slate-900 flex items-center gap-1.5">
-                    <span>{col.title}</span>
-                    <span className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold ${col.badgeBg} ${col.badgeText}`}>
-                      {colLeads.length}
-                    </span>
-                  </h3>
-                  <p className="text-[10px] text-slate-400 mt-0.5">{col.subText}</p>
+              <div className="p-3.5 bg-white border-b border-slate-200 space-y-1">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-1.5">
+                    <span className={`w-2 h-2 rounded-full ${
+                      col.id === 'NEW' ? 'bg-[#0284C7]' :
+                      col.id === 'CONTACTED' ? 'bg-amber-500' :
+                      col.id === 'VISITING' ? 'bg-indigo-500' :
+                      'bg-emerald-500'
+                    }`} />
+                    <h3 className="text-xs font-black text-slate-900">{col.title}</h3>
+                  </div>
+                  <span className={`px-2 py-0.5 rounded-full text-[10px] font-black ${col.badgeBg} ${col.badgeText}`}>
+                    {colLeads.length}명
+                  </span>
+                </div>
+                <div className="flex items-center justify-between text-[10px] text-slate-400">
+                  <span>{col.subText}</span>
+                  {colAmount > 0 && (
+                    <span className="font-bold text-slate-600">{colAmount.toLocaleString()}만</span>
+                  )}
                 </div>
               </div>
 
-              {/* 의뢰인 카드 목록 */}
-              <div className="space-y-3 flex-1 overflow-y-auto">
-                {colLeads.length === 0 ? (
-                  <div className="h-32 flex flex-col items-center justify-center text-center text-slate-400 text-xs border border-dashed border-slate-200 rounded-xl bg-white/50">
-                    <span>해당 단계의 의뢰인이 없습니다.</span>
+              {/* 컬럼 내부 카드 리스트 */}
+              <div className="p-3 space-y-3 flex-1 overflow-y-auto">
+                {isLoading ? (
+                  <div className="py-12 text-center text-xs text-slate-400">
+                    불러오는 중...
+                  </div>
+                ) : colLeads.length === 0 ? (
+                  <div className="py-16 text-center text-[11px] text-slate-400 space-y-1">
+                    <div className="text-xl">📭</div>
+                    <p className="font-medium">대기 중인 의뢰인이 없습니다</p>
                   </div>
                 ) : (
-                  colLeads.map((lead) => (
+                  colLeads.map((item) => (
                     <div
-                      key={lead.id}
-                      onClick={() => setSelectedLead(lead)}
-                      className="bg-white border border-slate-200/90 hover:border-[#0284C7] rounded-xl p-3.5 shadow-2xs hover:shadow-sm transition-all cursor-pointer space-y-2.5 group"
+                      key={item.id}
+                      className="bg-white p-4 rounded-xl border border-slate-200/80 hover:border-[#0284C7] hover:shadow-xs transition-all space-y-3 cursor-pointer group"
+                      onClick={() => setSelectedLead(item)}
                     >
+                      {/* 카드 상단 배지 & 시간 */}
                       <div className="flex items-center justify-between">
-                        <span className="text-xs font-black text-slate-900 group-hover:text-[#0284C7] transition-colors">
-                          {lead.name}
+                        <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold ${
+                          item.isUrgent ? 'bg-rose-50 text-rose-600 border border-rose-100' : 'bg-slate-100 text-slate-600'
+                        }`}>
+                          {item.isUrgent ? '🚨 골든타임' : '⚖️ 일반 상담'}
                         </span>
-                        <span className="text-[10px] text-slate-400 font-medium">{lead.createdAt}</span>
+                        <span className="text-[10px] text-slate-400 font-medium">
+                          {item.minutesAgo}분 전
+                        </span>
                       </div>
 
-                      <div className="space-y-1">
-                        <div className="inline-block px-2 py-0.5 rounded-md bg-[#E0F2FE] text-[#0284C7] font-bold text-[10px]">
-                          {lead.specialty}
+                      {/* 의뢰인 성함 및 사건 분야 */}
+                      <div>
+                        <div className="flex items-center justify-between">
+                          <h4 className="text-xs font-black text-slate-900 group-hover:text-[#0284C7] transition-colors">
+                            {item.name}
+                          </h4>
+                          <span className="text-[11px] font-bold text-slate-900 tabular-nums">
+                            {item.contractAmount}
+                          </span>
                         </div>
-                        <p className="text-[11px] text-slate-600 line-clamp-2 leading-relaxed">
-                          {lead.summary}
-                        </p>
+                        <span className="text-[11px] font-mono text-slate-400 block mt-0.5">
+                          {item.phoneMasked}
+                        </span>
                       </div>
 
-                      <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[10px] text-slate-500">
-                        <span className="font-bold text-slate-700">{lead.estimatedFee}</span>
-                        <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
-                          {col.id !== 'NEW' && (
-                            <button
-                              onClick={() => rewindStage(lead.id, lead.stage)}
-                              className="px-1.5 py-0.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold"
-                              title="이전 단계로"
-                            >
-                              ◀
-                            </button>
-                          )}
-                          {col.id !== 'RETAINED' && (
-                            <button
-                              onClick={() => advanceStage(lead.id, lead.stage)}
-                              className="px-2 py-0.5 rounded bg-[#FF6B00] hover:bg-[#E05D00] text-white font-black"
-                              title="다음 단계로 이동"
-                            >
-                              진행 ▶
-                            </button>
-                          )}
-                        </div>
+                      {/* 사건 요약 */}
+                      <p className="text-[11px] text-slate-600 line-clamp-2 leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100">
+                        <span className="font-bold text-slate-800">[{item.category}]</span> {item.summary}
+                      </p>
+
+                      {/* 카드 하단 단계 이동 원클릭 액션 버튼 */}
+                      <div className="pt-2 border-t border-slate-100 flex items-center justify-between gap-1" onClick={(e) => e.stopPropagation()}>
+                        {col.id !== 'NEW' ? (
+                          <button
+                            onClick={() => handleRewindStage(item.id, col.id)}
+                            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-all cursor-pointer"
+                            title="이전 단계로 이동"
+                          >
+                            <ArrowLeft className="w-3 h-3" />
+                          </button>
+                        ) : <div />}
+
+                        {col.id !== 'WON' ? (
+                          <Button
+                            size="sm"
+                            onClick={() => handleAdvanceStage(item.id, col.id)}
+                            className="h-7 px-2.5 text-[10px] font-bold bg-slate-900 hover:bg-[#0284C7] text-white rounded-lg cursor-pointer transition-colors flex items-center gap-1"
+                          >
+                            <span>
+                              {col.id === 'NEW' && '1차 상담 완료 ➔'}
+                              {col.id === 'CONTACTED' && '방문 예약 확정 ➔'}
+                              {col.id === 'VISITING' && '수임 계약 체결 ➔'}
+                            </span>
+                            <ArrowRight className="w-2.5 h-2.5" />
+                          </Button>
+                        ) : (
+                          <span className="text-[10px] font-bold text-emerald-600 flex items-center gap-0.5">
+                            <CheckCircle2 className="w-3 h-3" /> 수임 완료
+                          </span>
+                        )}
                       </div>
                     </div>
                   ))
@@ -296,64 +408,12 @@ export default function PipelinePage() {
         })}
       </div>
 
-      {/* 🌟 카드 클릭 시 상세 팝업 모달 */}
-      {selectedLead && (
-        <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 space-y-5 shadow-2xl border border-slate-100 animate-in fade-in zoom-in-95">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <div>
-                <span className="text-xs font-bold text-[#0284C7] bg-[#E0F2FE] px-2 py-0.5 rounded-full">
-                  {selectedLead.specialty}
-                </span>
-                <h3 className="text-xl font-black text-slate-900 mt-1">{selectedLead.name} 의뢰인 상세</h3>
-              </div>
-              <button 
-                onClick={() => setSelectedLead(null)}
-                className="p-1.5 text-slate-400 hover:text-slate-700 rounded-full cursor-pointer"
-              >
-                ✕
-              </button>
-            </div>
-
-            <div className="space-y-3 text-xs">
-              <div className="p-3.5 bg-[#F8FAFC] rounded-xl border border-slate-200/80 space-y-1">
-                <p className="text-slate-500 font-medium">연락처:</p>
-                <p className="font-black text-slate-900 text-sm">{selectedLead.phone}</p>
-                <p className="text-slate-500 font-medium mt-2">유입 출처:</p>
-                <p className="font-bold text-[#0284C7]">{selectedLead.source}</p>
-              </div>
-
-              <div className="space-y-1">
-                <p className="font-bold text-slate-700">사건 1분 진단 요약 및 의뢰인 호소 내용:</p>
-                <p className="p-3 bg-white rounded-xl border border-slate-200 text-slate-700 leading-relaxed">
-                  {selectedLead.summary}
-                </p>
-              </div>
-
-              <div className="space-y-1">
-                <p className="font-bold text-slate-700">예상 수임료 (기준액):</p>
-                <p className="text-base font-black text-emerald-600">{selectedLead.estimatedFee}</p>
-              </div>
-            </div>
-
-            <div className="pt-2 flex items-center justify-end gap-2 border-t border-slate-100">
-              <Button 
-                variant="outline"
-                onClick={() => setSelectedLead(null)}
-                className="text-xs font-bold h-9"
-              >
-                닫기
-              </Button>
-              <a href={`tel:${selectedLead.phone}`}>
-                <Button className="bg-[#0284C7] hover:bg-[#0369A1] text-white font-bold text-xs h-9 gap-1.5">
-                  <Phone className="w-3.5 h-3.5" />
-                  유선 상담 전화걸기
-                </Button>
-              </a>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Jev 의뢰인 심층 분석 & 원클릭 전화 연결 모달 */}
+      <IntakeDetailModal
+        lead={selectedLead}
+        onClose={() => setSelectedLead(null)}
+        onStatusChange={handleModalStatusChange}
+      />
     </div>
   )
 }

@@ -12,16 +12,16 @@ import { updateLeadStatus } from '@/actions/leads'
 interface IntakeDetailModalProps {
   lead: IntakeLeadItem | null
   onClose: () => void
-  onStatusChange?: (leadId: string, newStatus: 'NEW' | 'CONTACTED' | 'WON' | 'CLOSED') => void
+  onStatusChange?: (leadId: string, newStatus: 'NEW' | 'CONTACTED' | 'VISITING' | 'WON' | 'CLOSED') => void
 }
 
 export function IntakeDetailModal({ lead, onClose, onStatusChange }: IntakeDetailModalProps) {
-  const [currentStatus, setCurrentStatus] = useState<'NEW' | 'CONTACTED' | 'WON' | 'CLOSED'>(lead?.status || 'NEW')
+  const [currentStatus, setCurrentStatus] = useState<'NEW' | 'CONTACTED' | 'VISITING' | 'WON' | 'CLOSED'>(lead?.status || 'NEW')
   const [isUpdating, setIsUpdating] = useState(false)
 
   if (!lead) return null
 
-  const handleStatusUpdate = async (newStatus: 'NEW' | 'CONTACTED' | 'WON' | 'CLOSED') => {
+  const handleStatusUpdate = async (newStatus: 'NEW' | 'CONTACTED' | 'VISITING' | 'WON' | 'CLOSED') => {
     setIsUpdating(true)
     try {
       const res = await updateLeadStatus(lead.id, newStatus)
@@ -159,7 +159,19 @@ export function IntakeDetailModal({ lead, onClose, onStatusChange }: IntakeDetai
                     : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'
                 }`}
               >
-                📞 통화/상담 완료
+                📞 1차 통화 완료
+              </button>
+              <button
+                type="button"
+                disabled={isUpdating}
+                onClick={() => handleStatusUpdate('VISITING')}
+                className={`py-1.5 px-3 rounded-lg text-xs font-bold border transition-all cursor-pointer ${
+                  currentStatus === 'VISITING'
+                    ? 'bg-indigo-50 text-indigo-700 border-indigo-300 shadow-2xs'
+                    : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'
+                }`}
+              >
+                📅 방문 상담 예약
               </button>
               <button
                 type="button"

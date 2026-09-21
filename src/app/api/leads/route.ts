@@ -14,7 +14,11 @@ export async function POST(req: Request) {
       industry = '',
       businessName = '',
       metadata = {},
+      targetUserId = null,
+      ref = null,
     } = body
+
+    const resolvedTargetUserId = targetUserId || metadata.targetUserId || ref || null
 
     let validEmail = email
     if (!validEmail || !String(validEmail).includes('@')) {
@@ -173,6 +177,7 @@ export async function POST(req: Request) {
           status: 'NEW',
           metadata: {
             ...metadata,
+            targetUserId: resolvedTargetUserId,
             clientName: cleanName,
             clientPhone: cleanPhone,
             cleanEmail,

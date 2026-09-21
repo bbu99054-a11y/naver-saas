@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { PhoneCall, Clock, CheckCircle2, AlertCircle, Sparkles, RefreshCw, ChevronRight, Copy, Check } from 'lucide-react'
 import type { IntakeLeadItem } from '@/actions/leads'
 import { getIntakeLeads } from '@/actions/leads'
+import { getProfile } from '@/actions/profile'
 import { IntakeDetailModal } from '@/components/IntakeDetailModal'
 import Link from 'next/link'
 
@@ -12,9 +13,13 @@ export function IntakeCrmPanel() {
   const [isLoading, setIsLoading] = useState(true)
   const [selectedLead, setSelectedLead] = useState<IntakeLeadItem | null>(null)
   const [copiedConsultLink, setCopiedConsultLink] = useState(false)
+  const [profileData, setProfileData] = useState<{ userId?: string; storeName?: string }>({})
 
   const handleCopyConsultLink = () => {
-    const url = typeof window !== 'undefined' ? `${window.location.origin}/consult` : 'https://postsyncapp.com/consult'
+    const origin = typeof window !== 'undefined' ? window.location.origin : 'https://postsyncapp.com'
+    const url = profileData.userId
+      ? `${origin}/consult?ref=${profileData.userId}${profileData.storeName ? `&firm=${encodeURIComponent(profileData.storeName)}` : ''}`
+      : `${origin}/consult`
     navigator.clipboard.writeText(url)
     setCopiedConsultLink(true)
     setTimeout(() => setCopiedConsultLink(false), 2000)
@@ -23,8 +28,17 @@ export function IntakeCrmPanel() {
   const loadLeads = async () => {
     setIsLoading(true)
     try {
-      const data = await getIntakeLeads()
+      const [data, profile] = await Promise.all([
+        getIntakeLeads(),
+        getProfile()
+      ])
       setLeads(data)
+      if (profile) {
+        setProfileData({
+          userId: profile.user_id,
+          storeName: profile.store_name || ''
+        })
+      }
     } catch (e) {
       console.warn('Load intake leads error:', e)
     } finally {
@@ -36,7 +50,7 @@ export function IntakeCrmPanel() {
     loadLeads()
   }, [])
 
-  const handleStatusChange = (leadId: string, newStatus: 'NEW' | 'CONTACTED' | 'WON' | 'CLOSED') => {
+  const handleStatusChange = (leadId: string, newStatus: IntakeLeadItem['status']) => {
     setLeads(prev => prev.map(l => l.id === leadId ? { ...l, status: newStatus } : l))
     if (selectedLead && selectedLead.id === leadId) {
       setSelectedLead(prev => prev ? { ...prev, status: newStatus } : null)
