@@ -9,6 +9,9 @@ export interface PlaceItem {
   address: string;
   phone: string;
   hasBooking: boolean;
+  hasCoupon?: boolean;
+  visitorReviews?: string;
+  blogReviews?: string;
   placeUrl: string;
 }
 
@@ -28,6 +31,69 @@ export async function fetchLiveNaverPlaceRanking(query: string): Promise<{ total
   if (!cleanQuery) throw new Error('검색할 키워드를 입력해주세요.');
 
   const q = encodeURIComponent(cleanQuery);
+
+  // 1. 네이버 지도 PCMAP 전용 채널로 실시간 1~20위 정밀 수집 시도
+  try {
+    const pcmapUrl = `https://pcmap.place.naver.com/place/list?query=${q}&x=127.109831&y=37.496457`;
+    const res = await fetch(pcmapUrl, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+        'Accept-Language': 'ko-KR,ko;q=0.9',
+      },
+      signal: AbortSignal.timeout(7000),
+      next: { revalidate: 300 }
+    });
+
+    if (res.ok) {
+      const html = await res.text();
+      const apolloMatch = html.match(/__APOLLO_STATE__\s*=\s*(\{[\s\S]*?\});\s*(?:<\/script>|\n)/);
+      if (apolloMatch) {
+        const apolloState = JSON.parse(apolloMatch[1]);
+        const items: PlaceItem[] = [];
+        const seenIds = new Set<string>();
+
+        for (const [k, val] of Object.entries(apolloState)) {
+          const v = val as any;
+          if (v && (v.name || v.normalizedName) && (v.category || v.roadAddress || v.address)) {
+            const id = String(v.id || k.replace(/^[A-Za-z]+:/, ''));
+            if (seenIds.has(id)) continue;
+            seenIds.add(id);
+
+            const name = String(v.name || v.normalizedName || '').trim();
+            if (!name || name.length < 2) continue;
+
+            items.push({
+              rank: items.length + 1,
+              id,
+              name,
+              category: v.category || '스마트플레이스 등록점',
+              address: v.roadAddress || v.address || v.commonAddress || '지역 중심 상권 소재',
+              phone: v.phone || v.virtualPhone || '',
+              hasBooking: Boolean(v.hasBooking || v.bookingUrl),
+              hasCoupon: Boolean(v.coupon && v.coupon.total > 0),
+              visitorReviews: v.visitorReviewCount ? String(v.visitorReviewCount) : '-',
+              blogReviews: v.blogCafeReviewCount ? String(v.blogCafeReviewCount) : '-',
+              placeUrl: `https://m.place.naver.com/place/${id}`,
+            });
+
+            if (items.length >= 20) break;
+          }
+        }
+
+        if (items.length > 0) {
+          return {
+            totalCount: Math.max(items.length, 20),
+            items,
+          };
+        }
+      }
+    }
+  } catch (err) {
+    console.warn('[Pcmap 20위 수집 일시 지연, 모바일 폴백 가동]:', err);
+  }
+
+  // 2. Fallback: 네이버 모바일 통합검색 파서
   const mUrl = `https://m.search.naver.com/search.naver?query=${q}`;
   const res = await fetch(mUrl, {
     headers: {
@@ -35,7 +101,6 @@ export async function fetchLiveNaverPlaceRanking(query: string): Promise<{ total
       'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
       'Accept-Language': 'ko-KR,ko;q=0.9',
     },
-    // Next.js fetch cache configuration
     next: { revalidate: 300 }
   });
 
@@ -66,7 +131,6 @@ export async function fetchLiveNaverPlaceRanking(query: string): Promise<{ total
   for (const [id, data] of mapById.entries()) {
     const rawTexts = data.rawItems;
 
-    // Filter out meta badges and action buttons
     const candidate = rawTexts.find(t => {
       if (/^(이미지\s*수|진료|영업|리뷰|길찾기|전화|거리뷰|공유|블로그|플레이스|내비|지도)/.test(t)) return false;
       if (/^\d+(\.\d+)?(만|개|m|km|명|점)?$/.test(t)) return false;
@@ -77,11 +141,9 @@ export async function fetchLiveNaverPlaceRanking(query: string): Promise<{ total
 
     const hasBooking = rawTexts.some(t => t.includes('예약'));
 
-    // Clean name
     let cleanName = candidate.replace(/^(광고|네이버페이|톡톡|안내|예약|길찾기)\s*/g, '').trim();
     cleanName = cleanName.replace(/(네이버페이|예약|톡톡|쿠폰|주문|새로오픈|광고|TV|플레이스\s*플러스)/g, '').trim();
 
-    // Category detection
     let category = '스마트플레이스 등록점';
     const catMatch = candidate.match(/(카페,디저트|베이커리|피부과|성형외과|한의원|치과|세무사|변호사|법률사무소|음식점|식당|네일|미용실|학원)/);
     if (catMatch) category = catMatch[0];
@@ -97,6 +159,9 @@ export async function fetchLiveNaverPlaceRanking(query: string): Promise<{ total
         address: '지역 중심 상권 소재',
         phone: '',
         hasBooking,
+        hasCoupon: false,
+        visitorReviews: '-',
+        blogReviews: '-',
         placeUrl: `https://m.place.naver.com/place/${id}`,
       });
     }
