@@ -486,8 +486,193 @@
       cursor: default;
       user-select: none;
       pointer-events: none;
+    /* 💬 카카오톡 채널 연동 CTA 배너 */
+    .kakao-cta-banner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      background: #fee500;
+      color: #191919;
+      border-radius: 14px;
+      padding: 16px 20px;
+      margin-top: 18px;
+      text-decoration: none;
+      box-shadow: 0 4px 14px rgba(254, 229, 0, 0.35);
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      transition: all 0.2s ease;
+    }
+    .kakao-cta-banner:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 22px rgba(254, 229, 0, 0.5);
+      color: #191919;
+    }
+    .kakao-cta-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex: 1;
+      min-width: 0;
+    }
+    .kakao-icon-circle {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: #191919;
+      color: #fee500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+    .kakao-cta-text {
+      flex: 1;
+      min-width: 0;
+    }
+    .kakao-cta-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 4px;
+    }
+    .kakao-badge-pill {
+      background: #191919;
+      color: #fee500;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 2px 7px;
+      border-radius: 10px;
+      letter-spacing: 0.3px;
+    }
+    .kakao-badge-sub {
+      font-size: 12px;
+      font-weight: 700;
+      color: #372700;
+    }
+    .kakao-cta-title {
+      font-size: 14.5px;
+      font-weight: 800;
+      color: #191919;
+      line-height: 1.35;
+    }
+    .kakao-cta-desc {
+      font-size: 12.5px;
+      color: #594700;
+      margin-top: 2px;
+      line-height: 1.4;
+    }
+    .kakao-cta-right {
+      flex-shrink: 0;
+    }
+    .kakao-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #191919;
+      color: #ffffff;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 10px 16px;
+      border-radius: 10px;
+      transition: background 0.15s;
+      white-space: nowrap;
+    }
+    .kakao-cta-banner:hover .kakao-btn {
+      background: #000000;
     }
 
+    /* 💬 결과창 하단 카카오톡 리텐션 카드 */
+    .kakao-result-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+      border: 1.5px solid #fde68a;
+      border-radius: var(--radius-lg);
+      padding: 20px 24px;
+      margin-top: 20px;
+      margin-bottom: 24px;
+    }
+    .kakao-res-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex: 1;
+    }
+    .kakao-res-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: #fee500;
+      color: #191919;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+      box-shadow: 0 2px 8px rgba(245, 158, 11, 0.25);
+    }
+    .kakao-res-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: #92400e;
+      margin-bottom: 3px;
+    }
+    .kakao-res-desc {
+      font-size: 13px;
+      color: #78350f;
+      line-height: 1.45;
+    }
+    .kakao-res-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #fee500;
+      color: #191919;
+      font-size: 13.5px;
+      font-weight: 800;
+      padding: 12px 18px;
+      border-radius: 10px;
+      text-decoration: none;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      white-space: nowrap;
+      transition: all 0.15s ease;
+      flex-shrink: 0;
+    }
+    .kakao-res-btn:hover {
+      background: #fada0a;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+      color: #191919;
+    }
+
+    @media (max-width: 768px) {
+      .kakao-cta-banner {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 14px 16px;
+      }
+      .kakao-cta-right {
+        width: 100%;
+        margin-top: 10px;
+      }
+      .kakao-btn {
+        width: 100%;
+        justify-content: center;
+      }
+      .kakao-result-card {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 16px;
+      }
+      .kakao-res-btn {
+        width: 100%;
+        justify-content: center;
+        margin-top: 10px;
+      }
+    }
 
     /* Loading Spinner */
     .loading-container {
@@ -898,6 +1083,26 @@
         <span class="kw-badge">🥗 연남동 맛집</span>
         <span class="kw-badge">🏋️ 판교 헬스장</span>
       </div>
+
+      <!-- 💬 카카오톡 채널 연동 1초 순위조회 CTA 배너 -->
+      <a href="https://pf.kakao.com/_xonxiaX" target="_blank" rel="noopener noreferrer" class="kakao-cta-banner" id="kakaoCtaBanner">
+        <div class="kakao-cta-left">
+          <div class="kakao-icon-circle">
+            <i class="fa-solid fa-comment"></i>
+          </div>
+          <div class="kakao-cta-text">
+            <div class="kakao-cta-badge">
+              <span class="kakao-badge-pill">FREE</span>
+              <span class="kakao-badge-sub">카톡에서 매일 1초 자동 확인</span>
+            </div>
+            <div class="kakao-cta-title">카톡 채팅창에 <strong>[키워드, 매장명]</strong>만 치면 즉시 순위 알림!</div>
+            <div class="kakao-cta-desc">웹사이트 올 필요 없이 매일 아침 카카오톡으로 실시간 순위와 변동 추이를 무료로 받아보세요.</div>
+          </div>
+        </div>
+        <div class="kakao-cta-right">
+          <span class="kakao-btn">카톡 채널 추가하고 1초 조회 <i class="fa-solid fa-arrow-right"></i></span>
+        </div>
+      </a>
     </div>
 
     <!-- Loading Spinner -->
@@ -1045,6 +1250,20 @@
       <div class="teaser-cta-row">
         <a href="#applySection" class="btn-teaser-unlock" onclick="openApplySection(event)"><i class="fa-solid fa-stethoscope"></i> 우리 매장 1회 무료 정밀 진단 리포트 & 1위 처방전 신청하기</a>
       </div>
+    </div>
+
+    <!-- 💬 카카오톡 매일 순위 추적 알림 카드 (리텐션 락인) -->
+    <div class="kakao-result-card" id="kakaoResultCard">
+      <div class="kakao-res-left">
+        <div class="kakao-res-icon"><i class="fa-solid fa-bell"></i></div>
+        <div class="kakao-res-body">
+          <div class="kakao-res-title">매일 아침 내 매장 순위 변동, 카톡으로 편하게 받으실래요?</div>
+          <div class="kakao-res-desc">카카오톡 채널을 추가해 두시면, 순위가 떨어지거나 C-Rank 경쟁사가 치고 올라올 때 1초 알림을 드립니다.</div>
+        </div>
+      </div>
+      <a href="https://pf.kakao.com/_xonxiaX" target="_blank" rel="noopener noreferrer" class="kakao-res-btn">
+        <i class="fa-solid fa-comment"></i> <span>카톡으로 매일 알림 받기</span>
+      </a>
     </div>
 
     <!-- Apply Section (PlaceDoctor 3P Intelligence Report & 1st Rank Prescription) -->
