@@ -206,7 +206,7 @@ export async function POST(req: Request) {
             {
               action: 'webLink',
               label: '🚀 플레이스 상위노출 1:1 상담',
-              webLinkUrl: 'https://www.postsyncapp.com/consult'
+              webLinkUrl: 'http://pf.kakao.com/_xonxiaX/chat'
             }
           ]
         })
@@ -232,7 +232,7 @@ export async function POST(req: Request) {
           {
             action: 'webLink',
             label: '🚀 1위 노출 1:1 무료 진단받기',
-            webLinkUrl: 'https://www.postsyncapp.com/consult'
+            webLinkUrl: 'http://pf.kakao.com/_xonxiaX/chat'
           }
         ]
       })
