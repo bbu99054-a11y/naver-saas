@@ -19,6 +19,8 @@ function createSimpleTextResponse(text: string) {
   };
 }
 
+const DEFAULT_CARD_THUMBNAIL = 'https://www.postsyncapp.com/placesync_profile_A.jpg';
+
 function createBasicCardResponse({
   title,
   description,
@@ -32,10 +34,15 @@ function createBasicCardResponse({
   buttons?: Array<{ action: string; label: string; webLinkUrl?: string; messageText?: string; phoneNumber?: string }>;
   quickReplies?: Array<{ action: string; label: string; messageText: string }>;
 }) {
-  const card: any = { title, description };
-  if (thumbnail) {
-    card.thumbnail = { imageUrl: thumbnail };
-  }
+  const card: any = {
+    title,
+    description,
+    // 카카오 i 오픈빌더 말풍선 가이드 2461 필수 규격: BasicCard는 thumbnail.imageUrl 필수
+    thumbnail: {
+      imageUrl: thumbnail || DEFAULT_CARD_THUMBNAIL
+    }
+  };
+
   if (buttons.length > 0) {
     card.buttons = buttons;
   }
@@ -196,7 +203,7 @@ export async function POST(req: Request) {
             `• 실시간 순위: 전체 ${found.rank}위 (${statusEmoji})\n` +
             `• 스마트예약: ${bookingText}\n` +
             `• 주소: ${found.address}\n\n` +
-            `${isTop5 ? '🎉 1페이지에 안정적으로 노출 중입니다!' : '💡 1페이지(5위 이내) 진입을 위한 경쟁사 역추적 처방전을 확인하세요.'}`,
+            `${isTop5 ? '🎉 1페이지에 안정적으로 노출 중입니다!' : '💡 1페이지(5위 이내) 진입을 위한 1위 동기화 전략 리포트를 확인하세요.'}`,
           buttons: [
             {
               action: 'webLink',
