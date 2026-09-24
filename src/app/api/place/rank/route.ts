@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { diagnosePlaceWithJev } from '@/lib/ai/jevClient';
+import { getMonthlyKeywordVolume, KeywordVolumeResult } from '@/lib/naver/searchAdClient';
 
 export interface PlaceItem {
   rank: number;
@@ -12,7 +13,27 @@ export interface PlaceItem {
   hasCoupon?: boolean;
   visitorReviews?: string;
   blogReviews?: string;
+  saveCount?: string;
   placeUrl: string;
+}
+
+export interface MetricGap {
+  top1: string | boolean;
+  my: string | boolean;
+  diff?: number;
+  status: 'OPTIMAL' | 'DEFICIT' | 'MISSING' | 'ACTIVE' | 'NONE';
+}
+
+export interface PlaceGapAnalysis {
+  top1Name: string;
+  isRank1: boolean;
+  metrics: {
+    saves: MetricGap;
+    visitorReviews: MetricGap;
+    blogReviews: MetricGap;
+    booking: MetricGap;
+    coupon: MetricGap;
+  };
 }
 
 interface CacheEntry {
@@ -25,6 +46,36 @@ interface CacheEntry {
 
 const cache = new Map<string, CacheEntry>();
 const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes cache
+
+async function fetchPlaceReviewMeta(placeId: string): Promise<{ visitorReviews: string; blogReviews: string }> {
+  try {
+    const url = `https://m.place.naver.com/place/${placeId}/home`;
+    const res = await fetch(url, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+        'Accept-Language': 'ko-KR,ko;q=0.9',
+      },
+      signal: AbortSignal.timeout(3500),
+      next: { revalidate: 300 }
+    });
+
+    if (res.ok) {
+      const html = await res.text();
+      const descMatch = html.match(/property="og:description"\s*content="([^"]*)"/i) || html.match(/content="([^"]*)"\s*property="og:description"/i);
+      const desc = descMatch ? descMatch[1] : '';
+      const vMatch = desc.match(/방문자리뷰\s*([0-9,]+)/);
+      const bMatch = desc.match(/블로그리뷰\s*([0-9,]+)/);
+      return {
+        visitorReviews: vMatch ? vMatch[1] : '-',
+        blogReviews: bMatch ? bMatch[1] : '-',
+      };
+    }
+  } catch (err) {
+    // Non-blocking timeout or error
+  }
+  return { visitorReviews: '-', blogReviews: '-' };
+}
 
 export async function fetchLiveNaverPlaceRanking(query: string): Promise<{ totalCount: number; items: PlaceItem[] }> {
   const cleanQuery = query.trim();
@@ -74,6 +125,7 @@ export async function fetchLiveNaverPlaceRanking(query: string): Promise<{ total
               hasCoupon: Boolean(v.coupon && v.coupon.total > 0),
               visitorReviews: v.visitorReviewCount ? String(v.visitorReviewCount) : '-',
               blogReviews: v.blogCafeReviewCount ? String(v.blogCafeReviewCount) : '-',
+              saveCount: v.saveCount ? String(v.saveCount) : '-',
               placeUrl: `https://m.place.naver.com/place/${id}`,
             });
 
@@ -82,6 +134,15 @@ export async function fetchLiveNaverPlaceRanking(query: string): Promise<{ total
         }
 
         if (items.length > 0) {
+          // 상위 매장 리뷰 병렬 보강 (모바일 공식 실측치 100% 동기화)
+          await Promise.all(
+            items.slice(0, 20).map(async (item) => {
+              const rev = await fetchPlaceReviewMeta(item.id);
+              if (rev.visitorReviews !== '-') item.visitorReviews = rev.visitorReviews;
+              if (rev.blogReviews !== '-') item.blogReviews = rev.blogReviews;
+            })
+          );
+
           return {
             totalCount: Math.max(items.length, 20),
             items,
@@ -162,10 +223,21 @@ export async function fetchLiveNaverPlaceRanking(query: string): Promise<{ total
         hasCoupon: false,
         visitorReviews: '-',
         blogReviews: '-',
+        saveCount: '-',
         placeUrl: `https://m.place.naver.com/place/${id}`,
       });
     }
   }
+
+  // 3. 상위 20개 매장의 모바일 공식 실시간 리뷰(방문자/블로그) 병렬 고속 동기화
+  const topItems = items.slice(0, 20);
+  await Promise.all(
+    topItems.map(async (item) => {
+      const rev = await fetchPlaceReviewMeta(item.id);
+      if (rev.visitorReviews !== '-') item.visitorReviews = rev.visitorReviews;
+      if (rev.blogReviews !== '-') item.blogReviews = rev.blogReviews;
+    })
+  );
 
   return {
     totalCount: items.length,
@@ -193,16 +265,23 @@ export async function GET(req: Request) {
     const cached = cache.get(cacheKey);
     const now = Date.now();
 
-    let rankingData: { totalCount: number; items: PlaceItem[] };
+    // 1. 네이버 플레이스 실시간 순위 및 네이버 검색광고 공식 월간 검색량 병렬 조회
+    const [rankingData, searchVolume] = await Promise.all([
+      (async () => {
+        if (cached && (now - cached.timestamp < CACHE_TTL_MS)) {
+          return cached.data;
+        }
+        const fresh = await fetchLiveNaverPlaceRanking(cleanQuery);
+        cache.set(cacheKey, { timestamp: now, data: fresh });
+        return fresh;
+      })(),
+      getMonthlyKeywordVolume(cleanQuery).catch(err => {
+        console.warn('[SearchAd Volume Non-blocking Error]:', err);
+        return null;
+      }),
+    ]);
 
-    if (cached && (now - cached.timestamp < CACHE_TTL_MS)) {
-      rankingData = cached.data;
-    } else {
-      rankingData = await fetchLiveNaverPlaceRanking(cleanQuery);
-      cache.set(cacheKey, { timestamp: now, data: rankingData });
-    }
-
-    // Match target store/business if specified
+    // 2. 타깃 매장 매칭 (Match target store/business if specified)
     let myPlace: (PlaceItem & { isTop5: boolean; isTop10: boolean; percentile: number }) | null = null;
     if (cleanTarget) {
       const targetNorm = cleanTarget.toLowerCase().replace(/\s+/g, '');
@@ -221,7 +300,66 @@ export async function GET(req: Request) {
       }
     }
 
-    // 🧠 Jev AI 0.05초 순위 정체 원인 & 1위 탈환 처방전 산출
+    // 3. 1위 매장 vs 내 매장 5대 핵심 지표 정량 격차 분석 (Gap Analysis)
+    let gapAnalysis: PlaceGapAnalysis | null = null;
+    if (myPlace && rankingData.items.length > 0) {
+      const top1 = rankingData.items[0];
+
+      const parseNum = (str?: string): number => {
+        if (!str || str === '-') return 0;
+        const num = str.replace(/[^0-9]/g, '');
+        return num ? parseInt(num, 10) : 0;
+      };
+
+      const top1Saves = parseNum(top1.saveCount);
+      const mySaves = parseNum(myPlace.saveCount);
+      const savesGap = top1Saves - mySaves;
+
+      const top1Visitor = parseNum(top1.visitorReviews);
+      const myVisitor = parseNum(myPlace.visitorReviews);
+      const visitorGap = top1Visitor - myVisitor;
+
+      const top1Blog = parseNum(top1.blogReviews);
+      const myBlog = parseNum(myPlace.blogReviews);
+      const blogGap = top1Blog - myBlog;
+
+      gapAnalysis = {
+        top1Name: top1.name,
+        isRank1: myPlace.rank === 1,
+        metrics: {
+          saves: {
+            top1: top1.saveCount || '-',
+            my: myPlace.saveCount || '-',
+            diff: savesGap > 0 ? savesGap : 0,
+            status: savesGap > 0 ? 'DEFICIT' : 'OPTIMAL',
+          },
+          visitorReviews: {
+            top1: top1.visitorReviews || '-',
+            my: myPlace.visitorReviews || '-',
+            diff: visitorGap > 0 ? visitorGap : 0,
+            status: visitorGap > 0 ? 'DEFICIT' : 'OPTIMAL',
+          },
+          blogReviews: {
+            top1: top1.blogReviews || '-',
+            my: myPlace.blogReviews || '-',
+            diff: blogGap > 0 ? blogGap : 0,
+            status: blogGap > 0 ? 'DEFICIT' : 'OPTIMAL',
+          },
+          booking: {
+            top1: top1.hasBooking,
+            my: myPlace.hasBooking,
+            status: !myPlace.hasBooking && top1.hasBooking ? 'MISSING' : (myPlace.hasBooking ? 'ACTIVE' : 'NONE'),
+          },
+          coupon: {
+            top1: !!top1.hasCoupon,
+            my: !!myPlace.hasCoupon,
+            status: !myPlace.hasCoupon && top1.hasCoupon ? 'MISSING' : (myPlace.hasCoupon ? 'ACTIVE' : 'NONE'),
+          }
+        }
+      };
+    }
+
+    // 4. 🧠 플레이스싱크(PlaceSync) AI 0.05초 순위 정체 원인 & 1위 동기화 전략 산출
     let jevDiagnosis = null;
     if (cleanTarget) {
       const top1Item = rankingData.items.length > 0 ? rankingData.items[0] : null;
@@ -231,6 +369,8 @@ export async function GET(req: Request) {
         rank: myPlace ? myPlace.rank : null,
         hasBooking: myPlace ? myPlace.hasBooking : false,
         top1Name: top1Item ? top1Item.name : '',
+        category: myPlace ? myPlace.category : '',
+        gapAnalysis,
       });
     }
 
@@ -240,7 +380,9 @@ export async function GET(req: Request) {
       target: cleanTarget,
       totalCount: rankingData.totalCount,
       searchDate: new Date().toISOString(),
+      searchVolume, // 📊 네이버 공식 월간 검색량 (PC/모바일/합계/경쟁도)
       myPlace,
+      gapAnalysis, // 🩺 1위 대비 5대 정량 격차 분석
       jevDiagnosis,
       rankingList: rankingData.items,
     });
