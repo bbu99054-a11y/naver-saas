@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { ThumbScanResult } from '@/lib/thumbscan/types'
 import { 
   Heart, 
@@ -35,6 +35,7 @@ export default function ThumbScanPage() {
   const [copyToast, setCopyToast] = useState<string | null>(null)
   const [copiedReplyIndex, setCopiedReplyIndex] = useState<number | null>(null)
   const [copiedAccount, setCopiedAccount] = useState<boolean>(false)
+  const [isWaitingShareReturn, setIsWaitingShareReturn] = useState<boolean>(false)
 
   const fileInputRef = useRef<HTMLInputElement>(null)
   const ticketRef = useRef<HTMLDivElement>(null)
@@ -42,6 +43,51 @@ export default function ThumbScanPage() {
   // 실제 대표님 입금 계좌
   const KAKAO_BANK = '카카오뱅크 3333-01-8475325 (예금주: 유영무)'
   const TOSS_BANK = '토스뱅크 1000-0040-3565 (예금주: 유영무)'
+
+  // 모바일 OS 및 브라우저 환경에 맞춘 앱 딥링크 런처
+  const launchApp = (options: {
+    androidIntent: string
+    iosScheme: string
+    desktopScheme?: string
+  }) => {
+    if (typeof window === 'undefined') return
+    const ua = navigator.userAgent.toLowerCase()
+    const isAndroid = /android/i.test(ua)
+    const isIOS = /iphone|ipad|ipod/i.test(ua)
+
+    if (isAndroid) {
+      // 안드로이드 크롬/삼성인터넷 등은 인텐트 스킴으로 즉시 호출
+      window.location.href = options.androidIntent
+    } else if (isIOS) {
+      // iOS 사파리/크롬 등은 커스텀 URL 스킴 즉시 호출
+      window.location.href = options.iosScheme
+    } else if (options.desktopScheme) {
+      // 데스크톱 (PC)
+      window.location.href = options.desktopScheme
+    }
+  }
+
+  // 카카오톡 공유 후 사이트로 다시 돌아왔을 때 자동 잠금 해제 (Visibility / Focus 감지)
+  useEffect(() => {
+    if (!isWaitingShareReturn) return
+
+    const handleReturn = () => {
+      if (document.visibilityState === 'visible') {
+        setIsUnlocked(true)
+        setShowPaymentModal(false)
+        setIsWaitingShareReturn(false)
+        showToast('카카오톡 공유 확인 완료! 심층 리포트가 잠금 해제되었습니다 💖')
+      }
+    }
+
+    document.addEventListener('visibilitychange', handleReturn)
+    window.addEventListener('focus', handleReturn)
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleReturn)
+      window.removeEventListener('focus', handleReturn)
+    }
+  }, [isWaitingShareReturn])
 
   // 파일 선택 처리
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -132,42 +178,68 @@ export default function ThumbScanPage() {
     setTimeout(() => setCopyToast(null), 3000)
   }
 
-  // 1. 토스 송금 처리 (토스뱅크 계좌 자동 복사 + 토스 앱 실행)
+  // 1. 토스 송금 처리 (계좌번호만 복사해야 토스 앱이 자동 감지함)
   const handleTossPay = () => {
-    navigator.clipboard.writeText('토스뱅크 1000-0040-3565 유영무')
-    showToast('토스뱅크(1000-0040-3565 유영무) 복사 완료! 토스 앱으로 이동합니다 ⚡')
-    setTimeout(() => {
-      window.location.href = 'supertoss://'
-    }, 400)
+    try {
+      navigator.clipboard.writeText('100000403565')
+    } catch (e) {
+      console.error(e)
+    }
+    showToast('토스뱅크 1000-0040-3565 (유영무) 복사 완료! 토스 앱으로 이동합니다 ⚡')
+    launchApp({
+      androidIntent: 'intent://#Intent;scheme=supertoss;package=viva.republica.toss;end;',
+      iosScheme: 'supertoss://',
+      desktopScheme: 'supertoss://'
+    })
   }
 
-  // 2. 카카오 송금 처리 (카카오뱅크 계좌 자동 복사 + 카카오톡 실행)
+  // 2. 카카오 송금 처리 (카카오뱅크 계좌 복사 후 카카오톡/카카오페이 앱 즉시 실행)
   const handleKakaoPay = () => {
-    navigator.clipboard.writeText('카카오뱅크 3333-01-8475325 유영무')
-    showToast('카카오뱅크(3333-01-8475325 유영무) 복사 완료! 카카오톡으로 이동합니다 🟡')
-    setTimeout(() => {
-      window.location.href = 'kakaotalk://'
-    }, 400)
+    try {
+      navigator.clipboard.writeText('3333018475325')
+    } catch (e) {
+      console.error(e)
+    }
+    showToast('카카오뱅크 3333-01-8475325 (유영무) 복사 완료! 카카오톡으로 이동합니다 🟡')
+    launchApp({
+      androidIntent: 'intent://#Intent;scheme=kakaotalk;package=com.kakao.talk;end;',
+      iosScheme: 'kakaotalk://',
+      desktopScheme: 'kakaotalk://'
+    })
   }
 
   // 3. 계좌번호 1초 복사
   const handleCopyAccount = (bankType: 'kakao' | 'toss') => {
-    const acc = bankType === 'kakao' ? KAKAO_BANK : TOSS_BANK
-    navigator.clipboard.writeText(acc)
+    const rawNumber = bankType === 'kakao' ? '3333018475325' : '100000403565'
+    try {
+      navigator.clipboard.writeText(rawNumber)
+    } catch (e) {
+      console.error(e)
+    }
     setCopiedAccount(true)
-    showToast(`${bankType === 'kakao' ? '카카오뱅크' : '토스뱅크'} 계좌 복사 완료! 은행 앱에서 송금해 주세요 📋`)
+    showToast(`${bankType === 'kakao' ? '카카오뱅크 (3333-01-8475325)' : '토스뱅크 (1000-0040-3565)'} 복사 완료! 은행 앱에서 송금해 주세요 📋`)
     setTimeout(() => setCopiedAccount(false), 2500)
   }
 
-  // 4. 친구 공유로 무료 잠금 해제 (바이럴)
+  // 4. 친구 공유로 무료 잠금 해제 (카카오톡 앱 직접 실행 + 복귀 시 해제)
   const handleShareToUnlock = () => {
-    const shareUrl = window.location.href
-    navigator.clipboard.writeText(shareUrl)
-    showToast('링크가 복사되었습니다! 친구에게 공유하고 잠금이 해제되었습니다 🎉')
-    setTimeout(() => {
-      setIsUnlocked(true)
-      setShowPaymentModal(false)
-    }, 1200)
+    const shareText = `💘 [썸스캔] 카톡 대화 캡처 올리니까 호감도 분석 소름돋게 잘 맞춘다 ㅋㅋㅋ\n너도 썸남/썸녀 카톡 검사해봐!\n👉 ${window.location.href}`
+
+    try {
+      navigator.clipboard.writeText(shareText)
+    } catch (e) {
+      console.error(e)
+    }
+
+    showToast('공유 문구가 복사되었습니다! 카카오톡을 실행합니다 💬')
+    setIsWaitingShareReturn(true)
+
+    // 카카오톡 앱 즉시 실행 (안드로이드 intent / iOS scheme / 데스크톱 PC)
+    launchApp({
+      androidIntent: 'intent://#Intent;scheme=kakaotalk;package=com.kakao.talk;end;',
+      iosScheme: 'kakaotalk://',
+      desktopScheme: 'kakaotalk://'
+    })
   }
 
   // 송금 완료 확인 후 즉시 잠금 해제
@@ -591,7 +663,10 @@ export default function ThumbScanPage() {
           <div className="bg-white max-w-sm w-full rounded-3xl p-6 shadow-2xl border border-rose-100 flex flex-col relative animate-in zoom-in-95 duration-200">
             {/* 닫기 버튼 */}
             <button
-              onClick={() => setShowPaymentModal(false)}
+              onClick={() => {
+                setShowPaymentModal(false)
+                setIsWaitingShareReturn(false)
+              }}
               className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-1"
             >
               <X className="w-5 h-5" />
@@ -659,13 +734,36 @@ export default function ThumbScanPage() {
 
               {/* 4. 친구 공유로 무료 열기 (바이럴 치트키) */}
               <div className="pt-2">
-                <button
-                  onClick={handleShareToUnlock}
-                  className="w-full py-3 px-4 rounded-2xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:opacity-95 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-purple-600/20 transition-all active:scale-[0.98]"
-                >
-                  <Share2 className="w-4 h-4" />
-                  <span>🎁 친구 1명에게 링크 공유하고 무료 열기</span>
-                </button>
+                {!isWaitingShareReturn ? (
+                  <button
+                    onClick={handleShareToUnlock}
+                    className="w-full py-3 px-4 rounded-2xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:opacity-95 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-purple-600/20 transition-all active:scale-[0.98]"
+                  >
+                    <Share2 className="w-4 h-4" />
+                    <span>🎁 친구 1명에게 링크 공유하고 무료 열기</span>
+                  </button>
+                ) : (
+                  <div className="bg-purple-50/90 border border-purple-200 rounded-2xl p-3 text-center animate-in fade-in">
+                    <p className="text-xs font-bold text-purple-900 mb-1 flex items-center justify-center gap-1">
+                      <Sparkles className="w-3.5 h-3.5 text-purple-600 animate-spin" />
+                      <span>카카오톡으로 이동했습니다!</span>
+                    </p>
+                    <p className="text-[11px] text-purple-700 font-medium mb-2.5">
+                      친구에게 문구를 공유하고 돌아오시면 자동으로 잠금이 해제됩니다.
+                    </p>
+                    <button
+                      onClick={() => {
+                        setIsUnlocked(true)
+                        setShowPaymentModal(false)
+                        setIsWaitingShareReturn(false)
+                        showToast('카카오톡 공유 확인 완료! 심층 리포트가 잠금 해제되었습니다 💖')
+                      }}
+                      className="w-full py-2.5 bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs rounded-xl shadow-md transition-all active:scale-[0.98]"
+                    >
+                      ✅ 카톡 공유 완료! 잠금 해제하기
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
 
