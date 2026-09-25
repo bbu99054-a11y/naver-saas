@@ -3,20 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>[무료 퀵가이드] 네이버 플레이스 1위 세팅법 & 변호사·세무사 합법 수임 칼럼 템플릿 | PostSync</title>
+  <title>[2026 공식 무료 가이드] 네이버 스마트플레이스 1위 세팅 실전 시크릿 가이드북 | PlaceSync</title>
   
   <!-- Fonts & Icons -->
   <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@600;700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link rel="stylesheet" href="/assets/monetization.css">
 
   <style>
     :root {
-      --primary: #065f46;
-      --primary-dark: #064e3b;
-      --accent: #2563eb;
-      --gold: #d97706;
+      --primary: #1d4ed8;
+      --primary-dark: #1e3a8a;
+      --accent: #0284c7;
+      --emerald: #10b981;
+      --amber: #f59e0b;
+      --rose: #f43f5e;
       --slate-900: #0f172a;
       --slate-800: #1e293b;
       --slate-700: #334155;
@@ -28,7 +29,6 @@
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
     
-    /* 한국어 단어 단위 줄바꿈 보장 */
     body, h1, h2, h3, h4, p, li, span, div, td, th {
       word-break: keep-all;
       overflow-wrap: break-word;
@@ -46,7 +46,7 @@
     .top-bar {
       position: sticky;
       top: 0;
-      background: rgba(15, 23, 42, 0.95);
+      background: rgba(15, 23, 42, 0.96);
       backdrop-filter: blur(8px);
       color: #fff;
       padding: 12px 24px;
@@ -55,17 +55,25 @@
       align-items: center;
       z-index: 1000;
       box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     }
     .top-bar-title {
       font-size: 14px;
-      font-weight: 700;
+      font-weight: 800;
       display: flex;
       align-items: center;
       gap: 8px;
     }
+    .top-bar-title a {
+      color: #ffffff;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
     .top-bar-badge {
-      background: #10b981;
-      color: #064e3b;
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #ffffff;
       font-size: 11px;
       font-weight: 800;
       padding: 3px 8px;
@@ -77,9 +85,9 @@
       gap: 10px;
     }
     .btn-print {
-      background: rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.12);
       color: #fff;
-      border: 1px solid rgba(255, 255, 255, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.22);
       padding: 7px 14px;
       border-radius: 6px;
       font-size: 12.5px;
@@ -90,8 +98,8 @@
       gap: 6px;
       transition: all 0.2s;
     }
-    .btn-print:hover { background: rgba(255, 255, 255, 0.25); }
-    .btn-upgrade {
+    .btn-print:hover { background: rgba(255, 255, 255, 0.22); }
+    .btn-nav-rank {
       background: linear-gradient(135deg, #2563eb, #1d4ed8);
       color: #fff;
       border: none;
@@ -99,14 +107,14 @@
       border-radius: 6px;
       font-size: 12.5px;
       font-weight: 800;
-      cursor: pointer;
+      text-decoration: none;
       display: flex;
       align-items: center;
       gap: 6px;
       transition: all 0.2s;
       box-shadow: 0 2px 8px rgba(37,99,235,0.3);
     }
-    .btn-upgrade:hover { background: #1e40af; transform: translateY(-1px); }
+    .btn-nav-rank:hover { background: #1e40af; transform: translateY(-1px); }
 
     /* Book Container */
     .book-container {
@@ -119,12 +127,14 @@
       border: 1px solid var(--slate-200);
     }
     @media (max-width: 768px) {
-      .book-container { padding: 30px 20px; margin: 10px; }
+      .book-container { padding: 30px 18px; margin: 10px; }
+      .top-bar { padding: 10px 14px; }
+      .btn-print span { display: none; }
     }
 
     /* Book Cover */
     .book-cover {
-      background: linear-gradient(135deg, #064e3b 0%, #0f172a 100%);
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
       border-radius: 12px;
       padding: 60px 36px;
       color: #ffffff;
@@ -132,6 +142,7 @@
       margin-bottom: 36px;
       position: relative;
       overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
     .book-cover::after {
       content: "";
@@ -140,16 +151,16 @@
       left: -50%;
       width: 200%;
       height: 200%;
-      background: radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, transparent 60%);
+      background: radial-gradient(circle, rgba(56, 189, 248, 0.15) 0%, transparent 60%);
       pointer-events: none;
     }
     .cover-badge {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      background: rgba(16, 185, 129, 0.2);
-      border: 1px solid #10b981;
-      color: #6ee7b7;
+      background: rgba(37, 99, 235, 0.3);
+      border: 1px solid #60a5fa;
+      color: #93c5fd;
       font-size: 12px;
       font-weight: 800;
       padding: 6px 14px;
@@ -166,7 +177,7 @@
       letter-spacing: -0.5px;
     }
     .cover-title span {
-      color: #34d399;
+      color: #38bdf8;
       display: inline-block;
     }
     .cover-subtitle {
@@ -234,7 +245,8 @@
     }
     .callout-green { background: #f0fdf4; border-left: 4px solid #16a34a; color: #14532d; }
     .callout-blue { background: #eff6ff; border-left: 4px solid #2563eb; color: #1e3a8a; }
-    .callout-gold { background: #fffbeb; border-left: 4px solid #f59e0b; color: #92400e; }
+    .callout-amber { background: #fffbeb; border-left: 4px solid #f59e0b; color: #92400e; }
+    .callout-rose { background: #fff1f2; border-left: 4px solid #f43f5e; color: #9f1239; }
 
     /* Template Code Box */
     .template-card {
@@ -258,7 +270,7 @@
     }
     .template-top .badge {
       display: inline-block;
-      background: #059669;
+      background: #2563eb;
       color: #fff;
       font-size: 11px;
       font-weight: 800;
@@ -279,7 +291,7 @@
       gap: 6px;
       transition: background 0.2s;
     }
-    .btn-copy:hover { background: #059669; }
+    .btn-copy:hover { background: #2563eb; }
     .template-content {
       color: #e2e8f0;
       white-space: pre-wrap;
@@ -303,64 +315,98 @@
       color: var(--slate-800);
     }
 
-    /* Upsell Banner */
-    .upsell-box {
-      background: linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%);
-      border-radius: 12px;
-      padding: 36px 30px;
+    /* Kakao Alert Lead Box (Replaces Old Ebook Sale) */
+    .kakao-lead-box {
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+      border-radius: 14px;
+      padding: 38px 30px;
       color: #ffffff;
       margin-top: 50px;
-      border: 1px solid #3b82f6;
-      box-shadow: 0 10px 25px rgba(30, 58, 138, 0.2);
+      border: 2px solid #3b82f6;
+      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.25);
+      text-align: center;
     }
-    .upsell-title {
-      font-size: 20px;
-      font-weight: 900;
-      color: #93c5fd;
+    .kl-icon {
+      font-size: 38px;
       margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
     }
-    .upsell-desc {
-      font-size: 14px;
-      color: #e2e8f0;
+    .kl-title {
+      font-size: 22px;
+      font-weight: 900;
+      color: #60a5fa;
+      margin-bottom: 12px;
+      letter-spacing: -0.4px;
+    }
+    .kl-desc {
+      font-size: 14.5px;
+      color: #cbd5e1;
       line-height: 1.75;
-      margin-bottom: 20px;
+      max-width: 680px;
+      margin: 0 auto 24px auto;
     }
-    .upsell-grid {
+    .kl-benefits {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 12px;
-      margin-bottom: 24px;
+      max-width: 720px;
+      margin: 0 auto 26px auto;
+      text-align: left;
     }
-    .upsell-item {
+    .kl-benefit-item {
       background: rgba(255, 255, 255, 0.08);
       border: 1px solid rgba(255, 255, 255, 0.15);
       border-radius: 8px;
       padding: 12px 14px;
-      font-size: 12.5px;
+      font-size: 13px;
       color: #f1f5f9;
       line-height: 1.5;
     }
-    .btn-upsell-action {
-      background: linear-gradient(135deg, #3b82f6, #60a5fa);
-      color: #0f172a;
+    .kl-benefit-item b {
+      color: #fef08a;
+      display: block;
+      margin-bottom: 2px;
+    }
+    .kl-btn-row {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .btn-kakao-action {
+      background: #fee500;
+      color: #191600;
       font-weight: 900;
-      font-size: 15px;
-      padding: 14px 28px;
-      border-radius: 8px;
-      border: none;
-      cursor: pointer;
+      font-size: 14.5px;
+      padding: 14px 26px;
+      border-radius: 10px;
+      text-decoration: none;
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      transition: all 0.2s;
-      box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4);
+      box-shadow: 0 4px 14px rgba(254, 229, 0, 0.3);
+      transition: transform 0.15s, box-shadow 0.15s;
     }
-    .btn-upsell-action:hover {
-      background: #ffffff;
+    .btn-kakao-action:hover {
       transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(254, 229, 0, 0.45);
+    }
+    .btn-web-action {
+      background: rgba(255, 255, 255, 0.15);
+      color: #ffffff;
+      border: 1.5px solid rgba(255, 255, 255, 0.3);
+      font-weight: 800;
+      font-size: 14px;
+      padding: 14px 22px;
+      border-radius: 10px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.15s;
+    }
+    .btn-web-action:hover {
+      background: rgba(255, 255, 255, 0.25);
+      border-color: #ffffff;
     }
 
     /* Print Styles */
@@ -375,7 +421,7 @@
       .template-top .badge { background: #e2e8f0 !important; color: #0f172a !important; }
       .btn-copy { display: none !important; }
       .template-content { color: #0f172a !important; }
-      .upsell-box { page-break-before: always; }
+      .kakao-lead-box { page-break-before: always; }
     }
   </style>
 </head>
@@ -384,17 +430,19 @@
   <!-- Top Navigation Bar -->
   <div class="top-bar">
     <div class="top-bar-title">
-      <i class="fa-solid fa-bolt-lightning" style="color: #34d399;"></i>
-      <span>PostSync AI 전략연구소</span>
-      <span class="top-bar-badge">공식 무료 증정본</span>
+      <a href="/place" title="플레이스싱크 메인 이동">
+        <i class="fa-solid fa-arrows-rotate" style="color: #38bdf8;"></i>
+        <span>PlaceSync 플레이스싱크</span>
+      </a>
+      <span class="top-bar-badge">2026 공식 무료 증정본</span>
     </div>
     <div class="top-bar-actions">
       <button class="btn-print" onclick="window.print()">
         <i class="fa-solid fa-print"></i> <span>A4 인쇄 / PDF 저장</span>
       </button>
-      <button class="btn-upgrade" onclick="openEbookOrderModal()">
-        <i class="fa-solid fa-crown"></i> <span>정식 실전 지침서 (39,000원)</span>
-      </button>
+      <a href="/place" class="btn-nav-rank">
+        <i class="fa-solid fa-bolt"></i> <span>내 매장 순위 무료 조회</span>
+      </a>
     </div>
   </div>
 
@@ -403,277 +451,249 @@
     <!-- BOOK COVER -->
     <div class="book-cover">
       <div class="cover-badge">
-        <i class="fa-solid fa-shield-halved"></i> [대행사 위약금 날리기 전 필독] 과태료 0원 · 마케팅 비용 0원
+        <i class="fa-solid fa-shield-halved"></i> [전 업종 소상공인 필독] 대행사 위약금 날리기 전 10분 마스터북
       </div>
       <h1 class="cover-title">
         단 10분 만에 끝내는<br>
-        <span>[2026 네이버 스마트플레이스 1위 세팅법 & 변호사·세무사 합법 수임 칼럼 템플릿]</span>
+        <span>[2026 네이버 스마트플레이스 1위 세팅 실전 시크릿 가이드북]</span>
       </h1>
       <p class="cover-subtitle">
-        마케팅 대행사에 매달 300만 원씩 주는데도 수임 전화 한 통 없으셨습니까? 불법 슬롯 없이 지도 1~3위 장악하는 3분 세팅법과 징계 0건 합법 칼럼 복붙 서식을 지금 즉시 적용하십시오.
+        마케팅 대행사에 매달 100~300만 원씩 주는데도 손님이 없으셨습니까? 불법 슬롯 없이 지도 1~3위 장악하는 5대 알고리즘 실전 세팅법과 1초 복사 템플릿을 지금 즉시 적용하십시오.
       </p>
       <div class="cover-meta">
-        <span><i class="fa-solid fa-building"></i> 발행처: PostSync AI 전략연구소</span>
-        <span><i class="fa-solid fa-file-shield"></i> 버전: 2026 최신 개정판</span>
-        <span><i class="fa-solid fa-gift"></i> 배포: 공식 무료 증정본</span>
+        <span><i class="fa-solid fa-building"></i> 발행처: PlaceSync AI 전략연구소</span>
+        <span><i class="fa-solid fa-file-shield"></i> 버전: 2026 최신 개정판 (전 업종 공통)</span>
+        <span><i class="fa-solid fa-gift"></i> 배포: 100% 공식 무료 증정본</span>
       </div>
     </div>
 
-    <!-- LEGAL DISCLAIMER -->
-    <div style="background:#f8fafc; border:1px solid #cbd5e1; border-left:4px solid #64748b; padding:14px 18px; border-radius:6px; font-size:12px; color:#475569; line-height:1.65; margin-bottom:36px;">
-      ⚖️ <b>[법적 고지 및 면책 조항 (Legal Disclaimer)]</b><br>
-      • 본 가이드에 수록된 칼럼 서식 및 플레이스 설정 예시는 법률·세무 전문직의 이해를 돕기 위해 업계 규정을 바탕으로 재구성한 '견본 모델(Template Model)'입니다.<br>
-      • 본 저작물은 개별 사건에 대한 법률·세무 자문이나 소송/환급 결과를 보장하지 않으며, 실제 포스팅 시에는 각 사무소의 사실관계와 담당 전문가의 책임하에 검토·수정하여 사용하여야 합니다.
+    <!-- PROLOGUE -->
+    <h2>📌 읽기 전에: 대행사에 돈을 줘도 손님이 안 오는 진짜 이유</h2>
+    <p>
+      많은 대표님들이 *"대행사에 비싼 돈 주고 블로그 체험단을 100명 불렀는데 왜 손님이 안 올까요?"*라고 하소연하십니다. 이유는 명확합니다.
+    </p>
+    <div class="callout callout-blue">
+      💡 <b>2026 고객의 실제 매장 탐색 경로:</b><br>
+      고객은 블로그 글만 보고 바로 오지 않습니다. 블로그를 보든 인스타그램을 보든, <b>마지막 1초에는 반드시 [네이버 지도(스마트플레이스)]를 켜서</b> 매장 평점, 최근 영수증 리뷰, 실제 메뉴 가격, 그리고 <b>'네이버 예약'이나 '쿠폰'</b>이 있는지 확인하고 최종 결정을 내립니다.
     </div>
-
-    <!-- PROLOGUE / 30-SEC SUMMARY -->
-    <h2>📌 읽기 전에 (30초 핵심 요약)</h2>
-    <ul>
-      <li><b>대행사에 월 300만 원씩 주는데도 수임 전화가 안 오는 이유:</b> 의뢰인은 단순 '블로그 글'만 보고 계약하지 않습니다. <b>[스마트플레이스(지도)]</b>에서 가까운지, 진짜 전문성이 있는지 확인하고, <b>[블로그 칼럼]</b>에서 판례와 세법 소명 능력을 검증한 뒤 <b>[스마트콜]</b>로 전화를 겁니다.</li>
-      <li><b>이 가이드의 약속:</b> 단 10분 만에 읽고 사무실 플레이스에 바로 적용할 수 있는 <b>'지도 상위노출 세팅법'</b>과 내일 아침 복사해 쓰는 <b>'변호사·세무사 실전 수임 템플릿 각 1종'</b>을 제공합니다.</li>
-    </ul>
+    <p>
+      즉, <b>스마트플레이스가 1페이지(상위 1~5위)에 꽂혀있지 않으면</b> 수백만 원짜리 블로그 마케팅의 효과는 고스란히 경쟁 매장으로 흘러 들어갑니다. 지금부터 불법 프로그램 없이 네이버 검색로봇이 합법적으로 점수를 퍼주는 <b>5대 실전 세팅법</b>을 공개합니다.
+    </p>
 
     <!-- PART 1 -->
-    <h2>📍 PART 1. 네이버 스마트플레이스 1~3위 장악 3분 체크리스트</h2>
+    <h2>📍 PART 1. 네이버 스마트플레이스 1위 장악 5대 세팅 체크리스트</h2>
     <p>
-      대행사의 '불법 슬롯(트래픽 조작)'이나 '가짜 영수증 리뷰'는 2026 네이버 클린봇에 의해 100% 영구 패널티를 받습니다. 네이버 검색 로봇이 합법적으로 점수를 퍼주는 <b>[정석 세팅 3단계]</b>입니다.
+      대행사의 '불법 슬롯(가짜 트래픽 조작)'이나 '조작 영수증'은 2026 네이버 AI 클린봇에 의해 100% 영구 미노출(패널티) 처리됩니다. 네이버 알고리즘이 가산점을 주는 정석 5단계입니다.
     </p>
 
-    <h3>1. [절대 주의] 업체명에 키워드를 억지로 쑤셔 넣지 마세요</h3>
+    <h3>1. [절대 주의] 상호명에 키워드를 억지로 쑤셔 넣지 마세요</h3>
     <ul>
-      <li>❌ <b>감점/제재:</b> <code>서초동 형사전문 변호사 홍길동 법률사무소 음주운전 구제</code> ➔ <b>어뷰징 단속 대상</b></li>
-      <li>✅ <b>합법 정석:</b> <code>법률사무소 청람</code> 또는 <code>세무회계 바른 대표세무사 김철수</code><br>
-      <span style="font-size:12.5px; color:#64748b;">(사업자등록증 상의 정식 명칭을 사용해야 네이버 알고리즘 신뢰도 점수가 유지됩니다.)</span></li>
+      <li>❌ <b>감점 및 어뷰징 단속 대상:</b> <code>강남역맛집 신논현삼겹살 홍길동고깃집 회식전문</code></li>
+      <li>✅ <b>합법 정석:</b> <code>홍길동식당 강남본점</code> 또는 <code>청담헤어스튜디오</code><br>
+      <span style="font-size:12.5px; color:#64748b;">(사업자등록증이나 간판에 기재된 정식 상호명을 써야 네이버 알고리즘의 신뢰도 지수가 100% 인정됩니다.)</span></li>
     </ul>
 
-    <h3>2. 대표 키워드 5개: [지역 + 상황] 조합으로 세팅</h3>
+    <h3>2. 대표 키워드 5개: [지역 + 주력 상품/서비스 + 고객 상황] 황금 조합</h3>
     <p>
-      의뢰인은 '변호사', '세무사'라는 광범위한 단어만 치지 않습니다. 내 사무실로 찾아올 수 있는 <b>관할 기관/지역명</b>을 엮으세요.
+      업종별로 고객이 실제로 검색하는 <b>고전환(High-Intent) 황금 키워드</b> 5개를 조합해야 1페이지에 진입합니다.
     </p>
 
     <table>
       <thead>
         <tr>
-          <th>직역</th>
-          <th>추천 대표 키워드 조합 5선 (예시)</th>
+          <th>업종</th>
+          <th>추천 대표 키워드 5개 세팅 공식 (예시)</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td><b>변호사</b></td>
+          <td><b>외식업 / 카페</b></td>
           <td>
-            1. <code>[관할법원/경찰서명]변호사</code> (서초동변호사, 수원지방법원변호사)<br>
-            2. <code>[주력분야]전문변호사</code> (음주운전변호사, 상속전문변호사)<br>
-            3. <code>[세부지역]형사변호사</code> (강남형사변호사, 송파이혼변호사)<br>
-            4. <code>[사건키워드]상담</code> (개인회생상담, 전세사기고소)<br>
-            5. <code>[역세권/지역명]법률사무소</code> (교대역법률사무소)
+            1. <code>[역세권/동이름]맛집</code> (예: 가락동맛집, 성수동카페)<br>
+            2. <code>[세부메뉴]전문점</code> (예: 송파삼겹살, 강남숙성한우)<br>
+            3. <code>[모임상황]추천</code> (예: 역삼역회식, 판교청첩장모임)<br>
+            4. <code>[동행자/타깃]</code> (예: 잠실데이트맛집, 마포가족외식)<br>
+            5. <code>[공간특징]</code> (예: 룸식당, 주차가능식당)
           </td>
         </tr>
         <tr>
-          <td><b>세무사</b></td>
+          <td><b>병의원 / 뷰티샵</b></td>
           <td>
-            1. <code>[세무서명/지역명]세무사</code> (역삼세무사, 가산디지털단지세무사)<br>
-            2. <code>[주력분야]세무기장</code> (IT법인기장, 병의원세무기장)<br>
-            3. <code>[고단가분야]상담</code> (상속세전문세무사, 양도소득세상담)<br>
-            4. <code>[산업단지/지역]세무회계</code> (판교세무사, 마곡세무회계)<br>
-            5. <code>[리스크대응]전문</code> (세무조사소명세무사)
+            1. <code>[지역명]전문진료</code> (예: 문정동피부과, 서초역도수치료)<br>
+            2. <code>[특화시술/증상]</code> (예: 여드름흉터치료, 임플란트치과)<br>
+            3. <code>[원장/클리닉특징]</code> (예: 여의사진료, 야간진료한의원)<br>
+            4. <code>[뷰티서비스]</code> (예: 잠실속눈썹펌, 강남네일아트)<br>
+            5. <code>[위치역세권]</code> (예: 신사역성형외과, 홍대미용실)
+          </td>
+        </tr>
+        <tr>
+          <td><b>학원 / 교육</b></td>
+          <td>
+            1. <code>[학군/동이름]학원</code> (예: 대치동수학학원, 목동영어학원)<br>
+            2. <code>[대상학년]전문</code> (예: 초등사고력수학, 고등내신전문)<br>
+            3. <code>[취미/성인]</code> (예: 강남보컬학원, 송파성인피아노)<br>
+            4. <code>[시험/자격증]</code> (예: 토플단기완성, 바리스타자격증)<br>
+            5. <code>[교수법]</code> (예: 소수정예과외식, 1:1밀착관리)
+          </td>
+        </tr>
+        <tr>
+          <td><b>전문직 / 생활서비스</b></td>
+          <td>
+            1. <code>[관할기관/지역]</code> (예: 서초동변호사, 역삼세무사)<br>
+            2. <code>[주력해결사건]</code> (예: 음주운전구제, 상속세전문)<br>
+            3. <code>[생활밀착]</code> (예: 강남입주청소, 분당인테리어)<br>
+            4. <code>[긴급서비스]</code> (예: 24시출장열쇠, 당일누수탐지)<br>
+            5. <code>[신뢰자격]</code> (예: 손해사정사상담, 행정사사무소)
           </td>
         </tr>
       </tbody>
     </table>
 
-    <h3>3. 상세설명 2,000자: 검색 로봇과 의뢰인을 동시에 홀리는 법</h3>
+    <h3>3. 상세설명 2,000자: 첫 3줄이 순위의 80%를 결정합니다</h3>
     <p>
-      상세설명란 첫 3줄에 <b>[관할 지역 + 주력 사건 수임 경험 + 직통 전화]</b>가 들어가야 네이버 AI가 검색어와 매칭합니다.
+      고객과 네이버 AI 로봇은 첫 3줄을 가장 중요하게 읽습니다. <b>[정확한 위치 + 우리 매장만의 1등 차별점 + 주차/예약 혜택]</b>을 첫 3줄에 반드시 포함시키세요.
     </p>
 
-    <!-- Template Box 1: Place Description -->
+    <!-- Template Box 1: Universal Place Description -->
     <div class="template-card">
       <div class="template-top">
-        <span class="badge">플레이스 2,000자 표준 서식</span>
+        <span class="badge">전 업종 공통 2,000자 표준 서식</span>
         <button class="btn-copy" onclick="copySnippet(this)">
           <i class="fa-regular fa-copy"></i> <span>복사하기</span>
         </button>
       </div>
-      <div class="template-content">"안녕하십니까, [서울중앙지방법원 / 강남세무서] 맞은편에서 의뢰인의 권리를 지키는 [사무소명] 대표 [변호사/세무사] [이름]입니다.
+      <div class="template-content">"[지역명] 1위 [업종/메뉴] 전문점, [상호명]입니다.
+저희는 [3대 핵심 차별점: 100% 당일 도축 한우 / 1:1 맞춤 진료 / 15년 경력 전담 시술] 원칙을 바탕으로, 방문해 주시는 모든 고객님께 최고의 만족을 약속드립니다.
 
-저희는 단순 서면 대행이 아닌, [음주운전 면허구제 / IT스타트업 법인기장] 분야에서 [OO건 이상의 실전 해결 노하우]를 축적해 왔습니다.
+네이버 예약을 통해 사전 예약 후 방문해 주시는 고객님께는 [웰컴 드링크 / 무료 진단 / 10% 추가 혜택]을 제공해 드립니다.
 
-억울한 혐의나 예상치 못한 세금 고지서로 막막하시다면, 사건 초기 골든타임을 놓치지 마시고 아래 직통 스마트콜로 사전 상담을 예약해 주시기 바랍니다.
+■ [상호명]만의 3대 시크릿 약속
+1. [첫 번째 차별화 포인트]: (예: 화학조미료 0%, 매일 아침 직접 끓이는 특제 육수)
+2. [두 번째 차별화 포인트]: (예: 프라이빗 개별 룸 완비 및 100% 예약제 운영)
+3. [세 번째 차별화 포인트]: (예: 철저한 사후 관리 및 1년 무상 보증제)
 
-■ 주력 상담 분야
-1. [주력 분야 1]: 경찰 첫 출석 동행 및 법리 검토
-2. [주력 분야 2]: 맞춤형 절세 플랜 및 소명 자료 구축
-3. [주력 분야 3]: 1:1 비밀 보장 직접 상담
-
-■ 오시는 길 및 주차 안내
-- [지하철역 O번 출구 도보 O분]
-- 건물 내 무료 주차 2시간 지원"</div>
+■ 고객 편의 안내
+- 오시는 길: [지하철역 O번 출구 도보 O분 거리]
+- 주차 안내: [건물 지하 주차장 2시간 무료 지원]
+- 단체 예약 및 문의: [네이버 톡톡 또는 스마트콜 직통 연결]"</div>
     </div>
+
+    <h3>4. 네이버 예약 & 플레이스 쿠폰: 알고리즘 가산점 치트키</h3>
+    <p>
+      네이버는 자사 서비스(네이버페이, 네이버예약, 톡톡, 쿠폰)를 활발히 이용하는 매장에 <b>알고리즘 가산점(약 15~20점)</b>을 공식 부여합니다.
+    </p>
+    <ul>
+      <li><b>네이버 예약:</b> 테이블 예약 또는 시간대별 상담 예약을 단 1개라도 반드시 켜두세요.</li>
+      <li><b>플레이스 쿠폰:</b> <i>"네이버 알림받기 시 1,000원 할인 쿠폰"</i> 또는 <i>"음료 1캔 무료 증정 쿠폰"</i>을 걸어두면 클릭률(CTR)과 저장하기 수가 즉시 2배 상승합니다.</li>
+    </ul>
+
+    <h3>5. 찾아오는 길 & 고화질 사진 10장</h3>
+    <p>
+      고객이 플레이스에서 머무는 <b>체류 시간(Dwell Time)</b>이 길수록 네이버는 '좋은 매장'으로 판단합니다. 로드뷰 사진이 아닌, <b>지하철 출구부터 매장 입구까지 걸어오는 길</b>을 친절하게 사진 3장으로 남기면 길찾기 클릭 수가 폭발합니다.
+    </p>
 
     <!-- PART 2 -->
-    <h2>🏛️ PART 2. 변협·세무사회 징계 0건! 1초 단속 회피 족보</h2>
+    <h2>⭐ PART 2. 알고리즘 점수 300% 폭발시키는 영수증 리뷰 & 저장하기</h2>
     <p>
-      광고법을 위반하면 네이버 상위노출이 되어도 동료의 신고로 <b>과태료 500만~3,000만 원</b>과 <b>자격정지</b>를 당합니다. 아래 단어는 오늘 즉시 블로그와 플레이스에서 지우고 오른쪽 단어로 바꾸십시오.
+      단순히 리뷰가 많다고 1위가 되는 것이 아닙니다. 2026 네이버는 <b>'리뷰의 질(키워드 포함 여부)'</b>과 <b>'저장하기(스크랩) 수'</b>를 핵심 지표로 봅니다.
+    </p>
+
+    <div class="callout callout-green">
+      🎯 <b>영수증 리뷰에 핵심 키워드 유도하는 꿀팁:</b><br>
+      테이블이나 카운터에 <i>"영수증 포토리뷰 작성 시 혜택"</i> 안내판을 둘 때, <br>
+      <b>"저희 매장 메뉴 중 [가락동 삼겹살] 사진과 함께 후기를 남겨주시면 OOO을 드립니다"</b>처럼 안내해 보세요. 고객이 무의식중에 타깃 키워드를 리뷰 본문에 적어주어, 네이버 검색 매칭 점수가 3배 이상 뛰어오릅니다!
+    </div>
+
+    <h3>저장하기(스크랩)를 늘려야 2페이지에서 1페이지로 수직 상승합니다</h3>
+    <p>
+      소비자가 '저장' 버튼을 누른다는 것은 <b>"나중에 꼭 가보겠다"</b>는 강력한 의사표시입니다. 네이버 알고리즘은 저장수 증가 추이를 가장 신뢰도 높은 인기도 지표로 계산합니다.
+    </p>
+    <ul>
+      <li>플레이스 소식란에 주 1회 정기 혜택 포스팅 올리기</li>
+      <li>매장 내 <i>"네이버 지도에 저장해두시면 다음 방문 시 상시 5% 혜택"</i> 안내문 부착</li>
+    </ul>
+
+    <!-- PART 3 -->
+    <h2>🚨 PART 3. 2026 네이버 클린봇 단속 긴급 경고 (절대 금지 3가지)</h2>
+    <p>
+      아무리 급해도 아래 3가지는 절대 손대지 마십시오. 네이버는 매일 AI 어뷰징 탐지 엔진을 가동하고 있습니다.
     </p>
 
     <table>
       <thead>
         <tr>
-          <th>직역</th>
-          <th>❌ 절대 금지어 (과태료/징계 대상)</th>
-          <th>✅ 합법 신뢰 치환어 (단속 0건)</th>
+          <th>위반 행위</th>
+          <th>대행사의 유혹</th>
+          <th>네이버 실제 적발 결과</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td><b>변호사</b></td>
-          <td>100% 승소 보장, 무조건 무죄</td>
-          <td><b>철저한 법리 검토 및 객관적 판례 소명</b></td>
+          <td><b>불법 트래픽 슬롯</b></td>
+          <td>"10일 만에 1위 보장, 순위 안 오르면 환불"</td>
+          <td><b>클린봇에 의해 매장 영구 미노출 및 순위 밖 퇴출</b></td>
         </tr>
         <tr>
-          <td><b>변호사</b></td>
-          <td>부장판사·검사장 출신 전관예우</td>
-          <td><b>법원 재판 실무 및 검찰 수사 실무 경험</b></td>
+          <td><b>가짜 영수증 리뷰 알바</b></td>
+          <td>"건당 2,000원에 포토리뷰 100개 찍어드립니다"</td>
+          <td><b>영수증 결제 위조 형사 처벌 및 리뷰 일괄 블라인드</b></td>
         </tr>
         <tr>
-          <td><b>변호사</b></td>
-          <td>서초동 1위, 최상의 결과</td>
-          <td><b>의뢰인 맞춤형 전담 TF 법률 조력</b></td>
-        </tr>
-        <tr>
-          <td><b>변호사</b></td>
-          <td>수임료 최저가, 착수금 0원</td>
-          <td><b>합리적이고 투명한 수임 절차 안내</b></td>
-        </tr>
-        <tr>
-          <td><b>세무사</b></td>
-          <td>세금 0원, 무조건 100% 환급</td>
-          <td><b>세법상 적법한 공제 요건 심층 검토</b></td>
-        </tr>
-        <tr>
-          <td><b>세무사</b></td>
-          <td>세무조사 무마, 국세청 인맥</td>
-          <td><b>과세관청의 소명 요구에 객관적 입증 대응</b></td>
-        </tr>
-        <tr>
-          <td><b>세무사</b></td>
-          <td>업계 최저 기장료 (월 3만 원)</td>
-          <td><b>업종별 특화 맞춤 기장 및 정기 세무 브리핑</b></td>
+          <td><b>타 매장 상호명 도용</b></td>
+          <td>"근처 유명 매장 이름을 소개글에 몰래 넣으세요"</td>
+          <td><b>경쟁사 신고 즉시 네이버 운영정책 위반 경고 누적 제재</b></td>
         </tr>
       </tbody>
     </table>
 
-    <!-- PART 3 -->
-    <h2>📝 PART 3. 복사해 쓰는 실전 수임 칼럼 템플릿 2선</h2>
-    <p>
-      의뢰인이 글을 읽고 자연스럽게 스마트콜을 누르게 만드는 <b>Answer-First(결론 우선)</b> 칼럼 서식입니다. 그대로 복사하여 <code>[괄호]</code> 속 내용만 수정해 포스팅하세요.
-    </p>
+    <!-- KAKAO ALERT LEAD MAGNET SECTION (NEW UPGRADE) -->
+    <div class="kakao-lead-box">
+      <div class="kl-icon">☀️</div>
+      <h2 class="kl-title" style="border:none; margin:0 0 10px 0; color:#60a5fa; padding:0;">
+        매일 아침 9시, 내 매장 실시간 순위 변동을 카카오톡으로 무료 수신하세요!
+      </h2>
+      <p class="kl-desc">
+        오늘 세팅한 플레이스, 내일 몇 위에 올랐을까요?<br>
+        매일 네이버를 일일이 검색해보지 않아도, <b>플레이스싱크 카카오 공식 채널</b>을 추가해 두시면 매일 아침 9시 정각에 내 매장의 순위 변동과 1위 탈환 실전 액션플랜을 카카오톡으로 1초 만에 무료 전송해 드립니다.
+      </p>
 
-    <!-- Template Box 2: Lawyer Column -->
-    <h3>① [변호사] 형사/음주운전: 의뢰인이 읽고 당장 전화하는 칼럼</h3>
-    <div class="template-card">
-      <div class="template-top">
-        <span class="badge">변호사 복붙 칼럼 서식</span>
-        <button class="btn-copy" onclick="copySnippet(this)">
-          <i class="fa-regular fa-copy"></i> <span>복사하기</span>
-        </button>
-      </div>
-      <div class="template-content">[서초/강남] 음주운전 2진 아웃 적발, 경찰 첫 조사 전 반드시 챙겨야 할 3가지 양형자료
-
-음주운전 단속에 적발되어 면허 취소와 실형 선고의 위기에 놓이셨습니까? 
-혼자서 인터넷 글을 찾아보며 시간을 지체하는 지금 이 순간에도 수사 절차는 시작되고 있습니다.
-
-법원 재판 실무 및 경찰 수사 실무 경험을 바탕으로, 음주운전 2진 아웃 사건에서 불리한 진술을 피하고 유리한 양형을 이끌어내기 위한 객관적 대응 절차를 안내해 드립니다.
-
-■ 1. 경찰 첫 출석 전 '블랙박스 및 대리운전 호출 내역' 확보
-경찰 조사에서 당황하여 잘못된 진술을 남기면 번복하기 어렵습니다. 당시 운전 경위와 대리운전 기사와의 대화, 최종 정차 경위를 객관적 자료로 소명해야 합니다.
-
-■ 2. 객관적 양형 소명자료 5종 조기 준비
-단순한 반성문만으로는 재판부를 설득하기 어렵습니다. 재범 방지를 위한 차량 매각 증명, 정기 교육 이수 내역, 부양가족의 실질적 생계 상황을 증빙 서류로 구조화해야 합니다.
-
-■ 3. 사법 실무 노하우를 갖춘 법률 조력의 필요성
-음주운전 사건은 초기 수사 단계에서의 법리 검토가 재판 결과에 중대한 영향을 미칩니다.
-
-지금 즉시 아래 네이버 스마트콜 또는 예약으로 현재 혈중알코올농도와 적발 경위를 남겨주시면, 담당 변호사가 직접 초기 골든타임 대응 전략을 진단해 드립니다.
-
-[📞 네이버 스마트콜로 1:1 직통 상담 예약하기]
-[📍 사무실 오시는 길 (네이버 플레이스 지도)]</div>
-    </div>
-
-    <!-- Template Box 3: Tax Column -->
-    <h3>② [세무사] 법인 기장: 덤핑 없이 고단가 계약 따내는 칼럼</h3>
-    <div class="template-card">
-      <div class="template-top">
-        <span class="badge">세무사 복붙 칼럼 서식</span>
-        <button class="btn-copy" onclick="copySnippet(this)">
-          <i class="fa-regular fa-copy"></i> <span>복사하기</span>
-        </button>
-      </div>
-      <div class="template-content">가산디지털단지 IT 법인 대표님이 기장 세무사를 바꾸고 연 1,800만 원 절세한 비결
-
-"기장료 매달 10만 원씩 꼬박꼬박 나가는데, 정작 세무사 얼굴은 1년에 한 번도 못 보고 직원하고만 통화합니다."
-최근 저희 사무실로 기장 대리를 변경하신 IT 스타트업 대표님의 하소연이었습니다.
-
-단순 영수증 입력만 하는 기장 대리는 세금을 줄여주지 못합니다. 오히려 정부 고용지원금과 연구개발(R&D) 세액공제를 놓쳐 수천만 원의 세금을 더 내는 경우가 허다합니다.
-
-■ 1. 우리 회사가 놓치고 있는 '조세특례제한법' 세액감면 진단
-청년 고용 증대 세액공제, 벤처기업 인증 감면 등 법인 업종에 맞는 특화 공제를 사전에 챙기지 않으면 결산 때 소급 적용이 어렵습니다.
-
-■ 2. 대표이사 가지급금과 급여·배당 최적화 설계
-회사의 잉여금을 가장 적은 세금으로 회수할 수 있는 종합 플랜을 분기별로 점검받고 계십니까?
-
-■ 3. 세무사가 직접 결산 브리핑을 진행하는 이유
-저희 세무회계는 직원이 아닌 담당 세무사가 직접 분기별 가결산 리포트를 제공하며, 예상 세액을 사전에 고지해 자금 계획에 차질이 없도록 조력합니다.
-
-현재 기장료 대비 어떤 세무 관리를 받고 계신지 무료로 진단해 드립니다. 아래 플레이스 예약을 통해 사업자등록증 사본을 남겨주시면 1:1 절세 진단표를 보내드립니다.
-
-[📞 세무사 직통 스마트콜 상담 신청]
-[📍 세무회계 사무소 위치 및 방문 예약]</div>
-    </div>
-
-    <!-- UPSELL BRIDGE BANNER -->
-    <div class="upsell-box">
-      <div class="upsell-title">
-        <i class="fa-solid fa-crown" style="color: #fbbf24;"></i>
-        <span>더 깊은 수임 비결이 필요하신가요?</span>
-      </div>
-      <div class="upsell-desc">
-        본 무료 퀵가이드는 전체 지침서의 <b>10% 핵심 요약본</b>입니다. 대행사 없이 매달 수임 사건과 고단가 기장 업체를 물어오는 완전한 24시간 인바운드 수임 파이프라인을 구축하세요.
-      </div>
-      <div class="upsell-grid">
-        <div class="upsell-item">
-          <b>📖 6대 실전 칼럼 전문 수록</b><br>
-          이혼 재산분할, 전세사기, 상속증여 3년 플랜, 세무조사 소명 칼럼 전문
+      <div class="kl-benefits">
+        <div class="kl-benefit-item">
+          <b>⏱️ 1초 즉시 실측 추적</b>
+          모바일 네이버 실제 공식 순위 100% 동기화
         </div>
-        <div class="upsell-item">
-          <b>⚖️ 1초 치환 족보 30선</b><br>
-          변호사법 제23조·세무사법 제12조 전수 대응 합법 대체어 완비
+        <div class="kl-benefit-item">
+          <b>📊 1위 매장 5대 격차 분석</b>
+          저장수, 방문자리뷰, 블로그리뷰 정량 비교
         </div>
-        <div class="upsell-item">
-          <b>📞 3단계 인바운드 콜 설계</b><br>
-          손실 회피 트리거 & 첫 1분 통화로 방문 수임 성사시키는 실전 스크립트
+        <div class="kl-benefit-item">
+          <b>💬 카톡 1초 간편 조회</b>
+          채팅창에 [키워드, 매장명]만 치면 실시간 순위 회신
         </div>
-        <div class="upsell-item">
-          <b>📊 황금 키워드 50선 & 자가점검표</b><br>
-          변호사 25개 + 세무사 25개 즉시 수임 키워드 및 25제 점검 체크리스트
+        <div class="kl-benefit-item">
+          <b>🔄 100% 무료 혜택</b>
+          비용 0원, 회원가입 없이 채널 추가 1초 연동
         </div>
       </div>
-      <div style="text-align: center;">
-        <button class="btn-upsell-action" onclick="openEbookOrderModal()">
-          <i class="fa-solid fa-cart-shopping"></i> <span>39,000원에 실전 지침서 마스터본 평생 소장하기</span>
-        </button>
+
+      <div class="kl-btn-row">
+        <a href="https://pf.kakao.com/_xonxiaX" target="_blank" rel="noopener noreferrer" class="btn-kakao-action">
+          <i class="fa-solid fa-comment"></i> <span>카카오톡 채널 추가하고 아침 9시 순위 알림 받기</span> <i class="fa-solid fa-arrow-right"></i>
+        </a>
+        <a href="/place" class="btn-web-action">
+          <i class="fa-solid fa-chart-simple"></i> <span>웹에서 내 매장 지금 즉시 무료 진단</span>
+        </a>
       </div>
     </div>
 
     <!-- FOOTER -->
     <div style="text-align: center; margin-top: 50px; padding: 24px; border-top: 1px solid var(--slate-200); color: var(--slate-500); font-size: 12.5px;">
-      © 2026 PostSync AI 전략연구소. All rights reserved. 본 저작물의 무단 복제 및 상업적 재배포를 엄격히 금합니다.
+      <p style="margin-bottom:6px;"><b>PlaceSync (플레이스싱크) AI 전략연구소</b> | 스마트플레이스 1위 동기화 센터</p>
+      <p>© 2026 PlaceSync. All rights reserved. 본 가이드북의 무단 전재 및 재배포를 금합니다.</p>
     </div>
 
   </div>
 
-  <script src="/assets/monetization.js"></script>
   <script>
     function copySnippet(btn) {
       const card = btn.closest('.template-card');
