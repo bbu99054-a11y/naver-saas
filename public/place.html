@@ -2269,7 +2269,13 @@
             (담당 분석팀에 실시간 알림이 안전하게 접수되었습니다.)
           </p>
           <div style="display:inline-flex; align-items:center; gap:6px; background:#dcfce7; color:#15803d; font-size:12px; font-weight:700; padding:6px 14px; border-radius:20px; margin-bottom:14px;">
-            <i class="fa-solid fa-check-circle"></i> 접수 정상 완료 (DB 영구 보존)
+            <i class="fa-solid fa-check-circle"></i> 접수 정상 완료 (DB 영구 보존 &amp; 이메일 발송)
+          </div>
+          <!-- 📊 발급된 1위 실측 진단서 바로 열기 버튼 -->
+          <div id="applySuccessReportWrap" style="margin: 10px 0 16px 0;">
+            <a id="applySuccessReportLink" href="/report/place-audit.html" target="_blank" rel="noopener noreferrer" style="display:inline-flex; align-items:center; gap:8px; background:#2563eb; color:#ffffff; font-size:14px; font-weight:800; padding:12px 24px; border-radius:30px; text-decoration:none; box-shadow:0 4px 14px rgba(37,99,235,0.35); transition:transform 0.15s;">
+              <i class="fa-solid fa-file-invoice"></i> <span>📊 [발급 완료] 내 매장 1위 격차 실측 진단서 열기</span> &rarr;
+            </a>
           </div>
           <div id="applyKakaoActionWrap" style="margin-top:10px; padding-top:14px; border-top:1px dashed #86efac;">
             <p style="font-size:12.5px; color:#166534; font-weight:700; margin-bottom:10px;">
@@ -2840,6 +2846,39 @@
           gapBox.style.display = 'none';
         }
 
+        // 🌟 [Place Report Engine] 실측 진단 스냅샷 캐싱 (상위 1~3위 갭 매트릭스 포함)
+        try {
+          const top3List = (data.rankingList || []).slice(0, 3).map((item, idx) => ({
+            name: item.name || `${idx + 1}위 매장`,
+            rank: idx + 1,
+            visitorReviews: parseInt(String(item.visitorReviews || item.reviews || '0').replace(/[^0-9]/g, '')) || 0,
+            blogReviews: parseInt(String(item.blogReviews || '0').replace(/[^0-9]/g, '')) || 0,
+            hasBooking: !!item.hasBooking,
+            hasCoupon: !!item.hasCoupon,
+            saves: item.saves || '10,000+'
+          }));
+
+          window.__LAST_PLACE_SNAPSHOT = {
+            storeName: data.target || (data.myPlace ? data.myPlace.name : ''),
+            targetKeyword: data.query || '',
+            myRank: data.myPlace ? data.myPlace.rank : 2,
+            top1Name: data.gapAnalysis ? data.gapAnalysis.top1Name : (data.rankingList && data.rankingList[0] ? data.rankingList[0].name : '1위 매장'),
+            myReviews: data.myPlace ? parseInt(String(data.myPlace.visitorReviews || '0').replace(/[^0-9]/g, '')) || 0 : 0,
+            top1Reviews: data.gapAnalysis?.metrics?.visitorReviews ? parseInt(String(data.gapAnalysis.metrics.visitorReviews.top1 || '0').replace(/[^0-9]/g, '')) || 0 : 0,
+            myBlogReviews: data.myPlace ? parseInt(String(data.myPlace.blogReviews || '0').replace(/[^0-9]/g, '')) || 0 : 0,
+            top1BlogReviews: data.gapAnalysis?.metrics?.blogReviews ? parseInt(String(data.gapAnalysis.metrics.blogReviews.top1 || '0').replace(/[^0-9]/g, '')) || 0 : 0,
+            myBooking: data.myPlace ? !!data.myPlace.hasBooking : false,
+            top1Booking: data.gapAnalysis?.metrics?.booking ? !!data.gapAnalysis.metrics.booking.top1 : true,
+            myCoupon: data.myPlace ? !!data.myPlace.hasCoupon : false,
+            top1Coupon: data.gapAnalysis?.metrics?.coupon ? !!data.gapAnalysis.metrics.coupon.top1 : true,
+            mySaves: data.myPlace?.saves || '1,000+',
+            top1Saves: data.rankingList && data.rankingList[0] ? (data.rankingList[0].saves || '50,000+') : '50,000+',
+            top3Places: top3List
+          };
+        } catch (snapErr) {
+          console.warn('[Place Snapshot Cache Warning]:', snapErr);
+        }
+
         // 4. Render Table (Clean 5-Metric Columns)
         rankingCard.style.display = 'block';
         if (!data.rankingList || data.rankingList.length === 0) {
@@ -3024,9 +3063,10 @@
         }
 
         btn.disabled = true;
-        btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> <span>신청 접수 중...</span>';
+        btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> <span>리포트 생성 및 접수 중...</span>';
 
         try {
+          const snap = window.__LAST_PLACE_SNAPSHOT || {};
           const res = await fetch('/api/leads', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -3035,18 +3075,32 @@
               phone: phone || undefined,
               leadType: 'lead_magnet',
               sourceTool: 'place',
+              toolSource: 'place',
               rewardName: '플레이스싱크 1회 무료 전략 리포트 & 실전 액션플랜',
               details: {
                 store_name: storeName,
                 target_keyword: keyword,
-                kakao_alert_opt_in: !!kakaoOptIn
+                kakao_alert_opt_in: !!kakaoOptIn,
+                myRank: snap.myRank || 2,
+                top1Name: snap.top1Name || '1위 매장',
+                myReviews: snap.myReviews || 0,
+                top1Reviews: snap.top1Reviews || 0,
+                myBlogReviews: snap.myBlogReviews || 0,
+                top1BlogReviews: snap.top1BlogReviews || 0,
+                myBooking: snap.myBooking ?? false,
+                top1Booking: snap.top1Booking ?? true,
+                myCoupon: snap.myCoupon ?? true,
+                top1Coupon: snap.top1Coupon ?? true,
+                mySaves: snap.mySaves || '1,000+',
+                top1Saves: snap.top1Saves || '50,000+',
+                top3Places: snap.top3Places || []
               }
             })
           });
 
           const data = await res.json();
           if (data.ok || data.success) {
-            showToast('🎉 플레이스싱크 전략 리포트 신청이 정상 접수되었습니다!');
+            showToast('🎉 플레이스 1위 격차 실측 진단서가 발급되었습니다!');
             
             // Switch form to success card
             const formEl = document.getElementById('placeApplyForm');
@@ -3054,11 +3108,18 @@
             const successBox = document.getElementById('applySuccessBox');
             const successStoreTitle = document.getElementById('applySuccessTitle') || document.getElementById('successStoreTitle');
             const successTargetEmail = document.getElementById('applySuccessEmail') || document.getElementById('successTargetEmail');
+            const reportBtn = document.getElementById('applySuccessReportLink');
 
             if (formEl) formEl.style.display = 'none';
             if (guaranteeEl) guaranteeEl.style.display = 'none';
-            if (successStoreTitle) successStoreTitle.textContent = `🎉 [${storeName}] 플레이스싱크 전략 리포트 접수 완료!`;
+            if (successStoreTitle) successStoreTitle.textContent = `🎉 [${storeName}] 1위 격차 실측 진단서 발급 완료!`;
             if (successTargetEmail) successTargetEmail.textContent = email;
+
+            if (reportBtn && data.reportUrl) {
+              reportBtn.href = data.reportUrl;
+              reportBtn.innerHTML = `<i class="fa-solid fa-file-invoice"></i> <span>📊 [${storeName}] 1위 격차 실측 진단서 열기</span> &rarr;`;
+            }
+
             if (successBox) {
               successBox.style.display = 'block';
               successBox.scrollIntoView({ behavior: 'smooth', block: 'center' });

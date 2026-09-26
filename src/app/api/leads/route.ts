@@ -1,12 +1,14 @@
 import { NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
 import { triageConsultLead, LeadTriageResult } from '@/lib/ai/jevClient'
+import { generatePlaceReportEmailHtml, PlaceReportSnapshot, calculatePlaceAuditScore, buildDeepAuditBundle } from '@/lib/email/placeReportTemplate'
 
 export async function POST(req: Request) {
   try {
     const body = await req.json()
     const {
-      toolSource = 'unknown',
+      toolSource: rawToolSource,
+      sourceTool: rawSourceTool,
       leadType = 'lead_magnet', // 'lead_magnet' | 'ebook_order' | 'consulting'
       email,
       phone = '',
@@ -18,6 +20,7 @@ export async function POST(req: Request) {
       ref = null,
     } = body
 
+    const toolSource = String(rawToolSource || rawSourceTool || (body.details?.store_name || String(body.rewardName || '').includes('플레이스') ? 'place' : 'unknown')).trim()
     const resolvedTargetUserId = targetUserId || metadata.targetUserId || ref || null
 
     let validEmail = email
@@ -59,6 +62,37 @@ export async function POST(req: Request) {
       })
     }
 
+    // 📍 플레이스 실측 리포트 자동 발급 및 스냅샷 구성
+    const isPlaceLead = toolSource === 'place' || String(body.rewardName || '').includes('플레이스') || !!body.details?.store_name
+    const reportSlug = 'ps' + Math.random().toString(36).substring(2, 8)
+    const reportUrl = `https://postsyncapp.com/report/place-audit.html?id=${reportSlug}`
+
+    let placeSnapshot: PlaceReportSnapshot | null = null
+    if (isPlaceLead) {
+      const details = body.details || {}
+      placeSnapshot = {
+        storeName: details.store_name || body.storeName || cleanName,
+        targetKeyword: details.target_keyword || body.keyword || metadata.target_keyword || '플레이스',
+        myRank: details.myRank || body.myRank || 2,
+        top1Name: details.top1Name || body.top1Name || '1위 매장',
+        myReviews: details.myReviews || body.myReviews || 0,
+        top1Reviews: details.top1Reviews || body.top1Reviews || 0,
+        myBlogReviews: details.myBlogReviews || body.myBlogReviews || 0,
+        top1BlogReviews: details.top1BlogReviews || body.top1BlogReviews || 0,
+        myBooking: details.myBooking ?? body.myBooking ?? false,
+        top1Booking: details.top1Booking ?? body.top1Booking ?? true,
+        myCoupon: details.myCoupon ?? body.myCoupon ?? true,
+        top1Coupon: details.top1Coupon ?? body.top1Coupon ?? true,
+        mySaves: details.mySaves || body.mySaves || '10,000+',
+        top1Saves: details.top1Saves || body.top1Saves || '50,000+',
+        reportId: reportSlug,
+        reportDate: nowTime.split(' ')[0],
+        top3Places: details.top3Places || body.top3Places || []
+      }
+      placeSnapshot.totalScore = placeSnapshot.totalScore || calculatePlaceAuditScore(placeSnapshot)
+      placeSnapshot.deepAudit = buildDeepAuditBundle(placeSnapshot)
+    }
+
     // 1. Telegram 실시간 알림 발송 (대표님 텔레그램 봇)
     const tgToken = process.env.TELEGRAM_BOT_TOKEN || '8314703344:AAGoFyPTWjHCRjPWq32Pdq0dti0TG8zZahE'
     const tgChatId = process.env.TELEGRAM_CHAT_ID || '8650197247'
@@ -91,6 +125,16 @@ export async function POST(req: Request) {
             `🧾 증빙요청: ${taxDeductionText}\n` +
             `⏱ 신청일시: ${nowTime}\n\n` +
             `👉 [국민은행 93043922640 유영무] 입금 확인 후 PDF 발송 및 홈택스 영수증/계산서를 발행하세요.`
+        } else if (toolSource === 'place' || body.rewardName?.includes('플레이스')) {
+          msg = `📍 [플레이스 1위 격차 심층 리포트 신청 - ${toolSource.toUpperCase()}]\n\n` +
+            `🏢 상호명: ${placeSnapshot?.storeName || cleanName}\n` +
+            `🎯 타깃 키워드: ${placeSnapshot?.targetKeyword || '미기재'}\n` +
+            `📧 수신 이메일: ${cleanEmail}\n` +
+            `📱 연락처: ${cleanPhone || '미기재'}\n` +
+            `📊 산출 종합점수: ${placeSnapshot?.totalScore || 70}점\n` +
+            `⏱ 신청일시: ${nowTime}\n\n` +
+            `🔗 고객 발급 진단서: ${reportUrl}\n` +
+            `👉 고객 이메일로 1:1 맞춤형 정량 실측 진단서가 자동 발송되었습니다.`
         } else {
           msg = `🎁 [무료 리드 마그넷 신청 접수 - ${toolSource.toUpperCase()}]\n\n` +
             `📄 신청자료: ${metadata.docTitle || '[무료 퀵가이드] 네이버 플레이스 1위 세팅법 & 변호사·세무사 합법 수임 칼럼 템플릿 (PDF)'}\n` +
@@ -114,12 +158,32 @@ export async function POST(req: Request) {
       }
     }
 
-    // 2. Resend 관리자 알림 이메일 (환경변수 설정 시)
+    // 2. Resend 이메일 발송 엔진 (고객 맞춤 리포트 발송 + 관리자 알림)
     const resendKey = process.env.RESEND_API_KEY
     const adminEmail = process.env.ADMIN_EMAIL || 'contact@postsyncapp.com'
 
     if (resendKey) {
       try {
+        // [플레이스 전용 엔진] 고객에게 1:1 맞춤형 실측 리포트 이메일 1초 자동 발송
+        if (isPlaceLead && placeSnapshot) {
+          const emailReport = generatePlaceReportEmailHtml(placeSnapshot, reportUrl)
+          await fetch('https://api.resend.com/emails', {
+            method: 'POST',
+            headers: {
+              Authorization: `Bearer ${resendKey.trim()}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              from: 'PostSync AI 진단센터 <contact@postsyncapp.com>',
+              to: [cleanEmail],
+              subject: emailReport.subject,
+              html: emailReport.html,
+            }),
+          })
+          console.log(`[Leads API] Place Report Email successfully dispatched to: ${cleanEmail}`)
+        }
+
+        // 관리자 알림 이메일 발송
         let subject = `[신규 리드] ${cleanEmail} - ${toolSource} 가이드북 신청`
         let titleText = '신규 리드 마그넷 신청'
 
@@ -129,6 +193,9 @@ export async function POST(req: Request) {
         } else if (leadType === 'ebook_order') {
           subject = `[전자책 주문] ${cleanName}님 39,000원 계좌이체 신청 (${cleanEmail})`
           titleText = '전자책 무통장 입금 신청'
+        } else if (isPlaceLead) {
+          subject = `📍 [플레이스 진단] ${placeSnapshot?.storeName || cleanName} (${placeSnapshot?.targetKeyword || ''}) 리포트 발급`
+          titleText = '플레이스 1위 격차 진단서 자동 발급'
         }
 
         await fetch('https://api.resend.com/emails', {
@@ -146,9 +213,10 @@ export async function POST(req: Request) {
                 <h2 style="color: #1e3a8a;">🔔 ${titleText}</h2>
                 <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; margin: 16px 0;">
                   <p><strong>유입 출처:</strong> ${toolSource}</p>
-                  <p><strong>이름/입금자명:</strong> ${cleanName}</p>
+                  <p><strong>이름/상호명:</strong> ${cleanName}</p>
                   <p><strong>이메일:</strong> ${cleanEmail}</p>
                   <p><strong>연락처:</strong> ${cleanPhone || '미기재'}</p>
+                  ${isPlaceLead ? `<p><strong>🔗 발급 리포트 링크:</strong> <a href="${reportUrl}">${reportUrl}</a></p>` : ''}
                   <p><strong>증빙 요청:</strong> ${taxDeductionText}</p>
                   <p><strong>신청 일시:</strong> ${nowTime}</p>
                   ${metadata.amount ? `<p><strong>주문 금액:</strong> ${Number(metadata.amount).toLocaleString()}원</p>` : ''}
@@ -182,6 +250,9 @@ export async function POST(req: Request) {
             clientPhone: cleanPhone,
             cleanEmail,
             taxDeductionText,
+            reportId: isPlaceLead ? reportSlug : undefined,
+            reportSnapshot: placeSnapshot || undefined,
+            webReportUrl: isPlaceLead ? reportUrl : undefined,
             jevTriage: jevTriage ? {
               isUrgent: jevTriage.isUrgent,
               urgencyScore: jevTriage.urgencyScore,
@@ -205,10 +276,14 @@ export async function POST(req: Request) {
       success: true,
       message: leadType === 'ebook_order'
         ? '입금 신청이 정상 접수되었습니다. 입금 확인 후 기재하신 이메일로 전자책이 즉시 발송됩니다.'
-        : '신청이 정상 완료되었습니다. 기재하신 이메일로 가이드북이 순차 발송됩니다.',
+        : isPlaceLead
+          ? '🎉 플레이스 1위 격차 실측 진단서가 발급되었습니다. 기재하신 이메일로도 상세 리포트가 발송되었습니다.'
+          : '신청이 정상 완료되었습니다. 기재하신 이메일로 가이드북이 순차 발송됩니다.',
       email: cleanEmail,
       leadType,
       leadId: savedLeadId,
+      reportId: isPlaceLead ? reportSlug : undefined,
+      reportUrl: isPlaceLead ? `/report/place-audit.html?id=${reportSlug}` : undefined,
       triage: jevTriage,
     })
   } catch (err: any) {

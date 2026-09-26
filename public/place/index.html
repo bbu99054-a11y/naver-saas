@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>플레이스싱크 (PlaceSync) - 네이버 스마트플레이스 실시간 순위 추적 & 1위 동기화 솔루션</title>
-  <meta name="description" content="키워드와 상호명만 입력하면 네이버 스마트플레이스 1위부터 20위까지 내 매장의 실시간 노출 순위와 1위 탈환을 위한 플레이스싱크 AI 동기화 전략을 1초 만에 무료로 진단합니다.">
-  <meta name="keywords" content="플레이스 순위 조회, 네이버 플레이스 순위, 스마트플레이스 순위 확인, 플레이스 1위 상위노출, 플레이스싱크, PlaceSync, 플레이스 순위 추적">
+  <title>플레이스 순위 조회 - 네이버 플레이스 순위 확인 무료 | PostSync</title>
+  <meta name="description" content="네이버 플레이스 순위 조회 무료 도구 PostSync. 스마트플레이스 순위 확인, 1위 매장과의 4대 핵심 지표 격차 분석, 키워드 검색량·저장수·리뷰까지 1초 만에 실시간으로 조회하세요.">
+  <meta name="keywords" content="플레이스 순위 조회, 네이버 플레이스 순위 조회, 네이버 플레이스 순위, 플레이스 순위, 네이버 플레이스 상위노출, 플레이스 상위노출, 플레이스 순위 체크, 플레이스 순위 확인, 네이버 플레이스 순위 확인, 스마트플레이스 순위, PostSync">
   
   <!-- Canonical Consolidation -->
   <link rel="canonical" href="https://www.postsyncapp.com/place">
@@ -14,8 +14,8 @@
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔄</text></svg>">
   
   <!-- Open Graph -->
-  <meta property="og:title" content="플레이스싱크 (PlaceSync) - 네이버 스마트플레이스 실시간 순위 추적 & 1위 동기화 솔루션">
-  <meta property="og:description" content="우리 가게는 오늘 몇 위일까? 1초 만에 네이버 지도 1위~20위 전체 순위와 1위 탈환 전략 리포트를 무료로 확인하세요.">
+  <meta property="og:title" content="플레이스 순위 조회 - 네이버 플레이스 순위 확인 무료 | PostSync">
+  <meta property="og:description" content="네이버 플레이스 순위 조회 무료 도구 PostSync. 스마트플레이스 순위 확인, 1위 매장과의 4대 핵심 지표 격차 분석, 키워드 검색량·저장수·리뷰까지 1초 만에 실시간으로 조회하세요.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.postsyncapp.com/place">
   
@@ -1696,6 +1696,214 @@
       margin-top: 60px;
     }
     footer a { color: var(--slate-700); text-decoration: none; font-weight: 600; }
+
+    /* 🌟 올인원 통합 진단 & 1위 탈환 솔루션 카드 (옵션 1: 일렉트릭 사파이어 블루 고대비 테마) */
+    .all-in-one-solution-card {
+      display: none;
+      background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 50%, #e0e7ff 100%);
+      border: 2px solid #3b82f6;
+      border-radius: var(--radius-lg);
+      padding: 34px 28px;
+      margin-top: 14px;
+      margin-bottom: 38px;
+      box-shadow: 0 16px 40px -8px rgba(37, 99, 235, 0.22), 0 0 0 1px rgba(96, 165, 250, 0.35);
+      color: var(--slate-800);
+      position: relative;
+      overflow: hidden;
+    }
+    .all-in-one-solution-card::before {
+      content: "";
+      position: absolute;
+      top: -50px;
+      right: -50px;
+      width: 250px;
+      height: 250px;
+      background: radial-gradient(circle, rgba(59, 130, 246, 0.2) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .aio-header {
+      margin-bottom: 22px;
+      padding-bottom: 18px;
+      border-bottom: 1.5px solid rgba(59, 130, 246, 0.2);
+    }
+    .aio-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #2563eb;
+      color: #ffffff;
+      border: 1px solid #1d4ed8;
+      font-size: 11.5px;
+      font-weight: 800;
+      padding: 5px 14px;
+      border-radius: 20px;
+      margin-bottom: 10px;
+      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+    }
+    .aio-title {
+      font-size: 22px;
+      font-weight: 900;
+      color: #0f172a;
+      letter-spacing: -0.4px;
+      margin-bottom: 6px;
+    }
+    .aio-subtitle {
+      font-size: 14px;
+      color: #334155;
+      line-height: 1.5;
+    }
+
+    /* 통합 카드 내 gap-dashboard (순백색 고대비 플랫 카드) */
+    .aio-gap-box {
+      background: #ffffff;
+      border: 1.5px solid #bfdbfe;
+      border-radius: 14px;
+      padding: 18px;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.06);
+    }
+    .aio-gap-box .gap-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .aio-gap-box .gap-title {
+      font-size: 13.5px;
+      font-weight: 800;
+      color: #1d4ed8;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .aio-gap-box .gap-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 10px;
+    }
+    .aio-gap-box .gap-item {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 11px 8px;
+      text-align: center;
+    }
+    .aio-gap-box .gap-item.deficit {
+      background: #fff1f2;
+      border-color: #fecdd3;
+    }
+    .aio-gap-box .gap-item.optimal {
+      background: #f0fdf4;
+      border-color: #bbf7d0;
+    }
+    .aio-gap-box .gap-item-lbl {
+      font-size: 11px;
+      font-weight: 700;
+      color: #64748b;
+      margin-bottom: 4px;
+    }
+    .aio-gap-box .gap-item-vals {
+      font-size: 12px;
+      font-weight: 700;
+      color: #1e293b;
+      line-height: 1.4;
+    }
+    .aio-gap-box .gap-item-diff {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 2px 7px;
+      border-radius: 6px;
+      margin-top: 6px;
+    }
+    .aio-gap-box .gap-item-diff.diff-deficit {
+      background: #ffe4e6;
+      color: #e11d48;
+    }
+    .aio-gap-box .gap-item-diff.diff-optimal {
+      background: #dcfce7;
+      color: #16a34a;
+    }
+
+    /* 통합 카드 내 신청 폼 (순백색 고대비 플랫 카드) */
+    .aio-form-section {
+      background: #ffffff;
+      border: 1.5px solid #bfdbfe;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 4px 16px rgba(37, 99, 235, 0.08);
+    }
+    .aio-form-title {
+      font-size: 17.5px;
+      font-weight: 800;
+      color: #0f172a;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .aio-form-desc {
+      font-size: 13.5px;
+      color: #475569;
+      line-height: 1.55;
+      margin-bottom: 20px;
+    }
+    .aio-form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+    .aio-field label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 5px;
+    }
+    .aio-field input {
+      width: 100%;
+      height: 46px;
+      background: #ffffff;
+      border: 1.5px solid #cbd5e1;
+      border-radius: var(--radius-sm);
+      padding: 0 14px;
+      font-size: 13.5px;
+      color: #0f172a;
+      transition: all 0.2s;
+    }
+    .aio-field input:focus {
+      outline: none;
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.18);
+    }
+    .aio-field input::placeholder {
+      color: #94a3b8;
+    }
+    .aio-btn-submit {
+      width: 100%;
+      height: 52px;
+      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+      color: #ffffff;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s;
+      box-shadow: 0 4px 16px rgba(37, 99, 235, 0.35);
+    }
+    .aio-btn-submit:hover {
+      background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 22px rgba(37, 99, 235, 0.45);
+    }
   </style>
 
   <!-- Structured Data: JSON-LD for Programmatic SEO -->
@@ -1704,8 +1912,38 @@
     "@context": "https://schema.org",
     "@graph": [
       {
+        "@type": "WebApplication",
+        "name": "플레이스 순위 조회 - 네이버 플레이스 순위 확인 무료 | PostSync",
+        "url": "https://www.postsyncapp.com/place",
+        "applicationCategory": "BusinessApplication",
+        "operatingSystem": "All",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "KRW"
+        },
+        "description": "네이버 플레이스 순위 조회 무료 도구 PostSync. 스마트플레이스 순위 확인, 1위 매장과의 4대 핵심 지표 격차 분석, 키워드 검색량·저장수·리뷰까지 1초 만에 실시간으로 조회하세요."
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "PostSync",
+            "item": "https://www.postsyncapp.com/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "플레이스 순위 조회",
+            "item": "https://www.postsyncapp.com/place"
+          }
+        ]
+      },
+      {
         "@type": "SoftwareApplication",
-        "name": "PostSync 네이버 플레이스 실시간 순위 조회기",
+        "name": "PostSync 플레이스 순위 조회 무료 분석기",
         "operatingSystem": "All",
         "applicationCategory": "BusinessApplication",
         "offers": {
@@ -1800,9 +2038,9 @@
       <div class="hero-badge">
         <i class="fa-solid fa-arrows-rotate"></i> 네이버 스마트플레이스 공식 실측 순위 동기화 센터
       </div>
-      <h1 class="hero-title">우리 가게, 네이버 플레이스에서 제대로 보이고 있을까요?</h1>
+      <h1 class="hero-title">플레이스 순위 조회 · 네이버 플레이스 순위 확인 무료</h1>
       <p class="hero-subtitle">
-        키워드와 매장명을 입력하면 실시간 1위부터 20위까지의 <b>공식 노출 순위</b>와 1위 탈환을 위한 <b>플레이스싱크 AI 동기화 전략</b>을 1초 만에 무료로 진단합니다.
+        우리 매장은 오늘 몇 위일까? 키워드와 상호명을 입력하면 실시간 1위~20위 <b>플레이스 순위</b>와 1위 경쟁점 대비 <b>4대 핵심 지표 격차 진단 리포트</b>를 1초 만에 무료로 확인합니다.
       </p>
       
       <!-- Social Proof Indicators -->
@@ -1909,86 +2147,7 @@
       </div>
     </div>
 
-    <!-- 🔄 플레이스싱크 AI 1위 동기화 카드 (PlaceSync Strategy Card) -->
-    <div class="diagnosis-card" id="jevPrescriptionCard" style="display:none; margin-top: 20px; border: 2px solid #6366f1; background: linear-gradient(135deg, #ffffff 0%, #f8faff 100%);">
-      <div class="diag-header" style="border-bottom: 1px solid #e0e7ff; padding-bottom: 12px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;">
-        <div style="display:flex; align-items:center; gap: 8px; flex-wrap:wrap;">
-          <span style="background:#e0e7fe; color:#4338ca; font-size:11px; font-weight:800; padding:4px 11px; border-radius:20px; border:1px solid #c7d2fe; display:inline-flex; align-items:center; gap:5px;">
-            <i class="fa-solid fa-arrows-rotate"></i> 플레이스싱크 0.05초 AI 실시간 분석
-          </span>
-          <span id="diagIndustryPill" style="display:none; background:#ecfdf5; color:#065f46; font-size:11px; font-weight:800; padding:4px 11px; border-radius:20px; border:1px solid #a7f3d0; align-items:center; gap:4px;">
-            🎯 업종 감지
-          </span>
-          <span id="jevThreatPill" style="font-size:11px; font-weight:800; padding:4px 11px; border-radius:20px;">
-            상태 분석 중
-          </span>
-        </div>
-        <div style="text-align:right;">
-          <span style="font-size:11px; color:#64748b; font-weight:600; display:block;">플레이스 SEO 점수</span>
-          <strong id="jevScoreText" style="font-size:22px; font-weight:900; color:#4338ca;">0점</strong>
-          <span style="font-size:12px; color:#94a3b8;"> / 100점</span>
-        </div>
-      </div>
-
-      <div style="margin-top: 14px; display:flex; flex-direction:column; gap:12px;">
-        <!-- 순위 정체 원인 박스 -->
-        <div style="background:#fff1f2; border:1px solid #fecdd3; border-radius:12px; padding:12px 14px;">
-          <div style="display:flex; align-items:center; gap:6px; font-size:12px; font-weight:800; color:#be123c; margin-bottom:4px;">
-            <i class="fa-solid fa-triangle-exclamation"></i>
-            <span>1위 경쟁사 대비 순위 정체 핵심 원인</span>
-          </div>
-          <p id="jevCauseAnalysis" style="font-size:12.5px; color:#881337; line-height:1.55; margin:0; font-weight:500;">
-            -
-          </p>
-        </div>
-
-        <!-- 1위 탈환 1초 추천 소개글 카피 -->
-        <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:12px; padding:14px;">
-          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; gap:8px;">
-            <div style="display:flex; align-items:center; gap:6px; font-size:12px; font-weight:800; color:#15803d;">
-              <i class="fa-solid fa-wand-magic-sparkles"></i>
-              <span>💊 1위 탈환 추천 플레이스 소개글 첫 줄</span>
-            </div>
-            <button type="button" id="btnCopyIntro" onclick="copyJevIntroCopy()" style="background:#16a34a; color:#fff; font-size:11px; font-weight:800; border:none; border-radius:6px; padding:5px 11px; cursor:pointer; display:inline-flex; align-items:center; gap:4px; transition:all 0.2s; box-shadow:0 1px 3px rgba(0,0,0,0.1);">
-              <i class="fa-solid fa-copy"></i> <span>카피 1초 복사</span>
-            </button>
-          </div>
-          <div id="jevIntroCopy" style="background:#ffffff; border:1px solid #86efac; border-radius:8px; padding:10px 12px; font-size:13px; font-weight:700; color:#14532d; line-height:1.5;">
-            -
-          </div>
-          <span style="font-size:11px; color:#16a34a; display:block; margin-top:6px; font-weight:600;">
-            💡 2026 네이버 상호명 단속 대응: 관리자 ➔ [정보수정 ➔ 소개란 첫 문장]에 그대로 붙여넣으세요.
-          </span>
-        </div>
-
-        <!-- 1위 대비 5대 핵심 정량 격차 대시보드 (Gap Analysis) -->
-        <div class="gap-dashboard-box" id="jevGapDashboardBox" style="display:none;">
-          <div class="gap-header">
-            <div class="gap-title">
-              <i class="fa-solid fa-scale-balanced" style="color:#6366f1;"></i>
-              <span id="gapTop1Title">1위 매장 vs 우리 매장 5대 정량 격차 분석</span>
-            </div>
-            <span style="font-size:11px; font-weight:700; color:#4f46e5; background:#eef2ff; padding:2px 8px; border-radius:10px;">실시간 실측 데이터</span>
-          </div>
-          <div class="gap-grid" id="gapGrid">
-            <!-- Injected via JS -->
-          </div>
-        </div>
-
-        <!-- 3대 실무 행동 체크리스트 -->
-        <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:12px 14px;">
-          <div style="font-size:12px; font-weight:800; color:#1e293b; margin-bottom:8px; display:flex; align-items:center; gap:6px;">
-            <i class="fa-solid fa-list-check" style="color:#6366f1;"></i>
-            <span>플레이스싱크 권장: 1위 안착을 위한 3대 실전 액션플랜</span>
-          </div>
-          <div id="jevChecklist" style="display:flex; flex-direction:column; gap:6px;">
-            <!-- Injected via JS -->
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Ranking Table Card -->
+    <!-- 1️⃣ Ranking Table Card (Moved to Top Priority) -->
     <div class="ranking-card" id="rankingCard">
       <div class="ranking-header">
         <div class="ranking-title">
@@ -2020,98 +2179,112 @@
       </div>
     </div>
 
-    <!-- Teaser Card: 1st Place Secret Intelligence (PlaceSync 3 Key Indicators) -->
-    <div class="teaser-card" id="teaserCard">
-      <div class="teaser-badge"><i class="fa-solid fa-arrows-rotate"></i> 🔄 플레이스싱크 (PlaceSync) 정밀 분석</div>
-      <h3 class="teaser-title" id="teaserTitle">🥇 1위 매장이 순위를 독점하고 있는 3가지 핵심 지표 분석</h3>
-      <div class="teaser-grid">
-        <div class="teaser-item">
-          <span class="teaser-lbl">Page 1. 📊 최근 리뷰 급증 및 유입 요인</span>
-          <div class="teaser-blur">영수증 포토리뷰 급증 및 검색 키워드 집중 매칭 감지</div>
+    <!-- 2️⃣ 🌟 올인원 통합 진단 & 1위 탈환 솔루션 카드 (순위표 바로 아래 위치) -->
+    <section class="all-in-one-solution-card apply-section" id="applySection">
+      <div class="aio-header">
+        <div class="aio-badge">
+          <i class="fa-solid fa-crown" style="color:#fbbf24;"></i> 1위 탈환 실전 처방 & 리포트 발송
         </div>
-        <div class="teaser-item">
-          <span class="teaser-lbl">Page 2. 🔍 C-Rank 블로그 & 스마트블록 침투 지표</span>
-          <div class="teaser-blur">상위 1~5위 C-Rank 최적화 전문 원고 및 예약 연동 확인</div>
-        </div>
-        <div class="teaser-item">
-          <span class="teaser-lbl">Page 3. 🎯 우리 매장 1위 동기화 전략 (Action Plan)</span>
-          <div class="teaser-blur">이번 주 당장 실행해야 할 플레이스 쿠폰/예약/새소식 세팅 처방</div>
-        </div>
-      </div>
-      <div class="teaser-cta-row">
-        <a href="#applySection" class="btn-teaser-unlock" onclick="openApplySection(event)"><i class="fa-solid fa-arrows-rotate"></i> 우리 매장 1회 무료 전략 리포트 & 실전 액션플랜 신청하기</a>
-      </div>
-    </div>
-
-    <!-- Apply Section (PlaceSync Rank 1 Strategy Report) -->
-    <section class="apply-section" id="applySection">
-      <div class="apply-badge"><i class="fa-solid fa-arrows-rotate"></i> 플레이스싱크 1위 동기화 전략 리포트 & 실전 액션플랜</div>
-      <h2 class="apply-title">우리 매장도 플레이스싱크 1위 전략 리포트 & 실전 액션플랜을 받아보시겠습니까?</h2>
-      <p class="apply-desc">
-        1위 경쟁사의 리뷰 급증 원인, 블로그 침투 키워드, 그리고 이번 주 우리 매장이 당장 실행해야 할 상위노출 처방전이 담긴 <b>실전 전략 리포트 1회를 무료</b>로 이메일 발송해 드립니다.
-      </p>
-      <form class="apply-form" id="placeApplyForm" onsubmit="handleApply(event)">
-        <div class="apply-field">
-          <label for="applyStoreName"><i class="fa-solid fa-store"></i> 내 매장 상호명</label>
-          <input type="text" id="applyStoreName" class="apply-input" placeholder="예: 법무법인 로앤심, 마디쌩쌩 신경외과" required>
-        </div>
-        <div class="apply-field">
-          <label for="applyKeyword"><i class="fa-solid fa-magnifying-glass"></i> 분석 희망 키워드</label>
-          <input type="text" id="applyKeyword" class="apply-input" placeholder="예: 문정동 변호사, 동탄 신경외과">
-        </div>
-        <div class="apply-field">
-          <label for="applyEmail"><i class="fa-solid fa-envelope"></i> 1회 무료 진단서 받아볼 이메일 (필수 *)</label>
-          <input type="email" id="applyEmail" class="apply-input" placeholder="name@example.com" required>
-        </div>
-        <div class="apply-field">
-          <label for="applyPhone" id="applyPhoneLabel"><i class="fa-solid fa-phone"></i> 대표 연락처 <span id="phoneReqBadge" style="color:#2563eb; font-weight:800; font-size:11px;">(카톡 알림용, 필수 *)</span></label>
-          <input type="tel" id="applyPhone" class="apply-input" placeholder="010-0000-0000" pattern="[0-9]{3}-?[0-9]{3,4}-?[0-9]{4}" required>
-          <span id="phoneHelpText" style="font-size:11.5px; color:#64748b; margin-top:4px; display:block;">
-            * 매일 아침 카톡 순위 알림 수신을 위해 휴대폰 번호를 입력해주세요.
-          </span>
-        </div>
-
-        <!-- 💬 카톡 매일 아침 순위 변동 알림 옵트인 (7일 무료 체험) -->
-        <div class="apply-kakao-optin">
-          <label class="kakao-check-label">
-            <input type="checkbox" id="applyKakaoOptIn" checked onchange="toggleKakaoPhoneRequired(this.checked)">
-            <div class="kakao-check-text">
-              <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
-                <strong>💬 매일 아침 카톡으로 순위 변동 자동 알림 받기</strong>
-                <span style="background:#e0e7fe; color:#4338ca; font-size:11px; font-weight:800; padding:2px 8px; border-radius:10px;">첫 7일 무료 체험</span>
-              </div>
-              <span class="kakao-check-sub">매일 아침 9시 내 매장 순위 변동 카톡 알림 발송 (7일 무료 체험 후 월 9,900원 정기 구독 옵션)</span>
-            </div>
-          </label>
-        </div>
-
-        <button type="submit" class="btn-apply-submit" id="btnApplySubmit">
-          <i class="fa-solid fa-paper-plane"></i> <span>🔄 1회 무료 전략 리포트 & 실전 액션플랜 받기</span>
-        </button>
-      </form>
-      <div class="apply-guarantee" id="applyGuarantee">
-        <span>🔒 100% 무료 1회 진단 (스팸 발송 없음)</span>
-        <span>⚡ 신청 후 전문 분석 리포트 순차 전송</span>
-        <span>⭐ 네이버 스마트플레이스 1위 동기화 솔루션</span>
-      </div>
-      <!-- 접수 완료 안내 박스 -->
-      <div id="applySuccessBox" style="display:none; background:#f0fdf4; border:2px solid #86efac; border-radius:12px; padding:24px; text-align:center; margin-top:20px;">
-        <div style="font-size:36px; margin-bottom:8px;">🎉</div>
-        <h3 id="applySuccessTitle" style="font-size:18px; font-weight:900; color:#15803d; margin-bottom:6px;">플레이스싱크 1위 전략 리포트 접수 완료!</h3>
-        <p style="font-size:13.5px; color:#166534; line-height:1.6; margin-bottom:12px;">
-          입력하신 이메일(<b id="applySuccessEmail"></b>)로 전략 리포트와 실전 액션플랜이 순차 발송됩니다.<br>
-          (담당 분석팀에 실시간 알림이 안전하게 접수되었습니다.)
+        <h2 class="aio-title">1위 경쟁점 대비 정량 격차 분석 & 긴급 처방</h2>
+        <p class="aio-subtitle">
+          실시간 1위 매장과의 4대 핵심 격차를 확인하고, 1위 탈환 전략 리포트와 매일 아침 카톡 순위 알림을 한곳에서 신청하세요.
         </p>
-        <div style="display:inline-flex; align-items:center; gap:6px; background:#dcfce7; color:#15803d; font-size:12px; font-weight:700; padding:6px 14px; border-radius:20px; margin-bottom:14px;">
-          <i class="fa-solid fa-check-circle"></i> 접수 정상 완료 (DB 영구 보존)
+      </div>
+
+      <!-- 파트 A: 1위 대비 4대 핵심 정량 격차 대시보드 (Gap Analysis) -->
+      <div class="aio-gap-box" id="jevGapDashboardBox" style="display:none;">
+        <div class="gap-header">
+          <div class="gap-title">
+            <i class="fa-solid fa-scale-balanced" style="color:#2563eb;"></i>
+            <span id="gapTop1Title">🥇 1위 매장 vs 우리 매장 4대 정량 격차 분석</span>
+          </div>
+          <span style="font-size:11px; font-weight:700; color:#0369a1; background:#e0f2fe; padding:3px 10px; border-radius:12px; border:1px solid #bae6fd;">실시간 실측 데이터</span>
         </div>
-        <div id="applyKakaoActionWrap" style="margin-top:10px; padding-top:14px; border-top:1px dashed #86efac;">
-          <p style="font-size:12.5px; color:#166534; font-weight:700; margin-bottom:10px;">
-            ⚡ 마지막 1초: 카카오톡 공식 채널을 추가해 두시면 리포트 도착 알림과 순위 변동을 받아보실 수 있습니다.
+        <div class="gap-grid" id="gapGrid">
+          <!-- Injected via JS -->
+        </div>
+      </div>
+
+      <!-- 파트 B: 무료 심층 전략 리포트 & 카톡 순위 알림 통합 신청 폼 -->
+      <div class="aio-form-section">
+        <h3 class="aio-form-title">
+          <i class="fa-solid fa-file-invoice" style="color:#2563eb;"></i>
+          <span>우리 매장 맞춤 1위 탈환 심층 전략 리포트 신청</span>
+        </h3>
+        <p class="aio-form-desc">
+          1위 경쟁사의 리뷰 급증 원인, C-Rank 블로그 침투 키워드, 그리고 이번 주 우리 매장이 당장 실행해야 할 상위노출 처방전이 담긴 <b>실전 전략 리포트 1회를 무료</b>로 이메일 발송해 드립니다.
+        </p>
+
+        <form class="apply-form" id="placeApplyForm" onsubmit="handleApply(event)">
+          <div class="aio-form-grid">
+            <div class="aio-field">
+              <label for="applyStoreName"><i class="fa-solid fa-store" style="color:#2563eb;"></i> 내 매장 상호명</label>
+              <input type="text" id="applyStoreName" placeholder="예: 법무법인 로앤심, 마디쌩쌩 신경외과" required>
+            </div>
+            <div class="aio-field">
+              <label for="applyKeyword"><i class="fa-solid fa-magnifying-glass" style="color:#2563eb;"></i> 분석 희망 키워드</label>
+              <input type="text" id="applyKeyword" placeholder="예: 문정동 변호사, 동탄 신경외과">
+            </div>
+            <div class="aio-field">
+              <label for="applyEmail"><i class="fa-solid fa-envelope" style="color:#2563eb;"></i> 무료 진단서 받아볼 이메일 (필수 *)</label>
+              <input type="email" id="applyEmail" placeholder="name@example.com" required>
+            </div>
+            <div class="aio-field">
+              <label for="applyPhone" id="applyPhoneLabel"><i class="fa-solid fa-phone" style="color:#2563eb;"></i> 대표 연락처 <span id="phoneReqBadge" style="color:#2563eb; font-weight:800; font-size:11px;">(카톡 알림용, 필수 *)</span></label>
+              <input type="tel" id="applyPhone" placeholder="010-0000-0000" pattern="[0-9]{3}-?[0-9]{3,4}-?[0-9]{4}" required>
+            </div>
+          </div>
+
+          <!-- 💬 카톡 매일 아침 순위 변동 알림 옵트인 (7일 무료 체험) -->
+          <div class="apply-kakao-optin" style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:12px 14px; margin-bottom:16px;">
+            <label class="kakao-check-label" style="display:flex; align-items:flex-start; gap:10px; cursor:pointer;">
+              <input type="checkbox" id="applyKakaoOptIn" checked onchange="toggleKakaoPhoneRequired(this.checked)" style="margin-top:3px; accent-color:#2563eb; width:16px; height:16px;">
+              <div class="kakao-check-text">
+                <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                  <strong style="color:var(--slate-800); font-size:13.5px;">💬 매일 아침 카톡으로 순위 변동 자동 알림 받기</strong>
+                  <span style="background:#e0e7fe; color:#2563eb; font-size:11px; font-weight:800; padding:2px 8px; border-radius:10px;">첫 7일 무료 체험</span>
+                </div>
+                <span class="kakao-check-sub" style="color:var(--slate-500); font-size:12px; display:block; margin-top:2px;">매일 아침 9시 내 매장 순위 변동 카톡 알림 발송 (7일 무료 체험 후 월 9,900원 정기 구독 옵션)</span>
+              </div>
+            </label>
+          </div>
+
+          <button type="submit" class="aio-btn-submit" id="btnApplySubmit">
+            <i class="fa-solid fa-paper-plane"></i> <span>🚀 1회 무료 전략 리포트 & 카톡 알림 신청하기</span>
+          </button>
+        </form>
+
+        <div class="apply-guarantee" id="applyGuarantee" style="margin-top:14px; color:var(--slate-500); font-size:12px; display:flex; gap:16px; flex-wrap:wrap;">
+          <span>🔒 100% 무료 1회 진단 (스팸 발송 없음)</span>
+          <span>⚡ 신청 후 전문 분석 리포트 순차 전송</span>
+          <span>⭐ 네이버 스마트플레이스 1위 동기화 솔루션</span>
+        </div>
+
+        <!-- 접수 완료 안내 박스 -->
+        <div id="applySuccessBox" style="display:none; background:#f0fdf4; border:1.5px solid #86efac; border-radius:12px; padding:24px; text-align:center; margin-top:20px;">
+          <div style="font-size:36px; margin-bottom:8px;">🎉</div>
+          <h3 id="applySuccessTitle" style="font-size:18px; font-weight:900; color:#15803d; margin-bottom:6px;">플레이스싱크 1위 전략 리포트 접수 완료!</h3>
+          <p style="font-size:13.5px; color:#166534; line-height:1.6; margin-bottom:12px;">
+            입력하신 이메일(<b id="applySuccessEmail" style="color:#15803d;"></b>)로 전략 리포트와 실전 액션플랜이 순차 발송됩니다.<br>
+            (담당 분석팀에 실시간 알림이 안전하게 접수되었습니다.)
           </p>
-          <a href="https://pf.kakao.com/_xonxiaX" target="_blank" rel="noopener noreferrer" style="display:inline-flex; align-items:center; gap:8px; background:#fee500; color:#191919; font-size:13px; font-weight:800; padding:11px 22px; border-radius:10px; text-decoration:none; box-shadow:0 2px 8px rgba(0,0,0,0.1); transition:transform 0.15s;">
-            <i class="fa-solid fa-comment"></i> 💬 [플레이스싱크] 카카오톡 공식 채널로 매일 아침 9시 실시간 순위 변동 알림 연동 <i class="fa-solid fa-arrow-right"></i>
-          </a>
+          <div style="display:inline-flex; align-items:center; gap:6px; background:#dcfce7; color:#15803d; font-size:12px; font-weight:700; padding:6px 14px; border-radius:20px; margin-bottom:14px;">
+            <i class="fa-solid fa-check-circle"></i> 접수 정상 완료 (DB 영구 보존 &amp; 이메일 발송)
+          </div>
+          <!-- 📊 발급된 1위 실측 진단서 바로 열기 버튼 -->
+          <div id="applySuccessReportWrap" style="margin: 10px 0 16px 0;">
+            <a id="applySuccessReportLink" href="/report/place-audit.html" target="_blank" rel="noopener noreferrer" style="display:inline-flex; align-items:center; gap:8px; background:#2563eb; color:#ffffff; font-size:14px; font-weight:800; padding:12px 24px; border-radius:30px; text-decoration:none; box-shadow:0 4px 14px rgba(37,99,235,0.35); transition:transform 0.15s;">
+              <i class="fa-solid fa-file-invoice"></i> <span>📊 [발급 완료] 내 매장 1위 격차 실측 진단서 열기</span> &rarr;
+            </a>
+          </div>
+          <div id="applyKakaoActionWrap" style="margin-top:10px; padding-top:14px; border-top:1px dashed #86efac;">
+            <p style="font-size:12.5px; color:#166534; font-weight:700; margin-bottom:10px;">
+              ⚡ 마지막 1초: 카카오톡 공식 채널을 추가해 두시면 리포트 도착 알림과 순위 변동을 받아보실 수 있습니다.
+            </p>
+            <a href="https://pf.kakao.com/_xonxiaX" target="_blank" rel="noopener noreferrer" style="display:inline-flex; align-items:center; gap:8px; background:#fee500; color:#191919; font-size:13px; font-weight:800; padding:11px 22px; border-radius:10px; text-decoration:none; box-shadow:0 2px 8px rgba(0,0,0,0.1); transition:transform 0.15s;">
+              <i class="fa-solid fa-comment"></i> 💬 [플레이스싱크] 카카오톡 공식 채널로 매일 아침 9시 실시간 순위 변동 알림 연동 <i class="fa-solid fa-arrow-right"></i>
+            </a>
+          </div>
         </div>
       </div>
     </section>
@@ -2465,14 +2638,10 @@
         if (topDualGrid) topDualGrid.style.display = 'none';
         diagnosisCard.style.display = 'none';
         rankingCard.style.display = 'none';
-        const jevCardEl = document.getElementById('jevPrescriptionCard');
-        if (jevCardEl) jevCardEl.style.display = 'none';
         const gapBoxEl = document.getElementById('jevGapDashboardBox');
         if (gapBoxEl) gapBoxEl.style.display = 'none';
         const powerCardEl = document.getElementById('keywordPowerCard');
         if (powerCardEl) powerCardEl.style.display = 'none';
-        const teaserCardEl = document.getElementById('teaserCard');
-        if (teaserCardEl) teaserCardEl.style.display = 'none';
         const applySecEl = document.getElementById('applySection');
         if (applySecEl) applySecEl.style.display = 'none';
 
@@ -2632,103 +2801,82 @@
           }
         }
 
-        // 3. Render 플레이스싱크 AI Strategy Card & 4-Metric Gap Dashboard
-        const jevCard = document.getElementById('jevPrescriptionCard');
-        if (data.jevDiagnosis && data.target) {
-          const diag = data.jevDiagnosis;
-          const threatPill = document.getElementById('jevThreatPill');
-          const scoreText = document.getElementById('jevScoreText');
-          const causeEl = document.getElementById('jevCauseAnalysis');
-          const introEl = document.getElementById('jevIntroCopy');
-          const checklistEl = document.getElementById('jevChecklist');
-          const indPill = document.getElementById('diagIndustryPill');
+        // 3. Render 1위 대비 4대 정량 격차 대시보드 & 1위 탈환 소개글 원포인트 카피 (올인원 카드)
+        const gapBox = document.getElementById('jevGapDashboardBox');
+        const gapGrid = document.getElementById('gapGrid');
+        const gapTitle = document.getElementById('gapTop1Title');
 
-          if (indPill) {
-            if (diag.industryName) {
-              indPill.textContent = `🎯 ${diag.industryName} 맞춤 처방`;
-              indPill.style.display = 'inline-flex';
-            } else {
-              indPill.style.display = 'none';
-            }
-          }
+        if (gapBox && data.gapAnalysis && data.gapAnalysis.metrics) {
+          const g = data.gapAnalysis;
+          if (gapTitle) gapTitle.textContent = `🥇 1위 [${escapeHtml(g.top1Name)}] vs 우리 매장 4대 정량 격차 분석`;
 
-          if (threatPill) {
-            if (diag.threatLevel === 'SAFE') {
-              threatPill.style.background = '#dcfce7';
-              threatPill.style.color = '#15803d';
-              threatPill.textContent = '🏆 1위 방어 모드';
-            } else if (diag.threatLevel === 'WARN') {
-              threatPill.style.background = '#fef3c7';
-              threatPill.style.color = '#b45309';
-              threatPill.textContent = '⚡ 1위 탈환 가시권';
-            } else {
-              threatPill.style.background = '#ffe4e6';
-              threatPill.style.color = '#be123c';
-              threatPill.textContent = '🚨 순위 정체 긴급 처방';
-            }
-          }
+          const m = g.metrics;
+          gapGrid.innerHTML = `
+            <div class="gap-item ${m.visitorReviews.status === 'DEFICIT' ? 'deficit' : 'optimal'}">
+              <div class="gap-item-lbl">✍️ 방문자 리뷰</div>
+              <div class="gap-item-vals">1위: <b>${escapeHtml(m.visitorReviews.top1)}</b><br>내 매장: <b>${escapeHtml(m.visitorReviews.my)}</b></div>
+              <span class="gap-item-diff ${m.visitorReviews.status === 'DEFICIT' ? 'diff-deficit' : 'diff-optimal'}">
+                ${m.visitorReviews.status === 'DEFICIT' ? `-${m.visitorReviews.diff.toLocaleString()}개 부족` : '동급 이상'}
+              </span>
+            </div>
+            <div class="gap-item ${m.blogReviews.status === 'DEFICIT' ? 'deficit' : 'optimal'}">
+              <div class="gap-item-lbl">📝 블로그 리뷰</div>
+              <div class="gap-item-vals">1위: <b>${escapeHtml(m.blogReviews.top1)}</b><br>내 매장: <b>${escapeHtml(m.blogReviews.my)}</b></div>
+              <span class="gap-item-diff ${m.blogReviews.status === 'DEFICIT' ? 'diff-deficit' : 'diff-optimal'}">
+                ${m.blogReviews.status === 'DEFICIT' ? `-${m.blogReviews.diff.toLocaleString()}개 부족` : '동급 이상'}
+              </span>
+            </div>
+            <div class="gap-item ${m.booking.status === 'MISSING' ? 'deficit' : 'optimal'}">
+              <div class="gap-item-lbl">📅 네이버 예약</div>
+              <div class="gap-item-vals">1위: <b>${m.booking.top1 ? '연동' : '미연동'}</b><br>내 매장: <b>${m.booking.my ? '연동' : '미연동'}</b></div>
+              <span class="gap-item-diff ${m.booking.status === 'MISSING' ? 'diff-deficit' : 'diff-optimal'}">
+                ${m.booking.status === 'MISSING' ? '⚠️ 즉시 연동 권장' : (m.booking.my ? '정상 연동' : '경쟁사 동일')}
+              </span>
+            </div>
+            <div class="gap-item ${m.coupon.status === 'MISSING' ? 'deficit' : 'optimal'}">
+              <div class="gap-item-lbl">🎟️ 플레이스 쿠폰</div>
+              <div class="gap-item-vals">1위: <b>${m.coupon.top1 ? '발행' : '미발행'}</b><br>내 매장: <b>${m.coupon.my ? '발행' : '미발행'}</b></div>
+              <span class="gap-item-diff ${m.coupon.status === 'MISSING' ? 'diff-deficit' : 'diff-optimal'}">
+                ${m.coupon.status === 'MISSING' ? '⚠️ 쿠폰 등록 권장' : (m.coupon.my ? '정상 발행' : '경쟁사 동일')}
+              </span>
+            </div>
+          `;
+          gapBox.style.display = 'block';
+        } else if (gapBox) {
+          gapBox.style.display = 'none';
+        }
 
-          if (scoreText) scoreText.textContent = `${diag.score}점`;
-          if (causeEl) causeEl.textContent = diag.causeAnalysis;
-          if (introEl) introEl.textContent = diag.recommendedIntroCopy;
+        // 🌟 [Place Report Engine] 실측 진단 스냅샷 캐싱 (상위 1~3위 갭 매트릭스 포함)
+        try {
+          const top3List = (data.rankingList || []).slice(0, 3).map((item, idx) => ({
+            name: item.name || `${idx + 1}위 매장`,
+            rank: idx + 1,
+            visitorReviews: parseInt(String(item.visitorReviews || item.reviews || '0').replace(/[^0-9]/g, '')) || 0,
+            blogReviews: parseInt(String(item.blogReviews || '0').replace(/[^0-9]/g, '')) || 0,
+            hasBooking: !!item.hasBooking,
+            hasCoupon: !!item.hasCoupon,
+            saves: item.saves || '10,000+'
+          }));
 
-          // Render 4-Metric Gap Dashboard
-          const gapBox = document.getElementById('jevGapDashboardBox');
-          const gapGrid = document.getElementById('gapGrid');
-          const gapTitle = document.getElementById('gapTop1Title');
-
-          if (gapBox && data.gapAnalysis && data.gapAnalysis.metrics) {
-            const g = data.gapAnalysis;
-            if (gapTitle) gapTitle.textContent = `🥇 1위 [${escapeHtml(g.top1Name)}] vs 우리 매장 4대 정량 격차 분석`;
-
-            const m = g.metrics;
-            gapGrid.innerHTML = `
-              <div class="gap-item ${m.visitorReviews.status === 'DEFICIT' ? 'deficit' : 'optimal'}">
-                <div class="gap-item-lbl">✍️ 방문자 리뷰</div>
-                <div class="gap-item-vals">1위: <b>${escapeHtml(m.visitorReviews.top1)}</b><br>내 매장: <b>${escapeHtml(m.visitorReviews.my)}</b></div>
-                <span class="gap-item-diff ${m.visitorReviews.status === 'DEFICIT' ? 'diff-deficit' : 'diff-optimal'}">
-                  ${m.visitorReviews.status === 'DEFICIT' ? `-${m.visitorReviews.diff.toLocaleString()}개 부족` : '동급 이상'}
-                </span>
-              </div>
-              <div class="gap-item ${m.blogReviews.status === 'DEFICIT' ? 'deficit' : 'optimal'}">
-                <div class="gap-item-lbl">📝 블로그 리뷰</div>
-                <div class="gap-item-vals">1위: <b>${escapeHtml(m.blogReviews.top1)}</b><br>내 매장: <b>${escapeHtml(m.blogReviews.my)}</b></div>
-                <span class="gap-item-diff ${m.blogReviews.status === 'DEFICIT' ? 'diff-deficit' : 'diff-optimal'}">
-                  ${m.blogReviews.status === 'DEFICIT' ? `-${m.blogReviews.diff.toLocaleString()}개 부족` : '동급 이상'}
-                </span>
-              </div>
-              <div class="gap-item ${m.booking.status === 'MISSING' ? 'deficit' : 'optimal'}">
-                <div class="gap-item-lbl">📅 네이버 예약</div>
-                <div class="gap-item-vals">1위: <b>${m.booking.top1 ? '연동' : '미연동'}</b><br>내 매장: <b>${m.booking.my ? '연동' : '미연동'}</b></div>
-                <span class="gap-item-diff ${m.booking.status === 'MISSING' ? 'diff-deficit' : 'diff-optimal'}">
-                  ${m.booking.status === 'MISSING' ? '⚠️ 즉시 연동 권장' : (m.booking.my ? '정상 연동' : '경쟁사 동일')}
-                </span>
-              </div>
-              <div class="gap-item ${m.coupon.status === 'MISSING' ? 'deficit' : 'optimal'}">
-                <div class="gap-item-lbl">🎟️ 플레이스 쿠폰</div>
-                <div class="gap-item-vals">1위: <b>${m.coupon.top1 ? '발행' : '미발행'}</b><br>내 매장: <b>${m.coupon.my ? '발행' : '미발행'}</b></div>
-                <span class="gap-item-diff ${m.coupon.status === 'MISSING' ? 'diff-deficit' : 'diff-optimal'}">
-                  ${m.coupon.status === 'MISSING' ? '⚠️ 쿠폰 등록 권장' : (m.coupon.my ? '정상 발행' : '경쟁사 동일')}
-                </span>
-              </div>
-            `;
-            gapBox.style.display = 'block';
-          } else if (gapBox) {
-            gapBox.style.display = 'none';
-          }
-
-          if (checklistEl && Array.isArray(diag.actionChecklist)) {
-            checklistEl.innerHTML = diag.actionChecklist.map((item, idx) => `
-              <div style="display:flex; align-items:flex-start; gap:8px; font-size:12px; color:#334155; line-height:1.4;">
-                <span style="background:#6366f1; color:#fff; border-radius:50%; width:16px; height:16px; font-size:10px; font-weight:700; display:inline-flex; align-items:center; justify-content:center; shrink-0; margin-top:1px;">${idx + 1}</span>
-                <span>${escapeHtml(item)}</span>
-              </div>
-            `).join('');
-          }
-
-          if (jevCard) jevCard.style.display = 'block';
-        } else if (jevCard) {
-          jevCard.style.display = 'none';
+          window.__LAST_PLACE_SNAPSHOT = {
+            storeName: data.target || (data.myPlace ? data.myPlace.name : ''),
+            targetKeyword: data.query || '',
+            myRank: data.myPlace ? data.myPlace.rank : 2,
+            top1Name: data.gapAnalysis ? data.gapAnalysis.top1Name : (data.rankingList && data.rankingList[0] ? data.rankingList[0].name : '1위 매장'),
+            myReviews: data.myPlace ? parseInt(String(data.myPlace.visitorReviews || '0').replace(/[^0-9]/g, '')) || 0 : 0,
+            top1Reviews: data.gapAnalysis?.metrics?.visitorReviews ? parseInt(String(data.gapAnalysis.metrics.visitorReviews.top1 || '0').replace(/[^0-9]/g, '')) || 0 : 0,
+            myBlogReviews: data.myPlace ? parseInt(String(data.myPlace.blogReviews || '0').replace(/[^0-9]/g, '')) || 0 : 0,
+            top1BlogReviews: data.gapAnalysis?.metrics?.blogReviews ? parseInt(String(data.gapAnalysis.metrics.blogReviews.top1 || '0').replace(/[^0-9]/g, '')) || 0 : 0,
+            myBooking: data.myPlace ? !!data.myPlace.hasBooking : false,
+            top1Booking: data.gapAnalysis?.metrics?.booking ? !!data.gapAnalysis.metrics.booking.top1 : true,
+            myCoupon: data.myPlace ? !!data.myPlace.hasCoupon : false,
+            top1Coupon: data.gapAnalysis?.metrics?.coupon ? !!data.gapAnalysis.metrics.coupon.top1 : true,
+            mySaves: data.myPlace?.saves || '1,000+',
+            top1Saves: data.rankingList && data.rankingList[0] ? (data.rankingList[0].saves || '50,000+') : '50,000+',
+            top3Places: top3List
+          };
+        } catch (snapErr) {
+          console.warn('[Place Snapshot Cache Warning]:', snapErr);
         }
 
         // 4. Render Table (Clean 5-Metric Columns)
@@ -2769,18 +2917,10 @@
           `;
         }).join('');
 
-        // 5. Show & Auto-fill Teaser Card & Apply Section
-        const teaserCard = document.getElementById('teaserCard');
-        const teaserTitle = document.getElementById('teaserTitle');
+        // 5. Show & Auto-fill All-in-One Solution Box (applySection)
         const applySection = document.getElementById('applySection');
         const applyStoreName = document.getElementById('applyStoreName');
         const applyKeyword = document.getElementById('applyKeyword');
-
-        if (data.rankingList && data.rankingList.length > 0) {
-          const top1 = data.rankingList[0];
-          teaserTitle.innerHTML = `🥇 1위 <b>[${escapeHtml(top1.name)}]</b> 매장이 순위를 독점하고 있는 핵심 비결`;
-          teaserCard.style.display = 'block';
-        }
 
         if (applySection) {
           applySection.style.display = 'block';
@@ -2923,9 +3063,10 @@
         }
 
         btn.disabled = true;
-        btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> <span>신청 접수 중...</span>';
+        btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> <span>리포트 생성 및 접수 중...</span>';
 
         try {
+          const snap = window.__LAST_PLACE_SNAPSHOT || {};
           const res = await fetch('/api/leads', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -2934,18 +3075,32 @@
               phone: phone || undefined,
               leadType: 'lead_magnet',
               sourceTool: 'place',
+              toolSource: 'place',
               rewardName: '플레이스싱크 1회 무료 전략 리포트 & 실전 액션플랜',
               details: {
                 store_name: storeName,
                 target_keyword: keyword,
-                kakao_alert_opt_in: !!kakaoOptIn
+                kakao_alert_opt_in: !!kakaoOptIn,
+                myRank: snap.myRank || 2,
+                top1Name: snap.top1Name || '1위 매장',
+                myReviews: snap.myReviews || 0,
+                top1Reviews: snap.top1Reviews || 0,
+                myBlogReviews: snap.myBlogReviews || 0,
+                top1BlogReviews: snap.top1BlogReviews || 0,
+                myBooking: snap.myBooking ?? false,
+                top1Booking: snap.top1Booking ?? true,
+                myCoupon: snap.myCoupon ?? true,
+                top1Coupon: snap.top1Coupon ?? true,
+                mySaves: snap.mySaves || '1,000+',
+                top1Saves: snap.top1Saves || '50,000+',
+                top3Places: snap.top3Places || []
               }
             })
           });
 
           const data = await res.json();
           if (data.ok || data.success) {
-            showToast('🎉 플레이스싱크 전략 리포트 신청이 정상 접수되었습니다!');
+            showToast('🎉 플레이스 1위 격차 실측 진단서가 발급되었습니다!');
             
             // Switch form to success card
             const formEl = document.getElementById('placeApplyForm');
@@ -2953,11 +3108,18 @@
             const successBox = document.getElementById('applySuccessBox');
             const successStoreTitle = document.getElementById('applySuccessTitle') || document.getElementById('successStoreTitle');
             const successTargetEmail = document.getElementById('applySuccessEmail') || document.getElementById('successTargetEmail');
+            const reportBtn = document.getElementById('applySuccessReportLink');
 
             if (formEl) formEl.style.display = 'none';
             if (guaranteeEl) guaranteeEl.style.display = 'none';
-            if (successStoreTitle) successStoreTitle.textContent = `🎉 [${storeName}] 플레이스싱크 전략 리포트 접수 완료!`;
+            if (successStoreTitle) successStoreTitle.textContent = `🎉 [${storeName}] 1위 격차 실측 진단서 발급 완료!`;
             if (successTargetEmail) successTargetEmail.textContent = email;
+
+            if (reportBtn && data.reportUrl) {
+              reportBtn.href = data.reportUrl;
+              reportBtn.innerHTML = `<i class="fa-solid fa-file-invoice"></i> <span>📊 [${storeName}] 1위 격차 실측 진단서 열기</span> &rarr;`;
+            }
+
             if (successBox) {
               successBox.style.display = 'block';
               successBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
