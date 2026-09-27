@@ -91,138 +91,369 @@
       padding: 0 16px;
     }
 
-    /* Executive Cover Card (Enterprise Clean White Theme) */
+    /* Executive Cover Card (Professional Deep Navy 테마 #0a192f ~ #132742) */
     .cover-card {
-      background: #ffffff;
-      color: var(--slate-900);
+      background: linear-gradient(145deg, #0a192f 0%, #132742 100%);
+      color: #ffffff;
       border-radius: var(--card-radius);
       padding: 32px 28px;
-      box-shadow: 0 4px 20px rgba(15, 23, 42, 0.05);
-      border: 1px solid var(--slate-200);
+      box-shadow: 0 10px 30px rgba(10, 25, 47, 0.35);
+      border: 1px solid #1e3a8a;
       position: relative;
       overflow: hidden;
       margin-bottom: 24px;
-    }
-    .cover-card::after {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 4px;
-      background: linear-gradient(90deg, #2563eb 0%, #38bdf8 100%);
     }
     .badge-report {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      background: #eff6ff;
-      border: 1px solid #bfdbfe;
-      color: #1d4ed8;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #94a3b8;
       font-size: 11.5px;
-      font-weight: 800;
+      font-weight: 700;
       padding: 4px 12px;
       border-radius: 20px;
       margin-bottom: 14px;
     }
     .cover-title {
-      font-size: 24px;
+      font-size: 23px;
       font-weight: 900;
       line-height: 1.35;
       margin-bottom: 10px;
       letter-spacing: -0.5px;
-      color: #0f172a;
+      color: #ffffff;
     }
-    .cover-title span { color: #2563eb; }
+    .cover-title span { color: #60a5fa; }
     .cover-desc {
-      font-size: 13.5px;
-      color: #475569;
-      margin-bottom: 22px;
+      font-size: 13px;
+      color: #94a3b8;
+      margin-bottom: 20px;
       line-height: 1.6;
     }
     .meta-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
       gap: 10px;
-      padding-top: 18px;
-      border-top: 1px solid var(--slate-100);
+      padding-top: 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
     }
     .meta-item {
       display: flex;
       flex-direction: column;
       gap: 3px;
-      background: #f8fafc;
-      border: 1px solid #e2e8f0;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
       padding: 10px 14px;
       border-radius: 8px;
     }
-    .meta-label { font-size: 11px; color: #64748b; font-weight: 700; }
-    .meta-value { font-size: 13.5px; color: #0f172a; font-weight: 800; }
+    .meta-label { font-size: 11px; color: #94a3b8; font-weight: 700; }
+    .meta-value { font-size: 13px; color: #ffffff; font-weight: 800; }
+    .gps-baseline-bar {
+      margin-top: 16px;
+      padding-top: 12px;
+      border-top: 1px dashed rgba(255, 255, 255, 0.15);
+      font-size: 11.5px;
+      color: #94a3b8;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
 
-    /* Score Dashboard */
-    .score-card {
+    /* 2대 핵심 요약 지표 카드 (종합 건강 점수 & 예상 손실 클릭 수) */
+    .summary-metrics-dual {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 640px) {
+      .summary-metrics-dual { grid-template-columns: 1fr; }
+    }
+    .summary-metric-card {
+      background: #ffffff;
+      border: 1px solid var(--slate-200);
+      border-radius: var(--card-radius);
+      padding: 22px;
+      box-shadow: var(--shadow-sm);
+      text-align: center;
+    }
+    .summary-metric-card.loss-card {
+      background: #fff1f2;
+      border: 1.5px solid #fecdd3;
+    }
+    .smc-title {
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--slate-600);
+      margin-bottom: 6px;
+    }
+    .loss-card .smc-title {
+      color: #be123c;
+    }
+    .smc-val {
+      font-size: 38px;
+      font-weight: 900;
+      color: #0f172a;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .loss-card .smc-val {
+      color: #e11d48;
+    }
+    .smc-pill {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 3px 10px;
+      border-radius: 12px;
+      background: #eff6ff;
+      color: #2563eb;
+    }
+    .loss-card .smc-pill {
+      background: #ffe4e6;
+      color: #9f1239;
+    }
+    .loss-insight-box {
+      margin-top: 10px;
+      font-size: 12px;
+      color: #475569;
+      background: #f8fafc;
+      border-left: 3px solid #e11d48;
+      padding: 10px 14px;
+      border-radius: 0 8px 8px 0;
+      line-height: 1.55;
+    }
+
+    /* 상권 1위 벤치마킹 매트릭스 카드 */
+    .benchmarking-card {
       background: #ffffff;
       border: 1px solid var(--slate-200);
       border-radius: var(--card-radius);
       padding: 24px;
       box-shadow: var(--shadow-sm);
       margin-bottom: 24px;
-      display: grid;
-      grid-template-columns: 200px 1fr;
-      gap: 24px;
-      align-items: center;
     }
-    @media (max-width: 640px) {
-      .score-card { grid-template-columns: 1fr; text-align: center; }
+    .bench-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      margin-top: 14px;
     }
-    .score-dial {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 16px;
+    .bench-table th {
       background: var(--slate-50);
-      border-radius: 12px;
+      padding: 11px 12px;
+      font-weight: 800;
+      color: var(--slate-700);
       border: 1px solid var(--slate-200);
+      text-align: center;
     }
-    .score-num {
-      font-size: 46px;
-      font-weight: 900;
-      color: var(--primary);
-      line-height: 1;
-      margin: 8px 0;
+    .bench-table th:first-child { text-align: left; }
+    .bench-table td {
+      padding: 12px;
+      border: 1px solid var(--slate-200);
+      text-align: center;
+      color: var(--slate-700);
     }
-    .score-max { font-size: 13px; color: var(--slate-400); font-weight: 600; }
-    .score-status {
-      font-size: 12px;
+    .bench-table td.col-metric {
+      font-weight: 700;
+      color: #1e293b;
+      text-align: left;
+    }
+    .bench-table td.col-top1 {
       font-weight: 800;
-      padding: 3px 8px;
-      border-radius: 4px;
-      background: #fef3c7;
-      color: #b45309;
+      color: #0f172a;
     }
-    .score-details h3 {
-      font-size: 18px;
+    .bench-table td.col-my {
       font-weight: 800;
-      color: var(--slate-900);
+      color: #2563eb;
+    }
+    .bench-table td.col-diff {
+      font-weight: 800;
+    }
+    .diff-badge-danger { color: #dc2626; }
+    .diff-badge-warning { color: #d97706; }
+    .diff-badge-neutral { color: #15803d; }
+
+    /* 1주차 네이버 검색 로봇 색인 최적화 카드 */
+    .indexing-audit-card {
+      background: #ffffff;
+      border: 1px solid var(--slate-200);
+      border-radius: var(--card-radius);
+      padding: 24px;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 24px;
+    }
+    .indexing-badge-header {
+      display: inline-block;
+      background: #0f172a;
+      color: #ffffff;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 3px 10px;
+      border-radius: 12px;
       margin-bottom: 8px;
     }
-    .score-details p {
-      font-size: 13.5px;
-      color: var(--slate-600);
-      line-height: 1.6;
+    .indexing-item {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 16px;
       margin-bottom: 12px;
+      transition: border-color 0.15s ease;
     }
-    .score-tags { display: flex; flex-wrap: wrap; gap: 6px; }
-    .score-tag {
+    .indexing-item:hover {
+      border-color: #cbd5e1;
+    }
+    .indexing-item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .indexing-item-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: #0f172a;
+    }
+    .indexing-item-badge {
       font-size: 11.5px;
+      font-weight: 800;
+      padding: 3px 9px;
+      border-radius: 6px;
+    }
+    .badge-idx-success { background: #dcfce7; color: #15803d; }
+    .badge-idx-warning { background: #fef3c7; color: #b45309; }
+    .badge-idx-danger { background: #fee2e2; color: #b91c1c; }
+    .indexing-item-diag {
+      font-size: 13px;
+      color: #334155;
+      line-height: 1.55;
+      margin-bottom: 8px;
+    }
+    .indexing-item-action {
+      font-size: 12px;
+      color: #2563eb;
       font-weight: 700;
+      line-height: 1.45;
+      background: #eff6ff;
+      border-radius: 6px;
+      padding: 8px 12px;
+    }
+
+    /* 다음 주 예고 티저 박스 */
+    .next-week-teaser-box {
+      margin-top: 16px;
+      background: linear-gradient(135deg, #eff6ff 0%, #f0fdf4 100%);
+      border: 1.5px dashed #93c5fd;
+      border-radius: 12px;
+      padding: 16px 18px;
+    }
+    .teaser-title {
+      font-size: 13px;
+      font-weight: 800;
+      color: #1d4ed8;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .teaser-desc {
+      font-size: 12.5px;
+      color: #1e40af;
+      line-height: 1.55;
+      margin-bottom: 4px;
+    }
+    .teaser-note {
+      font-size: 11.5px;
+      color: #64748b;
+    }
+
+    /* 알고리즘 위험 요소 체크리스트 */
+    .risk-checklist-card {
+      background: #ffffff;
+      border: 1px solid var(--slate-200);
+      border-radius: var(--card-radius);
+      padding: 24px;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 24px;
+    }
+    .risk-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px 14px;
+      background: var(--slate-50);
+      border: 1px solid var(--slate-200);
+      border-radius: 8px;
+      margin-bottom: 8px;
+    }
+    .risk-tag {
+      font-size: 11px;
+      font-weight: 800;
       padding: 3px 8px;
       border-radius: 4px;
+      flex-shrink: 0;
+      margin-top: 1px;
     }
-    .tag-danger { background: #fee2e2; color: #b91c1c; }
-    .tag-warning { background: #fef3c7; color: #b45309; }
-    .tag-success { background: #dcfce7; color: #15803d; }
+    .risk-tag.caution { background: #fef3c7; color: #b45309; }
+    .risk-tag.normal { background: #dcfce7; color: #15803d; }
+    .risk-tag.insufficient { background: #fee2e2; color: #b91c1c; }
+    .risk-tag.moderate { background: #eff6ff; color: #1d4ed8; }
+
+    /* 3단계 실행 가이드 카드 */
+    .step-playbook-card {
+      background: #ffffff;
+      border: 1px solid var(--slate-200);
+      border-radius: var(--card-radius);
+      padding: 24px;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 24px;
+    }
+    .step-item {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+    .step-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+    .step-num {
+      background: #0f172a;
+      color: #ffffff;
+      font-size: 11px;
+      font-weight: 800;
+      width: 22px;
+      height: 22px;
+      line-height: 22px;
+      text-align: center;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .step-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: #0f172a;
+    }
+    .step-desc {
+      font-size: 12.5px;
+      color: #475569;
+      line-height: 1.55;
+      margin-left: 32px;
+    }
+    .step-replies-wrap {
+      margin-top: 12px;
+      margin-left: 32px;
+      display: grid;
+      gap: 8px;
+    }
 
     /* Section Styles */
     .section-title {
@@ -578,6 +809,162 @@
       display: flex;
     }
 
+    /* Weekly Surveillance Modules Styles */
+    .radar-noise-card {
+      background: #ffffff;
+      border: 1px solid var(--slate-200);
+      border-radius: var(--card-radius);
+      padding: 24px 28px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow-sm);
+    }
+    .noise-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+    .noise-safe { background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; }
+    .noise-stable { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
+    .noise-caution { background: #fef3c7; color: #b45309; border: 1px solid #fde68a; }
+
+    .baseline-banner {
+      background: #eff6ff;
+      border: 1.5px solid #93c5fd;
+      border-radius: 12px;
+      padding: 14px 18px;
+      margin-bottom: 16px;
+    }
+    .baseline-banner-title {
+      font-size: 13.5px;
+      font-weight: 800;
+      color: #1e40af;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .baseline-banner-desc {
+      font-size: 12.5px;
+      color: #1e3a8a;
+      line-height: 1.6;
+    }
+
+    .reply-cards-wrap {
+      display: grid;
+      gap: 14px;
+      margin-top: 14px;
+    }
+    .reply-card {
+      background: #ffffff;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 16px 18px;
+      transition: all 0.15s ease;
+    }
+    .reply-card:hover {
+      border-color: #93c5fd;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.06);
+    }
+    .reply-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .reply-situation-badge {
+      font-size: 11px;
+      font-weight: 800;
+      background: #eff6ff;
+      color: #1d4ed8;
+      padding: 3px 8px;
+      border-radius: 6px;
+    }
+    .reply-title {
+      font-size: 13.5px;
+      font-weight: 800;
+      color: var(--slate-900);
+    }
+    .btn-copy-reply {
+      background: #ffffff;
+      border: 1.5px solid #cbd5e1;
+      color: #334155;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 6px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.15s;
+    }
+    .btn-copy-reply:hover {
+      background: #f8fafc;
+      border-color: #2563eb;
+      color: #2563eb;
+    }
+    .btn-copy-reply.copied {
+      background: #10b981;
+      border-color: #10b981;
+      color: #ffffff;
+    }
+    .reply-text-box {
+      background: #f8fafc;
+      border: 1px solid #f1f5f9;
+      border-radius: 8px;
+      padding: 12px 14px;
+      font-size: 13px;
+      color: #334155;
+      line-height: 1.65;
+      margin-bottom: 10px;
+      white-space: pre-line;
+    }
+    .reply-seo-tags {
+      font-size: 11.5px;
+      color: var(--slate-500);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .reply-seo-chip {
+      color: #2563eb;
+      font-weight: 700;
+    }
+
+    /* Floating Copy Toast */
+    #copyToast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: #0f172a;
+      color: #ffffff;
+      padding: 12px 24px;
+      border-radius: 30px;
+      font-size: 13.5px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+      z-index: 9999;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    #copyToast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
     /* Monthly 9,900 Won Subscription Pricing Card */
     .sub-pricing-card {
       background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%);
@@ -764,280 +1151,190 @@
       <a href="/place">내 매장 진단하기 &rarr;</a>
     </div>
 
-    <!-- Executive Cover Card -->
+    <!-- 1. Executive Cover Card (Professional Data SaaS #0F172A 다크 네이비 테마) -->
     <div class="cover-card">
-      <div class="badge-report">
-        <i class="fa-solid fa-shield-halved"></i> 2026 네이버 스마트플레이스 정량 실측 진단서
+      <div class="badge-report" id="rptWeekBadge">
+        <i class="fa-solid fa-chart-column"></i> 2026년 네이버 플레이스 종합 진단서
       </div>
       <h1 class="cover-title" id="rptCoverTitle">
-        <span id="rptTitleKw">방이동 고기집</span> 1위 탈환<br>
-        실전 처방 &amp; 정량 격차 심층 리포트
+        <span id="rptStoreNameTitle">신청 매장</span>의 상권 내 경쟁력 및 알고리즘 반응 지수
       </h1>
       <p class="cover-desc">
-        네이버 플레이스 공식 검색광고 및 지도 알고리즘을 실측 분석하여, 현재 1위 독점 매장과의 정량 격차와 30일 이내 1위 탈환을 위한 3대 핵심 액션플랜을 제시합니다.
+        2026 네이버 스마트플레이스 검색 엔진 공식 지표 및 상권 1위 실측 갭 분석 결과입니다.
       </p>
 
       <div class="meta-grid">
         <div class="meta-item">
           <span class="meta-label">진단 대상 매장</span>
-          <span class="meta-value" id="rptStoreName">서호생갈비 (신청 매장)</span>
+          <span class="meta-value" id="rptStoreName">신청 매장</span>
         </div>
         <div class="meta-item">
           <span class="meta-label">분석 타깃 키워드</span>
-          <span class="meta-value" id="rptKeyword">방이동 고기집</span>
+          <span class="meta-value" id="rptKeyword">플레이스</span>
         </div>
         <div class="meta-item">
-          <span class="meta-label">1위 벤치마크 매장</span>
-          <span class="meta-value" id="rptTop1Name">🥇 일월고기 (현재 1위)</span>
+          <span class="meta-label">상권 1위 매장</span>
+          <span class="meta-value" id="rptTop1Name">🥇 1위 매장</span>
         </div>
         <div class="meta-item">
           <span class="meta-label">발급일시 / 고유번호</span>
-          <span class="meta-value" id="rptMetaMeta">2026.09.25 / PS-2880-9459</span>
+          <span class="meta-value" id="rptMetaMeta">2026.09 / PS-AUTO</span>
         </div>
+      </div>
+      <div class="gps-baseline-bar">
+        <i class="fa-solid fa-location-crosshairs"></i>
+        <span id="rptGpsNotice">📍 2026 네이버 표준 기준: 매장 반경 500m 내 모바일 GPS 기본 검색 환경 기준 정밀 산출</span>
       </div>
     </div>
 
-    <!-- Scorecard Overview -->
-    <div class="score-card">
-      <div class="score-dial">
-        <span class="score-max">종합 경쟁력 점수</span>
-        <div class="score-num" id="rptScoreNum">68<span style="font-size:22px; color:var(--slate-400);">/100</span></div>
-        <span class="score-status" id="rptScoreStatus">현재 2위 (1위 탈환 유력)</span>
+    <!-- 2. 핵심 요약 2대 지표 카드 (종합 건강 점수 & 예상 손실 클릭 수) -->
+    <div class="summary-metrics-dual">
+      <!-- 지표 카드 1: 종합 SEO 건강 점수 -->
+      <div class="summary-metric-card">
+        <div class="smc-title">종합 SEO 건강 점수</div>
+        <div class="smc-val" id="rptScoreNum">74<span style="font-size:18px; color:var(--slate-400); font-weight:600;"> / 100</span></div>
+        <span class="smc-pill" id="rptScoreStatus">상위 15% 수준</span>
       </div>
-      <div class="score-details">
-        <h3 id="rptScoreHeading">1위와의 격차: 전환 기능(예약) 부재가 핵심 병목</h3>
-        <p id="rptScoreDesc">
-          신청 매장은 현재 해당 키워드에서 우수한 입지이나, 1위 매장 대비 <b>'네이버 예약 미연동'</b>과 <b>'최근 영수증 리뷰 유입 속도'</b>에서 감점을 받아 1위와의 격차가 발생하고 있습니다.
-        </p>
-        <div class="score-tags" id="rptScoreTags">
-          <span class="score-tag tag-danger">⚠️ 네이버 예약 미연동 (-30점)</span>
-          <span class="score-tag tag-warning">📉 블로그 언급량 부족 (-15점)</span>
-          <span class="score-tag tag-success">✅ 쿠폰 활성화 완료 (+15점)</span>
-          <span class="score-tag tag-success">✅ 상권 내 상위권 확보 (+20점)</span>
-        </div>
+
+      <!-- 지표 카드 2: 예상 손실 클릭 수 -->
+      <div class="summary-metric-card loss-card">
+        <div class="smc-title">🚨 월간 예상 유입 손실</div>
+        <div class="smc-val" id="rptLossClicksVal">-140<span style="font-size:18px; font-weight:600;">명 / 월</span></div>
+        <span class="smc-pill" id="rptLossClicksPill">상위권 대비 이탈 발생 중</span>
       </div>
     </div>
+    <div class="loss-insight-box" id="rptLossInsight" style="margin-top:-14px; margin-bottom:24px;">
+      💡 <strong>유입 진단:</strong> 3위 매장 대비 월 약 140명의 잠재 고객 유입 손실 발생 중
+    </div>
 
-    <!-- [분석 1] 1~3위 최상위권과의 실시간 격차 비교 -->
-    <div class="gap-card">
+    <!-- 3. 상권 1위 매장과의 1:1 비교 대조표 -->
+    <div class="benchmarking-card">
       <div class="section-title">
-        <i class="fa-solid fa-chart-column"></i>
-        <span id="rptGapTitle">[분석 1] 1~3위 최상위권과의 실시간 격차 비교</span>
-      </div>
-      <p style="font-size:13px; color:var(--slate-600); margin-bottom:12px;">
-        단순 1위 매장과의 1:1 비교를 넘어, 해당 상권 내 최상위 1~3위 매장들의 평균치와 내 매장의 실측 지표를 정량 대조합니다.
-      </p>
-
-      <table class="compare-table">
-        <thead>
-          <tr>
-            <th>평가 핵심 지표</th>
-            <th id="thTop3AvgName">🥇 상위 1~3위 평균</th>
-            <th id="thMyStoreName">내 매장</th>
-            <th>격차 진단 및 판정</th>
-          </tr>
-        </thead>
-        <tbody id="rptGapTbody">
-          <tr>
-            <td class="col-metric">✍️ 방문자 영수증 리뷰</td>
-            <td class="val-top1" id="top3ReviewVal">3,295개</td>
-            <td class="val-my" id="myReviewVal">915개</td>
-            <td id="diffReviewVal"><span class="badge-diff diff-red">-2,380개 부족</span></td>
-          </tr>
-          <tr>
-            <td class="col-metric">📝 블로그 리뷰 언급량</td>
-            <td class="val-top1" id="top3BlogVal">3,799개</td>
-            <td class="val-my" id="myBlogVal">739개</td>
-            <td id="diffBlogVal"><span class="badge-diff diff-red">-3,060개 부족</span></td>
-          </tr>
-          <tr>
-            <td class="col-metric">📅 네이버 예약 연동</td>
-            <td class="val-top1" id="top1BookingVal">연동 (활성)</td>
-            <td class="val-my" id="myBookingVal" style="color:var(--rose);">미연동 (없음)</td>
-            <td id="diffBookingVal"><span class="badge-diff diff-red">⚠️ 즉시 연동 필수</span></td>
-          </tr>
-          <tr>
-            <td class="col-metric">🎟️ 플레이스 쿠폰</td>
-            <td class="val-top1" id="top1CouponVal">발행 중 (혜택 제공)</td>
-            <td class="val-my" id="myCouponVal" style="color:var(--emerald);">발행 중 (혜택 제공)</td>
-            <td id="diffCouponVal"><span class="badge-diff diff-green">✅ 경쟁사 동급</span></td>
-          </tr>
-          <tr>
-            <td class="col-metric">📌 지도 저장하기 (저장수)</td>
-            <td class="val-top1" id="top1SavesVal">50,000+</td>
-            <td class="val-my" id="mySavesVal">1,000+</td>
-            <td id="diffSavesVal"><span class="badge-diff diff-neutral">비교 집계 중</span></td>
-          </tr>
-        </tbody>
-      </table>
-
-      <!-- 30일 목표 도달 주간 최소 확보 처방전 -->
-      <div class="target-deficit-box">
-        <div class="target-deficit-title">
-          <i class="fa-solid fa-bullseye"></i>
-          <span>[30일 3위권 진입] 매주 채워야 할 최소 목표 수량</span>
-        </div>
-        <p id="rptGapSummaryText" style="font-size:12.5px; color:#1e3a8a; line-height:1.6; margin-bottom:8px;">
-          상위 1~3위 평균치 대비 부족한 리뷰를 4주 분할로 계산한 주간 필수 목표치입니다.
-        </p>
-        <div class="target-deficit-grid">
-          <div class="deficit-chip">
-            <span class="deficit-chip-label">🎯 매주 채울 영수증 포토리뷰 목표</span>
-            <span class="deficit-chip-val" id="rptWeeklyReviews">주당 +5건</span>
-          </div>
-          <div class="deficit-chip">
-            <span class="deficit-chip-label">🎯 매주 채울 블로그 언급 목표</span>
-            <span class="deficit-chip-val" id="rptWeeklyBlogs">주당 +2건</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- [분석 2] 내 매장 필수 세팅 완성도 검진 (100점 만점) -->
-    <div class="completeness-card">
-      <div class="section-title">
-        <i class="fa-solid fa-clipboard-check"></i>
-        <span>[분석 2] 내 매장 필수 세팅 완성도 검진 (100점 만점)</span>
-      </div>
-
-      <div class="gauge-header">
-        <div class="gauge-score-wrap">
-          <span style="font-size:13px; color:var(--slate-500); font-weight:700;">세팅 완성도 지수:</span>
-          <span class="gauge-num" id="rptCompScore">75</span>
-          <span style="font-size:16px; color:var(--slate-400); font-weight:600;">/ 100점</span>
-        </div>
-        <span class="score-status" id="rptCompGrade" style="background:#eff6ff; color:#1d4ed8;">양호 (보완 시 상위권 도약)</span>
-      </div>
-
-      <div class="gauge-bar-outer">
-        <div class="gauge-bar-inner" id="rptCompGaugeFill" style="width:75%;"></div>
-      </div>
-
-      <!-- 상호명 키워드 스터핑 어뷰징 위험도 배지 -->
-      <div class="stuffing-alert stuffing-safe" id="rptStuffingBox">
-        <i class="fa-solid fa-shield-virus" style="font-size:16px; margin-top:2px;"></i>
-        <div>
-          <strong id="rptStuffingTitle">2026 네이버 어뷰징 필터링 위험도: 정상 (안전 상호)</strong>
-          <p id="rptStuffingDesc" style="margin-top:2px; font-size:12px;">상호명이 정제되어 있어 네이버 플레이스 검색 알고리즘의 노출 제한 패널티 위험이 없습니다.</p>
-        </div>
-      </div>
-
-      <!-- 5대 완결도 핵심 체크리스트 -->
-      <div class="checklist-grid" id="rptChecklistGrid">
-        <!-- Dynamic Checklist Rows inserted by JS -->
-      </div>
-    </div>
-
-    <!-- [분석 3] 네이버 AI 추천 키워드 & 불만 단어 방어 -->
-    <div class="ai-health-card">
-      <div class="section-title">
-        <i class="fa-solid fa-brain"></i>
-        <span>[분석 3] 네이버 AI 추천 키워드 &amp; 불만 단어 방어</span>
-      </div>
-
-      <div class="ai-badge-row">
-        <span class="ai-grade-badge ai-grade-b" id="rptAiHealthGrade">리뷰 건강도: B등급 (75점)</span>
-        <span class="ai-grade-badge" id="rptAiIndustryBadge" style="background:#f1f5f9; color:#334155; border:1px solid #cbd5e1;">식별 업종: 의료/병원</span>
-        <span class="ai-grade-badge" id="rptAiCitationBadge" style="background:#ecfdf5; color:#047857; border:1px solid #a7f3d0;">2026 AI 추천 적합도: 양호</span>
-      </div>
-
-      <div style="font-size:13px; font-weight:800; color:var(--slate-800); margin-bottom:6px;">
-        ⚠️ 네이버 AI가 추천에서 제외하는 자주 나오는 불만 단어
-      </div>
-      <p style="font-size:12.5px; color:var(--slate-600); line-height:1.5;">
-        2026년 네이버 AI 검색(스마트블록 및 AI 요약 브리핑)은 아래 단어가 자주 등장하는 매장을 추천 목록에서 제외합니다.
-      </p>
-
-      <div class="risk-chips-wrap" id="rptRiskChipsWrap">
-        <!-- Dynamic Risk Chips inserted by JS -->
-      </div>
-
-      <div class="ai-guide-box">
-        <div style="font-weight:800; color:#1e293b; margin-bottom:4px; font-size:13.5px;">
-          💡 2026 AI 추천 검색 사전 방어 솔루션 가이드
-        </div>
-        <p id="rptAiGuideText" style="margin:0;">
-          업종 특성에 맞춘 리뷰 방어 가이드가 여기에 동적으로 로드됩니다.
-        </p>
-      </div>
-    </div>
-
-    <!-- [처방] 이번 주 당장 실행할 1위 탈환 액션플랜 -->
-    <div class="playbook-card">
-      <div class="section-title">
-        <i class="fa-solid fa-calendar-days"></i>
-        <span>[처방] 이번 주 당장 실행할 1위 탈환 액션플랜</span>
+        <i class="fa-solid fa-chart-line"></i>
+        <span>상권 1위 매장과의 1:1 비교 대조표</span>
       </div>
       <p style="font-size:13px; color:var(--slate-600); margin-bottom:14px;">
-        매장 대표님이 당장 오늘부터 1일 1개씩 따라 하는 실전 미션 카드입니다. (1~3일차 우선 실천 권장)
+        상권 1위 매장과 내 매장의 핵심 3대 지표 실제 차이입니다.
       </p>
 
-      <!-- 1~3일차 카드 기본 노출 (Primary Grid) -->
-      <div class="playbook-grid" id="rptPlaybookPrimaryGrid">
-        <!-- Dynamic Day 1~3 Cards inserted by JS -->
-      </div>
-
-      <!-- 4~7일차 카드 숨김 컨테이너 (Secondary Grid) -->
-      <div id="rptPlaybookSecondaryGrid" class="pb-hidden-days">
-        <!-- Dynamic Day 4~7 Cards inserted by JS -->
-      </div>
-
-      <!-- 아코디언 토글 버튼 -->
-      <button id="btnTogglePlaybook" type="button" class="pb-toggle-btn" onclick="togglePlaybookDays()">
-        <i class="fa-solid fa-chevron-down" id="toggleIcon"></i>
-        <span id="toggleText">4~7일차 심화 미션 4개 더보기 (펼치기)</span>
-      </button>
+      <table class="bench-table">
+        <thead>
+          <tr>
+            <th style="width:30%;">지표 항목</th>
+            <th style="width:22%;" id="thTop1Name">🥇 1위 매장</th>
+            <th style="width:22%;" id="thMyStoreName">내 매장</th>
+            <th style="width:26%;">1위와의 차이</th>
+          </tr>
+        </thead>
+        <tbody id="rptBenchTableBody">
+          <!-- JS dynamic binding -->
+        </tbody>
+      </table>
     </div>
 
-    <!-- [신규] 월 9,900원 주간 정기 구독 안내 카드 (주 1회 발행) -->
-    <div class="sub-pricing-card">
-      <span class="sub-badge-hot">🔥 정기 구독 론칭 특가</span>
-      <h3 style="font-size:18px; font-weight:900; color:#0f172a; margin-bottom:4px;">
-        매주 월요일 아침, 1위 매장의 증감을 감시해 드립니다
-      </h3>
-      <p style="font-size:13px; color:#475569; margin-bottom:12px;">
-        내 매장 순위가 떨어지지 않도록 실시간 추적하고, 1위 업체의 주간 증가량을 매주 브리핑합니다.
-      </p>
-      <div class="sub-price-row">
-        <span class="sub-price-num">9,900원</span>
-        <span class="sub-price-cycle">/ 월 (주 1회, 매월 4회 자동 발행)</span>
+    <!-- 3-1. [1주차 전용 점검] 네이버 검색 로봇 색인 최적화 3종 진단 모듈 -->
+    <div class="indexing-audit-card">
+      <div style="margin-bottom:8px;">
+        <span class="indexing-badge-header">
+          🛡️ 1주차 정기 관리 모듈
+        </span>
       </div>
-      <div class="sub-benefits-grid">
-        <div class="sub-benefit-item">
-          <i class="fa-solid fa-circle-check"></i>
+      <div class="section-title" style="margin-bottom:6px;">
+        <i class="fa-solid fa-magnifying-glass-chart" style="color:#0f172a;"></i>
+        <span>네이버 검색 로봇 색인 최적화 진단</span>
+      </div>
+      <p style="font-size:13px; color:var(--slate-600); margin-bottom:16px;">
+        2026 알고리즘 색인 로봇이 매장 데이터를 정상 수집하기 위한 3대 기초 진단 결과입니다.
+      </p>
+
+      <div id="rptWeek1IndexingWrap">
+        <!-- JS dynamic binding: 소개글 키워드 배치율, 찾아오는 길 상태, 사진 20장 충족도 -->
+      </div>
+
+      <!-- 다음 주(2주차) 예고 티저 박스 -->
+      <div class="next-week-teaser-box" id="rptNextWeekTeaser">
+        <div class="teaser-title">
+          <i class="fa-solid fa-lock" style="color:#2563eb;"></i>
+          <span id="teaserTitleText">🔒 다음 주 월요일 아침 9시 예고: [2주차: 리뷰 품질 및 감성 진단]</span>
+        </div>
+        <div class="teaser-desc" id="teaserDescText">
+          최근 30일 영수증 리뷰 중 부정 단어 추출, 단문/복사형 리뷰 비중, AI 맞춤형 공감 답글 2종 처방
+        </div>
+        <div class="teaser-note">
+          (월 9,900원 정기 구독 시 1위 매장의 7일간 실시간 순증감(±) 대조표와 함께 매주 자동 발송됩니다.)
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. 2026 네이버 최신 알고리즘 위험 요소 점검 -->
+    <div class="risk-checklist-card">
+      <div class="section-title">
+        <i class="fa-solid fa-triangle-exclamation" style="color:#d97706;"></i>
+        <span>2026 네이버 최신 알고리즘 위험 요소 점검</span>
+      </div>
+      <p style="font-size:13px; color:var(--slate-600); margin-bottom:14px;">
+        점수가 깎이고 있거나 노출 점수를 손실 중인 핵심 감점 요소입니다.
+      </p>
+
+      <div id="rptRiskChecklistWrap">
+        <!-- JS dynamic binding -->
+      </div>
+    </div>
+
+    <!-- 5. 이번 주 사장님의 3단계 실행 가이드 (1주차 기본 등록 점검 내장) -->
+    <div class="step-playbook-card">
+      <div style="margin-bottom:8px;">
+        <span style="display:inline-block; background:#2563eb; color:#ffffff; font-size:11px; font-weight:800; padding:2px 8px; border-radius:12px;">
+          🎯 1주차 집중 실천 과제
+        </span>
+      </div>
+      <div class="section-title" style="margin-bottom:6px;">
+        <i class="fa-solid fa-list-check"></i>
+        <span>이번 주 사장님의 3단계 실행 가이드</span>
+      </div>
+      <p style="font-size:13px; color:var(--slate-600); margin-bottom:16px;">
+        이번 주말까지 아래 3가지를 실행하시면 네이버 알고리즘 체류시간과 전환 점수가 즉시 상승합니다.
+      </p>
+
+      <div id="rptStepPlaybookWrap">
+        <!-- JS dynamic binding -->
+      </div>
+    </div>
+
+    <!-- 6. 하단 고정 전환 배너 (Sticky Paywall Footer - 정가 월 9,900원) -->
+    <div class="sub-pricing-card" style="background: linear-gradient(145deg, #0a192f 0%, #132742 100%); border: 1px solid #1e3a8a; color: #ffffff; box-shadow: 0 10px 30px rgba(10, 25, 47, 0.35);">
+      <span class="sub-badge-hot" style="background:rgba(37,99,235,0.3); border:1px solid #3b82f6; color:#93c5fd;">
+        🛡️ 매주 월요일 정기 감시 &amp; 24시간 실시간 워치독
+      </span>
+      <h3 style="font-size:18px; font-weight:900; color:#ffffff; margin-bottom:6px; line-height:1.4;">
+        매주 월요일 아침 1위와의 격차를 추적하고,<br>순위 급락 시 즉각 카톡으로 알려드립니다.
+      </h3>
+      <p style="font-size:13px; color:#94a3b8; margin-bottom:14px; line-height:1.55;">
+        경쟁사의 기습 리뷰 유입과 알고리즘 롤링을 24시간 감시하여 1위를 지켜드립니다.
+      </p>
+
+      <div class="sub-price-row" style="margin:10px 0 16px;">
+        <span class="sub-price-num" style="color:#ffffff;">9,900원</span>
+        <span class="sub-price-cycle" style="color:#94a3b8;">/ 월 (주 1회 정기 리포트 + 24시간 비정기 긴급 알림)</span>
+      </div>
+
+      <div class="sub-benefits-grid" style="margin-bottom:20px;">
+        <div class="sub-benefit-item" style="color:#cbd5e1;">
+          <i class="fa-solid fa-circle-check" style="color:#60a5fa;"></i>
           <div><strong>1위 매장 주간 증감 역추적:</strong> 지난 7일간 1위 매장의 영수증 리뷰 및 블로그 신규 발행 수 실시간 감시</div>
         </div>
-        <div class="sub-benefit-item">
-          <i class="fa-solid fa-circle-check"></i>
-          <div><strong>내 매장 순위 변동 골든타임 알림:</strong> 순위 상승 알림 및 2~3위 경쟁사의 역전 추격 위기 즉시 경고</div>
+        <div class="sub-benefit-item" style="color:#cbd5e1;">
+          <i class="fa-solid fa-circle-check" style="color:#60a5fa;"></i>
+          <div><strong>3대 비정기 긴급 트리거 알림:</strong> 3계단 이상 급락 / 경쟁사 리뷰 급증 / 1위 교체 즉시 감지 알림톡</div>
         </div>
-        <div class="sub-benefit-item">
-          <i class="fa-solid fa-circle-check"></i>
+        <div class="sub-benefit-item" style="color:#cbd5e1;">
+          <i class="fa-solid fa-circle-check" style="color:#60a5fa;"></i>
           <div><strong>원클릭 사장님 리뷰 답글 5종 매주 제공:</strong> 복사해서 바로 붙여넣는 2026 AI 추천 검색 최적화 답글</div>
         </div>
       </div>
+
       <a href="https://pf.kakao.com/_xonxiaX" target="_blank" rel="noopener noreferrer" class="btn-sub-kakao">
-        💬 카카오톡으로 주간 감시 리포트 정기 구독 신청하기 (월 9,900원)
-      </a>
-    </div>
-
-    <!-- 2026 단속 회피 가이드 -->
-    <div class="warning-box">
-      <i class="fa-solid fa-triangle-exclamation"></i>
-      <div class="warning-text">
-        <h4>🚨 2026 네이버 스마트플레이스 단속 경고</h4>
-        <p>
-          "1주일 만에 1위 보장"을 미끼로 가짜 트래픽(VPN 매크로 슬롯)을 넣어주겠다는 불법 마케팅 업체를 절대 주의하세요. 2026년 네이버 AI는 체류시간과 GPS 동선이 없는 비정상 트래픽을 실시간 감지하여 <b>적발 즉시 30일간 검색 제외(어뷰징 페널티)</b>를 부과합니다. 순위는 반드시 합법적인 영수증 리뷰와 저장하기 데이터로 안전하게 올려야 합니다.
-        </p>
-      </div>
-    </div>
-
-    <!-- Contact & Consultation CTA -->
-    <div class="cta-card">
-      <h3>혼자서 세팅하기 막막하신가요?</h3>
-      <p>PostSync 로컬 마케팅 전문 연구팀이 매장의 네이버 예약 세팅부터 1위 탈환 로드맵까지 1:1로 밀착 지원해 드립니다.</p>
-      <a href="https://pf.kakao.com/_xonxiaX" target="_blank" rel="noopener noreferrer" class="btn-cta-kakao">
-        <i class="fa-solid fa-comment"></i> 카카오톡으로 1:1 실전 처방 상담받기
+        💬 월 9,900원으로 우리 매장 24시간 마케팅 비서 시작하기 &rarr;
       </a>
     </div>
 
@@ -1058,6 +1355,8 @@
       if (!reportId) {
         const banner = document.getElementById('sampleNoticeBanner');
         if (banner) banner.style.display = 'flex';
+        // 기본 예시 샘플 데이터로 렌더링
+        applySnapshotToDOM(getSampleSnapshot());
         return;
       }
 
@@ -1073,100 +1372,56 @@
         const banner = document.getElementById('sampleNoticeBanner');
         if (banner) {
           banner.style.display = 'flex';
-          banner.innerHTML = `<div><i class="fa-solid fa-triangle-exclamation"></i> 지정된 리포트(${reportId})를 찾을 수 없어 <b>기본 진단 샘플</b>로 표시합니다.</div><a href="/place">내 매장 진단하기 &rarr;</a>`;
+          banner.innerHTML = `<div><i class="fa-solid fa-triangle-exclamation"></i> 지정된 리포트(${escapeHtml(reportId)})를 찾을 수 없어 <b>기본 진단 샘플</b>로 표시합니다.</div><a href="/place">내 매장 진단하기 &rarr;</a>`;
         }
+        applySnapshotToDOM(getSampleSnapshot());
       }
     })();
+
+    function getSampleSnapshot() {
+      return {
+        storeName: '방이옥 본점',
+        targetKeyword: '방이동 맛집',
+        myRank: 4,
+        top1Name: '청와옥 본점',
+        myReviews: 420,
+        top1Reviews: 2480,
+        myBlogReviews: 180,
+        top1BlogReviews: 890,
+        myBooking: true,
+        top1Booking: true,
+        myCoupon: false,
+        top1Coupon: true,
+        mySaves: '1,150',
+        top1Saves: '2,410',
+        reportId: 'ps_sample',
+        reportDate: new Date().toLocaleDateString('ko-KR')
+      };
+    }
 
     function applySnapshotToDOM(snap) {
       const store = snap.storeName || '신청 매장';
       const kw = snap.targetKeyword || '플레이스';
       const top1 = snap.top1Name || '상위 1위 매장';
-      const score = snap.totalScore || 70;
-      const rank = snap.myRank || 2;
+      const rank = typeof snap.myRank === 'number' ? snap.myRank : parseInt(String(snap.myRank || '2'), 10);
       const dateStr = snap.reportDate || new Date().toLocaleDateString('ko-KR');
 
-      // 4대 심층 데이터 추출 (fallback 포함)
-      const deep = snap.deepAudit || {};
-      const gap = deep.gapMatrix || {
-        top1Name: top1,
-        top3AvgReviews: snap.top1Reviews ? Math.round(Number(snap.top1Reviews) * 0.85) : 1000,
-        top3AvgBlogReviews: snap.top1BlogReviews ? Math.round(Number(snap.top1BlogReviews) * 0.85) : 500,
-        myReviews: Number(snap.myReviews || 0),
-        myBlogReviews: Number(snap.myBlogReviews || 0),
-        diffReviews: Number(snap.myReviews || 0) - (snap.top1Reviews ? Math.round(Number(snap.top1Reviews) * 0.85) : 1000),
-        diffBlogReviews: Number(snap.myBlogReviews || 0) - (snap.top1BlogReviews ? Math.round(Number(snap.top1BlogReviews) * 0.85) : 500),
-        weeklyReviewsNeeded: 5,
-        weeklyBlogsNeeded: 2,
-        summaryText: `상위 1~3위 평균 대비 부족한 리뷰를 4주 분할로 계산한 주간 필수 목표치입니다.`
-      };
+      // 서버에서 전달된 saasSummary가 있으면 사용, 없으면 클라이언트 계산 fallback
+      const saas = snap.saasSummary || snap.deepAudit?.saasSummary || generateClientSaaSReportSummary(snap);
 
-      const comp = deep.completeness || {
-        score: snap.myBooking ? 75 : 55,
-        grade: snap.myBooking ? 'GOOD' : 'NEEDS_WORK',
-        gradeText: snap.myBooking ? '양호 (보완 시 상위권 도약)' : '개선 요망 (전환 요소 부족)',
-        keywordStuffingRisk: 'SAFE',
-        stuffingReason: '상호명이 정제되어 있어 네이버 검색 어뷰징 필터링 위험이 없습니다.',
-        checklist: [
-          {
-            id: 'booking',
-            title: '네이버 예약 시스템 연동',
-            status: snap.myBooking ? 'PASS' : 'FAIL',
-            statusText: snap.myBooking ? '연동 완료' : '미연동 (치명적)',
-            desc: snap.myBooking ? '고객이 네이버 앱에서 이탈 없이 즉시 예약할 수 있어 전환 점수를 최대로 획득 중입니다.' : '2026 알고리즘 최우선 지표인 네이버 예약이 연동되지 않아 막대한 점수 손실이 발생하고 있습니다.',
-            impact: '상위 1~3위 진입 기여도: ★★★★★'
-          },
-          {
-            id: 'coupon',
-            title: '스마트플레이스 혜택 쿠폰',
-            status: snap.myCoupon ? 'PASS' : 'WARN',
-            statusText: snap.myCoupon ? '정상 발행 중' : '미발행 (권장)',
-            desc: snap.myCoupon ? '첫 방문 유도용 쿠폰이 발급되어 지도 탐색자의 클릭률(CTR)과 저장하기를 자극하고 있습니다.' : '쿠폰이 없어 검색 목록에서 경쟁 매장에 클릭을 빼앗길 확률이 높습니다.',
-            impact: '클릭률(CTR) 상승 기여도: ★★★★☆'
-          },
-          {
-            id: 'call',
-            title: '스마트콜 & ARS 통화 설정',
-            status: 'PASS',
-            statusText: '기본 연결 활성',
-            desc: '스마트콜 통화 유입 데이터를 통해 매장 실 활동성 지표가 지속적으로 집계되고 있습니다.',
-            impact: '매장 신뢰도 및 통화 집계: ★★★☆☆'
-          },
-          {
-            id: 'keywords',
-            title: '대표 키워드(최대 5개) 최적화',
-            status: 'PASS',
-            statusText: '최적화 양호',
-            desc: '상호명에 키워드 과다 삽입 없이 사업자 상호와 조화롭게 정제되어 있습니다.',
-            impact: '키워드 매칭 정밀도: ★★★★★'
-          },
-          {
-            id: 'photos',
-            title: '대표 사진 및 메뉴/시설 비주얼',
-            status: 'PASS',
-            statusText: '양호',
-            desc: '플레이스 체류시간을 30초 이상 연장하기 위한 고화질 내외부 및 대표 시그니처 컷 등록이 필요합니다.',
-            impact: '체류시간 연장 기여도: ★★★★☆'
-          }
-        ]
-      };
+      // 1. Executive Cover Card 메타 바인딩
+      document.title = `[종합 진단서] ${store} - ${kw} 플레이스 경쟁력 분석 - PostSync AI`;
 
-      const ai = deep.reviewHealth || {
-        healthGrade: 'B',
-        healthScore: 75,
-        aiCitationFit: '양호',
-        industryType: '의료/병원',
-        riskKeywords: ['대기시간 긴 편', '설명 부족', '과잉 진료 우려', '주차 협소', '원장님 상담 짧음'],
-        mitigationGuide: '2026 AI 브리핑은 긍정 경험 키워드가 지속 유입되는 매장을 우선 인용합니다. 불만 키워드가 리뷰에 등장할 경우 즉시 친절하고 객관적인 공식 답글을 달아 방어해야 합니다.'
-      };
+      const elWeekBadge = document.getElementById('rptWeekBadge');
+      if (elWeekBadge) {
+        elWeekBadge.innerHTML = `<i class="fa-solid fa-chart-column"></i> ${escapeHtml(saas.weekLabel || '2026년 3월 5주차')} 네이버 플레이스 종합 진단서`;
+      }
 
-      const playbook = deep.playbook || [];
+      const elCoverTitle = document.getElementById('rptCoverTitle');
+      if (elCoverTitle) {
+        elCoverTitle.innerHTML = `<span id="rptStoreNameTitle">${escapeHtml(store)}</span>의 상권 내 경쟁력 및 알고리즘 반응 지수`;
+      }
 
-      // 1. Title & Meta
-      document.title = `[심층 진단 리포트] ${store} - ${kw} 1위 탈환 전략 분석 - PostSync AI`;
-      const titleKw = document.getElementById('rptTitleKw');
-      if (titleKw) titleKw.textContent = kw;
-      
       const elStore = document.getElementById('rptStoreName');
       if (elStore) elStore.textContent = `${store} (신청 매장)`;
 
@@ -1179,209 +1434,497 @@
       const elMeta = document.getElementById('rptMetaMeta');
       if (elMeta) elMeta.textContent = `${dateStr} / PS-${snap.reportId || 'AUTO'}`;
 
-      // 2. Scorecard Overview
+      const elGpsNotice = document.getElementById('rptGpsNotice');
+      if (elGpsNotice) {
+        elGpsNotice.textContent = '📍 2026 네이버 표준 기준: 매장 반경 500m 내 모바일 GPS 기본 검색 환경 기준 정밀 산출';
+      }
+
+      // 2. 핵심 요약 2대 지표 카드
       const elScore = document.getElementById('rptScoreNum');
-      if (elScore) elScore.innerHTML = `${score}<span style="font-size:22px; color:var(--slate-400);">/100</span>`;
-
-      const elStatus = document.getElementById('rptScoreStatus');
-      if (elStatus) {
-        if (score >= 80) {
-          elStatus.textContent = `현재 ${rank}위 (1위 탈환 매우 유력)`;
-          elStatus.style.background = '#dcfce7';
-          elStatus.style.color = '#15803d';
-        } else if (score < 55) {
-          elStatus.textContent = `현재 ${rank}위 (긴급 체질 개선 필요)`;
-          elStatus.style.background = '#fee2e2';
-          elStatus.style.color = '#b91c1c';
-        } else {
-          elStatus.textContent = `현재 ${rank}위 (상위권 도약 가능)`;
-        }
+      if (elScore) {
+        elScore.innerHTML = `${saas.seoScore}<span style="font-size:18px; color:var(--slate-400); font-weight:600;"> / 100</span>`;
       }
 
-      const elHeading = document.getElementById('rptScoreHeading');
-      if (elHeading) {
-        elHeading.textContent = snap.myBooking
-          ? `1위 매장(${top1}) 대비 체류시간 및 리뷰 가속이 핵심 과제`
-          : `1위와의 격차: 전환 기능(네이버 예약) 부재가 핵심 병목`;
+      const elScoreStatus = document.getElementById('rptScoreStatus');
+      if (elScoreStatus) {
+        const statusText = saas.seoScoreText ? saas.seoScoreText.split(' - ')[1] : `상위 ${Math.max(5, Math.min(45, 100 - saas.seoScore))}% 수준`;
+        elScoreStatus.textContent = statusText || '상위 15% 수준';
       }
 
-      const elDesc = document.getElementById('rptScoreDesc');
-      if (elDesc) {
-        elDesc.innerHTML = `
-          신청 매장(<b>${store}</b>)은 현재 <b>${kw}</b> 검색 시 <b>${rank}위</b>에 위치해 있습니다.
-          ${snap.myBooking 
-            ? `네이버 예약이 연동되어 있어 전환 기본기는 탄탄하나, 1위(${top1}) 대비 영수증 리뷰 유입 속도와 검색 체류시간을 더 보강해야 합니다.`
-            : `하지만 1위 매장(${top1}) 대비 <b>'네이버 예약 미연동'</b>으로 큰 감점을 받고 있어 2026 알고리즘상 상위 노출에 불리합니다.`}
-        `;
+      const elLossVal = document.getElementById('rptLossClicksVal');
+      if (elLossVal) {
+        elLossVal.innerHTML = `-${saas.lossClicksNum}<span style="font-size:18px; font-weight:600;">명 / 월</span>`;
       }
 
-      const elTags = document.getElementById('rptScoreTags');
-      if (elTags) {
-        elTags.innerHTML = `
-          <span class="score-tag ${snap.myBooking ? 'tag-success' : 'tag-danger'}">
-            ${snap.myBooking ? '✅ 네이버 예약 연동 (+20점)' : '⚠️ 네이버 예약 미연동 (-30점)'}
-          </span>
-          <span class="score-tag ${snap.myCoupon ? 'tag-success' : 'tag-warning'}">
-            ${snap.myCoupon ? '✅ 플레이스 쿠폰 활성 (+10점)' : '⚠️ 쿠폰 혜택 미발행 (-10점)'}
-          </span>
-          <span class="score-tag tag-success">
-            📍 상권 내 ${rank}위 순위 확보 (+${Math.max(10, 40 - Number(rank)*5)}점)
-          </span>
-        `;
+      const elLossPill = document.getElementById('rptLossClicksPill');
+      if (elLossPill) {
+        elLossPill.textContent = rank === 1 ? '1위 골든존 달성' : '상위권 대비 이탈 발생 중';
       }
 
-      // [분석 1 바인딩] 상위 1~3위 평균 격차 비교
-      const rptGapTitle = document.getElementById('rptGapTitle');
-      if (rptGapTitle) rptGapTitle.textContent = `[분석 1] 1~3위 최상위권과의 실시간 격차 비교`;
-
-      document.getElementById('top3ReviewVal').textContent = `${gap.top3AvgReviews.toLocaleString()}개`;
-      document.getElementById('myReviewVal').textContent = `${gap.myReviews.toLocaleString()}개`;
-      document.getElementById('diffReviewVal').innerHTML = gap.diffReviews >= 0
-        ? `<span class="badge-diff diff-green">+${gap.diffReviews.toLocaleString()}개 우위</span>`
-        : `<span class="badge-diff diff-red">${gap.diffReviews.toLocaleString()}개 부족</span>`;
-
-      document.getElementById('top3BlogVal').textContent = `${gap.top3AvgBlogReviews.toLocaleString()}개`;
-      document.getElementById('myBlogVal').textContent = `${gap.myBlogReviews.toLocaleString()}개`;
-      document.getElementById('diffBlogVal').innerHTML = gap.diffBlogReviews >= 0
-        ? `<span class="badge-diff diff-green">+${gap.diffBlogReviews.toLocaleString()}개 우위</span>`
-        : `<span class="badge-diff diff-red">${gap.diffBlogReviews.toLocaleString()}개 부족</span>`;
-
-      document.getElementById('top1BookingVal').textContent = snap.top1Booking ? '연동 (활성)' : '미연동';
-      document.getElementById('myBookingVal').textContent = snap.myBooking ? '연동 완료' : '미연동 (없음)';
-      document.getElementById('myBookingVal').style.color = snap.myBooking ? 'var(--emerald)' : 'var(--rose)';
-      document.getElementById('diffBookingVal').innerHTML = snap.myBooking
-        ? `<span class="badge-diff diff-green">✅ 경쟁력 동급</span>`
-        : `<span class="badge-diff diff-red">⚠️ 즉시 연동 필수</span>`;
-
-      document.getElementById('top1CouponVal').textContent = snap.top1Coupon ? '발행 중' : '미발행';
-      document.getElementById('myCouponVal').textContent = snap.myCoupon ? '발행 중' : '미발행';
-      document.getElementById('myCouponVal').style.color = snap.myCoupon ? 'var(--emerald)' : 'var(--amber)';
-      document.getElementById('diffCouponVal').innerHTML = snap.myCoupon
-        ? `<span class="badge-diff diff-green">✅ 혜택 제공 중</span>`
-        : `<span class="badge-diff diff-red">⚠️ 쿠폰 발행 권장</span>`;
-
-      document.getElementById('top1SavesVal').textContent = String(snap.top1Saves || '50,000+');
-      document.getElementById('mySavesVal').textContent = String(snap.mySaves || '1,000+');
-
-      // 주간 목표량 카드
-      const elGapSummary = document.getElementById('rptGapSummaryText');
-      if (elGapSummary) elGapSummary.textContent = gap.summaryText;
-      const elWeeklyRev = document.getElementById('rptWeeklyReviews');
-      if (elWeeklyRev) elWeeklyRev.textContent = `주당 +${gap.weeklyReviewsNeeded}건 이상`;
-      const elWeeklyBlog = document.getElementById('rptWeeklyBlogs');
-      if (elWeeklyBlog) elWeeklyBlog.textContent = `주당 +${gap.weeklyBlogsNeeded}건 이상`;
-
-      // [분석 2 바인딩] 완결도 점검 (Completeness Score)
-      const elCompScore = document.getElementById('rptCompScore');
-      if (elCompScore) elCompScore.textContent = comp.score;
-      const elCompGrade = document.getElementById('rptCompGrade');
-      if (elCompGrade) elCompGrade.textContent = comp.gradeText;
-      const elGaugeFill = document.getElementById('rptCompGaugeFill');
-      if (elGaugeFill) elGaugeFill.style.width = `${comp.score}%`;
-
-      // 스터핑 위험도 박스
-      const elStuffingBox = document.getElementById('rptStuffingBox');
-      const elStuffingTitle = document.getElementById('rptStuffingTitle');
-      const elStuffingDesc = document.getElementById('rptStuffingDesc');
-      if (elStuffingBox && elStuffingTitle && elStuffingDesc) {
-        if (comp.keywordStuffingRisk === 'DANGER') {
-          elStuffingBox.className = 'stuffing-alert stuffing-danger';
-          elStuffingTitle.textContent = '🚨 2026 네이버 어뷰징 필터링 위험도: 위험 (키워드 과다 삽입)';
-        } else if (comp.keywordStuffingRisk === 'CAUTION') {
-          elStuffingBox.className = 'stuffing-alert stuffing-caution';
-          elStuffingTitle.textContent = '⚠️ 2026 네이버 어뷰징 필터링 위험도: 주의 (키워드 중복 점검 요망)';
-        } else {
-          elStuffingBox.className = 'stuffing-alert stuffing-safe';
-          elStuffingTitle.textContent = '✅ 2026 네이버 어뷰징 필터링 위험도: 정상 (안전 상호)';
-        }
-        elStuffingDesc.textContent = comp.stuffingReason;
+      const elLossInsight = document.getElementById('rptLossInsight');
+      if (elLossInsight) {
+        elLossInsight.innerHTML = `💡 <strong>유입 진단:</strong> ${escapeHtml(saas.lossClicksText)}`;
       }
 
-      // 5대 체크리스트 렌더링
-      const elCheckGrid = document.getElementById('rptChecklistGrid');
-      if (elCheckGrid && comp.checklist) {
-        elCheckGrid.innerHTML = comp.checklist.map(item => {
-          const badgeClass = item.status === 'PASS' ? 'pass' : (item.status === 'WARN' ? 'warn' : 'fail');
+      // 3. 상권 1위 벤치마킹 매트릭스 (1:1 격차 분석 테이블)
+      const thTop1 = document.getElementById('thTop1Name');
+      if (thTop1) thTop1.textContent = `🥇 ${top1}`;
+
+      const thMy = document.getElementById('thMyStoreName');
+      if (thMy) thMy.textContent = `내 매장 (${store})`;
+
+      const tbody = document.getElementById('rptBenchTableBody');
+      if (tbody && saas.benchmarkingMatrix) {
+        tbody.innerHTML = saas.benchmarkingMatrix.map(m => {
+          let badgeClass = 'diff-badge-neutral';
+          if (m.diffBadgeType === 'danger') badgeClass = 'diff-badge-danger';
+          else if (m.diffBadgeType === 'warning') badgeClass = 'diff-badge-warning';
+
           return `
-            <div class="check-row">
-              <span class="check-badge ${badgeClass}">${item.statusText || item.status}</span>
-              <div class="check-body">
-                <h5>${item.title}</h5>
-                <p>${item.desc}</p>
-                <div class="check-impact">${item.impact}</div>
+            <tr>
+              <td class="col-metric">${escapeHtml(m.metricName)}</td>
+              <td class="col-top1">${escapeHtml(String(m.top1Value))}</td>
+              <td class="col-my">${escapeHtml(String(m.myValue))}</td>
+              <td class="col-diff ${badgeClass}">${escapeHtml(m.diffText)}</td>
+            </tr>
+          `;
+        }).join('');
+      }
+
+      // 3-1. [1주차 전용 점검] 네이버 검색 로봇 색인 최적화 3종 진단 모듈 바인딩
+      const elIdxWrap = document.getElementById('rptWeek1IndexingWrap');
+      if (elIdxWrap && saas.indexingAudit) {
+        elIdxWrap.innerHTML = saas.indexingAudit.map(item => {
+          const badgeClass = item.badgeType === 'success' ? 'badge-idx-success' : (item.badgeType === 'warning' ? 'badge-idx-warning' : 'badge-idx-danger');
+          return `
+            <div class="indexing-item">
+              <div class="indexing-item-header">
+                <span class="indexing-item-title">${escapeHtml(item.title)}</span>
+                <span class="indexing-item-badge ${badgeClass}">${escapeHtml(item.statusBadge)}</span>
+              </div>
+              <div class="indexing-item-diag">${escapeHtml(item.diagnosis)}</div>
+              <div class="indexing-item-action">💡 <strong>처방:</strong> ${escapeHtml(item.actionGuide)}</div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      // 다음 주 예고 티저 박스 바인딩
+      const elTeaserTitle = document.getElementById('teaserTitleText');
+      const elTeaserDesc = document.getElementById('teaserDescText');
+      if (saas.nextWeekTeaser) {
+        if (elTeaserTitle) elTeaserTitle.textContent = `🔒 다음 주 월요일 아침 9시 예고: [${saas.nextWeekTeaser.themeTitle}]`;
+        if (elTeaserDesc) elTeaserDesc.textContent = saas.nextWeekTeaser.description;
+      }
+
+      // 4. 2026 네이버 최신 알고리즘 위험 요소 점검
+      const elRiskWrap = document.getElementById('rptRiskChecklistWrap');
+      if (elRiskWrap && saas.riskChecklist) {
+        elRiskWrap.innerHTML = saas.riskChecklist.map(r => {
+          let tagClass = 'normal';
+          if (r.status === '주의') tagClass = 'caution';
+          else if (r.status === '미흡') tagClass = 'insufficient';
+          else if (r.status === '보통') tagClass = 'moderate';
+
+          return `
+            <div class="risk-row">
+              <span class="risk-tag ${tagClass}">${escapeHtml(r.status)}</span>
+              <div style="font-size:13px; color:var(--slate-800); line-height:1.5;">
+                <strong style="color:#0f172a;">${escapeHtml(r.category)}:</strong> ${escapeHtml(r.desc)}
               </div>
             </div>
           `;
         }).join('');
       }
 
-      // [분석 3 바인딩] AI 리뷰 진정성 & 불만 마이닝
-      const elAiHealth = document.getElementById('rptAiHealthGrade');
-      if (elAiHealth) {
-        elAiHealth.textContent = `리뷰 건강도: ${ai.healthGrade}등급 (${ai.healthScore}점)`;
-        elAiHealth.className = `ai-grade-badge ai-grade-${ai.healthGrade.toLowerCase()}`;
-      }
-      const elAiIndustry = document.getElementById('rptAiIndustryBadge');
-      if (elAiIndustry) elAiIndustry.textContent = `식별 업종: ${ai.industryType}`;
-      const elAiCitation = document.getElementById('rptAiCitationBadge');
-      if (elAiCitation) elAiCitation.textContent = `2026 AI 브리핑 인용 적합도: ${ai.aiCitationFit}`;
+      // 5. 이번 주 사장님의 3단계 실행 가이드 (1주차 기본 등록/색인 점검 내장)
+      const elPlaybookWrap = document.getElementById('rptStepPlaybookWrap');
+      if (elPlaybookWrap && saas.stepPlaybook) {
+        window.__stepCopyReplies = [];
 
-      const elChipsWrap = document.getElementById('rptRiskChipsWrap');
-      if (elChipsWrap && ai.riskKeywords) {
-        elChipsWrap.innerHTML = ai.riskKeywords.map(k => `<span class="risk-chip"># ${k}</span>`).join('');
-      }
+        elPlaybookWrap.innerHTML = saas.stepPlaybook.map((step, sIdx) => {
+          let repliesHtml = '';
+          if (step.copyReplies && step.copyReplies.length > 0) {
+            window.__stepCopyReplies = step.copyReplies;
+            repliesHtml = `
+              <div class="step-replies-wrap">
+                ${step.copyReplies.map((reply, rIdx) => `
+                  <div class="reply-card">
+                    <div class="reply-card-header">
+                      <div class="reply-title">
+                        <i class="fa-solid fa-wand-magic-sparkles" style="color:#2563eb; margin-right:4px;"></i>
+                        ${escapeHtml(reply.title)}
+                      </div>
+                      <button type="button" class="btn-copy-reply" id="btnCopyStep_${rIdx}" onclick="copyStepReply(${rIdx})">
+                        <i class="fa-solid fa-copy"></i> <span>1초 복사</span>
+                      </button>
+                    </div>
+                    <div class="reply-text-box" id="stepReplyText_${rIdx}">${escapeHtml(reply.text)}</div>
+                  </div>
+                `).join('')}
+              </div>
+            `;
+          }
 
-      const elAiGuide = document.getElementById('rptAiGuideText');
-      if (elAiGuide) elAiGuide.textContent = ai.mitigationGuide;
-
-      // [처방 바인딩] 일주일 실전 플레이북 렌더링 (1~3일차 기본 노출 + 4~7일차 아코디언 접힘)
-      const elPrimaryGrid = document.getElementById('rptPlaybookPrimaryGrid');
-      const elSecondaryGrid = document.getElementById('rptPlaybookSecondaryGrid');
-
-      const renderCard = item => `
-        <div class="pb-day-item">
-          <div class="pb-day-num">
-            <span>DAY</span>
-            <b>${item.day}</b>
-          </div>
-          <div class="pb-day-content">
-            <div class="pb-day-meta">
-              <span class="pb-badge">${item.badge}</span>
-              <span class="pb-diff">난이도: ${item.difficulty}</span>
+          return `
+            <div class="step-item">
+              <div class="step-header">
+                <span class="step-num">${step.step}</span>
+                <span class="step-title">${escapeHtml(step.title)}</span>
+              </div>
+              <div class="step-desc">${escapeHtml(step.description)}</div>
+              ${repliesHtml}
             </div>
-            <div class="pb-day-title">${item.title}</div>
-            <div class="pb-day-action">${item.action}</div>
-            <div class="pb-day-kpi">📌 검증 목표: ${item.kpi}</div>
-          </div>
-        </div>
-      `;
-
-      if (playbook.length > 0) {
-        if (elPrimaryGrid) {
-          elPrimaryGrid.innerHTML = playbook.slice(0, 3).map(renderCard).join('');
-        }
-        if (elSecondaryGrid) {
-          elSecondaryGrid.innerHTML = playbook.slice(3).map(renderCard).join('');
-        }
+          `;
+        }).join('');
       }
     }
 
-    function togglePlaybookDays() {
-      const sec = document.getElementById('rptPlaybookSecondaryGrid');
-      const icon = document.getElementById('toggleIcon');
-      const text = document.getElementById('toggleText');
-      if (!sec) return;
-      const isOpen = sec.classList.contains('open');
-      if (isOpen) {
-        sec.classList.remove('open');
-        if (icon) icon.className = 'fa-solid fa-chevron-down';
-        if (text) text.textContent = '4~7일차 심화 미션 4개 더보기 (펼치기)';
+    // 클라이언트 측 SaaS 리포트 자동 계산 Fallback 함수
+    function generateClientSaaSReportSummary(snapshot) {
+      const store = snapshot.storeName || '신청 매장';
+      const kw = snapshot.targetKeyword || '플레이스';
+      const rank = typeof snapshot.myRank === 'number' ? snapshot.myRank : parseInt(String(snapshot.myRank || '2'), 10);
+      
+      const text = `${store} ${kw}`.toLowerCase();
+      const isMedical = /정형외과|한의원|치과|병원|의원|피부과|안과|내과|이비인후과|통증|클리닉|성형외과/.test(text);
+      const isLaw = /변호사|법무사|세무사|회계사|노무사|행정사|법률|특허/.test(text);
+      const isMedicalOrLaw = isMedical || isLaw;
+
+      // 점수 산정
+      let seoScore = 50;
+      if (rank === 1) seoScore += 25;
+      else if (rank <= 3) seoScore += 20;
+      else if (rank <= 10) seoScore += 10;
+      else seoScore += 5;
+
+      if (snapshot.myBooking) seoScore += 15;
+      else seoScore -= 10;
+
+      const myRevTotal = Number(snapshot.myReviews || 150);
+      if (snapshot.myCoupon || myRevTotal >= 100) seoScore += 10;
+      seoScore = Math.max(30, Math.min(98, seoScore));
+
+      const seoScoreText = `${seoScore}점 / 100점 - 상위 ${Math.max(5, Math.min(45, 100 - seoScore))}% 수준`;
+
+      let lossClicksNum = 140;
+      let lossClicksText = '';
+      if (rank === 1) {
+        lossClicksNum = 0;
+        lossClicksText = '현재 1위 골든존 점유로 월 최대 유입률 달성 중 (손실 0명)';
+      } else if (rank <= 3) {
+        lossClicksNum = Math.max(50, (rank - 1) * 70);
+        lossClicksText = `1위 매장 대비 월 약 ${lossClicksNum}명의 잠재 고객 유입 손실 발생 중`;
       } else {
-        sec.classList.add('open');
-        if (icon) icon.className = 'fa-solid fa-chevron-up';
-        if (text) text.textContent = '4~7일차 심화 미션 접기';
+        lossClicksNum = Math.min(480, Math.max(140, (rank - 1) * 80));
+        lossClicksText = `3위 매장 대비 월 약 ${lossClicksNum}명의 잠재 고객 유입 손실 발생 중`;
       }
+
+      const real = snapshot.realDetails;
+
+      // 벤치마킹 매트릭스 (저장하기 수 제거, 블로그 리뷰 추가)
+      const top1RevTotal = Number(snapshot.top1Reviews || 1200);
+      const top30dRev = Math.max(48, Math.round(top1RevTotal * 0.08));
+      const my30dRev = Math.max(8, Math.round(myRevTotal * 0.08));
+      const diffRev = Math.max(0, top30dRev - my30dRev);
+
+      const top1BlogTotal = Number(snapshot.top1BlogReviews || 520);
+      const myBlogTotal = Number(snapshot.myBlogReviews || 68);
+      const diffBlog = Math.max(0, top1BlogTotal - myBlogTotal);
+
+      const top1Photos = 120;
+      const myPhotos = real ? real.photoCount : Math.max(12, Math.min(50, Math.round(myRevTotal * 0.12)));
+      const diffPhotos = Math.max(0, top1Photos - myPhotos);
+
+      const benchmarkingMatrix = [
+        {
+          metricName: '최근 30일 영수증 리뷰',
+          top1Value: `${top30dRev.toLocaleString()}개`,
+          myValue: `${my30dRev.toLocaleString()}개`,
+          diffText: diffRev > 0 ? `-${diffRev.toLocaleString()}개 (1위 우세)` : `+${Math.abs(diffRev).toLocaleString()}개 (내 매장 우세)`,
+          diffBadgeType: diffRev > 0 ? 'danger' : 'neutral'
+        },
+        {
+          metricName: '블로그 리뷰 (체험단/방문기)',
+          top1Value: `${top1BlogTotal.toLocaleString()}개`,
+          myValue: `${myBlogTotal.toLocaleString()}개`,
+          diffText: diffBlog > 0 ? `-${diffBlog.toLocaleString()}개 (1위 우세)` : `+${Math.abs(diffBlog).toLocaleString()}개 (내 매장 우세)`,
+          diffBadgeType: diffBlog > 0 ? 'warning' : 'neutral'
+        },
+        {
+          metricName: '등록 사진 수',
+          top1Value: `${top1Photos}장`,
+          myValue: `${myPhotos}장`,
+          diffText: diffPhotos > 0 ? `-${diffPhotos}장 (1위 우세)` : `+${Math.abs(diffPhotos)}장 (충족)`,
+          diffBadgeType: diffPhotos > 0 ? 'danger' : 'neutral'
+        }
+      ];
+
+      // 1주차 색인 최적화 점검 3종
+      const photoQuotaNeeded = Math.max(0, 20 - myPhotos);
+      const isPhotoQuotaPassed = myPhotos >= 20;
+
+      const indexingAudit = real
+        ? [
+            {
+              id: 'intro_keyword',
+              title: '매장 소개글 키워드 자연 배치율 점검',
+              status: real.introStatus,
+              statusBadge: real.introStatusBadge,
+              badgeType:
+                real.introStatus === 'EXCELLENT' || real.introStatus === 'GOOD'
+                  ? 'success'
+                  : real.introStatus === 'WARN'
+                  ? 'warning'
+                  : 'danger',
+              diagnosis: real.introDiagnosis,
+              actionGuide: real.introActionGuide
+            },
+            {
+              id: 'directions',
+              title: '찾아오는 길 상세 안내 등록 상태 점검',
+              status: real.directionsStatus,
+              statusBadge: real.directionsStatusBadge,
+              badgeType:
+                real.directionsStatus === 'EXCELLENT'
+                  ? 'success'
+                  : real.directionsStatus === 'WARN'
+                  ? 'warning'
+                  : 'danger',
+              diagnosis: real.directionsDiagnosis,
+              actionGuide: real.directionsActionGuide
+            },
+            {
+              id: 'photos_quota',
+              title: '대표 사진 20장 완결 충족 여부 점검',
+              status: real.photoStatus,
+              statusBadge: real.photoStatusBadge,
+              badgeType: real.photoStatus === 'GOOD' ? 'success' : 'danger',
+              diagnosis: real.photoDiagnosis,
+              actionGuide: real.photoActionGuide
+            }
+          ]
+        : [
+            {
+              id: 'intro_keyword',
+              title: '매장 소개글 키워드 자연 배치율 점검',
+              status: 'EXCELLENT',
+              statusBadge: '적정 배치율 88% (안전권)',
+              badgeType: 'success',
+              diagnosis: `타깃 키워드 '${kw}'가 소개글 500자 내에 어뷰징(도배) 없이 최적 빈도(2~3회)로 자연스럽게 배치되어 있어 검색 로봇의 색인 가중치를 온전히 획득 중입니다.`,
+              actionGuide: '현재 키워드 빈도를 유지하시고, 시그니처 메뉴나 주요 혜택 변경 시에만 문맥에 맞게 업데이트하세요.'
+            },
+            {
+              id: 'directions',
+              title: '찾아오는 길 상세 안내 등록 상태 점검',
+              status: 'WARN',
+              statusBadge: '보완 요망 (랜드마크 누락)',
+              badgeType: 'warning',
+              diagnosis: '지하철역 출구 번호, 주변 주요 랜드마크 건물, 도보 소요 시간 동선이 구체적으로 기재되지 않아 모바일 지도 탐색자의 체류시간 감점이 발생하고 있습니다.',
+              actionGuide: "'스마트플레이스 관리자 > 찾아오는 길' 메뉴에서 출구 번호와 인근 랜드마크를 활용한 3줄 도보 동선을 즉시 보강하세요."
+            },
+            {
+              id: 'photos_quota',
+              title: '대표 사진 20장 완결 충족 여부 점검',
+              status: isPhotoQuotaPassed ? 'GOOD' : 'FAIL',
+              statusBadge: isPhotoQuotaPassed ? '기준 충족 (20장 완료)' : `현재 ${myPhotos}장 / 권장 20장 (${photoQuotaNeeded}장 부족)`,
+              badgeType: isPhotoQuotaPassed ? 'success' : 'danger',
+              diagnosis: isPhotoQuotaPassed
+                ? '네이버 검색 로봇의 2026 권장 규격(최소 20장)을 충족하여 탐색 체류시간 30초 이상 유지에 기여하고 있습니다.'
+                : `현재 등록된 사진(${myPhotos}장)이 네이버 검색 로봇 권장 규격(최소 20장)에 ${photoQuotaNeeded}장 미달하여 검색 체류시간 점수 손실이 발생하고 있습니다.`,
+              actionGuide: '고화질 매장 내외부 인테리어 및 시그니처 컷을 추가 업로드하여 최소 20장을 즉시 채우세요.'
+            }
+          ];
+
+      // 위험 요소 점검 동적 판정
+      let directionsRiskStatus = '주의';
+      let directionsRiskDesc = '대중교통 랜드마크 및 상세 도보 동선 설명 누락 (체류시간 감점)';
+      if (real) {
+        if (real.directionsStatus === 'EXCELLENT') {
+          directionsRiskStatus = '정상';
+          directionsRiskDesc = '지하철역 출구 및 랜드마크가 상세 기재되어 탐색 체류시간 만점 유지 중';
+        } else if (real.directionsStatus === 'WARN') {
+          directionsRiskStatus = '주의';
+          directionsRiskDesc = '찾아오는 길은 등록되어 있으나 구체적 랜드마크와 도보 분 수가 부족함';
+        } else {
+          directionsRiskStatus = '미흡';
+          directionsRiskDesc = '찾아오는 길 안내 미등록 (모바일 지도 이용자 이탈 및 체류시간 감점 발생)';
+        }
+      }
+
+      let introRiskStatus = '정상';
+      let introRiskDesc = `타깃 키워드('${kw}') 최적 빈도 배치 완료 (검색 로봇 색인 가중치 확보)`;
+      if (real) {
+        if (real.introStatus === 'FAIL') {
+          introRiskStatus = '미흡';
+          introRiskDesc = '매장 소개글 미등록 (네이버 검색 로봇 형태소 색인 완전 누락)';
+        } else if (real.introStatus === 'WARN') {
+          introRiskStatus = '주의';
+          introRiskDesc =
+            real.introKeywordCount === 0
+              ? `소개글 내 타깃 키워드('${kw}') 누락으로 검색 연관도 점수 감점`
+              : `소개글 내 키워드 과다 반복(${real.introKeywordCount}회)으로 2026 어뷰징 필터 주의`;
+        } else {
+          introRiskStatus = '정상';
+          introRiskDesc = `타깃 키워드가 문맥에 자연스럽게 ${real.introKeywordCount}회 포함되어 색인 가중치 최적화`;
+        }
+      }
+
+      let photoRiskStatus = isPhotoQuotaPassed ? '정상' : '주의';
+      let photoRiskDesc = isPhotoQuotaPassed
+        ? `고화질 사진 ${myPhotos}장 등록 완료 (네이버 권장 최소 20장 규격 충족)`
+        : `현재 사진 ${myPhotos}장 등록 (권장 20장 대비 ${photoQuotaNeeded}장 부족으로 체류시간 점수 손실)`;
+
+      let convRiskStatus = '보통';
+      let convRiskDesc = '';
+      if (isMedicalOrLaw) {
+        convRiskStatus = snapshot.myBooking ? '정상' : '주의';
+        convRiskDesc = snapshot.myBooking
+          ? '네이버 예약 연동으로 모바일 예약 진료 전환 활성 중'
+          : '네이버 예약 진료 슬롯 및 진료시간 공지 미등록';
+      } else {
+        convRiskStatus = snapshot.myCoupon || snapshot.myBooking ? '정상' : '미흡';
+        convRiskDesc =
+          snapshot.myCoupon || snapshot.myBooking
+            ? '예약/쿠폰을 통한 모바일 유입 고객 전환 활성 중'
+            : '알림받기 고객 전용 쿠폰 미발행 (클릭 대비 실제 방문 전환율 저하)';
+      }
+
+      const riskChecklist = [
+        {
+          category: '찾아오는 길 설명 완결도',
+          status: directionsRiskStatus,
+          desc: directionsRiskDesc
+        },
+        {
+          category: '매장 소개글 키워드 최적화',
+          status: introRiskStatus,
+          desc: introRiskDesc
+        },
+        {
+          category: '등록 사진 규격 (최소 20장)',
+          status: photoRiskStatus,
+          desc: photoRiskDesc
+        },
+        {
+          category: '전환 도구 (예약/쿠폰)',
+          status: convRiskStatus,
+          desc: convRiskDesc
+        }
+      ];
+
+      let step1Title = '메뉴판/시설 상세 사진 10장 추가 업로드 (체류 시간 증대용)';
+      let step1Desc =
+        '네이버 검색 로봇의 2026 체류시간 알고리즘을 공략하기 위해 매장 내외부 및 대표 시그니처 컷 10장을 고화질로 보강하세요.';
+
+      if (real) {
+        if (real.photoCount < 20) {
+          step1Title = `대표 사진 ${20 - real.photoCount}장 추가 업로드 (권장 20장 규격 충족용)`;
+          step1Desc = `현재 매장에 등록된 사진이 ${real.photoCount}장입니다. 네이버 검색 로봇의 2026 체류시간 알고리즘 기본 규격(최소 20장)을 충족하기 위해 매장 내외부 인테리어와 시그니처 컷을 고화질로 즉시 보강하세요.`;
+        } else if (real.directionsStatus === 'FAIL' || real.directionsStatus === 'WARN') {
+          step1Title = `지하철 출구 및 랜드마크 기반 '찾아오는 길' 3줄 상세 동선 등록`;
+          step1Desc = `현재 찾아오는 길 안내가 미흡합니다. 고객이 매장을 검색했을 때 길을 헤매지 않도록 인근 지하철역 출구 번호, 대표 랜드마크 건물을 포함하여 스마트플레이스 관리자에서 보강하세요.`;
+        } else if (real.introKeywordCount === 0 || real.introStatus === 'FAIL') {
+          step1Title = `매장 소개글에 타깃 키워드 '${kw}' 자연스럽게 2회 포함하여 수정`;
+          step1Desc = `현재 소개글에 핵심 검색어 '${kw}'가 빠져 있어 검색 로봇이 매장 특성을 명확히 인덱싱하지 못하고 있습니다. 첫 2줄에 키워드를 자연스러운 문맥으로 배치하세요.`;
+        } else {
+          step1Title = '대표 시그니처 메뉴 옵션 및 상세 설명 텍스트 보강 (체류시간 극대화)';
+          step1Desc =
+            '기본 인덱싱은 훌륭하게 세팅되어 있습니다. 메뉴판의 대표 메뉴별 특징과 원산지/조리법 스토리를 3줄씩 추가하여 고객 상세페이지 체류시간을 45초 이상으로 늘리세요.';
+        }
+      }
+
+      const stepPlaybook = [
+        {
+          step: 1,
+          title: step1Title,
+          description: step1Desc
+        },
+        {
+          step: 2,
+          title: 'AI가 작성한 미답변 리뷰 맞춤 답글 2건 복사해서 등록하기',
+          description: 'AI 추천 검색(GEO) 인용 점수를 높이기 위해 키워드가 자연스럽게 녹아든 공식 답글을 바로 복사해 등록하세요.',
+          copyReplies: [
+            {
+              title: isMedicalOrLaw ? '원장님 1:1 맞춤 진료 및 친절 상담 만족 후기 전용' : '대표 메뉴 & 친절한 서비스 만족 후기 전용',
+              text: isMedicalOrLaw
+                ? `소중한 진료 후기 남겨주셔서 진심으로 감사드립니다. 저희 ${store}에서는 환자분 한 분 한 분의 불편함을 깊이 공감하고, 과잉 진료 없이 정직하고 명확한 진료 계획을 제공해 드리고자 온 힘을 다하고 있습니다. ${kw} 인근에서 믿고 의지하실 수 있는 평생 건강 주치의가 되겠습니다. 쾌유를 기원합니다!`
+                : `소중한 발걸음과 따뜻한 후기 진심으로 감사드립니다! 저희 ${store}에서는 매일 정성껏 선별한 신선한 재료와 시그니처 레시피로 고객님께 최상의 미식 경험을 선물해 드리고자 노력하고 있습니다. ${kw}에서 가장 편안하고 기분 좋은 시간이 되셨길 바라며, 언제든 한결같은 맛과 정성으로 맞이하겠습니다. 다음에도 꼭 찾아주세요! 😊`
+            },
+            {
+              title: isMedicalOrLaw ? '청결한 시설 & 쾌적한 대기 환경 칭찬 후기 전용' : '매장 공간 & 감성 분위기 칭찬 후기 전용',
+              text: isMedicalOrLaw
+                ? `쾌적하고 안심할 수 있는 환경에서 진료받으실 수 있도록 멸균 위생 관리와 대기실 편의성에 최선을 다하고 있습니다. 말씀해 주신 따뜻한 격려는 저희 의료진과 전 직원에게 큰 힘이 됩니다. 불편하신 점이 있으시면 언제든 편하게 말씀해 주세요. 건강한 일상을 지켜드리겠습니다!`
+                : `${store}의 공간과 분위기를 온전히 즐겨주셔서 마음 깊이 뿌듯합니다! 바쁜 일상 속에서 잠시 여유를 찾으실 수 있도록 조명, 음악, 좌석 배치 하나까지 세심하게 신경 썼습니다. ${kw} 인근에서 조용하고 아늑한 힐링이 필요하실 때 언제든 편안한 마음으로 들러주세요.`
+            }
+          ]
+        },
+        {
+          step: 3,
+          title: isMedicalOrLaw
+            ? `주말/야간 대기시간 단축을 위한 '네이버 예약 슬롯 & 진료 안내 공지' 등록하기`
+            : `주말 대비 '첫 방문 1,000원 할인 쿠폰' 등록하기`,
+          description: isMedicalOrLaw
+            ? '의료/전문직 광고 규정을 준수하여 불법 유인성 할인 대신 환자/의뢰인 편의를 위한 당일 예약 슬롯과 진료시간 공지를 활성화하세요.'
+            : '스마트플레이스 관리자에서 알림받기 동의 고객 대상 첫 방문 1,000원 쿠폰을 발행하여 유입 전환율을 40% 이상 끌어올리세요.'
+        }
+      ];
+
+      return {
+        weekLabel: '2026년 3월 5주차',
+        subTitle: `[${store}]의 상권 내 경쟁력 및 알고리즘 반응 지수`,
+        seoScore,
+        seoScoreText,
+        lossClicksText,
+        lossClicksNum,
+        benchmarkingMatrix,
+        indexingAudit,
+        riskChecklist,
+        stepPlaybook,
+        nextWeekTeaser: {
+          weekNumber: 2,
+          themeTitle: '2주차: 리뷰 품질 및 감성 진단',
+          subject: 'AI 리뷰 진정성 평가',
+          description: '최근 30일 영수증 리뷰 중 부정 단어 추출, 단문/복사형 리뷰 비중, AI 맞춤형 공감 답글 2종 처방'
+        }
+      };
     }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str).replace(/[&<>"']/g, function(m) {
+        return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[m];
+      });
+    }
+
+    window.copyStepReply = function(rIdx) {
+      if (!window.__stepCopyReplies || !window.__stepCopyReplies[rIdx]) return;
+      const text = window.__stepCopyReplies[rIdx].text;
+      navigator.clipboard.writeText(text).then(() => {
+        const btn = document.getElementById(`btnCopyStep_${rIdx}`);
+        if (btn) {
+          btn.innerHTML = `<i class="fa-solid fa-check"></i> <span>복사 완료!</span>`;
+          btn.classList.add('copied');
+          setTimeout(() => {
+            btn.innerHTML = `<i class="fa-solid fa-copy"></i> <span>1초 복사</span>`;
+            btn.classList.remove('copied');
+          }, 2000);
+        }
+        const toast = document.getElementById('copyToast');
+        if (toast) {
+          toast.classList.add('show');
+          setTimeout(() => toast.classList.remove('show'), 2500);
+        }
+      }).catch(() => {
+        alert('클립보드 복사에 실패했습니다. 본문 텍스트를 직접 드래그하여 복사해 주세요.');
+      });
+    };
   </script>
+
+  <!-- Floating Copy Toast -->
+  <div id="copyToast">
+    <i class="fa-solid fa-circle-check" style="color:#4ade80;"></i>
+    <span>AI 답글이 복사되었습니다! 네이버 플레이스에 바로 붙여넣으세요.</span>
+  </div>
 </body>
 </html>

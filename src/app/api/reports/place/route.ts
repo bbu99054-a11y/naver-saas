@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
-import { PlaceReportSnapshot, calculatePlaceAuditScore, buildDeepAuditBundle } from '@/lib/email/placeReportTemplate'
+import { PlaceReportSnapshot, calculatePlaceAuditScore, buildDeepAuditBundle, generateSaaSReportSummary } from '@/lib/email/placeReportTemplate'
+import { fetchPlaceRealDetails } from '@/lib/naver/placeDetailScraper'
 
 export async function GET(req: Request) {
   try {
@@ -68,13 +69,19 @@ export async function GET(req: Request) {
       reportDate: lead.createdAt.toLocaleDateString('ko-KR')
     }
 
-    if (!snapshot.totalScore) {
-      snapshot.totalScore = calculatePlaceAuditScore(snapshot)
+    // 실측 데이터가 없으면 실시간 네이버 실측 분석 실행
+    if (!snapshot.realDetails && snapshot.storeName) {
+      try {
+        snapshot.realDetails = await fetchPlaceRealDetails(snapshot.storeName, snapshot.targetKeyword)
+      } catch (scrapeErr) {
+        console.warn('[Reports Place GET] fetchPlaceRealDetails fallback:', scrapeErr)
+      }
     }
 
-    if (!snapshot.deepAudit) {
-      snapshot.deepAudit = buildDeepAuditBundle(snapshot)
-    }
+    // 항상 최신 2026 규정 및 가속도 알고리즘에 맞게 점수와 심층 번들을 실시간 재산출하여 보장
+    snapshot.totalScore = calculatePlaceAuditScore(snapshot)
+    snapshot.deepAudit = buildDeepAuditBundle(snapshot)
+    snapshot.saasSummary = snapshot.deepAudit.saasSummary || generateSaaSReportSummary(snapshot)
 
     return NextResponse.json({
       success: true,
@@ -119,8 +126,18 @@ export async function POST(req: Request) {
       reportDate: new Date().toLocaleDateString('ko-KR')
     }
 
+    // 실측 데이터가 없으면 실시간 네이버 실측 분석 실행
+    if (!finalSnapshot.realDetails && finalSnapshot.storeName) {
+      try {
+        finalSnapshot.realDetails = await fetchPlaceRealDetails(finalSnapshot.storeName, finalSnapshot.targetKeyword)
+      } catch (scrapeErr) {
+        console.warn('[Reports Place POST] fetchPlaceRealDetails fallback:', scrapeErr)
+      }
+    }
+
     finalSnapshot.totalScore = finalSnapshot.totalScore || calculatePlaceAuditScore(finalSnapshot)
     finalSnapshot.deepAudit = finalSnapshot.deepAudit || buildDeepAuditBundle(finalSnapshot)
+    finalSnapshot.saasSummary = finalSnapshot.saasSummary || finalSnapshot.deepAudit.saasSummary || generateSaaSReportSummary(finalSnapshot)
 
     // DB에 스냅샷 저장
     const createdLead = await prisma.lead.create({

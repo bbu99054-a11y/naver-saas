@@ -77,16 +77,21 @@ async function fetchPlaceReviewMeta(placeId: string): Promise<{ visitorReviews: 
   return { visitorReviews: '-', blogReviews: '-' };
 }
 
-export async function fetchLiveNaverPlaceRanking(query: string): Promise<{ totalCount: number; items: PlaceItem[] }> {
+export async function fetchLiveNaverPlaceRanking(
+  query: string,
+  coords?: { x?: string; y?: string }
+): Promise<{ totalCount: number; items: PlaceItem[] }> {
   // 끝에 붙은 마침표(.), 쉼표(,), 느낌표 등 특수문자 자동 정제
   const cleanQuery = query.replace(/[.,!?~#*]+$/, '').trim();
   if (!cleanQuery) throw new Error('검색할 키워드를 입력해주세요.');
 
   const q = encodeURIComponent(cleanQuery);
+  const posX = coords?.x?.trim() || '127.109831';
+  const posY = coords?.y?.trim() || '37.496457';
 
-  // 1. 네이버 지도 PCMAP 전용 채널로 실시간 1~20위 정밀 수집 시도 (1차 시도)
+  // 1. 네이버 지도 PCMAP 전용 채널로 실시간 1~20위 정밀 수집 시도 (1차 시도, GPS 좌표 바인딩)
   try {
-    const pcmapUrl = `https://pcmap.place.naver.com/place/list?query=${q}&x=127.109831&y=37.496457`;
+    const pcmapUrl = `https://pcmap.place.naver.com/place/list?query=${q}&x=${posX}&y=${posY}`;
     const res = await fetch(pcmapUrl, {
       headers: {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
@@ -335,6 +340,8 @@ export async function GET(req: Request) {
     const { searchParams } = new URL(req.url);
     const query = searchParams.get('query') || '';
     const target = searchParams.get('target') || '';
+    const coordX = searchParams.get('x') || '';
+    const coordY = searchParams.get('y') || '';
 
     const cleanQuery = query.replace(/[.,!?~#*]+$/, '').trim();
     const cleanTarget = target.trim();
@@ -346,7 +353,7 @@ export async function GET(req: Request) {
       }, { status: 400 });
     }
 
-    const cacheKey = cleanQuery.toLowerCase();
+    const cacheKey = `${cleanQuery.toLowerCase()}_${coordX}_${coordY}`;
     const cached = cache.get(cacheKey);
     const now = Date.now();
 
@@ -356,7 +363,7 @@ export async function GET(req: Request) {
         if (cached && (now - cached.timestamp < CACHE_TTL_MS)) {
           return cached.data;
         }
-        const fresh = await fetchLiveNaverPlaceRanking(cleanQuery);
+        const fresh = await fetchLiveNaverPlaceRanking(cleanQuery, { x: coordX, y: coordY });
         cache.set(cacheKey, { timestamp: now, data: fresh });
         return fresh;
       })(),
@@ -459,6 +466,17 @@ export async function GET(req: Request) {
       });
     }
 
+    const top5Places = rankingData.items.slice(0, 5).map(item => ({
+      rank: item.rank,
+      id: item.id,
+      name: item.name,
+      visitorReviews: item.visitorReviews,
+      blogReviews: item.blogReviews,
+      hasBooking: item.hasBooking,
+      hasCoupon: item.hasCoupon,
+      saveCount: item.saveCount
+    }));
+
     return NextResponse.json({
       success: true,
       query: cleanQuery,
@@ -469,6 +487,7 @@ export async function GET(req: Request) {
       myPlace,
       gapAnalysis, // 🩺 1위 대비 5대 정량 격차 분석
       jevDiagnosis,
+      top5Places, // 📸 1~5위 상위 스냅샷
       rankingList: rankingData.items,
     });
   } catch (error: any) {
