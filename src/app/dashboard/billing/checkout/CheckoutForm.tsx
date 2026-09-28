@@ -73,9 +73,9 @@ export default function CheckoutForm({
     }
     if (plan === 'pro') {
       return {
-        title: 'PostSync Pro-Pilot',
+        title: 'PostSync Pro 수임 OS 올인원 패스',
         credits: '35 크레딧',
-        sub: '매일 1위 수임 독점 + 벤토 카드'
+        sub: '월 35회 칼럼 + 벤토 카드 + 투트랙 발행 + 1분 진단폼'
       }
     }
     return {
@@ -268,7 +268,8 @@ export default function CheckoutForm({
                 <p>• 네이버 C-Rank / DIA+ 최적화 칼럼 생성</p>
                 <p>• 전문직 광고 법규 안심 체크 (금칙어 차단)</p>
                 <p>• 네이버 플레이스 순위 추적 & 분석</p>
-                {plan === 'pro' && <p>• 정예 8종 벤토 인포그래픽 카드 무제한</p>}
+                {plan === 'pro' && <p>• 정예 8종 벤토 카드 & 투트랙 1초 발행</p>}
+                {plan === 'pro' && <p>• 1분 안심 진단폼 CRM & 실시간 알림</p>}
                 {plan === 'enterprise' && <p>• 3개 지점 통합 관리 & 전용 RAG 구축</p>}
               </div>
             </div>

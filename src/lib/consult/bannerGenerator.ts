@@ -20,8 +20,16 @@ export interface ConsultBannerParams {
 export function generateConsultBannerHtml(params: ConsultBannerParams = {}): string {
   const storeName = params.storeName || '대표 변호사실'
   const targetUrl = params.consultUrl || 'https://postsyncapp.com/consult'
-  const fullUrl = params.refId 
-    ? `${targetUrl}${targetUrl.includes('?') ? '&' : '?'}ref=${encodeURIComponent(params.refId)}`
+  
+  const queryParts: string[] = []
+  if (params.refId) {
+    queryParts.push(`ref=${encodeURIComponent(params.refId)}`)
+  }
+  if (params.storeName && params.storeName !== '대표 변호사실') {
+    queryParts.push(`firm=${encodeURIComponent(params.storeName)}`)
+  }
+  const fullUrl = queryParts.length > 0
+    ? `${targetUrl}${targetUrl.includes('?') ? '&' : '?'}${queryParts.join('&')}`
     : targetUrl
 
   return `

@@ -885,7 +885,7 @@ export default function WritePage() {
         {/* 하단 고정 액션 버튼 툴바 (투트랙 하이브리드: 1초 전자동 vs 무설치 웹 복사/다운로드) */}
         <div className="p-2 bg-white border-t border-slate-200 shadow-2xs z-10 flex flex-wrap sm:flex-nowrap gap-2 items-center">
           {/* Track 1: 1초 전자동 임시저장 (local-helper 연동, 추천) */}
-          <div className="flex-[1.4] min-w-[200px]">
+          <div className="flex-[1.4] min-w-[190px]">
             <NaverAutoPublishBtn
               title={postTitle}
               content={parsedHtml}
@@ -893,8 +893,30 @@ export default function WritePage() {
             />
           </div>
 
+          {/* 원스톱 제목 복사 버튼 */}
+          <Button
+            type="button"
+            variant="outline"
+            disabled={!postTitle}
+            onClick={() => {
+              if (!postTitle) return;
+              navigator.clipboard.writeText(postTitle);
+              setIsTitleCopied(true);
+              toast({ title: '복사 완료', description: '제목이 클립보드에 복사되었습니다.' });
+              setTimeout(() => setIsTitleCopied(false), 2000);
+            }}
+            className="h-9 px-2.5 border-indigo-200 text-indigo-700 hover:bg-indigo-50 font-bold text-xs shrink-0 flex items-center gap-1 cursor-pointer shadow-2xs"
+            title="생성된 글 제목을 복사합니다."
+          >
+            {isTitleCopied ? (
+              <><Check className="w-3.5 h-3.5 text-emerald-600 mr-1" /> 제목 복사됨</>
+            ) : (
+              <><Copy className="w-3.5 h-3.5 mr-1" /> 제목 복사</>
+            )}
+          </Button>
+
           {/* Track 2: 무설치 본문 1초 복사 */}
-          <div className="flex-1 min-w-[120px]">
+          <div className="flex-1 min-w-[110px]">
             <CopyToNaverBtn 
               content={readyHtml || parsedHtml} 
               isImagesReady={isImagesReady}

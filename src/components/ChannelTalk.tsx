@@ -2,7 +2,14 @@
 
 import { useEffect } from 'react';
 
+/**
+ * 채널톡(Channel.io) 위젯 연동 컴포넌트
+ * [설정] 대표님 요청으로 현재는 비활성화 상태입니다.
+ * 다시 활성화하려면 아래 주석을 해제하세요. (pluginKey: '7a0bf250-fe54-437c-ab43-cf37863de7f2')
+ */
 export default function ChannelTalk() {
+  // 채널톡 임시 비활성화 (필요할 때 다시 켜기)
+  /*
   useEffect(() => {
     (function () {
       var w = window as any;
@@ -50,6 +57,7 @@ export default function ChannelTalk() {
       windowAny.ChannelIO('shutdown');
     };
   }, []);
+  */
 
   return null;
 }
