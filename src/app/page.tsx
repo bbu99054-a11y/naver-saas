@@ -35,6 +35,7 @@ import {
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { blogPosts } from '@/lib/blogData'
+import LawGuardLiveScanner from '@/components/compliance/LawGuardLiveScanner'
 
 const FAQ_ITEMS = [
   {
@@ -164,16 +165,16 @@ export default function HomePage() {
           <div className="lg:col-span-7 space-y-6">
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#E0F2FE] text-[#0284C7] text-xs font-extrabold border border-[#0284C7]/20">
               <Sparkles className="w-3.5 h-3.5 text-[#0284C7]" />
-              <span>대행사 외주비(월 300만 원) 93% 절감 · 대한민국 1등 변호사 사건 수임 OS</span>
+              <span>대행사 외주비(월 300만 원) 100% 종결 · 대한민국 1등 변호사 사건 수임 OS</span>
             </div>
 
-            <h1 className="text-3xl sm:text-5xl lg:text-[54px] font-black text-slate-900 tracking-tight leading-[1.18]">
-              네이버 1위부터 SNS까지,<br />
-              대표님 로펌에 <span className="text-[#0284C7]">알짜 사건 수임을 물어다 드립니다</span>
+            <h1 className="text-3xl sm:text-5xl lg:text-[52px] font-black text-slate-900 tracking-tight leading-[1.18]">
+              매달 나가는 대행사 외주비 300만 원을 끝내세요.<br />
+              대표님 로펌에 <span className="text-[#0284C7]">알짜 사건 수임을 물어다 주는 단 하나의 OS</span>
             </h1>
 
             <p className="text-sm sm:text-base text-slate-600 leading-relaxed max-w-xl font-normal">
-              네이버 상위 1% 전문 칼럼 발행부터 스마트플레이스 로컬 1위 선점, 사건 1분 안심 진단, 그리고 실시간 수임 관리 시스템까지. 앞으로 스레드, 인스타, 쇼츠 영상 생성까지 확장되는 옴니채널 수임망으로 대표님의 실질적인 수임 매출을 자동으로 완성합니다.
+              로가드 23 징계 위험 0건 판례 칼럼 ➔ 본문 1분 안심 진단 배너 ➔ 실시간 의뢰인 수임 파이프라인. 복잡한 마케팅 고민 없이, 월 19만 원으로 대표님의 로펌에 24시간 수임망을 완성하세요.
             </p>
 
             {/* 분야별 태그 바 (Lawmatics 사진 속 태그 스타일 - 100% 변호사 핵심 사건) */}
@@ -200,16 +201,16 @@ export default function HomePage() {
               </Link>
             </div>
 
-            <div className="flex items-center gap-4 text-xs text-slate-400 font-medium pt-1">
+            <div className="flex flex-wrap items-center gap-4 text-xs text-slate-500 font-medium pt-1">
               <span className="flex items-center gap-1">
                 <Check className="w-4 h-4 text-emerald-500" /> 신용카드 불필요
               </span>
               <span className="flex items-center gap-1">
                 <Check className="w-4 h-4 text-emerald-500" /> 1분 무료 세팅
               </span>
-              <span className="flex items-center gap-1">
-                <Check className="w-4 h-4 text-emerald-500" /> 변호사법 제23조 100% 안심
-              </span>
+              <a href="#compliance" className="flex items-center gap-1 text-[#0284C7] font-bold hover:underline">
+                <Check className="w-4 h-4 text-[#0284C7]" /> 로가드 23 광고 규정 1초 검사 ➔
+              </a>
             </div>
           </div>
 
@@ -870,11 +871,11 @@ export default function HomePage() {
               <div className="space-y-4">
                 <div className="flex items-center justify-between pb-3 border-b border-slate-100">
                   <div>
-                    <span className="text-xs font-bold text-[#0284C7]">2026 차세대 표준</span>
+                    <span className="text-xs font-bold text-[#0284C7]">2026 차세대 단일 표준</span>
                     <h3 className="text-xl font-black text-slate-900 mt-0.5">PostSync Pro 수임 관제 OS</h3>
                   </div>
-                  <span className="px-2.5 py-1 rounded-full bg-[#E0F2FE] text-[#0284C7] text-xs font-black">
-                    월 9.9만~19.9만 원
+                  <span className="px-3 py-1 rounded-full bg-[#E0F2FE] text-[#0284C7] text-xs font-black">
+                    월 190,000원 (올인원)
                   </span>
                 </div>
 
@@ -882,8 +883,8 @@ export default function HomePage() {
                   <div className="flex items-start gap-2.5">
                     <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
                     <div>
-                      <strong className="text-slate-900">외주비 93% 절감 (연 3,240만 원 순이익 방어):</strong>
-                      <p className="text-slate-500 mt-0.5">대행사 외주비의 10분의 1 수준으로 대표님의 마케팅 고정비를 압도적으로 절감.</p>
+                      <strong className="text-slate-900">외주비 93% 절감 (착수금 1건으로 2.4년 치 회수):</strong>
+                      <p className="text-slate-500 mt-0.5">소송 착수금(평균 550만 원) 딱 1건만 수임되어도 2.4년 치 구독료가 전액 회수됩니다.</p>
                     </div>
                   </div>
 
@@ -1097,64 +1098,27 @@ export default function HomePage() {
       </section>
 
       {/* ========================================================================= */}
-      {/* 🌟 5. 교차 기능 2: 광고 법규 안심 체크 (Feature Row 2 - Compliance) */}
+      {/* 🌟 5. 교차 기능 2: 광고 법규 안심 체크 - 로가드 23 (LawGuard 23) 실시간 라이브 스캐너 */}
       {/* ========================================================================= */}
-      <section id="compliance" className="py-16 sm:py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-            {/* 좌측: 텍스트 설명 */}
-            <div className="lg:col-span-6 space-y-4 order-2 lg:order-1">
-              <div className="text-xs font-black text-emerald-600 tracking-wider uppercase">
-                LEGAL ADVERTISING COMPLIANCE (BAR ASSOC.)
-              </div>
-              <h2 className="text-2xl sm:text-4xl font-black text-slate-900 tracking-tight leading-tight">
-                광고 규정 위반 걱정 0%,<br />
-                변호사법 제23조와 변협 규정을 100% 준수합니다
-              </h2>
-              <p className="text-sm text-slate-600 leading-relaxed">
-                '100% 승소 보장', '승소율 1위', '전관예우 표방', '부당 염가' 등 대한변호사협회의 엄격한 변호사 광고 규정상 금지된 위험 표현을 작성 즉시 실시간 탐지하고 품격 있는 전문직 문장으로 자동 순화합니다.
-              </p>
-              <div className="space-y-2 pt-2 text-xs font-bold text-slate-700">
-                <div className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
-                  <span>변호사법 제23조 및 변호사 광고에 관한 규정 100% 실시간 반영</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
-                  <span>경쟁 로펌의 악의적 변협 징계 진정·고발 위험 원천 차단</span>
-                </div>
-              </div>
-            </div>
+      <section id="compliance" className="py-16 sm:py-24 bg-gradient-to-b from-white via-slate-50/60 to-white border-y border-slate-200/80">
+        <div className="max-w-7xl mx-auto px-4 sm:px-8 space-y-10">
+          <div className="text-center space-y-3 max-w-3xl mx-auto">
+            <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-sky-50 text-[#0284C7] text-xs font-black border border-[#0284C7]/30 shadow-2xs">
+              <Scale className="w-3.5 h-3.5 text-[#0284C7]" />
+              <span>로가드 23 (LawGuard 23) 인터랙티브 체험기</span>
+            </span>
+            <h2 className="text-2xl sm:text-4xl font-black text-slate-900 tracking-tight leading-snug">
+              내 로펌 블로그·플레이스 글,<br />
+              <span className="text-[#0284C7]">혹시 대한변협 징계 대상은 아닐까요?</span>
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed max-w-2xl mx-auto">
+              대한민국 변호사법 제23조 및 변호사 광고 규정 120대 정밀 룰셋과 4대 문맥 심층 감별기 탑재. 대행사가 작성해준 원고나 작성 중인 글을 지금 바로 복사해 넣고 1초 만에 징계 위험을 무료로 진단해보세요.
+            </p>
+          </div>
 
-            {/* 우측: 목업 (안전 검사 통과 카드) */}
-            <div className="lg:col-span-6 order-1 lg:order-2">
-              <div className="bg-[#F8FAFC] border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-sm space-y-4">
-                <div className="flex items-center justify-between pb-3 border-b border-slate-200">
-                  <div className="flex items-center gap-2">
-                    <ShieldCheck className="w-5 h-5 text-emerald-600" />
-                    <span className="font-black text-slate-900 text-sm">변호사 광고 규정 안심 검수</span>
-                  </div>
-                  <span className="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-700 text-xs font-black">
-                    안전도 100% 적법
-                  </span>
-                </div>
-
-                <div className="space-y-2.5 text-xs">
-                  <div className="p-3 bg-white rounded-xl border border-rose-200 flex items-center justify-between">
-                    <span className="line-through text-rose-500 font-medium">"100% 무죄 판결을 약속드립니다"</span>
-                    <span className="text-[10px] text-rose-600 font-bold bg-rose-50 px-2 py-0.5 rounded">금칙어 감지</span>
-                  </div>
-                  <div className="p-3 bg-emerald-50/50 rounded-xl border border-emerald-300 flex items-center justify-between">
-                    <span className="text-emerald-800 font-bold">➔ "객관적 양형 자료를 토대로 실형을 방어합니다"</span>
-                    <span className="text-[10px] text-emerald-700 font-bold bg-emerald-100 px-2 py-0.5 rounded">합법 대체 완료</span>
-                  </div>
-                </div>
-
-                <p className="text-[11px] text-slate-400 text-center pt-1">
-                  징계 위험 없이 신뢰받는 법률사무소 브랜딩을 구축하세요.
-                </p>
-              </div>
-            </div>
+          {/* 실시간 인터랙티브 검역 스캐너 위젯 */}
+          <div className="max-w-5xl mx-auto">
+            <LawGuardLiveScanner />
           </div>
         </div>
       </section>

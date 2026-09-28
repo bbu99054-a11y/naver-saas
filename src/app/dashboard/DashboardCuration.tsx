@@ -276,7 +276,7 @@ export function DashboardCuration({ profile }: { profile: any }) {
             <div className="flex items-center gap-1.5 mb-1">
               <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
               <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100/80 text-amber-800">
-                Jev AI 고단가 심사 연동
+                로가드 23 고단가 심사 연동
               </span>
             </div>
             <CardTitle className="text-lg sm:text-xl flex items-center gap-2 text-slate-900 font-extrabold break-keep">
@@ -284,7 +284,7 @@ export function DashboardCuration({ profile }: { profile: any }) {
               오늘의 고단가 수임 키워드 자동 선별기
             </CardTitle>
             <CardDescription className="text-slate-600 text-xs mt-0.5 break-keep">
-              네이버 실시간 검색 시그널과 Jev AI가 선별한 <strong>{profile?.address || '관할 지역'}</strong> 수임 직결 롱테일 키워드입니다.
+              네이버 실시간 검색 시그널과 로가드 23 AI가 선별한 <strong>{profile?.address || '관할 지역'}</strong> 수임 직결 롱테일 키워드입니다.
             </CardDescription>
           </div>
           
@@ -424,7 +424,7 @@ export function DashboardCuration({ profile }: { profile: any }) {
                 수임료 500만~1,000만 원 상당의 고단가 사건을 선별하시겠습니까?
               </h3>
               <p className="text-xs text-slate-500 mb-5 max-w-md leading-relaxed">
-                네이버 실시간 검색 시그널과 Jev 0.05초 심층 감별 AI를 가동하여, <strong>단순 잡상식 문의는 버리고 실제 유료 수임으로 직결되는 10대 알짜 키워드</strong>를 추출합니다.
+                네이버 실시간 검색 시그널과 로가드 23 0.05초 심층 감별 AI를 가동하여, <strong>단순 잡상식 문의는 버리고 실제 유료 수임으로 직결되는 10대 알짜 키워드</strong>를 추출합니다.
               </p>
               <Button 
                 onClick={handleGenerate} 
@@ -432,7 +432,7 @@ export function DashboardCuration({ profile }: { profile: any }) {
                 className="bg-[#FF6B00] hover:bg-[#E05D00] text-white font-extrabold text-xs rounded-xl px-6 h-10 shadow-sm cursor-pointer transition-transform active:scale-95 disabled:opacity-60"
               >
                 {isLoading ? (
-                  <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Jev AI 고단가 수임 키워드 정밀 선별 중...</>
+                  <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> 로가드 23 AI 고단가 수임 키워드 정밀 선별 중...</>
                 ) : cooldownLeft > 0 ? (
                   `재발굴 대기 중 (${cooldownLeft}초)`
                 ) : remainingQuota === 0 ? (

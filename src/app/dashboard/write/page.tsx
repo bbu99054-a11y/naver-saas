@@ -11,14 +11,17 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { 
   Loader2, Sparkles, PenTool, Monitor, Smartphone, 
   Copy, Check, FileText, Clock, BookOpen, ArrowRight, ShieldCheck, AlertCircle, RefreshCw, Search,
-  Swords, X
+  Swords, X, Download
 } from 'lucide-react'
 import type { ComplianceInspectionResult, ComplianceViolation } from '@/lib/adcheck/lawyerCompliance'
 import { CopyToNaverBtn } from '@/components/CopyToNaverBtn'
 import { NaverAutoPublishBtn } from '@/components/NaverAutoPublishBtn'
 import { MultiPublishBtn } from '@/components/MultiPublishBtn'
 import { checkKeywordDuplicate } from '@/actions/articles'
+import { getProfile } from '@/actions/profile'
 import { preUploadCardImages, processPostInfographics } from '@/lib/cardImageUploader'
+import { generateConsultBannerHtml } from '@/lib/consult/bannerGenerator'
+import { downloadAllCardImages } from '@/lib/cardImageDownloader'
 
 
 
@@ -80,7 +83,20 @@ export default function WritePage() {
   const [showQuotaModal, setShowQuotaModal] = useState(false)
   const [quotaMessage, setQuotaMessage] = useState('')
   
-  // 🛡️ Jev 변호사법 제23조 실시간 안심 검역 상태
+  // 🎣 사건 1분 안심 진단 폼 수임 배너 상태
+  const [userProfile, setUserProfile] = useState<any>(null)
+  const [includeConsultBanner, setIncludeConsultBanner] = useState<boolean>(true)
+  const [isBannerCopied, setIsBannerCopied] = useState<boolean>(false)
+  const [isDownloadingCards, setIsDownloadingCards] = useState<boolean>(false)
+
+  // 프로필 정보 로드
+  useEffect(() => {
+    getProfile().then(p => {
+      if (p) setUserProfile(p)
+    })
+  }, [])
+  
+  // 🛡️ 로가드 23 변호사법 제23조 실시간 안심 검역 상태
   const [complianceResult, setComplianceResult] = useState<ComplianceInspectionResult | null>(null)
   const [isInspectingCompliance, setIsInspectingCompliance] = useState(false)
   const [showComplianceModal, setShowComplianceModal] = useState(false)
@@ -217,8 +233,19 @@ export default function WritePage() {
     // 유니코드 결합 제어 문자 (바코드 글리프 잔여물) 완전 제거
     clean = clean.replace(/[\uFE00-\uFE0F\u200B-\u200D\u20E0-\u20E3]+/g, '');
 
+    // 🎣 사건 1분 안심 진단 폼 수임 배너 자동 결합
+    if (includeConsultBanner && !clean.includes('사건 1분 안심 진단 폼 수임 배너')) {
+      const bannerHtml = generateConsultBannerHtml({
+        storeName: userProfile?.store_name || '대표 변호사실',
+        industry: userProfile?.industry || '법률',
+        phone: userProfile?.phone || undefined,
+        refId: userProfile?.user_id || undefined
+      })
+      clean = `${clean}\n\n${bannerHtml}`
+    }
+
     return clean;
-  }, [completion, keyword]);
+  }, [completion, keyword, includeConsultBanner, userProfile]);
 
 
 
@@ -232,6 +259,67 @@ export default function WritePage() {
     const readTimeMin = Math.max(1, Math.ceil(charsNoSpaces / 500));
     return { charsWithSpaces, charsNoSpaces, readTimeMin };
   }, [parsedHtml]);
+
+  // 📋 사건 1분 안심 진단 배너 단독 복사 핸들러 (네이버 스마트에디터 ONE 서식 호환)
+  const handleCopyBannerOnly = async () => {
+    const bannerHtml = generateConsultBannerHtml({
+      storeName: userProfile?.store_name || '대표 변호사실',
+      industry: userProfile?.industry || '법률',
+      phone: userProfile?.phone || undefined,
+      refId: userProfile?.user_id || undefined
+    })
+
+    try {
+      if (typeof window !== 'undefined' && navigator.clipboard && window.ClipboardItem) {
+        await navigator.clipboard.write([
+          new ClipboardItem({
+            'text/html': new Blob([bannerHtml], { type: 'text/html' }),
+            'text/plain': new Blob([bannerHtml], { type: 'text/plain' })
+          })
+        ])
+      } else {
+        await navigator.clipboard.writeText(bannerHtml)
+      }
+      setIsBannerCopied(true)
+      toast({ title: '수임 배너 복사 완료', description: '네이버 블로그 에디터에 붙여넣기(Ctrl+V)하세요.' })
+      setTimeout(() => setIsBannerCopied(false), 2000)
+    } catch (err) {
+      console.warn('Banner clipboard item fallback:', err)
+      navigator.clipboard.writeText(bannerHtml)
+      setIsBannerCopied(true)
+      toast({ title: '수임 배너 복사 완료', description: '클립보드에 복사되었습니다.' })
+      setTimeout(() => setIsBannerCopied(false), 2000)
+    }
+  }
+
+  // 📸 본문 인포그래픽 카드뉴스 일괄 다운로드 핸들러 (드래그 앤 드롭 업로드용)
+  const handleDownloadCards = async () => {
+    if (!parsedHtml) return
+    setIsDownloadingCards(true)
+    try {
+      const count = await downloadAllCardImages(parsedHtml, postTitle || keyword)
+      if (count > 0) {
+        toast({
+          title: `카드 ${count}장 다운로드 시작!`,
+          description: '네이버 블로그 에디터 창으로 다운로드된 이미지들을 드래그 앤 드롭하시면 네이버 정규 사진으로 자동 등록됩니다.'
+        })
+      } else {
+        toast({
+          title: '다운로드할 카드가 없습니다',
+          description: '본문에 카드 이미지가 포함되어 있지 않습니다.'
+        })
+      }
+    } catch (err) {
+      console.error('Card download failed:', err)
+      toast({
+        title: '다운로드 실패',
+        description: '카드 이미지를 내려받는 중 오류가 발생했습니다.',
+        variant: 'destructive'
+      })
+    } finally {
+      setIsDownloadingCards(false)
+    }
+  }
 
   // 원고 스트리밍 완료 시 백그라운드 사전 업로드 (0.01초 무손실 복사 준비)
   useEffect(() => {
@@ -444,7 +532,7 @@ export default function WritePage() {
                   공략 대상: <strong className="text-slate-900">{competitorContext.competitor}</strong>
                 </p>
                 <div className="text-[11px] text-rose-950 bg-white/90 p-2 rounded-lg border border-rose-100/90 leading-relaxed">
-                  <strong className="text-rose-700 font-bold block mb-0.5">🧠 Jev 간파 허점 (우리가 메울 빈틈):</strong>
+                  <strong className="text-rose-700 font-bold block mb-0.5">🧠 로가드 23 간파 허점 (우리가 메울 빈틈):</strong>
                   {competitorContext.gap}
                 </div>
               </div>
@@ -521,7 +609,7 @@ export default function WritePage() {
           >
             {isLoading ? (
               !completion ? (
-                <><Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin" /> 네이버 상위 10개 SERP 수집 & Jev 팩트 정제 중...</>
+                <><Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin" /> 네이버 상위 10개 SERP 수집 & 로가드 23 팩트 정제 중...</>
               ) : (
                 <><Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin" /> AI 원고 작성 중...</>
               )
@@ -559,7 +647,7 @@ export default function WritePage() {
             {/* 🛡️ 변호사법 제23조 안심 검역 인디케이터 배지 */}
             {parsedHtml && !isLoading && (
               <div className="ml-1 flex items-center gap-1.5">
-                {/* 🔍 네이버 상위 10개 SERP 역설계 & Jev 정제 완료 뱃지 */}
+                {/* 🔍 네이버 상위 10개 SERP 역설계 & 로가드 23 정제 완료 뱃지 */}
                 <span className="hidden md:inline-flex items-center gap-1 text-[10px] font-bold text-slate-700 bg-slate-100 px-2 py-0.5 rounded-full border border-slate-200 shadow-2xs">
                   <Search className="w-2.5 h-2.5 text-indigo-500" />
                   상위 10사 역설계 완료 (정예 4건 벤치마크)
@@ -567,7 +655,7 @@ export default function WritePage() {
 
                 {isInspectingCompliance ? (
                   <span className="inline-flex items-center gap-1 text-[10px] font-bold text-[#0284C7] bg-[#E0F2FE] px-2 py-0.5 rounded-full border border-sky-200">
-                    <Loader2 className="w-2.5 h-2.5 animate-spin" /> Jev 광고법 23조 심사 중...
+                    <Loader2 className="w-2.5 h-2.5 animate-spin" /> 로가드 23 안심 심사 중...
                   </span>
                 ) : complianceResult ? (
                   complianceResult.isCompliant ? (
@@ -697,6 +785,57 @@ export default function WritePage() {
           </div>
         )}
 
+        {/* 🎣 사건 1분 안심 진단 폼 수임 배너 상태 & 단독 복사 컨트롤 바 */}
+        {parsedHtml && !isLoading && (
+          <div className="bg-sky-50/90 border-b border-sky-200/80 px-3.5 py-2 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-[#0284C7] animate-pulse"></span>
+              <div className="flex items-center gap-1.5 flex-wrap">
+                <span className="font-black text-slate-900 flex items-center gap-1">
+                  🎣 수임 낚싯바늘:
+                </span>
+                <span className="text-slate-600 text-[11px]">
+                  {includeConsultBanner 
+                    ? '본문 최하단에 [사건 1분 안심 진단 폼] 배너가 자동 장착되었습니다 (네이버 블로그 복사 시 함께 복사).'
+                    : '진단 폼 배너가 제외된 순수 본문 상태입니다.'}
+                </span>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2 shrink-0">
+              <button
+                type="button"
+                onClick={handleCopyBannerOnly}
+                className="h-7 px-2.5 text-[11px] font-bold border border-sky-300 bg-white hover:bg-sky-100 text-[#0284C7] rounded-md transition-colors flex items-center gap-1 cursor-pointer shadow-2xs"
+              >
+                {isBannerCopied ? (
+                  <>
+                    <Check className="w-3 h-3 text-emerald-600" />
+                    <span>배너 복사됨</span>
+                  </>
+                ) : (
+                  <>
+                    <Copy className="w-3 h-3" />
+                    <span>배너만 단독 복사</span>
+                  </>
+                )}
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setIncludeConsultBanner(!includeConsultBanner)}
+                className={`h-7 px-2.5 text-[11px] font-extrabold rounded-md transition-all cursor-pointer shadow-2xs ${
+                  includeConsultBanner
+                    ? 'bg-[#0284C7] hover:bg-[#0369A1] text-white'
+                    : 'bg-slate-200 hover:bg-slate-300 text-slate-700'
+                }`}
+              >
+                {includeConsultBanner ? '배너 장착 중 (ON)' : '배너 제외됨 (OFF)'}
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* 중앙 본문 렌더링 영역 (세로 공간 극대화 및 좌측 정렬) */}
         <CardContent className="p-0 flex-1 overflow-auto bg-slate-100/50">
           {!parsedHtml && !isLoading ? (
@@ -743,22 +882,50 @@ export default function WritePage() {
           )}
         </CardContent>
         
-        {/* 하단 고정 액션 버튼 툴바 (초슬림 & 컴팩트) */}
-        <div className="p-2 bg-white border-t border-slate-200 shadow-2xs z-10 flex gap-2 items-stretch">
-          <NaverAutoPublishBtn
-            title={postTitle}
-            content={parsedHtml}
-            className="flex-[1.6] h-8.5 shadow-2xs font-bold text-xs"
-          />
-          {/* 수동 복사 버튼 (임시 비노출 보존)
-          <CopyToNaverBtn 
-            content={readyHtml || parsedHtml} 
-            isImagesReady={isImagesReady}
-            onEnsureReady={ensurePreUploadReady}
-            className="flex-1 h-8.5 shadow-2xs font-bold text-xs" 
-          />
-          */}
-          <MultiPublishBtn title={postTitle} content={parsedHtml} className="flex-1" buttonClassName="h-8.5 text-xs font-bold" />
+        {/* 하단 고정 액션 버튼 툴바 (투트랙 하이브리드: 1초 전자동 vs 무설치 웹 복사/다운로드) */}
+        <div className="p-2 bg-white border-t border-slate-200 shadow-2xs z-10 flex flex-wrap sm:flex-nowrap gap-2 items-center">
+          {/* Track 1: 1초 전자동 임시저장 (local-helper 연동, 추천) */}
+          <div className="flex-[1.4] min-w-[200px]">
+            <NaverAutoPublishBtn
+              title={postTitle}
+              content={parsedHtml}
+              className="w-full h-9 shadow-sm font-bold text-xs"
+            />
+          </div>
+
+          {/* Track 2: 무설치 본문 1초 복사 */}
+          <div className="flex-1 min-w-[120px]">
+            <CopyToNaverBtn 
+              content={readyHtml || parsedHtml} 
+              isImagesReady={isImagesReady}
+              className="w-full h-9 shadow-2xs font-bold text-xs" 
+            />
+          </div>
+
+          {/* Track 3: 카드뉴스 일괄 다운로드 (드래그앤드롭용) */}
+          <Button
+            type="button"
+            variant="outline"
+            disabled={!parsedHtml || isDownloadingCards}
+            onClick={handleDownloadCards}
+            className="h-9 px-3 border-slate-300 hover:bg-slate-50 text-slate-700 font-bold text-xs shrink-0 flex items-center gap-1.5 cursor-pointer shadow-2xs"
+            title="본문의 고화질 카드 이미지를 다운로드하여 네이버 블로그에 드래그앤드롭하세요."
+          >
+            {isDownloadingCards ? (
+              <>
+                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                <span>저장 중...</span>
+              </>
+            ) : (
+              <>
+                <Download className="w-3.5 h-3.5 text-sky-600" />
+                <span className="hidden sm:inline">📸 </span><span>카드 다운로드</span>
+              </>
+            )}
+          </Button>
+
+          {/* 서브: 워드프레스/티스토리 동시발행 */}
+          <MultiPublishBtn title={postTitle} content={parsedHtml} className="shrink-0" buttonClassName="h-9 px-3 text-xs font-bold" />
         </div>
 
       </Card>
@@ -781,24 +948,25 @@ export default function WritePage() {
               </p>
             </div>
 
-            <div className="bg-indigo-50/70 border border-indigo-100/80 rounded-xl p-4 text-left space-y-2 text-xs">
-              <p className="font-bold text-indigo-950 flex items-center justify-between">
-                <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-indigo-600" /> Pro 요금제 업그레이드 혜택:</span>
-                <span className="text-[10px] bg-indigo-600 text-white px-2 py-0.5 rounded-full font-extrabold">50% 평생 특가</span>
+            <div className="bg-sky-50/70 border border-sky-100/80 rounded-xl p-4 text-left space-y-2 text-xs">
+              <p className="font-bold text-slate-900 flex items-center justify-between">
+                <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-[#0284C7]" /> PostSync Pro 수임 OS 올인원:</span>
+                <span className="text-[10px] bg-[#0284C7] text-white px-2 py-0.5 rounded-full font-extrabold">월 190,000원</span>
               </p>
               <ul className="space-y-1.5 text-slate-700 font-medium pl-3.5 list-disc">
-                <li><strong>월 30건 (주 3~5회)</strong> 넉넉한 정기 포스팅 발행</li>
-                <li><strong>1080px 고화질 실사 인포그래픽 카드</strong> 자동 생성</li>
-                <li>전문직 맞춤 <strong>RAG 지식베이스 & 4대 톤앤매너</strong> 최적화</li>
-                <li>워드프레스 · 티스토리 <strong>원클릭 동시 발행</strong> 지원</li>
+                <li><strong>로가드 23</strong> 징계 0건 안심 검역 무제한</li>
+                <li><strong>월 35회 (매일 1편)</strong> 판례 분석 칼럼 독점 발행</li>
+                <li><strong>사건 1분 안심 진단 폼</strong> 수임 배너 자동 결합</li>
+                <li><strong>네이버 스마트플레이스</strong> 로컬 1위 관제 & AI 리뷰 답글</li>
+                <li><strong>의뢰인 수임 파이프라인 CRM</strong> 실시간 알림 연동</li>
               </ul>
             </div>
 
             <div className="space-y-2 pt-1">
-              <Link href="/dashboard/billing" className="block w-full">
-                <Button className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs h-10 shadow-md gap-1.5 cursor-pointer">
-                  <Sparkles className="w-4 h-4 text-amber-300" />
-                  <span>Pro 요금제 업그레이드하러 가기 →</span>
+              <Link href="/dashboard/billing/checkout?plan=pro&amount=190000" className="block w-full">
+                <Button className="w-full bg-[#FF6B00] hover:bg-[#E05D00] text-white font-extrabold text-xs h-10 shadow-md gap-1.5 cursor-pointer">
+                  <Sparkles className="w-4 h-4 text-amber-200" />
+                  <span>수임 OS 올인원 패스 시작하기 (월 19만 원) →</span>
                 </Button>
               </Link>
               <Button 
@@ -823,11 +991,12 @@ export default function WritePage() {
                   <ShieldCheck className="w-5 h-5" />
                 </span>
                 <div>
-                  <h3 className="text-base font-black text-slate-900">
-                    변호사법 제23조 & 대한변협 광고규정 심사 결과
+                  <h3 className="text-base font-black text-slate-900 flex items-center gap-1.5">
+                    <span>로가드 23 (LawGuard 23) 안심 심사 결과</span>
+                    <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-200">AI 안심 방패</span>
                   </h3>
                   <p className="text-xs text-slate-500">
-                    총 {complianceResult.violations.length}건의 규정 위반 소지가 발견되었습니다.
+                    대한변협 광고규정 및 변호사법 제23조 기준 위반 소지 {complianceResult.violations.length}건 정밀 감지
                   </p>
                 </div>
               </div>
@@ -840,7 +1009,7 @@ export default function WritePage() {
               </Button>
             </div>
 
-            {/* Jev 4대 지표 요약 바 */}
+            {/* 로가드 23 4대 지표 요약 바 */}
             {complianceResult.jevAnalysis && (
               <div className="grid grid-cols-4 gap-2 bg-slate-50 p-3 rounded-xl text-center text-xs">
                 <div>

@@ -38,7 +38,7 @@ export function CompetitorRadarCard() {
               Competitor Radar & Counter
             </span>
             <span className="text-[10px] font-bold text-[#0284C7] bg-[#E0F2FE] px-2 py-0.2 rounded-full flex items-center gap-1">
-              <Sparkles className="w-2.5 h-2.5" /> Jev 허점 간파 가동 중
+              <Sparkles className="w-2.5 h-2.5" /> 로가드 23 허점 분석기 가동 중
             </span>
           </div>
           <h3 className="text-sm font-bold text-slate-900 mt-1 flex items-center gap-1.5">
@@ -118,7 +118,7 @@ export function CompetitorRadarCard() {
                 <div className="flex items-center justify-between">
                   <span className="font-extrabold text-rose-700 flex items-center gap-1 text-[10px]">
                     <AlertTriangle className="w-3 h-3 text-rose-600" />
-                    Jev 간파 허점 (경쟁사 빈틈)
+                    로가드 23 간파 허점 (경쟁사 빈틈)
                   </span>
                   <span className="text-[10px] font-bold text-rose-600">
                     위협도 {comp.threatScore}%

@@ -277,12 +277,14 @@ export async function POST(req: Request) {
 
       profileFooterPrompt = `
 <footer_cta>
-[사무소 프로필 정보: [최하단 상담 유도 배너 카드]에 직통 상담 및 오시는 길 2개 정보를 집중 반영할 것]
+[사무소 프로필 정보: 결론부 및 상담 유도에 반영할 것]
 - 이름/상호: ${profile.store_name || ''}
 - 전문 분야: ${profile.industry || ''}
 - 주소: ${profile.address || ''}
 - 직통 전화번호: ${profile.phone || ''}
 ${profile.reservation_link ? `- 네이버 지도/예약 링크: ${profile.reservation_link}` : ''}
+
+[결론부 브릿지 지침] 본문의 4단 결론부 마지막 문장에서는 혼자 불안해하는 독자를 위해 "아래 [사건 1분 안심 진단 폼]을 통해 자신의 상황과 쟁점을 남겨주시면, 담당 변호사실에서 실무 판례를 토대로 골든타임 내에 신속히 쟁점을 사전 검토해 드린다"는 취지의 신뢰도 높은 행동 유도 문장으로 자연스럽게 글을 맺으세요.
 
 [필수 면책 조항] 배너 바로 위에 다음 문구를 작고 흐린 글씨(<p style="font-size: 11px; color: #94a3b8; text-align: center; margin: 25px 0 10px 0;">)로 반드시 삽입해: 
 "본 포스팅은 일반적인 정보 제공을 목적으로 하며, 구체적인 사안에 따라 법적 판단이 달라질 수 있으므로 반드시 정식 상담을 받아보시기 바랍니다."

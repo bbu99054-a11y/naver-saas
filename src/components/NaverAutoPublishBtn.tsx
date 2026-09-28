@@ -259,17 +259,17 @@ export function NaverAutoPublishBtn({
           {isPublishing ? (
             <>
               <Loader2 className="w-4 h-4 mr-1.5 animate-spin" />
-              <span>AI 다이렉트 발행 중 ({progressPercent}%)...</span>
+              <span>자동 임시저장 중 ({progressPercent}%)...</span>
             </>
           ) : isPublished ? (
             <>
               <CheckCircle2 className="w-4 h-4 mr-1.5" />
-              <span>네이버 발행 완료! 🎉</span>
+              <span>네이버 임시저장 완료! 🎉</span>
             </>
           ) : (
             <>
               <Send className="w-4 h-4 mr-1.5" />
-              <span>🚀 네이버 원클릭 자동 발행</span>
+              <span>⚡ 1초 자동 임시저장 (사진 등록)</span>
               {isHelperOnline === true && (
                 <span className="ml-1.5 w-2 h-2 rounded-full bg-emerald-300 animate-pulse" title="PostSynk AI 다이렉트 엔진 연결됨" />
               )}
@@ -571,6 +571,17 @@ export function NaverAutoPublishBtn({
               >
                 닫기
               </Button>
+            </div>
+
+            {/* 💡 무설치 웹 복사 모드 바로가기 Fallback */}
+            <div className="pt-2 border-t border-slate-100 text-center">
+              <button
+                type="button"
+                onClick={() => setShowHelperModal(false)}
+                className="text-xs text-[#0284C7] hover:underline font-bold inline-flex items-center gap-1 cursor-pointer"
+              >
+                <span>💡 프로그램 설치 없이 바로 작성하기 ➔ [무설치 본문 복사 & 카드 다운로드]</span>
+              </button>
             </div>
           </div>
         </div>

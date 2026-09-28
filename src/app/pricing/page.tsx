@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-import { Sparkles, CheckCircle2, ShieldCheck, HelpCircle, ArrowRight, Building2, Flame } from 'lucide-react'
+import { Sparkles, CheckCircle2, ShieldCheck, HelpCircle, ArrowRight, Building2, Flame, Scale, Check } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
 export default function PricingPage() {
@@ -22,7 +22,7 @@ export default function PricingPage() {
   return (
     <div className="min-h-screen bg-[#F4F8FC] text-slate-900 font-sans selection:bg-sky-200">
       
-      {/* Navbar */}
+      {/* 1. 상단 네비게이션 */}
       <header className="fixed top-0 w-full bg-white/80 backdrop-blur-md z-50 border-b border-slate-200/60 shadow-xs">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           <Link href="/" className="text-xl font-black tracking-tighter flex items-center gap-2">
@@ -36,13 +36,13 @@ export default function PricingPage() {
             <Link href="/login" className="text-sm font-semibold text-slate-600 hover:text-[#0284C7] transition-colors">
               로그인
             </Link>
-            <Link href="/consult">
+            <Link href="/consult" target="_blank">
               <Button variant="outline" className="hidden sm:inline-flex border-slate-200 text-xs font-bold rounded-full">
-                1분 진단 체험
+                1분 진단 폼 체험
               </Button>
             </Link>
-            <Link href="/login">
-              <Button className="bg-[#FF6B00] hover:bg-[#E56000] text-white rounded-full px-5 py-2 font-bold text-xs shadow-md shadow-orange-200 cursor-pointer">
+            <Link href="/dashboard">
+              <Button className="bg-[#FF6B00] hover:bg-[#E05D00] text-white rounded-full px-5 py-2 font-bold text-xs shadow-md shadow-orange-200 cursor-pointer">
                 무료 체험 시작
               </Button>
             </Link>
@@ -50,263 +50,237 @@ export default function PricingPage() {
         </div>
       </header>
 
-      {/* Pricing Section Header */}
-      <section className="pt-32 pb-16 px-6">
-        <div className="max-w-4xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-sky-100 border border-sky-200 text-sky-800 text-xs font-bold mb-5">
+      {/* 2. 요금제 헤더 (ROI 앵커링) */}
+      <section className="pt-32 pb-12 px-6">
+        <div className="max-w-4xl mx-auto text-center space-y-4">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-sky-100 border border-sky-200 text-sky-800 text-xs font-bold">
             <ShieldCheck className="w-4 h-4 text-[#0284C7]" />
-            대한민국 1등 변호사 및 법률사무소 전용 사건 수임 OS
+            월 300만 원 마케팅 대행사 100% 대체 · 대한민국 1등 변호사 사건 수임 OS
           </div>
-          <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 mb-5 leading-tight">
-            외주 대행비 월 300만 원 대비 <span className="text-[#0284C7]">93% 절감</span><br />
-            실제 의뢰인이 사건 수임으로 이어지는 실속 요금제
+
+          <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-slate-900 leading-[1.2]">
+            소송 착수금(평균 550만 원) 딱 1건이면,<br />
+            <span className="text-[#0284C7]">2.4년 치 구독료가 전액 회수됩니다</span>
           </h1>
-          <p className="text-base md:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
-            단순 블로그 글쓰기가 아닌, 네이버 블로그·플레이스부터 옴니채널 수임 파이프라인까지<br className="hidden sm:inline" />
-            대표님의 법률사무소에 알짜 사건 수임을 물어다 주는 원스톱 시스템을 누려보세요.
+
+          <p className="text-sm sm:text-base text-slate-600 max-w-2xl mx-auto leading-relaxed">
+            복잡한 요금제 비교로 고민하지 마세요. 대행사 직원 1명이 하던 판례 칼럼 작성, 플레이스 1위 관제, 1분 진단 배너, 실시간 수임 파이프라인을 <strong>월 19만 원 단 하나의 올인원 패스</strong>로 종결합니다.
           </p>
         </div>
       </section>
 
-      {/* Pricing Cards Grid */}
+      {/* 3. 단일 수임 OS 올인원 패스 카드 (Hero Card) */}
       <section className="pb-20 px-6">
         <motion.div 
-          className="max-w-6xl mx-auto grid md:grid-cols-3 gap-8 items-stretch"
+          className="max-w-3xl mx-auto"
           initial="hidden"
           animate="visible"
           variants={containerVariants}
         >
-          {/* 1. Starter Plan */}
           <motion.div 
             variants={itemVariants} 
-            className="bg-white rounded-3xl p-8 shadow-sm border border-slate-200 flex flex-col justify-between hover:shadow-md transition-shadow"
+            className="bg-white rounded-3xl p-8 sm:p-12 shadow-2xl shadow-sky-100 border-2 border-[#0284C7] relative flex flex-col justify-between overflow-hidden"
           >
-            <div>
-              <div className="flex items-center justify-between mb-2">
-                <h3 className="text-xl font-black text-slate-900">Starter</h3>
-                <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600">
-                  개업 및 1인 사무소
-                </span>
-              </div>
-              <p className="text-slate-500 text-xs mb-6">
-                기본적인 블로그 칼럼 연재와 플레이스 관리를 시작하는 전문직
-              </p>
-              
-              <div className="mb-6 pb-6 border-b border-slate-100">
-                <div className="flex items-baseline gap-1">
-                  <span className="text-4xl font-extrabold text-slate-900">₩99,000</span>
-                  <span className="text-slate-500 font-medium text-sm">/ 월</span>
-                </div>
-                <p className="text-[11px] text-slate-400 mt-1">포스팅 1건당 약 8,250원 (원고료의 1/10)</p>
-              </div>
-
-              <ul className="space-y-3.5 mb-8">
-                <li className="flex items-start gap-2.5 text-xs text-slate-700">
-                  <CheckCircle2 className="w-4 h-4 text-[#0284C7] shrink-0 mt-0.5" />
-                  <span><strong>월 12회 전문 칼럼 생성</strong> (주 3회 연재 권장)</span>
-                </li>
-                <li className="flex items-start gap-2.5 text-xs text-slate-700">
-                  <CheckCircle2 className="w-4 h-4 text-[#0284C7] shrink-0 mt-0.5" />
-                  <span>네이버 플레이스 <strong>핵심 키워드 3개</strong> 순위 추적</span>
-                </li>
-                <li className="flex items-start gap-2.5 text-xs text-slate-700">
-                  <CheckCircle2 className="w-4 h-4 text-[#0284C7] shrink-0 mt-0.5" />
-                  <span><strong>광고 법규 안심 체크</strong> (변호사법 제23조 및 변협 규정)</span>
-                </li>
-                <li className="flex items-start gap-2.5 text-xs text-slate-700">
-                  <CheckCircle2 className="w-4 h-4 text-[#0284C7] shrink-0 mt-0.5" />
-                  <span>1분 간편 진단 폼 연동 (월 50건 유입 상담)</span>
-                </li>
-                <li className="flex items-start gap-2.5 text-xs text-slate-700">
-                  <CheckCircle2 className="w-4 h-4 text-[#0284C7] shrink-0 mt-0.5" />
-                  <span>스마트에디터 ONE 원클릭 복사 포맷</span>
-                </li>
-              </ul>
+            {/* 상단 시그니처 뱃지 */}
+            <div className="absolute top-0 right-0 bg-[#0284C7] text-white text-[11px] font-black px-5 py-1.5 rounded-bl-2xl uppercase tracking-wider shadow-xs">
+              ALL-IN-ONE PASS
             </div>
 
-            <Link href="/dashboard/billing/checkout?plan=starter&amount=99000">
-              <Button className="w-full h-12 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs cursor-pointer shadow-sm">
-                Starter 시작하기
-              </Button>
-            </Link>
-          </motion.div>
-
-          {/* 2. Pro-Pilot Plan (Hero / Most Popular) */}
-          <motion.div 
-            variants={itemVariants} 
-            className="bg-white rounded-3xl p-8 shadow-xl shadow-sky-100 border-2 border-[#0284C7] relative flex flex-col justify-between scale-105 z-10"
-          >
-            <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-gradient-to-r from-[#FF6B00] to-orange-500 text-white px-4 py-1 rounded-full text-xs font-black shadow-md flex items-center gap-1">
-              <Flame className="w-3.5 h-3.5" />
-              <span>가장 많은 로펌이 선택한 플랜</span>
-            </div>
-
-            <div>
-              <div className="flex items-center justify-between mb-2 mt-1">
-                <h3 className="text-xl font-black text-[#0284C7]">Pro-Pilot</h3>
-                <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-sky-100 text-[#0284C7]">
-                  선착순 특가
-                </span>
-              </div>
-              <p className="text-slate-600 text-xs mb-6">
-                매일 상위 노출과 잠재 의뢰인 상담 전환을 극대화하는 주력 플랜
-              </p>
-
-              <div className="mb-6 pb-6 border-b border-slate-100">
-                <div className="flex items-baseline gap-1.5">
-                  <span className="text-4xl font-extrabold text-slate-900">₩199,000</span>
-                  <span className="text-slate-500 font-medium text-sm">/ 월</span>
+            <div className="space-y-6">
+              {/* 헤더 & 타깃 안내 */}
+              <div>
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 border border-amber-200 text-amber-800 text-xs font-black mb-3">
+                  <Flame className="w-3.5 h-3.5 text-[#FF6B00]" />
+                  <span>대한민국 로펌 단일 표준 요금제</span>
                 </div>
-                <p className="text-[11px] text-[#0284C7] font-semibold mt-1">
-                  대행사 300만 원 패키지 대비 93% 비용 절감 효과
+                <h3 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+                  PostSync Pro 사건 수임 OS
+                </h3>
+                <p className="text-slate-600 text-xs sm:text-sm mt-1">
+                  대표님 로펌에 24시간 알짜 사건 수임을 물어다 주는 전자동 수임망
                 </p>
               </div>
 
-              <ul className="space-y-3.5 mb-8">
-                <li className="flex items-start gap-2.5 text-xs text-slate-800">
-                  <CheckCircle2 className="w-4 h-4 text-[#0284C7] shrink-0 mt-0.5" />
-                  <span><strong>월 35회 원클릭 생성</strong> (매일 1편씩 수임 독점 발행)</span>
-                </li>
-                <li className="flex items-start gap-2.5 text-xs text-slate-800">
-                  <CheckCircle2 className="w-4 h-4 text-[#0284C7] shrink-0 mt-0.5" />
-                  <span>네이버 플레이스 <strong>15개 키워드 실시간 순위 & 경쟁사 분석</strong></span>
-                </li>
-                <li className="flex items-start gap-2.5 text-xs text-slate-800">
-                  <CheckCircle2 className="w-4 h-4 text-[#0284C7] shrink-0 mt-0.5" />
-                  <span><strong>정예 8종 벤토 인포그래픽 카드</strong> 자동 생성 (1080px 실사)</span>
-                </li>
-                <li className="flex items-start gap-2.5 text-xs text-slate-800">
-                  <CheckCircle2 className="w-4 h-4 text-[#0284C7] shrink-0 mt-0.5" />
-                  <span><strong>의뢰인 상담 파이프라인 관리</strong> (미처리 건수 0건 알림)</span>
-                </li>
-                <li className="flex items-start gap-2.5 text-xs text-slate-800">
-                  <CheckCircle2 className="w-4 h-4 text-[#0284C7] shrink-0 mt-0.5" />
-                  <span>워드프레스 · 티스토리 원클릭 동시 발행 지원</span>
-                </li>
-                <li className="flex items-start gap-2.5 text-xs text-slate-800">
-                  <CheckCircle2 className="w-4 h-4 text-[#0284C7] shrink-0 mt-0.5" />
-                  <span><strong>1:1 전담 마케팅 온보딩</strong> 및 템플릿 맞춤 세팅</span>
-                </li>
-              </ul>
-            </div>
-
-            <Link href="/dashboard/billing/checkout?plan=pro&amount=199000">
-              <Button className="w-full h-12 rounded-xl bg-[#FF6B00] hover:bg-[#E56000] text-white font-black text-sm cursor-pointer shadow-lg shadow-orange-200">
-                Pro-Pilot 지금 시작하기
-              </Button>
-            </Link>
-          </motion.div>
-
-          {/* 3. Firm Growth Plan */}
-          <motion.div 
-            variants={itemVariants} 
-            className="bg-white rounded-3xl p-8 shadow-sm border border-slate-200 flex flex-col justify-between hover:shadow-md transition-shadow"
-          >
-            <div>
-              <div className="flex items-center justify-between mb-2">
-                <h3 className="text-xl font-black text-slate-900">Firm Growth</h3>
-                <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-purple-100 text-purple-700">
-                  대형 법인 & 다지점
-                </span>
-              </div>
-              <p className="text-slate-500 text-xs mb-6">
-                복수 분사무소 및 송무팀을 보유한 중대형 법무법인
-              </p>
-
-              <div className="mb-6 pb-6 border-b border-slate-100">
-                <div className="flex items-baseline gap-1">
-                  <span className="text-4xl font-extrabold text-slate-900">₩399,000</span>
-                  <span className="text-slate-500 font-medium text-sm">/ 월</span>
+              {/* 가격 블록 & ROI 계산기 뱃지 */}
+              <div className="p-6 rounded-2xl bg-gradient-to-br from-slate-50 to-sky-50/50 border border-sky-100/80 space-y-3">
+                <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2">
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-4xl sm:text-5xl font-black text-slate-900 tracking-tight">₩190,000</span>
+                    <span className="text-slate-500 font-bold text-sm">/ 월 (VAT 별도)</span>
+                  </div>
+                  <span className="text-xs font-black text-[#0284C7] bg-[#E0F2FE] px-3 py-1 rounded-full border border-sky-200">
+                    대행사(월 300만 원) 대비 93% 절감
+                  </span>
                 </div>
-                <p className="text-[11px] text-slate-400 mt-1">지점 3곳 통합 관리 포함</p>
+
+                <div className="p-3 bg-white rounded-xl border border-sky-200/80 text-xs text-slate-700 leading-snug flex items-center gap-2 shadow-2xs">
+                  <span className="text-amber-500 font-black text-base">💡</span>
+                  <div>
+                    <strong className="text-slate-900 font-black">압도적인 투자수익률 (ROI):</strong>
+                    <span className="text-slate-600 ml-1">착수금 550만 원 사건 딱 1건만 수임해도 29개월(2.4년) 치 구독료가 순이익으로 남습니다.</span>
+                  </div>
+                </div>
               </div>
 
-              <ul className="space-y-3.5 mb-8">
-                <li className="flex items-start gap-2.5 text-xs text-slate-700">
-                  <CheckCircle2 className="w-4 h-4 text-purple-600 shrink-0 mt-0.5" />
-                  <span><strong>월 100회 대용량 생성</strong> (분야별 칼럼 대량 발행)</span>
-                </li>
-                <li className="flex items-start gap-2.5 text-xs text-slate-700">
-                  <CheckCircle2 className="w-4 h-4 text-purple-600 shrink-0 mt-0.5" />
-                  <span><strong>플레이스 키워드 50개 추적 & 3개 지점 통합 관리</strong></span>
-                </li>
-                <li className="flex items-start gap-2.5 text-xs text-slate-700">
-                  <CheckCircle2 className="w-4 h-4 text-purple-600 shrink-0 mt-0.5" />
-                  <span>사무장/마케터 <strong>다중 계정 3개 제공</strong></span>
-                </li>
-                <li className="flex items-start gap-2.5 text-xs text-slate-700">
-                  <CheckCircle2 className="w-4 h-4 text-purple-600 shrink-0 mt-0.5" />
-                  <span><strong>법인 전용 승소사례 · 판례 맞춤 RAG 구축</strong></span>
-                </li>
-                <li className="flex items-start gap-2.5 text-xs text-slate-700">
-                  <CheckCircle2 className="w-4 h-4 text-purple-600 shrink-0 mt-0.5" />
-                  <span>전담 어카운트 매니저 배정 및 분기 리포트 제공</span>
-                </li>
-              </ul>
-            </div>
+              {/* 6대 핵심 수임 혜택 리스트 (2열 그리드) */}
+              <div className="space-y-3 pt-2">
+                <h4 className="text-xs font-black text-slate-500 uppercase tracking-wider">
+                  포함된 6대 수임 엔진 (추가 비용 0원)
+                </h4>
 
-            <Link href="/dashboard/billing/checkout?plan=enterprise&amount=399000">
-              <Button className="w-full h-12 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-900 font-bold text-xs cursor-pointer border border-slate-300">
-                Firm Growth 문의 및 신청
-              </Button>
-            </Link>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 text-xs text-slate-800">
+                  <div className="flex items-start gap-2.5 p-3 rounded-xl bg-slate-50 border border-slate-200/80">
+                    <CheckCircle2 className="w-4 h-4 text-[#0284C7] shrink-0 mt-0.5" />
+                    <div>
+                      <strong className="text-slate-900 block font-bold">로가드 23 징계 0건 안심 검역</strong>
+                      <span className="text-slate-500 text-[11px]">변호사법 제23조 및 변협 규정 120대 룰 0.05초 심층 검역</span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-2.5 p-3 rounded-xl bg-slate-50 border border-slate-200/80">
+                    <CheckCircle2 className="w-4 h-4 text-[#0284C7] shrink-0 mt-0.5" />
+                    <div>
+                      <strong className="text-slate-900 block font-bold">C-Rank 4단 판례 칼럼 월 35회</strong>
+                      <span className="text-slate-500 text-[11px]">매일 1편씩 네이버 스마트블록 1위 독점 발행 (스마트에디터 ONE 서식)</span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-2.5 p-3 rounded-xl bg-slate-50 border border-slate-200/80">
+                    <CheckCircle2 className="w-4 h-4 text-[#0284C7] shrink-0 mt-0.5" />
+                    <div>
+                      <strong className="text-slate-900 block font-bold">[1분 안심 진단 배너] 자동 결합</strong>
+                      <span className="text-slate-500 text-[11px]">본문 끝 의뢰인 번호 수집 배너 자동 렌더링 & 원클릭 복사</span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-2.5 p-3 rounded-xl bg-slate-50 border border-slate-200/80">
+                    <CheckCircle2 className="w-4 h-4 text-[#0284C7] shrink-0 mt-0.5" />
+                    <div>
+                      <strong className="text-slate-900 block font-bold">스마트플레이스 로컬 1위 관제</strong>
+                      <span className="text-slate-500 text-[11px]">지역 키워드 실시간 순위 추적 & 영수증 리뷰 AI 감사 답글</span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-2.5 p-3 rounded-xl bg-slate-50 border border-slate-200/80">
+                    <CheckCircle2 className="w-4 h-4 text-[#0284C7] shrink-0 mt-0.5" />
+                    <div>
+                      <strong className="text-slate-900 block font-bold">의뢰인 수임 파이프라인 CRM</strong>
+                      <span className="text-slate-500 text-[11px]">골든타임 10분 연결 카운트다운 & 신규 접수 실시간 알림</span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-2.5 p-3 rounded-xl bg-slate-50 border border-slate-200/80">
+                    <CheckCircle2 className="w-4 h-4 text-[#0284C7] shrink-0 mt-0.5" />
+                    <div>
+                      <strong className="text-slate-900 block font-bold">1:1 전담 세팅 & 로펌 맞춤 RAG</strong>
+                      <span className="text-slate-500 text-[11px]">대표님 로펌의 실제 승소 판결문 및 전문분야 맞춤 주입</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* 메인 고전환 CTA 버튼 */}
+              <div className="pt-4 space-y-3">
+                <Link href="/dashboard/billing/checkout?plan=pro&amount=190000">
+                  <Button className="w-full h-14 rounded-full bg-[#FF6B00] hover:bg-[#E05D00] text-white font-black text-base shadow-xl shadow-orange-200 cursor-pointer flex items-center justify-center gap-2 transition-transform active:scale-[0.98]">
+                    <span>7일간 신용카드 없이 사건 칼럼 3편 무료 체험하기</span>
+                    <ArrowRight className="w-5 h-5" />
+                  </Button>
+                </Link>
+
+                <div className="flex flex-wrap items-center justify-center gap-4 text-xs text-slate-500 font-medium">
+                  <span className="flex items-center gap-1">
+                    <Check className="w-4 h-4 text-emerald-500" /> 신용카드 등록 불필요
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <Check className="w-4 h-4 text-emerald-500" /> 1분 즉시 세팅
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <Check className="w-4 h-4 text-emerald-500" /> 전자세금계산서 100% 발행
+                  </span>
+                </div>
+              </div>
+            </div>
           </motion.div>
         </motion.div>
 
-        {/* Agency Comparison Box */}
-        <div className="max-w-4xl mx-auto mt-16 bg-white rounded-3xl p-8 border border-sky-100 shadow-sm">
+        {/* 4. 중대형 로펌 / 다지점 네트워크 문의 박스 */}
+        <div className="max-w-3xl mx-auto mt-8 p-5 bg-white rounded-2xl border border-slate-200 shadow-2xs flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
+          <div className="space-y-0.5 text-center sm:text-left">
+            <span className="font-bold text-slate-800">🏢 복수 지점 또는 대형 법무법인이신가요?</span>
+            <p className="text-slate-500">사무장 다중 계정(3인 이상) 및 전사 승소 데이터 구축을 위한 맞춤 플랜을 상담해 드립니다.</p>
+          </div>
+          <Link href="/contact" className="shrink-0 text-[#0284C7] font-black hover:underline flex items-center gap-1">
+            <span>엔터프라이즈 문의 ➔</span>
+          </Link>
+        </div>
+
+        {/* 5. 대행사 vs PostSync Pro 비용 비교 박스 */}
+        <div className="max-w-3xl mx-auto mt-12 bg-white rounded-3xl p-6 sm:p-8 border border-sky-100 shadow-sm">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="space-y-2 text-center md:text-left">
-              <div className="inline-flex items-center gap-2 text-xs font-bold text-[#0284C7] bg-sky-50 px-3 py-1 rounded-full">
+              <div className="inline-flex items-center gap-1.5 text-xs font-bold text-[#0284C7] bg-sky-50 px-3 py-1 rounded-full">
                 <Building2 className="w-3.5 h-3.5" />
-                마케팅 대행사 vs PostSync Pro 비교
+                <span>마케팅 대행사 vs PostSync Pro 비교</span>
               </div>
-              <h3 className="text-xl font-bold text-slate-900">
+              <h3 className="text-lg sm:text-xl font-bold text-slate-900">
                 대행사에 매달 300만 원씩 주면서 수정 요청하느라 지치셨나요?
               </h3>
               <p className="text-xs text-slate-500 leading-relaxed">
-                법률 광고 규정을 몰라 위반 딱지를 떼이던 대행사 글 대신, 승소 키워드와 전문직 컴플라이언스를 완벽 탑재한 시스템을 도입하세요.
+                법률 광고 규정을 몰라 위반 딱지를 떼이던 알바생 글 대신, 로가드 23의 징계 0건 검역과 사건 수임 폼이 결합된 전자동 시스템을 도입하세요.
               </p>
             </div>
-            <div className="bg-sky-50/60 p-4 rounded-2xl border border-sky-100 text-center shrink-0 w-full md:w-auto">
-              <p className="text-xs text-slate-500 mb-1">연간 절감 예상 비용</p>
-              <p className="text-2xl font-black text-[#0284C7]">약 3,360만 원</p>
-              <p className="text-[10px] text-slate-400 mt-1">(대행사 300만 vs Pro 19.9만 기준)</p>
+            <div className="bg-sky-50/70 p-4 rounded-2xl border border-sky-100 text-center shrink-0 w-full md:w-auto">
+              <p className="text-xs text-slate-500 mb-0.5">연간 고정비 순절감액</p>
+              <p className="text-2xl font-black text-[#0284C7]">약 3,372만 원</p>
+              <p className="text-[10px] text-slate-400 mt-0.5">(대행사 300만 vs Pro 19만 원 기준)</p>
             </div>
           </div>
         </div>
 
-        {/* FAQ Section */}
-        <div className="max-w-3xl mx-auto mt-20">
-          <h2 className="text-2xl font-bold text-center text-slate-900 mb-8">
+        {/* 6. FAQ Section */}
+        <div className="max-w-3xl mx-auto mt-16">
+          <h2 className="text-2xl font-bold text-center text-slate-900 mb-6">
             자주 묻는 질문 (FAQ)
           </h2>
-          <div className="space-y-4">
+          <div className="space-y-3.5">
+            <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
+              <h4 className="text-sm font-bold text-slate-900 mb-1.5 flex items-center gap-2">
+                <HelpCircle className="w-4 h-4 text-[#0284C7]" />
+                왜 복잡한 요금제 없이 월 19만 원 단일 요금제인가요?
+              </h4>
+              <p className="text-xs text-slate-600 leading-relaxed">
+                변호사님께 마케팅은 기능을 쪼개어 저가로 파는 소프트웨어가 아닌, <strong>"대행사를 없애고 실제 사건 수임을 만드는 단 하나의 완성된 시스템"</strong>이어야 하기 때문입니다. 판례 칼럼, 플레이스 관제, 진단 배너, CRM까지 수임에 필요한 모든 기능을 제한 없이 월 19만 원에 일괄 제공합니다.
+              </p>
+            </div>
+
             <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
               <h4 className="text-sm font-bold text-slate-900 mb-1.5 flex items-center gap-2">
                 <HelpCircle className="w-4 h-4 text-[#0284C7]" />
                 세금계산서 발행이 가능한가요?
               </h4>
               <p className="text-xs text-slate-600 leading-relaxed">
-                네, 100% 가능합니다. 무통장 입금 신청 시 사업자등록번호 또는 주민등록번호/휴대폰번호를 입력해 주시면 전자세금계산서 또는 지출증빙용 현금영수증이 즉시 국세청으로 발행됩니다.
+                네, 100% 가능합니다. 결제 시 사업자등록번호를 입력해 주시면 매월 결제 즉시 국세청으로 전자세금계산서가 자동 발행되어 전액 경비 처리됩니다.
               </p>
             </div>
+
             <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
               <h4 className="text-sm font-bold text-slate-900 mb-1.5 flex items-center gap-2">
                 <HelpCircle className="w-4 h-4 text-[#0284C7]" />
-                변호사법이나 의료법 광고 규정에 위반되지 않나요?
+                변호사법 제23조 및 변협 광고 규정에 정말 안전한가요?
               </h4>
               <p className="text-xs text-slate-600 leading-relaxed">
-                PostSync는 전문직 광고 법규 안심 체크 엔진이 내장되어 있어, '100% 승소', '최고 환급률', '부작용 없는' 등의 금칙어와 과장 표현을 글 생성 단계에서 자동으로 필터링 및 대체 문구로 교정합니다.
+                PostSync Pro에는 '로가드 23 (LawGuard 23)' 실시간 검역 엔진이 기본 탑재되어 있어, 100% 승소 보장, 전관예우 표방, 최상급 우월성 주장, 부당 염가 유인 등 120대 변협 금칙어를 작성 즉시 0.05초 만에 차단하고 합법 대체 문구로 자동 순화합니다.
               </p>
             </div>
+
             <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
               <h4 className="text-sm font-bold text-slate-900 mb-1.5 flex items-center gap-2">
                 <HelpCircle className="w-4 h-4 text-[#0284C7]" />
-                이용 도중 플랜을 변경하거나 크레딧을 추가할 수 있나요?
+                무료 체험 후 원치 않으면 자동 결제되나요?
               </h4>
               <p className="text-xs text-slate-600 leading-relaxed">
-                언제든지 마이페이지에서 플랜 업그레이드가 가능하며, 잔여 크레딧은 이월되어 사라지지 않습니다. 대량 포스팅이 필요하신 법인은 추가 크레딧 일괄 충전도 지원됩니다.
+                아닙니다. 가입 시 <strong>신용카드 번호를 요구하지 않으므로</strong> 원치 않는 자동 결제는 절대 발생하지 않습니다. 7일간 3편의 사건 칼럼과 진단 배너를 직접 써보시고, 실제 의뢰인 유입 효과를 확인하신 후 자율적으로 구독을 결정하시면 됩니다.
               </p>
             </div>
           </div>
