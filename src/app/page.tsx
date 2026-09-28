@@ -34,6 +34,7 @@ import {
   RefreshCw
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { blogPosts } from '@/lib/blogData'
 
 const FAQ_ITEMS = [
   {
@@ -132,13 +133,20 @@ export default function HomePage() {
           </nav>
         </div>
 
-        <div className="flex items-center gap-3">
-          <Link href="/login" className="text-xs font-bold text-slate-600 hover:text-slate-900 px-3 py-2">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <Link
+            href="/blog"
+            className="lg:hidden text-xs font-bold text-[#0284C7] bg-[#E0F2FE] hover:bg-[#bae6fd] px-2.5 py-1.5 rounded-full transition-colors flex items-center gap-1"
+          >
+            <span>칼럼</span>
+            <span className="w-1.5 h-1.5 rounded-full bg-[#0284C7]"></span>
+          </Link>
+          <Link href="/login" className="text-xs font-bold text-slate-600 hover:text-slate-900 px-2 sm:px-3 py-2">
             로그인
           </Link>
           <Link href="/dashboard">
-            <Button className="h-10 px-5 rounded-full bg-[#FF6B00] hover:bg-[#E05D00] text-white font-black text-xs shadow-md hover:shadow-lg transition-all cursor-pointer">
-              무료로 수임 시작하기
+            <Button className="h-9 sm:h-10 px-3.5 sm:px-5 rounded-full bg-[#FF6B00] hover:bg-[#E05D00] text-white font-black text-xs shadow-md hover:shadow-lg transition-all cursor-pointer">
+              <span className="hidden xs:inline">무료로 </span>수임 시작하기
             </Button>
           </Link>
         </div>
@@ -1340,6 +1348,70 @@ export default function HomePage() {
       </section>
 
       {/* ========================================================================= */}
+      {/* 🌟 9.5. 실전 마케팅 인사이트 칼럼 (SEO & GEO 검색 최적화 및 애드센스 심사 텍스트 보강) */}
+      {/* ========================================================================= */}
+      <section className="py-16 sm:py-20 px-4 sm:px-8 max-w-7xl mx-auto border-t border-slate-100">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+          <div>
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#E0F2FE] text-[#0284C7] text-xs font-bold mb-3">
+              <FileText className="w-3.5 h-3.5" />
+              <span>실전 전문직 마케팅 인사이트</span>
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+              검증된 1위 로펌과 병원의 디지털 성장 공식
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-500 mt-2">
+              최신 네이버 C-Rank 알고리즘, 광고 규정 준수 가이드, 수임 전환율 극대화 전략을 정기 발행합니다.
+            </p>
+          </div>
+          <Link
+            href="/blog"
+            className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-extrabold text-[#0284C7] hover:underline"
+          >
+            <span>칼럼 전체보기 (19편)</span>
+            <ArrowRight className="w-4 h-4" />
+          </Link>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {blogPosts.slice(0, 3).map((post) => (
+            <Link
+              key={post.id}
+              href={`/blog/${post.slug}`}
+              className="group bg-white rounded-2xl border border-slate-200/90 overflow-hidden hover:shadow-md hover:border-[#0284C7]/40 transition-all flex flex-col"
+            >
+              <div className="h-44 w-full overflow-hidden bg-slate-100 relative">
+                <img
+                  src={post.imageUrl}
+                  alt={post.title}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  loading="lazy"
+                />
+                <span className="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-slate-900/80 backdrop-blur-md text-white text-[10px] font-bold">
+                  {post.categoryLabel}
+                </span>
+              </div>
+              <div className="p-5 flex flex-col flex-1 justify-between space-y-3">
+                <div className="space-y-2">
+                  <p className="text-[11px] text-slate-400 font-medium">{post.date} · {post.readTime}</p>
+                  <h3 className="text-sm font-black text-slate-900 group-hover:text-[#0284C7] transition-colors line-clamp-2 leading-snug">
+                    {post.title}
+                  </h3>
+                  <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed">
+                    {post.excerpt}
+                  </p>
+                </div>
+                <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-[#0284C7]">
+                  <span>칼럼 읽기</span>
+                  <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* ========================================================================= */}
       {/* 🌟 10. 사진 속 하단 스플릿 대형 전환 배너 (Bottom Call-To-Action Banner) */}
       {/* ========================================================================= */}
       <section className="py-16 sm:py-20 px-4 sm:px-8 max-w-7xl mx-auto">
@@ -1424,8 +1496,18 @@ export default function HomePage() {
             <Link href="/dashboard" className="hover:text-[#FF6B00]">대표 변호사 로그인</Link>
           </div>
         </div>
-        <div className="max-w-7xl mx-auto mt-6 pt-6 border-t border-slate-100 text-[11px] text-slate-400 text-center sm:text-left">
-          © 2026 PostSync Pro. All rights reserved. 본 서비스는 변호사법 제23조 및 대한변협 광고 규정을 준수합니다.
+        <div className="max-w-7xl mx-auto mt-8 pt-6 border-t border-slate-100 text-[11px] text-slate-400 space-y-2">
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
+            <span><strong>상호명:</strong> 와이엠랩스 (YM Labs)</span>
+            <span><strong>대표자:</strong> 유영무</span>
+            <span><strong>사업자등록번호:</strong> 736-48-01186</span>
+            <span><strong>사업장 소재지:</strong> 서울특별시 송파구 송파대로 345, 103동 204호(가락동, 헬리오시티)</span>
+            <span><strong>고객문의:</strong> bu99054@naver.com</span>
+          </div>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-1 text-[10px] text-slate-400">
+            <p>© 2026 PostSync Pro (YM Labs). All rights reserved. 본 서비스는 변호사법 제23조 및 대한변협 광고 규정을 준수합니다.</p>
+            <p>호스팅 서비스: Vercel Inc. | SSL 보안 암호화 통신 적용</p>
+          </div>
         </div>
       </footer>
     </div>

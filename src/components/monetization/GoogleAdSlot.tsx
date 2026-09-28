@@ -15,6 +15,10 @@ declare global {
   }
 }
 
+// ⚠️ 애드센스 계정 승인 전 빈 광고 박스 노출로 인한 '가치 없는 콘텐츠' 반려 방지 안전 스위치
+// 구글 애드센스 최종 승인 통보를 받은 후 true로 변경하시면 즉시 전면 광고가 송출됩니다.
+const IS_ADSENSE_APPROVED = false
+
 export default function GoogleAdSlot({
   adSlot = '3734423172', // 기본 슬롯 ID (추후 각 슬롯별 지정 가능)
   adFormat = 'auto',
@@ -23,6 +27,11 @@ export default function GoogleAdSlot({
 }: GoogleAdSlotProps) {
   const adRef = useRef<HTMLModElement>(null)
   const isPushed = useRef(false)
+
+  // 승인 전에는 빈 박스(공백)를 렌더링하지 않고 숨김
+  if (!IS_ADSENSE_APPROVED) {
+    return null
+  }
 
   useEffect(() => {
     // 광고 스크립트 중복 푸시 방지 및 브라우저 환경 검증
