@@ -875,19 +875,119 @@
       </div>
     </div>
 
-    <!-- Inline Lead Magnet Banner -->
-    <div class="lead-magnet-box">
-      <div class="lead-magnet-badge"><i class="fa-solid fa-gift"></i> 선착순 한정 무료 배포 · 2026 실전 시크릿</div>
-      <div class="lead-magnet-header">
-        <div class="lead-magnet-icon"><i class="fa-solid fa-file-pdf"></i></div>
-        <div>
-          <div class="lead-magnet-title">🎁 [무료 퀵가이드] 네이버 플레이스 1위 세팅법 & 변호사·세무사 합법 수임 칼럼 템플릿 (PDF)</div>
-          <div class="lead-magnet-desc">
-            대행사 위약금 날리기 전 필독! 단 10분 만에 지도 1~3위 장악하는 3분 체크리스트와 즉시 복사해 쓰는 합법 수임 칼럼 템플릿 2선을 무료로 전송해 드립니다.
+    <!-- pSEO Deep Knowledge Section (전면 전진 배치: 체류시간 극대화 & 포털별 계산 원리 해설) -->
+    <div class="seo-guide-section" style="margin-top: 28px;">
+      <h2>📊 사람인 vs 잡코리아 vs 공기업 NCS 바이트 계산 기준 비교</h2>
+      <p>
+        지원서 제출 직전 가장 빈번하게 발생하는 글자수 초과 오류는 각 취업 포털마다 적용하는 문자 바이트(Byte) 및 줄바꿈(엔터) 연산 규칙이 다르기 때문입니다.
+      </p>
+
+      <div style="overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 18px 0 28px 0;">
+        <table class="seo-guide-table" style="margin: 0;">
+          <thead>
+            <tr>
+              <th>구분</th>
+              <th>한글(가~힣)</th>
+              <th>영문 / 숫자 / 특수기호</th>
+              <th>공백(띄어쓰기)</th>
+              <th>줄바꿈(엔터/개행)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><b>사람인 (Saramin)</b></td>
+              <td>2 Byte</td>
+              <td>1 Byte</td>
+              <td>1 Byte</td>
+              <td><b style="color:var(--primary);">2 Byte (CRLF)</b></td>
+            </tr>
+            <tr>
+              <td><b>잡코리아 (JobKorea)</b></td>
+              <td>2 Byte</td>
+              <td>1 Byte</td>
+              <td>1 Byte</td>
+              <td><b style="color:var(--primary);">1 Byte (LF)</b></td>
+            </tr>
+            <tr>
+              <td><b>공기업 / 공공기관 (NCS)</b></td>
+              <td><b style="color:var(--primary);">3 Byte (UTF-8)</b></td>
+              <td>1 Byte</td>
+              <td>1 Byte</td>
+              <td>1 Byte</td>
+            </tr>
+            <tr>
+              <td><b>네이버 블로그 / 스마트에디터</b></td>
+              <td colspan="4">바이트 대신 <b>순수 글자수(공백 포함/제외)</b>를 기준으로 카운트</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- HowTo 3 Cards -->
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:14px; margin-bottom:28px;">
+        <div style="background:var(--slate-50); border:1px solid var(--slate-200); border-radius:12px; padding:16px;">
+          <div style="font-size:12px; font-weight:800; color:var(--primary); margin-bottom:4px;">STEP 01</div>
+          <div style="font-size:14px; font-weight:700; color:var(--slate-800); margin-bottom:6px;">초안 붙여넣기</div>
+          <div style="font-size:12px; color:var(--slate-600); line-height:1.5;">작성 중인 자기소개서나 블로그 원고를 에디터에 붙여넣습니다.</div>
+        </div>
+        <div style="background:var(--slate-50); border:1px solid var(--slate-200); border-radius:12px; padding:16px;">
+          <div style="font-size:12px; font-weight:800; color:var(--primary); margin-bottom:4px;">STEP 02</div>
+          <div style="font-size:14px; font-weight:700; color:var(--slate-800); margin-bottom:6px;">제출처 바이트 탭 확인</div>
+          <div style="font-size:12px; color:var(--slate-600); line-height:1.5;">사람인, 잡코리아, 공기업 NCS 탭을 각각 클릭해 제출처별 바이트 초과 여부를 즉시 점검합니다.</div>
+        </div>
+        <div style="background:var(--slate-50); border:1px solid var(--slate-200); border-radius:12px; padding:16px;">
+          <div style="font-size:12px; font-weight:800; color:var(--primary); margin-bottom:4px;">STEP 03</div>
+          <div style="font-size:14px; font-weight:700; color:var(--slate-800); margin-bottom:6px;">키워드 밀도 황금비율 검사</div>
+          <div style="font-size:12px; color:var(--slate-600); line-height:1.5;">반복 단어 분석기로 키워드 밀도가 1.0%~2.5% 골든존에 들어오는지 1초 만에 확인합니다.</div>
+        </div>
+      </div>
+
+      <h2>🎯 2026 네이버 블로그 C-Rank와 스마트블록의 키워드 밀도 황금률</h2>
+      <p>
+        과거에는 검색 상위노출을 위해 키워드를 무조건 많이 반복하는 방식이 통했으나, 2026년 현재 네이버 C-Rank 및 스마트블록 알고리즘은 <b>'문맥적 연관성(Semantic Context)'</b>과 <b>'어뷰징 방지 필터'</b>를 엄격히 적용합니다.
+      </p>
+      <p>
+        • <b>0% ~ 1.0% (부족):</b> 본문 분량 대비 핵심 키워드 출현 횟수가 적어 검색 로봇이 글의 핵심 주제를 판별하기 어렵습니다.<br>
+        • <b>1.0% ~ 2.5% (골든존 - 최적):</b> 자연스러운 문맥 안에서 키워드가 고르게 분포되어 상위노출 지수가 가장 높게 평가됩니다.<br>
+        • <b>3.5% 초과 (위험):</b> 기계적인 키워드 도배(Stuffing)로 판정되어 네이버 클린봇 및 저품질 패널티 대상이 될 수 있습니다.
+      </p>
+
+      <h2 style="margin-top: 36px;">❓ 자주 묻는 질문 (FAQ)</h2>
+      <div class="faq-list">
+        <div class="faq-item">
+          <div class="faq-q"><i class="fa-solid fa-code-compare" style="color:var(--primary);"></i> 사람인과 잡코리아의 바이트 수가 왜 서로 다르게 나오나요?</div>
+          <div class="faq-a">
+            줄바꿈(엔터키) 연산 방식의 차이 때문입니다. 사람인은 윈도우 표준인 CRLF(\r\n)를 적용하여 엔터 하나당 <b>2바이트</b>로 계산하지만, 잡코리아는 리눅스 표준인 LF(\n)를 적용하여 엔터 하나당 <b>1바이트</b>로 계산합니다. 따라서 문단 나눔이 많은 자소서일수록 사람인의 바이트 수가 더 크게 잡힙니다.
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q"><i class="fa-solid fa-lock" style="color:var(--primary);"></i> 작성 중인 자기소개서나 기밀 초안이 외부 서버로 전송되나요?</div>
+          <div class="faq-a">
+            절대 전송되지 않습니다. 본 글자수·바이트 계산기는 순수 웹 브라우저 로컬 자바스크립트 엔진으로만 구동되며, 입력하신 어떠한 글도 외부 서버로 전송되거나 저장되지 않아 안심하고 대외비 원고를 검토하실 수 있습니다.
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q"><i class="fa-solid fa-circle-question" style="color:var(--primary);"></i> 원고지 매수는 어떤 기준으로 환산되나요?</div>
+          <div class="faq-a">
+            대한민국 표준 200자 원고지 기준으로, 공백을 포함한 전체 글자수를 200으로 나누어 올림 계산합니다. 각종 문예 공모전 및 논술 제출 시 참고하실 수 있습니다.
           </div>
         </div>
       </div>
-      <form class="lead-magnet-form" onsubmit="handleLeadMagnetSubmit(event, 'byte', '[무료 퀵가이드] 네이버 플레이스 1위 세팅법 & 변호사·세무사 합법 수임 칼럼 템플릿 (PDF)')">
+    </div>
+
+    <!-- Inline Lead Magnet Banner (취업준비생/서류지원 1:1 맞춤형 전환) -->
+    <div class="lead-magnet-box" style="margin-top: 36px;">
+      <div class="lead-magnet-badge"><i class="fa-solid fa-gift"></i> 취업·이직 준비생 서류 합격 킷 · 한정 무료 배포</div>
+      <div class="lead-magnet-header">
+        <div class="lead-magnet-icon"><i class="fa-solid fa-file-pdf"></i></div>
+        <div>
+          <div class="lead-magnet-title">🎁 [무료 퀵가이드] 대기업·공기업 서류 합격 자소서 글자수 공식 & 감점 방지 체크리스트 (PDF)</div>
+          <div class="lead-magnet-desc">
+            제출 직전 바이트 초과 오류 방지법과 소제목 3초 후킹 공식, 인사담당자가 꼽은 광탈 자기소개서 금칙어 50선을 무료로 전송해 드립니다.
+          </div>
+        </div>
+      </div>
+      <form class="lead-magnet-form" onsubmit="handleLeadMagnetSubmit(event, 'byte', '[무료 퀵가이드] 대기업 서류 합격 자소서 글자수 공식 (PDF)')">
         <input type="email" class="lead-magnet-input" placeholder="퀵가이드를 받아보실 이메일 주소" required>
         <input type="tel" class="lead-magnet-input" placeholder="연락처 (선택 - 알림용)" style="flex: 0 1 180px;">
         <button type="submit" class="btn-lead-submit">
@@ -900,8 +1000,8 @@
       <div class="lead-magnet-success"></div>
     </div>
 
-    <!-- Monetization 2-Column Grid (Ebook & SaaS Bridge) -->
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; margin-top: 24px;">
+    <!-- Monetization 2-Column Grid (Ebook & SaaS Bridge) (글 하단 보조 배치) -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; margin-top: 24px; margin-bottom: 24px;">
       <!-- Ebook Promo Card -->
       <div class="ebook-promo-card" style="margin-top: 0;">
         <div class="ebook-promo-badge"><i class="fa-solid fa-crown"></i> 2026 추천 필독 실전서</div>
@@ -928,7 +1028,7 @@
           </button>
         </div>
         <div style="text-align: center; margin-top: 10px; font-size: 11.5px; color: #64748b;">
-          먼저 요약본이 필요하신가요? <a href="javascript:void(0)" onclick="openLeadMagnetModal('byte', '[무료 퀵가이드] 네이버 플레이스 1위 세팅법 & 변호사·세무사 합법 수임 칼럼 템플릿 (PDF)')" style="color: #2563eb; font-weight: 700; text-decoration: underline;">[무료] 3분 퀵가이드 맛보기</a>
+          먼저 요약본이 필요하신가요? <a href="javascript:void(0)" onclick="openLeadMagnetModal('byte', '[무료 퀵가이드] 대기업 서류 합격 자소서 글자수 공식 (PDF)')" style="color: #2563eb; font-weight: 700; text-decoration: underline;">[무료] 3분 퀵가이드 맛보기</a>
         </div>
       </div>
 
@@ -944,84 +1044,6 @@
         <a href="https://postsyncapp.com" target="_blank" class="btn-saas-bridge">
           무료체험 시작하기 <i class="fa-solid fa-arrow-right"></i>
         </a>
-      </div>
-    </div>
-
-    <!-- Google AdSense Bottom Responsive Slot (계정 승인 후 정식 슬롯 코드로 활성화) -->
-    <div class="ad-slot-bottom" style="display:none;"></div>
-
-    <!-- pSEO Deep Knowledge Section -->
-    <div class="seo-guide-section">
-      <h2>📊 사람인 vs 잡코리아 vs 공기업 NCS 바이트 계산 기준 비교</h2>
-      <p>
-        지원서 제출 직전 가장 빈번하게 발생하는 글자수 초과 오류는 각 취업 포털마다 적용하는 문자 바이트(Byte) 및 줄바꿈(엔터) 연산 규칙이 다르기 때문입니다.
-      </p>
-
-      <div style="overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 18px 0 28px 0;">
-        <table class="seo-guide-table" style="margin: 0;">
-          <thead>
-            <tr>
-              <th>구분</th>
-              <th>한글(가~힣)</th>
-              <th>영문 / 숫자 / 특수기호</th>
-              <th>공백(띄어쓰기)</th>
-              <th>줄바꿈(엔터/개행)</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><b>사람인 (Saramin)</b></td>
-              <td>2 Byte</td>
-              <td>1 Byte</td>
-              <td>1 Byte</td>
-              <td><b>2 Byte (CRLF)</b></td>
-            </tr>
-            <tr>
-              <td><b>잡코리아 (JobKorea)</b></td>
-              <td>2 Byte</td>
-              <td>1 Byte</td>
-              <td>1 Byte</td>
-              <td><b>1 Byte (LF)</b></td>
-            </tr>
-            <tr>
-              <td><b>공기업 / 공공기관 (NCS)</b></td>
-              <td><b>3 Byte (UTF-8)</b></td>
-              <td>1 Byte</td>
-              <td>1 Byte</td>
-              <td>1 Byte</td>
-            </tr>
-            <tr>
-              <td><b>네이버 블로그 / 스마트에디터</b></td>
-              <td colspan="4">바이트 대신 <b>순수 글자수(공백 포함/제외)</b>를 기준으로 카운트</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <h2>🎯 2026 네이버 블로그 C-Rank와 스마트블록의 키워드 밀도 황금률</h2>
-      <p>
-        과거에는 검색 상위노출을 위해 키워드를 무조건 많이 반복하는 방식이 통했으나, 2026년 현재 네이버 C-Rank 및 스마트블록 알고리즘은 <b>'문맥적 연관성(Semantic Context)'</b>과 <b>'어뷰징 방지 필터'</b>를 엄격히 적용합니다.
-      </p>
-      <p>
-        • <b>0% ~ 1.0% (부족):</b> 본문 분량 대비 핵심 키워드 출현 횟수가 적어 검색 로봇이 글의 핵심 주제를 판별하기 어렵습니다.<br>
-        • <b>1.0% ~ 2.5% (골든존 - 최적):</b> 자연스러운 문맥 안에서 키워드가 고르게 분포되어 상위노출 지수가 가장 높게 평가됩니다.<br>
-        • <b>3.5% 초과 (위험):</b> 기계적인 키워드 도배(Stuffing)로 판정되어 네이버 클린봇 및 저품질 패널티 대상이 될 수 있습니다.
-      </p>
-
-      <h2 style="margin-top: 36px;">❓ 자주 묻는 질문 (FAQ)</h2>
-      <div class="faq-list">
-        <div class="faq-item">
-          <div class="faq-q"><i class="fa-solid fa-lock" style="color:var(--primary);"></i> 작성 중인 자기소개서나 기밀 초안이 외부 서버로 전송되나요?</div>
-          <div class="faq-a">
-            절대 전송되지 않습니다. 본 글자수·바이트 계산기는 순수 웹 브라우저 로컬 자바스크립트 엔진으로만 구동되며, 입력하신 어떠한 글도 외부 서버로 전송되거나 저장되지 않아 안심하고 대외비 원고를 검토하실 수 있습니다.
-          </div>
-        </div>
-        <div class="faq-item">
-          <div class="faq-q"><i class="fa-solid fa-circle-question" style="color:var(--primary);"></i> 원고지 매수는 어떤 기준으로 환산되나요?</div>
-          <div class="faq-a">
-            대한민국 표준 200자 원고지 기준으로, 공백을 포함한 전체 글자수를 200으로 나누어 올림 계산합니다. 각종 문예 공모전 및 논술 제출 시 참고하실 수 있습니다.
-          </div>
-        </div>
       </div>
     </div>
   </div>
