@@ -358,10 +358,10 @@ export default function ToolsHubPage() {
           </div>
         </div>
 
-        {/* 2026 전문직 마케팅 PDF 전자책 프로모션 카드 */}
-        <div className="mb-12">
+        {/* 2026 전문직 마케팅 PDF 전자책 프로모션 카드 (초기 트래픽 안착 시까지 임시 비활성화) */}
+        {/* <div className="mb-12">
           <EbookPromoCard toolSource="tools_hub" />
-        </div>
+        </div> */}
 
         {/* B2B SaaS 메인 전환 배너 (토스 스타일 로열 블루 카드) */}
         <div className="rounded-3xl bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 p-8 md:p-11 shadow-lg text-white relative overflow-hidden">
