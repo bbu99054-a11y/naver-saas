@@ -1456,7 +1456,7 @@ export default function HomePage() {
             <Link href="/terms" className="hover:text-slate-900">이용약관</Link>
             <Link href="/privacy" className="hover:text-slate-900">개인정보처리방침</Link>
             <Link href="/contact" className="hover:text-[#0284C7]">고객지원</Link>
-            <a href="https://pf.kakao.com/_xonxiaX/chat" target="_blank" rel="noopener noreferrer" className="hover:text-amber-500 font-bold text-amber-600 flex items-center gap-1">💬 카카오톡 채널 상담</a>
+            <a href="https://pf.kakao.com/_xonxiaX/chat" target="_blank" rel="noopener noreferrer" className="hover:text-amber-500 font-bold text-amber-600 flex items-center gap-1">💬 카카오톡 채널 상담 (플레이스싱크)</a>
             <Link href="/consult" target="_blank" className="hover:text-[#0284C7]">1분 안심 진단 센터</Link>
             <Link href="/dashboard" className="hover:text-[#FF6B00]">대표 변호사 로그인</Link>
           </div>
@@ -1467,6 +1467,7 @@ export default function HomePage() {
             <span><strong>대표자:</strong> 유영무</span>
             <span><strong>사업자등록번호:</strong> 736-48-01186</span>
             <span><strong>사업장 소재지:</strong> 서울특별시 송파구 송파대로 345, 103동 204호(가락동, 헬리오시티)</span>
+            <span><strong>운영 서비스:</strong> PostSync Pro, 플레이스싱크 (PlaceSync)</span>
             <span><strong>고객문의:</strong> contact@postsyncapp.com</span>
           </div>
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-1 text-[10px] text-slate-400">
