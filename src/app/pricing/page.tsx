@@ -291,9 +291,19 @@ export default function PricingPage() {
       {/* Footer */}
       <footer className="border-t border-slate-200 py-10 bg-white text-center text-xs text-slate-500">
         <div className="max-w-7xl mx-auto px-6 space-y-2">
-          <p className="font-semibold text-slate-700">PostSync Pro · 와이엠랩스</p>
-          <p>사업자등록번호: 247-06-02488 | 대표: 유영무 | 통신판매업신고 완료</p>
-          <p className="text-[11px] text-slate-400">© 2026 PostSync. All rights reserved.</p>
+          <p className="font-semibold text-slate-700">PostSync Pro · 와이엠랩스 (YM Labs)</p>
+          <p>
+            <span>상호명: 와이엠랩스 (YM Labs)</span> · 
+            <span>대표자: 유영무</span> · 
+            <span>사업자등록번호: 736-48-01186</span>
+          </p>
+          <p>사업장 소재지: 서울특별시 송파구 송파대로 345, 103동 204호(가락동, 헬리오시티) | 고객문의: contact@postsyncapp.com</p>
+          <p className="pt-1">
+            <a href="https://pf.kakao.com/_xonxiaX/chat" target="_blank" rel="noopener noreferrer" className="text-amber-600 font-bold hover:underline inline-flex items-center gap-1">
+              💬 카카오톡 채널 상담 (1:1 실시간 문의)
+            </a>
+          </p>
+          <p className="text-[11px] text-slate-400 pt-2">© 2026 PostSync Pro (YM Labs). All rights reserved.</p>
         </div>
       </footer>
 

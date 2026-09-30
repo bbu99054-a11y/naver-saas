@@ -1456,6 +1456,7 @@ export default function HomePage() {
             <Link href="/terms" className="hover:text-slate-900">이용약관</Link>
             <Link href="/privacy" className="hover:text-slate-900">개인정보처리방침</Link>
             <Link href="/contact" className="hover:text-[#0284C7]">고객지원</Link>
+            <a href="https://pf.kakao.com/_xonxiaX/chat" target="_blank" rel="noopener noreferrer" className="hover:text-amber-500 font-bold text-amber-600 flex items-center gap-1">💬 카카오톡 채널 상담</a>
             <Link href="/consult" target="_blank" className="hover:text-[#0284C7]">1분 안심 진단 센터</Link>
             <Link href="/dashboard" className="hover:text-[#FF6B00]">대표 변호사 로그인</Link>
           </div>
