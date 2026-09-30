@@ -24,7 +24,10 @@ export const CATEGORIES = [
   { id: 'strategy', label: '💡 마케팅 전략 & 대행사 분석' },
 ] as const;
 
+import { pSeoPlacePosts } from './pSeoPlacePosts';
+
 export const blogPosts: BlogPost[] = [
+  ...pSeoPlacePosts,
   {
     id: '17',
     slug: 'naver-place-rank-algorithm-2026',
