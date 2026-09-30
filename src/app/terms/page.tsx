@@ -86,7 +86,7 @@ export default function TermsPage() {
               <li>크레딧을 일부 사용한 경우, 디지털 콘텐츠의 특성상 사용된 분량 및 결제 수수료를 공제한 잔여 금액에 대해 환불을 진행합니다.</li>
               <li>무료로 지급된 프로모션 크레딧은 현금으로 환불되지 않습니다.</li>
             </ul>
-            <p>3. 환불 신청은 고객센터(<a href="mailto:bu99054@naver.com" className="text-indigo-400 underline">bu99054@naver.com</a>)를 통해 접수할 수 있습니다.</p>
+            <p>3. 환불 신청은 고객센터(<a href="mailto:contact@postsyncapp.com" className="text-indigo-400 underline">contact@postsyncapp.com</a>)를 통해 접수할 수 있습니다.</p>
           </section>
 
           {/* 제 6 조 */}
@@ -116,7 +116,7 @@ export default function TermsPage() {
             <h3 className="font-bold text-white mb-2 text-sm">사업자 정보</h3>
             <p><strong>상호명:</strong> 와이엠랩스 (YM Labs) | <strong>대표자:</strong> 유영무</p>
             <p><strong>사업자등록번호:</strong> 736-48-01186 | <strong>주소:</strong> 서울특별시 송파구 송파대로 345, 103동 204호(가락동, 헬리오시티)</p>
-            <p><strong>문의 이메일:</strong> bu99054@naver.com | <strong>서비스 도메인:</strong> https://postsyncapp.com</p>
+            <p><strong>문의 이메일:</strong> contact@postsyncapp.com | <strong>서비스 도메인:</strong> https://postsyncapp.com</p>
           </div>
         </div>
       </main>

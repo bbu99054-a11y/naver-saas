@@ -163,7 +163,7 @@ export default function PrivacyPage() {
               <p><strong>[개인정보 보호책임자]</strong></p>
               <p>• 성명: 유영무</p>
               <p>• 직책: 대표 / 개인정보보호최고책임자(CPO)</p>
-              <p>• 이메일: <a href="mailto:bu99054@naver.com" className="text-indigo-400 underline">bu99054@naver.com</a></p>
+              <p>• 이메일: <a href="mailto:contact@postsyncapp.com" className="text-indigo-400 underline">contact@postsyncapp.com</a></p>
               <p>• 상호: 와이엠랩스 (YM Labs)</p>
               <p>• 주소: 서울특별시 송파구 송파대로 345, 103동 204호(가락동, 헬리오시티)</p>
             </div>

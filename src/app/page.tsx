@@ -1466,7 +1466,7 @@ export default function HomePage() {
             <span><strong>대표자:</strong> 유영무</span>
             <span><strong>사업자등록번호:</strong> 736-48-01186</span>
             <span><strong>사업장 소재지:</strong> 서울특별시 송파구 송파대로 345, 103동 204호(가락동, 헬리오시티)</span>
-            <span><strong>고객문의:</strong> bu99054@naver.com</span>
+            <span><strong>고객문의:</strong> contact@postsyncapp.com</span>
           </div>
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-1 text-[10px] text-slate-400">
             <p>© 2026 PostSync Pro (YM Labs). All rights reserved. 본 서비스는 변호사법 제23조 및 대한변협 광고 규정을 준수합니다.</p>

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { Sparkles, ArrowLeft, Mail, MessageSquare, Clock, Building2, ShieldCheck } from 'lucide-react'
+import { Sparkles, ArrowLeft, Mail, MessageSquare, Clock, Building2, ShieldCheck, FileEdit } from 'lucide-react'
+import ContactForm from './ContactForm'
 
 export const metadata: Metadata = {
   title: '고객센터 & 제휴 문의 | PostSync',
@@ -62,39 +63,39 @@ export default function ContactPage() {
               <h2 className="text-lg font-bold text-white mb-1">이메일 문의</h2>
               <p className="text-xs text-slate-400 mb-4">24시간 상시 접수 가능</p>
               <a 
-                href="mailto:bu99054@naver.com?subject=[PostSync%20문의]%20"
+                href="mailto:contact@postsyncapp.com?subject=[PostSync%20문의]%20"
                 className="text-sm font-semibold text-indigo-400 hover:text-indigo-300 underline break-all block mb-2"
               >
-                bu99054@naver.com
+                contact@postsyncapp.com
               </a>
-              <p className="text-xs text-slate-400">보조: contact@postsyncapp.com</p>
+              <p className="text-xs text-slate-400">공식 고객지원 전용 창구</p>
             </div>
             <a 
-              href="mailto:bu99054@naver.com?subject=[PostSync%20문의]%20"
+              href="mailto:contact@postsyncapp.com?subject=[PostSync%20문의]%20"
               className="mt-6 w-full py-2.5 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold text-center block transition-all shadow-md shadow-indigo-600/20"
             >
               이메일 보내기 →
             </a>
           </div>
 
-          {/* 카드 2: 실시간 채팅 */}
+          {/* 카드 2: 온라인 빠른 문의 */}
           <div className="bg-white/5 border border-white/10 rounded-2xl p-6 hover:border-indigo-500/40 transition-all flex flex-col justify-between">
             <div>
-              <div className="w-12 h-12 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center mb-4 border border-emerald-500/30">
-                <MessageSquare className="w-6 h-6" />
+              <div className="w-12 h-12 rounded-xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center mb-4 border border-indigo-500/30">
+                <FileEdit className="w-6 h-6" />
               </div>
-              <h2 className="text-lg font-bold text-white mb-1">실시간 채팅 상담</h2>
-              <p className="text-xs text-slate-400 mb-4">채널톡 1:1 실시간 응대</p>
+              <h2 className="text-lg font-bold text-white mb-1">온라인 빠른 문의</h2>
+              <p className="text-xs text-slate-400 mb-4">30초 웹 간편 접수</p>
               <p className="text-xs text-slate-300 leading-relaxed">
-                웹사이트 우측 하단의 <strong className="text-white">채널톡 아이콘</strong>을 클릭하시면 로그인 없이도 담당자와 즉시 대화가 가능합니다.
+                별도의 메일 앱 없이 아래 양식에 문의를 남겨주시면 대표 관리자 텔레그램으로 실시간 알림이 전송됩니다.
               </p>
             </div>
-            <div className="mt-6 p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-center">
-              <span className="text-[11px] font-bold text-emerald-400 flex items-center justify-center gap-1">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                상담원 실시간 대기 중
-              </span>
-            </div>
+            <a 
+              href="#inquiry-form"
+              className="mt-6 w-full py-2.5 px-4 rounded-xl bg-white/10 hover:bg-white/15 text-white text-xs font-bold text-center block transition-all border border-white/15 hover:border-indigo-500/50"
+            >
+              문의 양식 작성하기 ↓
+            </a>
           </div>
 
           {/* 카드 3: 운영 시간 */}
@@ -117,6 +118,11 @@ export default function ContactPage() {
           </div>
         </div>
 
+        {/* 온라인 빠른 문의 폼 섹션 */}
+        <div className="mb-12">
+          <ContactForm />
+        </div>
+
         {/* 회사 및 사업자 공식 고지 정보 */}
         <section className="bg-white/5 border border-white/10 rounded-2xl p-6 sm:p-8">
           <div className="flex items-center gap-2 mb-4">
@@ -137,7 +143,7 @@ export default function ContactPage() {
                 [사업자정보확인]
               </a>
             </div>
-            <div><strong className="text-slate-400">개인정보보호책임자:</strong> 유영무 (bu99054@naver.com)</div>
+            <div><strong className="text-slate-400">개인정보보호책임자:</strong> 유영무 (contact@postsyncapp.com)</div>
             <div className="sm:col-span-2">
               <strong className="text-slate-400">사업장 소재지:</strong> 서울특별시 송파구 송파대로 345, 103동 204호(가락동, 헬리오시티)
             </div>

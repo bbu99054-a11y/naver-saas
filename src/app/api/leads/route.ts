@@ -135,6 +135,15 @@ export async function POST(req: Request) {
             `⏱ 신청일시: ${nowTime}\n\n` +
             `🔗 고객 발급 진단서: ${reportUrl}\n` +
             `👉 고객 이메일로 1:1 맞춤형 정량 실측 진단서가 자동 발송되었습니다.`
+        } else if (leadType === 'inquiry') {
+          msg = `📩 [고객센터 1:1 온라인 문의 접수 - ${toolSource.toUpperCase()}]\n\n` +
+            `👤 성함/로펌: ${cleanName}\n` +
+            `📱 연락처: ${cleanPhone || '미기재'}\n` +
+            `📧 수신 이메일: ${cleanEmail}\n` +
+            `📌 문의 유형: ${metadata.inquiryType || '일반 문의'}\n` +
+            `📝 문의 내용:\n${metadata.message || '상세 내용 없음'}\n\n` +
+            `⏱ 접수일시: ${nowTime}\n` +
+            `👉 신속하게 확인 후 유선 연락 또는 이메일 회신을 진행하세요.`
         } else {
           msg = `🎁 [무료 리드 마그넷 신청 접수 - ${toolSource.toUpperCase()}]\n\n` +
             `📄 신청자료: ${metadata.docTitle || '[무료 퀵가이드] 네이버 플레이스 1위 세팅법 & 변호사·세무사 합법 수임 칼럼 템플릿 (PDF)'}\n` +
@@ -193,6 +202,9 @@ export async function POST(req: Request) {
         } else if (leadType === 'ebook_order') {
           subject = `[전자책 주문] ${cleanName}님 39,000원 계좌이체 신청 (${cleanEmail})`
           titleText = '전자책 무통장 입금 신청'
+        } else if (leadType === 'inquiry') {
+          subject = `📩 [고객 문의] ${cleanName}님 - ${metadata.inquiryType || '온라인 문의 접수'}`
+          titleText = '고객센터 1:1 온라인 문의 접수'
         } else if (isPlaceLead) {
           subject = `📍 [플레이스 진단] ${placeSnapshot?.storeName || cleanName} (${placeSnapshot?.targetKeyword || ''}) 리포트 발급`
           titleText = '플레이스 1위 격차 진단서 자동 발급'
@@ -216,6 +228,8 @@ export async function POST(req: Request) {
                   <p><strong>이름/상호명:</strong> ${cleanName}</p>
                   <p><strong>이메일:</strong> ${cleanEmail}</p>
                   <p><strong>연락처:</strong> ${cleanPhone || '미기재'}</p>
+                  ${metadata.inquiryType ? `<p><strong>문의 유형:</strong> ${metadata.inquiryType}</p>` : ''}
+                  ${metadata.message ? `<div style="margin-top:12px; padding:12px; background:#ffffff; border:1px solid #cbd5e1; border-radius:6px; font-size:14px; white-space:pre-wrap;"><strong>문의 내용:</strong><br/>${String(metadata.message)}</div>` : ''}
                   ${isPlaceLead ? `<p><strong>🔗 발급 리포트 링크:</strong> <a href="${reportUrl}">${reportUrl}</a></p>` : ''}
                   <p><strong>증빙 요청:</strong> ${taxDeductionText}</p>
                   <p><strong>신청 일시:</strong> ${nowTime}</p>
@@ -274,11 +288,13 @@ export async function POST(req: Request) {
 
     return NextResponse.json({
       success: true,
-      message: leadType === 'ebook_order'
-        ? '입금 신청이 정상 접수되었습니다. 입금 확인 후 기재하신 이메일로 전자책이 즉시 발송됩니다.'
-        : isPlaceLead
-          ? '🎉 플레이스 1위 격차 실측 진단서가 발급되었습니다. 기재하신 이메일로도 상세 리포트가 발송되었습니다.'
-          : '신청이 정상 완료되었습니다. 기재하신 이메일로 가이드북이 순차 발송됩니다.',
+      message: leadType === 'inquiry'
+        ? '문의가 정상적으로 접수되었습니다. 전담 매니저가 확인 후 4시간 이내에 회신드리겠습니다.'
+        : leadType === 'ebook_order'
+          ? '입금 신청이 정상 접수되었습니다. 입금 확인 후 기재하신 이메일로 전자책이 즉시 발송됩니다.'
+          : isPlaceLead
+            ? '🎉 플레이스 1위 격차 실측 진단서가 발급되었습니다. 기재하신 이메일로도 상세 리포트가 발송되었습니다.'
+            : '신청이 정상 완료되었습니다. 기재하신 이메일로 가이드북이 순차 발송됩니다.',
       email: cleanEmail,
       leadType,
       leadId: savedLeadId,
