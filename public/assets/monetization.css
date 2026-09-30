@@ -202,8 +202,9 @@
   color: var(--mz-slate-900);
 }
 
-/* 2. SaaS Bridge Banner (Sidebar) */
+/* 2. SaaS Bridge Banner (Sidebar) - 임시 숨김 처리 (100% 무료 공익 툴 모드) */
 .saas-bridge-card {
+  display: none !important;
   background: linear-gradient(135deg, #0f172a, #1e293b);
   border-radius: var(--mz-radius-lg);
   padding: 18px 20px;

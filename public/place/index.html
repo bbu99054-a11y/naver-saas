@@ -2179,6 +2179,115 @@
         </table>
       </div>
     </div>
+<!-- 2️⃣ 🌟 올인원 통합 진단 & 1위 탈환 솔루션 카드 (정보성 가이드 하단 배치로 자연스러운 전환 유도) -->
+    <section class="all-in-one-solution-card apply-section" id="applySection" style="margin-top: 36px;">
+      <div class="aio-header">
+        <div class="aio-badge">
+          <i class="fa-solid fa-crown" style="color:#fbbf24;"></i> 1위 탈환 실전 처방 &amp; 리포트 발송
+        </div>
+        <h2 class="aio-title">1위 경쟁점 대비 정량 격차 분석 &amp; 긴급 처방</h2>
+        <p class="aio-subtitle">
+          실시간 1위 매장과의 4대 핵심 격차를 확인하고, 1위 탈환 전략 리포트와 매일 아침 카톡 순위 알림을 한곳에서 신청하세요.
+        </p>
+      </div>
+
+      <!-- 파트 A: 1위 대비 4대 핵심 정량 격차 대시보드 (Gap Analysis) -->
+      <div class="aio-gap-box" id="jevGapDashboardBox" style="display:none;">
+        <div class="gap-header">
+          <div class="gap-title">
+            <i class="fa-solid fa-scale-balanced" style="color:#2563eb;"></i>
+            <span id="gapTop1Title">🥇 1위 매장 vs 우리 매장 4대 정량 격차 분석</span>
+          </div>
+          <span style="font-size:11px; font-weight:700; color:#0369a1; background:#e0f2fe; padding:3px 10px; border-radius:12px; border:1px solid #bae6fd;">실시간 실측 데이터</span>
+        </div>
+        <div class="gap-grid" id="gapGrid">
+          <!-- Injected via JS -->
+        </div>
+      </div>
+
+      <!-- 파트 B: 무료 심층 전략 리포트 &amp; 카톡 순위 알림 통합 신청 폼 -->
+      <div class="aio-form-section">
+        <h3 class="aio-form-title">
+          <i class="fa-solid fa-file-invoice" style="color:#2563eb;"></i>
+          <span>우리 매장 맞춤 1위 탈환 심층 전략 리포트 신청</span>
+        </h3>
+        <p class="aio-form-desc">
+          1위 경쟁사의 리뷰 급증 원인, C-Rank 블로그 침투 키워드, 그리고 이번 주 우리 매장이 당장 실행해야 할 상위노출 처방전이 담긴 <b>실전 전략 리포트 1회를 무료</b>로 이메일 발송해 드립니다.
+        </p>
+
+        <form class="apply-form" id="placeApplyForm" onsubmit="handleApply(event)">
+          <div class="aio-form-grid">
+            <div class="aio-field">
+              <label for="applyStoreName"><i class="fa-solid fa-store" style="color:#2563eb;"></i> 내 매장 상호명</label>
+              <input type="text" id="applyStoreName" placeholder="예: 법무법인 로앤심, 마디쌩쌩 신경외과" required>
+            </div>
+            <div class="aio-field">
+              <label for="applyKeyword"><i class="fa-solid fa-magnifying-glass" style="color:#2563eb;"></i> 분석 희망 키워드</label>
+              <input type="text" id="applyKeyword" placeholder="예: 문정동 변호사, 동탄 신경외과">
+            </div>
+            <div class="aio-field">
+              <label for="applyEmail"><i class="fa-solid fa-envelope" style="color:#2563eb;"></i> 무료 진단서 받아볼 이메일 (필수 *)</label>
+              <input type="email" id="applyEmail" placeholder="name@example.com" required>
+            </div>
+            <div class="aio-field">
+              <label for="applyPhone" id="applyPhoneLabel"><i class="fa-solid fa-phone" style="color:#2563eb;"></i> 대표 연락처 <span id="phoneReqBadge" style="color:#2563eb; font-weight:800; font-size:11px;">(카톡 알림용, 필수 *)</span></label>
+              <input type="tel" id="applyPhone" placeholder="010-0000-0000" pattern="[0-9]{3}-?[0-9]{3,4}-?[0-9]{4}" required>
+            </div>
+          </div>
+
+          <!-- 💬 카톡 매일 아침 순위 변동 알림 옵트인 (7일 무료 체험) -->
+          <div class="apply-kakao-optin" style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:12px 14px; margin-bottom:16px;">
+            <label class="kakao-check-label" style="display:flex; align-items:flex-start; gap:10px; cursor:pointer;">
+              <input type="checkbox" id="applyKakaoOptIn" checked onchange="toggleKakaoPhoneRequired(this.checked)" style="margin-top:3px; accent-color:#2563eb; width:16px; height:16px;">
+              <div class="kakao-check-text">
+                <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                  <strong style="color:var(--slate-800); font-size:13.5px;">💬 매일 아침 카톡으로 순위 변동 자동 알림 받기</strong>
+                  <span style="background:#e0e7fe; color:#2563eb; font-size:11px; font-weight:800; padding:2px 8px; border-radius:10px;">첫 7일 무료 체험</span>
+                </div>
+                <span class="kakao-check-sub" style="color:var(--slate-500); font-size:12px; display:block; margin-top:2px;">매일 아침 9시 내 매장 순위 변동 카톡 알림 발송 (7일 무료 체험 후 월 9,900원 정기 구독 옵션)</span>
+              </div>
+            </label>
+          </div>
+
+          <button type="submit" class="aio-btn-submit" id="btnApplySubmit">
+            <i class="fa-solid fa-paper-plane"></i> <span>🚀 1회 무료 전략 리포트 &amp; 카톡 알림 신청하기</span>
+          </button>
+        </form>
+
+        <div class="apply-guarantee" id="applyGuarantee" style="margin-top:14px; color:var(--slate-500); font-size:12px; display:flex; gap:16px; flex-wrap:wrap;">
+          <span>🔒 100% 무료 1회 진단 (스팸 발송 없음)</span>
+          <span>⚡ 신청 후 전문 분석 리포트 순차 전송</span>
+          <span>⭐ 네이버 스마트플레이스 1위 동기화 솔루션</span>
+        </div>
+
+        <!-- 접수 완료 안내 박스 -->
+        <div id="applySuccessBox" style="display:none; background:#f0fdf4; border:1.5px solid #86efac; border-radius:12px; padding:24px; text-align:center; margin-top:20px;">
+          <div style="font-size:36px; margin-bottom:8px;">🎉</div>
+          <h3 id="applySuccessTitle" style="font-size:18px; font-weight:900; color:#15803d; margin-bottom:6px;">플레이스싱크 1위 전략 리포트 접수 완료!</h3>
+          <p style="font-size:13.5px; color:#166534; line-height:1.6; margin-bottom:12px;">
+            입력하신 이메일(<b id="applySuccessEmail" style="color:#15803d;"></b>)로 전략 리포트와 실전 액션플랜이 순차 발송됩니다.<br>
+            (담당 분석팀에 실시간 알림이 안전하게 접수되었습니다.)
+          </p>
+          <div style="display:inline-flex; align-items:center; gap:6px; background:#dcfce7; color:#15803d; font-size:12px; font-weight:700; padding:6px 14px; border-radius:20px; margin-bottom:14px;">
+            <i class="fa-solid fa-check-circle"></i> 접수 정상 완료 (DB 영구 보존 &amp; 이메일 발송)
+          </div>
+          <!-- 📊 발급된 1위 실측 진단서 바로 열기 버튼 -->
+          <div id="applySuccessReportWrap" style="margin: 10px 0 16px 0;">
+            <a id="applySuccessReportLink" href="/report/place-audit.html" target="_blank" rel="noopener noreferrer" style="display:inline-flex; align-items:center; gap:8px; background:#2563eb; color:#ffffff; font-size:14px; font-weight:800; padding:12px 24px; border-radius:30px; text-decoration:none; box-shadow:0 4px 14px rgba(37,99,235,0.35); transition:transform 0.15s;">
+              <i class="fa-solid fa-file-invoice"></i> <span>📊 [발급 완료] 내 매장 1위 격차 실측 진단서 열기</span> &rarr;
+            </a>
+          </div>
+          <div id="applyKakaoActionWrap" style="margin-top:10px; padding-top:14px; border-top:1px dashed #86efac;">
+            <p style="font-size:12.5px; color:#166534; font-weight:700; margin-bottom:10px;">
+              ⚡ 마지막 1초: 카카오톡 공식 채널을 추가해 두시면 리포트 도착 알림과 순위 변동을 받아보실 수 있습니다.
+            </p>
+            <a href="https://pf.kakao.com/_xonxiaX" target="_blank" rel="noopener noreferrer" style="display:inline-flex; align-items:center; gap:8px; background:#fee500; color:#191919; font-size:13px; font-weight:800; padding:11px 22px; border-radius:10px; text-decoration:none; box-shadow:0 2px 8px rgba(0,0,0,0.1); transition:transform 0.15s;">
+              <i class="fa-solid fa-comment"></i> 💬 [플레이스싱크] 카카오톡 공식 채널로 매일 아침 9시 실시간 순위 변동 알림 연동 <i class="fa-solid fa-arrow-right"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
 
     <!-- 📚 2026 네이버 스마트플레이스 공식 운영정책 & 상위노출 실전 가이드 (순위표 바로 아래 전진 배치) -->
     <section class="seo-guide-section" id="seoGuideSection" style="margin-top: 36px;">
@@ -2454,116 +2563,6 @@
       </div>
     </div>
 
-    <!-- 2️⃣ 🌟 올인원 통합 진단 & 1위 탈환 솔루션 카드 (정보성 가이드 하단 배치로 자연스러운 전환 유도) -->
-    <section class="all-in-one-solution-card apply-section" id="applySection" style="margin-top: 36px;">
-      <div class="aio-header">
-        <div class="aio-badge">
-          <i class="fa-solid fa-crown" style="color:#fbbf24;"></i> 1위 탈환 실전 처방 &amp; 리포트 발송
-        </div>
-        <h2 class="aio-title">1위 경쟁점 대비 정량 격차 분석 &amp; 긴급 처방</h2>
-        <p class="aio-subtitle">
-          실시간 1위 매장과의 4대 핵심 격차를 확인하고, 1위 탈환 전략 리포트와 매일 아침 카톡 순위 알림을 한곳에서 신청하세요.
-        </p>
-      </div>
-
-      <!-- 파트 A: 1위 대비 4대 핵심 정량 격차 대시보드 (Gap Analysis) -->
-      <div class="aio-gap-box" id="jevGapDashboardBox" style="display:none;">
-        <div class="gap-header">
-          <div class="gap-title">
-            <i class="fa-solid fa-scale-balanced" style="color:#2563eb;"></i>
-            <span id="gapTop1Title">🥇 1위 매장 vs 우리 매장 4대 정량 격차 분석</span>
-          </div>
-          <span style="font-size:11px; font-weight:700; color:#0369a1; background:#e0f2fe; padding:3px 10px; border-radius:12px; border:1px solid #bae6fd;">실시간 실측 데이터</span>
-        </div>
-        <div class="gap-grid" id="gapGrid">
-          <!-- Injected via JS -->
-        </div>
-      </div>
-
-      <!-- 파트 B: 무료 심층 전략 리포트 &amp; 카톡 순위 알림 통합 신청 폼 -->
-      <div class="aio-form-section">
-        <h3 class="aio-form-title">
-          <i class="fa-solid fa-file-invoice" style="color:#2563eb;"></i>
-          <span>우리 매장 맞춤 1위 탈환 심층 전략 리포트 신청</span>
-        </h3>
-        <p class="aio-form-desc">
-          1위 경쟁사의 리뷰 급증 원인, C-Rank 블로그 침투 키워드, 그리고 이번 주 우리 매장이 당장 실행해야 할 상위노출 처방전이 담긴 <b>실전 전략 리포트 1회를 무료</b>로 이메일 발송해 드립니다.
-        </p>
-
-        <form class="apply-form" id="placeApplyForm" onsubmit="handleApply(event)">
-          <div class="aio-form-grid">
-            <div class="aio-field">
-              <label for="applyStoreName"><i class="fa-solid fa-store" style="color:#2563eb;"></i> 내 매장 상호명</label>
-              <input type="text" id="applyStoreName" placeholder="예: 법무법인 로앤심, 마디쌩쌩 신경외과" required>
-            </div>
-            <div class="aio-field">
-              <label for="applyKeyword"><i class="fa-solid fa-magnifying-glass" style="color:#2563eb;"></i> 분석 희망 키워드</label>
-              <input type="text" id="applyKeyword" placeholder="예: 문정동 변호사, 동탄 신경외과">
-            </div>
-            <div class="aio-field">
-              <label for="applyEmail"><i class="fa-solid fa-envelope" style="color:#2563eb;"></i> 무료 진단서 받아볼 이메일 (필수 *)</label>
-              <input type="email" id="applyEmail" placeholder="name@example.com" required>
-            </div>
-            <div class="aio-field">
-              <label for="applyPhone" id="applyPhoneLabel"><i class="fa-solid fa-phone" style="color:#2563eb;"></i> 대표 연락처 <span id="phoneReqBadge" style="color:#2563eb; font-weight:800; font-size:11px;">(카톡 알림용, 필수 *)</span></label>
-              <input type="tel" id="applyPhone" placeholder="010-0000-0000" pattern="[0-9]{3}-?[0-9]{3,4}-?[0-9]{4}" required>
-            </div>
-          </div>
-
-          <!-- 💬 카톡 매일 아침 순위 변동 알림 옵트인 (7일 무료 체험) -->
-          <div class="apply-kakao-optin" style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:12px 14px; margin-bottom:16px;">
-            <label class="kakao-check-label" style="display:flex; align-items:flex-start; gap:10px; cursor:pointer;">
-              <input type="checkbox" id="applyKakaoOptIn" checked onchange="toggleKakaoPhoneRequired(this.checked)" style="margin-top:3px; accent-color:#2563eb; width:16px; height:16px;">
-              <div class="kakao-check-text">
-                <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
-                  <strong style="color:var(--slate-800); font-size:13.5px;">💬 매일 아침 카톡으로 순위 변동 자동 알림 받기</strong>
-                  <span style="background:#e0e7fe; color:#2563eb; font-size:11px; font-weight:800; padding:2px 8px; border-radius:10px;">첫 7일 무료 체험</span>
-                </div>
-                <span class="kakao-check-sub" style="color:var(--slate-500); font-size:12px; display:block; margin-top:2px;">매일 아침 9시 내 매장 순위 변동 카톡 알림 발송 (7일 무료 체험 후 월 9,900원 정기 구독 옵션)</span>
-              </div>
-            </label>
-          </div>
-
-          <button type="submit" class="aio-btn-submit" id="btnApplySubmit">
-            <i class="fa-solid fa-paper-plane"></i> <span>🚀 1회 무료 전략 리포트 &amp; 카톡 알림 신청하기</span>
-          </button>
-        </form>
-
-        <div class="apply-guarantee" id="applyGuarantee" style="margin-top:14px; color:var(--slate-500); font-size:12px; display:flex; gap:16px; flex-wrap:wrap;">
-          <span>🔒 100% 무료 1회 진단 (스팸 발송 없음)</span>
-          <span>⚡ 신청 후 전문 분석 리포트 순차 전송</span>
-          <span>⭐ 네이버 스마트플레이스 1위 동기화 솔루션</span>
-        </div>
-
-        <!-- 접수 완료 안내 박스 -->
-        <div id="applySuccessBox" style="display:none; background:#f0fdf4; border:1.5px solid #86efac; border-radius:12px; padding:24px; text-align:center; margin-top:20px;">
-          <div style="font-size:36px; margin-bottom:8px;">🎉</div>
-          <h3 id="applySuccessTitle" style="font-size:18px; font-weight:900; color:#15803d; margin-bottom:6px;">플레이스싱크 1위 전략 리포트 접수 완료!</h3>
-          <p style="font-size:13.5px; color:#166534; line-height:1.6; margin-bottom:12px;">
-            입력하신 이메일(<b id="applySuccessEmail" style="color:#15803d;"></b>)로 전략 리포트와 실전 액션플랜이 순차 발송됩니다.<br>
-            (담당 분석팀에 실시간 알림이 안전하게 접수되었습니다.)
-          </p>
-          <div style="display:inline-flex; align-items:center; gap:6px; background:#dcfce7; color:#15803d; font-size:12px; font-weight:700; padding:6px 14px; border-radius:20px; margin-bottom:14px;">
-            <i class="fa-solid fa-check-circle"></i> 접수 정상 완료 (DB 영구 보존 &amp; 이메일 발송)
-          </div>
-          <!-- 📊 발급된 1위 실측 진단서 바로 열기 버튼 -->
-          <div id="applySuccessReportWrap" style="margin: 10px 0 16px 0;">
-            <a id="applySuccessReportLink" href="/report/place-audit.html" target="_blank" rel="noopener noreferrer" style="display:inline-flex; align-items:center; gap:8px; background:#2563eb; color:#ffffff; font-size:14px; font-weight:800; padding:12px 24px; border-radius:30px; text-decoration:none; box-shadow:0 4px 14px rgba(37,99,235,0.35); transition:transform 0.15s;">
-              <i class="fa-solid fa-file-invoice"></i> <span>📊 [발급 완료] 내 매장 1위 격차 실측 진단서 열기</span> &rarr;
-            </a>
-          </div>
-          <div id="applyKakaoActionWrap" style="margin-top:10px; padding-top:14px; border-top:1px dashed #86efac;">
-            <p style="font-size:12.5px; color:#166534; font-weight:700; margin-bottom:10px;">
-              ⚡ 마지막 1초: 카카오톡 공식 채널을 추가해 두시면 리포트 도착 알림과 순위 변동을 받아보실 수 있습니다.
-            </p>
-            <a href="https://pf.kakao.com/_xonxiaX" target="_blank" rel="noopener noreferrer" style="display:inline-flex; align-items:center; gap:8px; background:#fee500; color:#191919; font-size:13px; font-weight:800; padding:11px 22px; border-radius:10px; text-decoration:none; box-shadow:0 2px 8px rgba(0,0,0,0.1); transition:transform 0.15s;">
-              <i class="fa-solid fa-comment"></i> 💬 [플레이스싱크] 카카오톡 공식 채널로 매일 아침 9시 실시간 순위 변동 알림 연동 <i class="fa-solid fa-arrow-right"></i>
-            </a>
-          </div>
-        </div>
-      </div>
-    </section>
-
     <!-- Ebook Promo Card (플레이스 전문직·자영업 1% 지침서) -->
     <div class="ebook-promo-card" style="display: none !important; margin-top: 24px;">
       <div class="ebook-promo-badge"><i class="fa-solid fa-crown"></i> 2026 추천 필독 실전서</div>
@@ -2592,7 +2591,7 @@
     </div>
 
     <!-- SaaS Bridge Banner (플레이스싱크 AI 자동화 브릿지) -->
-    <div class="saas-bridge-card" style="margin-top: 24px;">
+    <div class="saas-bridge-card" style="display: none !important; margin-top: 24px;">
       <div class="saas-bridge-header">
         <div class="saas-bridge-icon"><i class="fa-solid fa-robot"></i></div>
         <div class="saas-bridge-title">PostSync AI: 24시간 네이버 상위노출 머신</div>

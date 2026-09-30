@@ -363,8 +363,8 @@ export default function ToolsHubPage() {
           <EbookPromoCard toolSource="tools_hub" />
         </div> */}
 
-        {/* B2B SaaS 메인 전환 배너 (토스 스타일 로열 블루 카드) */}
-        <div className="rounded-3xl bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 p-8 md:p-11 shadow-lg text-white relative overflow-hidden">
+        {/* B2B SaaS 메인 전환 배너 (임시 비활성화) */}
+        <div className="hidden rounded-3xl bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 p-8 md:p-11 shadow-lg text-white relative overflow-hidden">
           <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 relative z-10">
             <div className="space-y-3">
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 border border-white/30 text-white text-xs font-bold">
