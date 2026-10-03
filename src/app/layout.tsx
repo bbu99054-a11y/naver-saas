@@ -45,7 +45,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "PostSync - 전문직 전용 AI 블로그 자동화",
     description: "전문직을 위한 완벽한 AI 블로그 엔진. 광고법 위반 제로, 환각 제로.",
-    url: "https://postsyncapp.com",
+    url: "https://www.postsyncapp.com",
     siteName: "PostSync",
     type: "website",
     locale: "ko_KR",

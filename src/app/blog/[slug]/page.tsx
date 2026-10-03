@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     title: `${post.title} | PostSync 전문직 칼럼`,
     description: post.excerpt,
     alternates: {
-      canonical: `/blog/${post.slug}`,
+      canonical: `https://www.postsyncapp.com/blog/${post.slug}`,
     },
     openGraph: {
       title: post.title,
