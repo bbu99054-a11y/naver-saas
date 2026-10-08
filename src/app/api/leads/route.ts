@@ -4,6 +4,7 @@ import { triageConsultLead, LeadTriageResult } from '@/lib/ai/jevClient'
 import { generatePlaceReportEmailHtml, PlaceReportSnapshot, calculatePlaceAuditScore, buildDeepAuditBundle } from '@/lib/email/placeReportTemplate'
 import { getClientIp, checkIpRateLimit, checkEmailCoolDown, escapeHtml } from '@/lib/rateLimit'
 import { safeEncrypt } from '@/lib/crypto'
+import crypto from 'crypto'
 
 export async function POST(req: Request) {
   try {
@@ -75,7 +76,7 @@ export async function POST(req: Request) {
 
     // 📍 플레이스 실측 리포트 자동 발급 및 스냅샷 구성
     const isPlaceLead = toolSource === 'place' || String(body.rewardName || '').includes('플레이스') || !!body.details?.store_name
-    const reportSlug = 'ps' + Math.random().toString(36).substring(2, 8)
+    const reportSlug = 'ps' + crypto.randomBytes(4).toString('hex')
     const reportUrl = `https://postsyncapp.com/report/place-audit.html?id=${reportSlug}`
 
     let placeSnapshot: PlaceReportSnapshot | null = null

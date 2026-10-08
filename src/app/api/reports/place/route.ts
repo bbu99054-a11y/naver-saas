@@ -2,9 +2,21 @@ import { NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
 import { PlaceReportSnapshot, calculatePlaceAuditScore, buildDeepAuditBundle, generateSaaSReportSummary } from '@/lib/email/placeReportTemplate'
 import { fetchPlaceRealDetails } from '@/lib/naver/placeDetailScraper'
+import { getClientIp, checkIpRateLimit } from '@/lib/rateLimit'
+import crypto from 'crypto'
 
 export async function GET(req: Request) {
   try {
+    // 🛡️ IP 기반 Rate Limiting (1분당 최대 30회 조회 제한 - 무차별 크롤링 및 DB 과부하 차단)
+    const clientIp = getClientIp(req)
+    const ipCheck = checkIpRateLimit(clientIp, 30, 60000)
+    if (!ipCheck.allowed) {
+      return NextResponse.json(
+        { error: `리포트 조회 요청이 너무 빈번합니다. ${ipCheck.remainingSec}초 후 다시 시도해 주세요.` },
+        { status: 429 }
+      )
+    }
+
     const { searchParams } = new URL(req.url)
     const id = searchParams.get('id')
 
@@ -104,8 +116,8 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: '진단 데이터가 누락되었습니다.' }, { status: 400 })
     }
 
-    // 8자리 랜덤 슬러그 생성 (예: 'ps7k9a2f')
-    const reportSlug = 'ps' + Math.random().toString(36).substring(2, 8)
+    // 8자리 암호학적 랜덤 슬러그 생성 (예: 'ps7a3f9c2d')
+    const reportSlug = 'ps' + crypto.randomBytes(4).toString('hex')
 
     const finalSnapshot: PlaceReportSnapshot = snapshot || {
       storeName,
