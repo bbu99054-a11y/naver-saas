@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { diagnosePlaceWithJev } from '@/lib/ai/jevClient';
 import { getMonthlyKeywordVolume, KeywordVolumeResult } from '@/lib/naver/searchAdClient';
+import { getClientIp, checkIpRateLimit } from '@/lib/rateLimit';
 
 export interface PlaceItem {
   rank: number;
@@ -161,7 +162,7 @@ export async function fetchLiveNaverPlaceRanking(
           }
 
           return {
-            totalCount: Math.max(items.length, 20),
+            totalCount: items.length,
             items,
           };
         }
@@ -351,6 +352,23 @@ export async function GET(req: Request) {
         success: false,
         error: '검색할 플레이스 키워드를 입력해주세요. 예: 강남역 변호사, 서초동 세무사',
       }, { status: 400 });
+    }
+
+    if (cleanQuery.length > 50) {
+      return NextResponse.json({
+        success: false,
+        error: '검색 키워드는 50자 이내로 입력해 주세요.',
+      }, { status: 400 });
+    }
+
+    // 🛡️ IP 기반 Rate Limiting (1분당 최대 12회 조회 제한 - 네이버 IP 차단 및 서버 남용 방어)
+    const clientIp = getClientIp(req);
+    const ipCheck = checkIpRateLimit(clientIp, 12, 60000);
+    if (!ipCheck.allowed) {
+      return NextResponse.json({
+        success: false,
+        error: `단시간 내 조회 요청이 너무 많습니다. ${ipCheck.remainingSec}초 후 다시 시도해 주세요.`,
+      }, { status: 429 });
     }
 
     const cacheKey = `${cleanQuery.toLowerCase()}_${coordX}_${coordY}`;

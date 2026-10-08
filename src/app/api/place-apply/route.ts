@@ -1,8 +1,18 @@
 import { NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
+import { getClientIp, checkIpRateLimit, escapeHtml } from '@/lib/rateLimit'
 
 export async function POST(req: Request) {
   try {
+    // 🛡️ IP 기반 Rate Limiting (1분당 최대 4회 신청 제한)
+    const clientIp = getClientIp(req)
+    const ipCheck = checkIpRateLimit(clientIp, 4, 60000)
+    if (!ipCheck.allowed) {
+      return NextResponse.json(
+        { error: `신청 요청이 너무 빈번합니다. ${ipCheck.remainingSec}초 후 다시 시도해 주세요.` },
+        { status: 429 }
+      )
+    }
     const body = await req.json()
     const { name, email, phone, location, industry, leadId } = body
 
@@ -38,8 +48,8 @@ export async function POST(req: Request) {
     }
 
     // 1. Telegram Notification to Representative
-    const tgToken = process.env.TELEGRAM_BOT_TOKEN || '8314703344:AAGoFyPTWjHCRjPWq32Pdq0dti0TG8zZahE';
-    const tgChatId = process.env.TELEGRAM_CHAT_ID || '8650197247';
+    const tgToken = process.env.TELEGRAM_BOT_TOKEN;
+    const tgChatId = process.env.TELEGRAM_CHAT_ID;
 
     if (tgToken && tgChatId) {
       try {
@@ -88,10 +98,10 @@ export async function POST(req: Request) {
                 <h2 style="color: #1e3a8a;">🔔 신규 플레이스 분석 신청 접수</h2>
                 <p>postsyncapp.com 공식 가이드 페이지에서 고객이 리포트를 신청했습니다.</p>
                 <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; margin: 16px 0;">
-                  <p><strong>🏢 상호명:</strong> ${cleanName}</p>
-                  <p><strong>📧 수신 이메일:</strong> ${cleanEmail}</p>
-                  <p><strong>📍 상권/업종:</strong> ${location || '반경 2km'} (${targetIndustry})</p>
-                  <p><strong>⏱ 접수 일시:</strong> ${nowTime}</p>
+                  <p><strong>🏢 상호명:</strong> ${escapeHtml(cleanName)}</p>
+                  <p><strong>📧 수신 이메일:</strong> ${escapeHtml(cleanEmail)}</p>
+                  <p><strong>📍 상권/업종:</strong> ${escapeHtml(location || '반경 2km')} (${escapeHtml(targetIndustry)})</p>
+                  <p><strong>⏱ 접수 일시:</strong> ${escapeHtml(nowTime)}</p>
                 </div>
                 <p>로컬 PC의 PostSync 또는 naver_place 파이프라인에서 발송을 승인해 주세요.</p>
               </div>

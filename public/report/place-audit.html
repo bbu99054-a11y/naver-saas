@@ -1409,7 +1409,9 @@
       const store = snap.storeName || '신청 매장';
       const kw = snap.targetKeyword || '플레이스';
       const top1 = snap.top1Name || '상위 1위 매장';
-      const rank = typeof snap.myRank === 'number' ? snap.myRank : parseInt(String(snap.myRank || '2'), 10);
+      const rankNum = Number(snap.myRank);
+      const isRanked = Boolean(snap.myRank && !isNaN(rankNum) && rankNum > 0 && rankNum <= 20);
+      const rankLabel = isRanked ? `현재 ${rankNum}위` : '20위권 밖 (미노출)';
       const dateStr = snap.reportDate || new Date().toLocaleDateString('ko-KR');
 
       // 서버에서 전달된 saasSummary가 있으면 사용, 없으면 클라이언트 계산 fallback
@@ -1432,7 +1434,7 @@
       if (elStore) elStore.textContent = `${store} (신청 매장)`;
 
       const elKw = document.getElementById('rptKeyword');
-      if (elKw) elKw.textContent = `${kw} (현재 ${rank}위)`;
+      if (elKw) elKw.textContent = `${kw} (${rankLabel})`;
 
       const elTop1 = document.getElementById('rptTop1Name');
       if (elTop1) elTop1.textContent = `🥇 ${top1} (현재 1위)`;
@@ -1464,7 +1466,7 @@
 
       const elLossPill = document.getElementById('rptLossClicksPill');
       if (elLossPill) {
-        elLossPill.textContent = rank === 1 ? '1위 골든존 달성' : '상위권 대비 이탈 발생 중';
+        elLossPill.textContent = (isRanked && rankNum === 1) ? '1위 골든존 달성' : (isRanked ? '상위권 대비 이탈 발생 중' : '20위권 밖 미노출');
       }
 
       const elLossInsight = document.getElementById('rptLossInsight');
@@ -1590,7 +1592,9 @@
     function generateClientSaaSReportSummary(snapshot) {
       const store = snapshot.storeName || '신청 매장';
       const kw = snapshot.targetKeyword || '플레이스';
-      const rank = typeof snapshot.myRank === 'number' ? snapshot.myRank : parseInt(String(snapshot.myRank || '2'), 10);
+      const rankNum = Number(snapshot.myRank);
+      const isUnranked = !snapshot.myRank || isNaN(rankNum) || rankNum <= 0 || rankNum > 20;
+      const rank = isUnranked ? null : rankNum;
       
       const text = `${store} ${kw}`.toLowerCase();
       const isMedical = /정형외과|한의원|치과|병원|의원|피부과|안과|내과|이비인후과|통증|클리닉|성형외과/.test(text);
@@ -1599,10 +1603,17 @@
 
       // 점수 산정
       let seoScore = 50;
-      if (rank === 1) seoScore += 25;
-      else if (rank <= 3) seoScore += 20;
-      else if (rank <= 10) seoScore += 10;
-      else seoScore += 5;
+      if (isUnranked) {
+        seoScore = 35;
+      } else if (rank === 1) {
+        seoScore += 25;
+      } else if (rank <= 3) {
+        seoScore += 20;
+      } else if (rank <= 10) {
+        seoScore += 10;
+      } else {
+        seoScore += 5;
+      }
 
       if (snapshot.myBooking) seoScore += 15;
       else seoScore -= 10;
@@ -1613,9 +1624,12 @@
 
       const seoScoreText = `${seoScore}점 / 100점 - 상위 ${Math.max(5, Math.min(45, 100 - seoScore))}% 수준`;
 
-      let lossClicksNum = 140;
+      let lossClicksNum = 350;
       let lossClicksText = '';
-      if (rank === 1) {
+      if (isUnranked) {
+        lossClicksNum = 350;
+        lossClicksText = '현재 20위권 밖 미노출 상태로 모바일 검색 고객 유입의 90% 이상(월 약 350명)이 경쟁 매장으로 유실 중입니다.';
+      } else if (rank === 1) {
         lossClicksNum = 0;
         lossClicksText = '현재 1위 골든존 점유로 월 최대 유입률 달성 중 (손실 0명)';
       } else if (rank <= 3) {

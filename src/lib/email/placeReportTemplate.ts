@@ -1057,16 +1057,21 @@ export function getKoreanWeekLabel(dateObj: Date = new Date()): string {
 export function generateSaaSReportSummary(snapshot: PlaceReportSnapshot): SaaSReportSummary {
   const store = snapshot.storeName || '신청 매장'
   const kw = snapshot.targetKeyword || '플레이스'
-  const rank = typeof snapshot.myRank === 'number' ? snapshot.myRank : parseInt(String(snapshot.myRank || '2'), 10)
+  const rankNum = Number(snapshot.myRank)
+  const isUnranked = !snapshot.myRank || isNaN(rankNum) || rankNum <= 0 || rankNum > 20
+  const rank = isUnranked ? null : rankNum
   const industry = detectIndustry(store, kw)
   const isMedicalOrLaw = industry === '의료/병원' || industry === '전문직/법률'
 
   const seoScore = snapshot.totalScore || calculatePlaceAuditScore(snapshot)
   const seoScoreText = `${seoScore}점 / 100점 - 상위 ${Math.max(5, Math.min(45, 100 - seoScore))}% 수준`
 
-  let lossClicksNum = 140
+  let lossClicksNum = 350
   let lossClicksText = ''
-  if (rank === 1) {
+  if (rank === null) {
+    lossClicksNum = 350
+    lossClicksText = '현재 20위권 밖 미노출 상태로 모바일 검색 고객 유입의 90% 이상(월 약 350명)이 경쟁 매장으로 유실 중입니다.'
+  } else if (rank === 1) {
     lossClicksNum = 0
     lossClicksText = '현재 1위 골든존 점유로 월 최대 유입률 달성 중 (손실 0명)'
   } else if (rank <= 3) {
@@ -1370,11 +1375,20 @@ export function buildDeepAuditBundle(snapshot: PlaceReportSnapshot): DeepAuditBu
 export function calculatePlaceAuditScore(snapshot: PlaceReportSnapshot): number {
   let score = 50 // 기본 점수
 
-  const rank = typeof snapshot.myRank === 'number' ? snapshot.myRank : parseInt(String(snapshot.myRank || '99'), 10)
-  if (rank === 1) score += 25
-  else if (rank <= 3) score += 20
-  else if (rank <= 10) score += 10
-  else score += 5
+  const rankNum = Number(snapshot.myRank)
+  const isUnranked = !snapshot.myRank || isNaN(rankNum) || rankNum <= 0 || rankNum > 20
+
+  if (isUnranked) {
+    score = 35 // 20위권 밖 미노출 감점 기준 점수
+  } else if (rankNum === 1) {
+    score += 25
+  } else if (rankNum <= 3) {
+    score += 20
+  } else if (rankNum <= 10) {
+    score += 10
+  } else {
+    score += 5
+  }
 
   if (snapshot.myBooking) score += 15
   else score -= 10
@@ -1396,7 +1410,9 @@ export function generatePlaceReportEmailHtml(snapshot: PlaceReportSnapshot, webR
   const store = snapshot.storeName || '신청 매장'
   const kw = snapshot.targetKeyword || '플레이스'
   const top1 = snapshot.top1Name || '상위 1위 매장'
-  const rank = snapshot.myRank || 2
+  const rankNum = Number(snapshot.myRank)
+  const isRanked = Boolean(snapshot.myRank && !isNaN(rankNum) && rankNum > 0 && rankNum <= 20)
+  const rankLabel = isRanked ? `실시간 ${rankNum}위` : '20위권 밖 (미노출)'
   const dateStr = snapshot.reportDate || new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' })
   const reportCode = `PS-${snapshot.reportId ? String(snapshot.reportId).toUpperCase() : 'AUTO'}`
 
@@ -1441,7 +1457,7 @@ export function generatePlaceReportEmailHtml(snapshot: PlaceReportSnapshot, webR
                     진단 대상: <strong style="color:#ffffff;">${store}</strong>
                   </td>
                   <td width="50%" style="padding:3px 4px;color:#94a3b8;">
-                    검색 키워드: <strong style="color:#ffffff;">${kw} (${rank}위)</strong>
+                    검색 키워드: <strong style="color:#ffffff;">${kw} (${rankLabel})</strong>
                   </td>
                 </tr>
                 <tr>

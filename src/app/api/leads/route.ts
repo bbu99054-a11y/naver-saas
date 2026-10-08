@@ -2,9 +2,19 @@ import { NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
 import { triageConsultLead, LeadTriageResult } from '@/lib/ai/jevClient'
 import { generatePlaceReportEmailHtml, PlaceReportSnapshot, calculatePlaceAuditScore, buildDeepAuditBundle } from '@/lib/email/placeReportTemplate'
+import { getClientIp, checkIpRateLimit, checkEmailCoolDown, escapeHtml } from '@/lib/rateLimit'
 
 export async function POST(req: Request) {
   try {
+    // 🛡️ IP 기반 Rate Limiting (1분당 최대 4회 신청 제한 - 매크로 및 서버 자원 남용 방어)
+    const clientIp = getClientIp(req)
+    const ipCheck = checkIpRateLimit(clientIp, 4, 60000)
+    if (!ipCheck.allowed) {
+      return NextResponse.json(
+        { error: `신청 요청이 너무 빈번합니다. ${ipCheck.remainingSec}초 후 다시 시도해 주세요.` },
+        { status: 429 }
+      )
+    }
     const body = await req.json()
     const {
       toolSource: rawToolSource,
@@ -73,18 +83,18 @@ export async function POST(req: Request) {
       placeSnapshot = {
         storeName: details.store_name || body.storeName || cleanName,
         targetKeyword: details.target_keyword || body.keyword || metadata.target_keyword || '플레이스',
-        myRank: details.myRank || body.myRank || 2,
+        myRank: (details.myRank !== undefined && details.myRank !== null) ? details.myRank : (body.myRank ?? null),
         top1Name: details.top1Name || body.top1Name || '1위 매장',
         myReviews: details.myReviews || body.myReviews || 0,
         top1Reviews: details.top1Reviews || body.top1Reviews || 0,
         myBlogReviews: details.myBlogReviews || body.myBlogReviews || 0,
         top1BlogReviews: details.top1BlogReviews || body.top1BlogReviews || 0,
         myBooking: details.myBooking ?? body.myBooking ?? false,
-        top1Booking: details.top1Booking ?? body.top1Booking ?? true,
-        myCoupon: details.myCoupon ?? body.myCoupon ?? true,
-        top1Coupon: details.top1Coupon ?? body.top1Coupon ?? true,
-        mySaves: details.mySaves || body.mySaves || '10,000+',
-        top1Saves: details.top1Saves || body.top1Saves || '50,000+',
+        top1Booking: details.top1Booking ?? body.top1Booking ?? false,
+        myCoupon: details.myCoupon ?? body.myCoupon ?? false,
+        top1Coupon: details.top1Coupon ?? body.top1Coupon ?? false,
+        mySaves: details.mySaves || body.mySaves || '미집계',
+        top1Saves: details.top1Saves || body.top1Saves || '미집계',
         reportId: reportSlug,
         reportDate: nowTime.split(' ')[0],
         top3Places: details.top3Places || body.top3Places || []
@@ -94,8 +104,8 @@ export async function POST(req: Request) {
     }
 
     // 1. Telegram 실시간 알림 발송 (대표님 텔레그램 봇)
-    const tgToken = process.env.TELEGRAM_BOT_TOKEN || '8314703344:AAGoFyPTWjHCRjPWq32Pdq0dti0TG8zZahE'
-    const tgChatId = process.env.TELEGRAM_CHAT_ID || '8650197247'
+    const tgToken = process.env.TELEGRAM_BOT_TOKEN
+    const tgChatId = process.env.TELEGRAM_CHAT_ID
 
     if (tgToken && tgChatId) {
       try {
@@ -116,6 +126,11 @@ export async function POST(req: Request) {
             `⏱ 신청일시: ${nowTime}\n\n` +
             `🔥 [수임 골든타임 10분] 지금 바로 의뢰인에게 유선 전화를 연결하여 방문 상담을 확정하세요!`
         } else if (leadType === 'ebook_order') {
+          const bankName = process.env.NEXT_PUBLIC_BANK_NAME || '국민은행'
+          const bankAccount = process.env.NEXT_PUBLIC_BANK_ACCOUNT || ''
+          const bankHolder = process.env.NEXT_PUBLIC_BANK_HOLDER || ''
+          const bankInfoStr = bankAccount ? `[${bankName} ${bankAccount} ${bankHolder}]` : '[등록 계좌 정보]'
+
           msg = `💰 [전자책 계좌이체 주문 접수 - ${toolSource.toUpperCase()}]\n\n` +
             `📚 상품명: ${metadata.bookTitle || '2026 변호사·세무사 네이버 상위 1% 인바운드 마케팅 실전 지침서 (PDF)'}\n` +
             `💵 결제금액: ${metadata.amount ? Number(metadata.amount).toLocaleString() + '원' : '39,000원'}\n` +
@@ -124,7 +139,7 @@ export async function POST(req: Request) {
             `📱 연락처: ${cleanPhone || '미기재'}\n` +
             `🧾 증빙요청: ${taxDeductionText}\n` +
             `⏱ 신청일시: ${nowTime}\n\n` +
-            `👉 [국민은행 93043922640 유영무] 입금 확인 후 PDF 발송 및 홈택스 영수증/계산서를 발행하세요.`
+            `👉 ${bankInfoStr} 입금 확인 후 PDF 발송 및 홈택스 영수증/계산서를 발행하세요.`
         } else if (toolSource === 'place' || body.rewardName?.includes('플레이스')) {
           msg = `📍 [플레이스 1위 격차 심층 리포트 신청 - ${toolSource.toUpperCase()}]\n\n` +
             `🏢 상호명: ${placeSnapshot?.storeName || cleanName}\n` +
@@ -168,10 +183,12 @@ export async function POST(req: Request) {
     }
 
     // 2. Resend 이메일 발송 엔진 (고객 맞춤 리포트 발송 + 관리자 알림)
+    // 🛡️ 동일 이메일 3분 쿨다운 체크 (Resend API 무료 한도 소진 및 메일 폭탄 악용 방어)
+    const emailCoolDown = checkEmailCoolDown(cleanEmail, 180000)
     const resendKey = process.env.RESEND_API_KEY
     const adminEmail = process.env.ADMIN_EMAIL || 'contact@postsyncapp.com'
 
-    if (resendKey) {
+    if (resendKey && emailCoolDown.allowed) {
       try {
         // [플레이스 전용 엔진] 고객에게 1:1 맞춤형 실측 리포트 이메일 1초 자동 발송
         if (isPlaceLead && placeSnapshot) {
@@ -222,17 +239,17 @@ export async function POST(req: Request) {
             subject: subject,
             html: `
               <div style="font-family: sans-serif; font-size: 15px; line-height: 1.7; color: #334155; padding: 20px;">
-                <h2 style="color: #1e3a8a;">🔔 ${titleText}</h2>
+                <h2 style="color: #1e3a8a;">🔔 ${escapeHtml(titleText)}</h2>
                 <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; margin: 16px 0;">
-                  <p><strong>유입 출처:</strong> ${toolSource}</p>
-                  <p><strong>이름/상호명:</strong> ${cleanName}</p>
-                  <p><strong>이메일:</strong> ${cleanEmail}</p>
-                  <p><strong>연락처:</strong> ${cleanPhone || '미기재'}</p>
-                  ${metadata.inquiryType ? `<p><strong>문의 유형:</strong> ${metadata.inquiryType}</p>` : ''}
-                  ${metadata.message ? `<div style="margin-top:12px; padding:12px; background:#ffffff; border:1px solid #cbd5e1; border-radius:6px; font-size:14px; white-space:pre-wrap;"><strong>문의 내용:</strong><br/>${String(metadata.message)}</div>` : ''}
-                  ${isPlaceLead ? `<p><strong>🔗 발급 리포트 링크:</strong> <a href="${reportUrl}">${reportUrl}</a></p>` : ''}
-                  <p><strong>증빙 요청:</strong> ${taxDeductionText}</p>
-                  <p><strong>신청 일시:</strong> ${nowTime}</p>
+                  <p><strong>유입 출처:</strong> ${escapeHtml(toolSource)}</p>
+                  <p><strong>이름/상호명:</strong> ${escapeHtml(cleanName)}</p>
+                  <p><strong>이메일:</strong> ${escapeHtml(cleanEmail)}</p>
+                  <p><strong>연락처:</strong> ${escapeHtml(cleanPhone || '미기재')}</p>
+                  ${metadata.inquiryType ? `<p><strong>문의 유형:</strong> ${escapeHtml(metadata.inquiryType)}</p>` : ''}
+                  ${metadata.message ? `<div style="margin-top:12px; padding:12px; background:#ffffff; border:1px solid #cbd5e1; border-radius:6px; font-size:14px; white-space:pre-wrap;"><strong>문의 내용:</strong><br/>${escapeHtml(String(metadata.message))}</div>` : ''}
+                  ${isPlaceLead ? `<p><strong>🔗 발급 리포트 링크:</strong> <a href="${reportUrl}">${escapeHtml(reportUrl)}</a></p>` : ''}
+                  <p><strong>증빙 요청:</strong> ${escapeHtml(taxDeductionText)}</p>
+                  <p><strong>신청 일시:</strong> ${escapeHtml(nowTime)}</p>
                   ${metadata.amount ? `<p><strong>주문 금액:</strong> ${Number(metadata.amount).toLocaleString()}원</p>` : ''}
                 </div>
               </div>
@@ -242,6 +259,8 @@ export async function POST(req: Request) {
       } catch (resendErr) {
         console.error('[Leads API Resend Error]:', resendErr)
       }
+    } else if (!emailCoolDown.allowed) {
+      console.log(`[Leads API] 쿨다운 제한으로 중복 이메일 발송 건너뜀: ${cleanEmail} (남은 시간: ${emailCoolDown.remainingSec}초)`)
     }
 
     // 3. PostgreSQL leads 테이블에 영구 보존
@@ -263,6 +282,7 @@ export async function POST(req: Request) {
             clientName: cleanName,
             clientPhone: cleanPhone,
             cleanEmail,
+            earlyBirdKakaoAlert: Boolean(body.details?.kakao_alert_opt_in || metadata?.kakao_alert_opt_in),
             taxDeductionText,
             reportId: isPlaceLead ? reportSlug : undefined,
             reportSnapshot: placeSnapshot || undefined,

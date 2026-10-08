@@ -53,3 +53,102 @@ export function checkRateLimit(userId: string, minIntervalMs: number = 10000): {
   lastRequestTimestamps.set(userId, now);
   return { allowed: true };
 }
+
+// 🌐 클라이언트 IP 추출 유틸리티 (Vercel, Cloudflare, 프록시 지원)
+export function getClientIp(req: Request): string {
+  const forwardedFor = req.headers.get('x-forwarded-for');
+  if (forwardedFor) {
+    return forwardedFor.split(',')[0].trim();
+  }
+  const realIp = req.headers.get('x-real-ip');
+  if (realIp) {
+    return realIp.trim();
+  }
+  const cfConnectingIp = req.headers.get('cf-connecting-ip');
+  if (cfConnectingIp) {
+    return cfConnectingIp.trim();
+  }
+  return '127.0.0.1';
+}
+
+// 🛡️ IP 기반 슬라이딩 윈도우 속도 제한 (Rate Limiting)
+interface IpRateLimitEntry {
+  timestamps: number[];
+}
+const ipRateLimitMap = new Map<string, IpRateLimitEntry>();
+
+export function checkIpRateLimit(
+  ip: string,
+  limit: number = 12,
+  windowMs: number = 60000
+): { allowed: boolean; remainingSec: number } {
+  const now = Date.now();
+  let entry = ipRateLimitMap.get(ip);
+  if (!entry) {
+    entry = { timestamps: [] };
+    ipRateLimitMap.set(ip, entry);
+  }
+
+  // 윈도우 밖 만료된 타임스탬프 정리
+  entry.timestamps = entry.timestamps.filter(t => now - t < windowMs);
+
+  if (entry.timestamps.length >= limit) {
+    const oldest = entry.timestamps[0];
+    const remainingSec = Math.max(1, Math.ceil((oldest + windowMs - now) / 1000));
+    return { allowed: false, remainingSec };
+  }
+
+  entry.timestamps.push(now);
+
+  // 메모리 누수 방지 (주기적 정리)
+  if (ipRateLimitMap.size > 10000) {
+    for (const [key, val] of ipRateLimitMap.entries()) {
+      if (val.timestamps.length === 0 || now - val.timestamps[val.timestamps.length - 1] > windowMs) {
+        ipRateLimitMap.delete(key);
+      }
+    }
+  }
+
+  return { allowed: true, remainingSec: 0 };
+}
+
+// 📧 이메일 발송 쿨다운 (동일 이메일 메일 폭탄 및 Resend 한도 소진 방어)
+const emailCoolDownMap = new Map<string, number>();
+
+export function checkEmailCoolDown(
+  email: string,
+  coolDownMs: number = 180000 // 기본 3분
+): { allowed: boolean; remainingSec: number } {
+  const now = Date.now();
+  const normalizedEmail = email.trim().toLowerCase();
+  const lastSent = emailCoolDownMap.get(normalizedEmail);
+
+  if (lastSent && now - lastSent < coolDownMs) {
+    const remainingSec = Math.max(1, Math.ceil((coolDownMs - (now - lastSent)) / 1000));
+    return { allowed: false, remainingSec };
+  }
+
+  emailCoolDownMap.set(normalizedEmail, now);
+
+  if (emailCoolDownMap.size > 5000) {
+    for (const [key, val] of emailCoolDownMap.entries()) {
+      if (now - val > coolDownMs * 2) {
+        emailCoolDownMap.delete(key);
+      }
+    }
+  }
+
+  return { allowed: true, remainingSec: 0 };
+}
+
+// 🔒 악성 HTML 인젝션 / XSS 방어용 텍스트 이스케이프
+export function escapeHtml(str: string | null | undefined): string {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+

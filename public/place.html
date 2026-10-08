@@ -2347,29 +2347,35 @@
               <input type="email" id="applyEmail" placeholder="name@example.com" required>
             </div>
             <div class="aio-field">
-              <label for="applyPhone" id="applyPhoneLabel"><i class="fa-solid fa-phone" style="color:#2563eb;"></i> 대표 연락처 <span id="phoneReqBadge" style="color:#2563eb; font-weight:800; font-size:11px;">(카톡 알림용, 필수 *)</span></label>
-              <input type="tel" id="applyPhone" placeholder="010-0000-0000" pattern="[0-9]{3}-?[0-9]{3,4}-?[0-9]{4}" required>
+              <label for="applyPhone" id="applyPhoneLabel"><i class="fa-solid fa-phone" style="color:#2563eb;"></i> 대표 연락처 <span id="phoneReqBadge" style="color:#64748b; font-weight:700; font-size:11px;">(선택)</span></label>
+              <input type="tel" id="applyPhone" placeholder="010-0000-0000" pattern="[0-9]{3}-?[0-9]{3,4}-?[0-9]{4}">
             </div>
           </div>
 
-          <!-- 💬 카톡 매일 아침 순위 변동 알림 옵트인 (7일 무료 체험) -->
+          <!-- 🔔 카톡 매일 순위 변동 알림(출시 예정) 얼리버드 대기자 등록 -->
           <div class="apply-kakao-optin" style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:12px 14px; margin-bottom:16px;">
             <label class="kakao-check-label" style="display:flex; align-items:flex-start; gap:10px; cursor:pointer;">
-              <input type="checkbox" id="applyKakaoOptIn" checked onchange="toggleKakaoPhoneRequired(this.checked)" style="margin-top:3px; accent-color:#2563eb; width:16px; height:16px;">
+              <input type="checkbox" id="applyKakaoOptIn" onchange="toggleKakaoPhoneRequired(this.checked)" style="margin-top:3px; accent-color:#2563eb; width:16px; height:16px;">
               <div class="kakao-check-text">
                 <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
-                  <strong style="color:var(--slate-800); font-size:13.5px;">💬 매일 아침 카톡으로 순위 변동 자동 알림 받기</strong>
-                  <span style="background:#e0e7fe; color:#2563eb; font-size:11px; font-weight:800; padding:2px 8px; border-radius:10px;">첫 7일 무료 체험</span>
+                  <strong style="color:var(--slate-800); font-size:13.5px;">🔔 [선택] 매일 아침 순위 변동 자동 알림 기능 출시 시 사전 알림 받기</strong>
+                  <span style="background:#e0e7fe; color:#2563eb; font-size:11px; font-weight:800; padding:2px 8px; border-radius:10px;">출시 대기자 등록</span>
                 </div>
-                <span class="kakao-check-sub" style="color:var(--slate-500); font-size:12px; display:block; margin-top:2px;">매일 아침 9시 내 매장 순위 변동 카톡 알림 발송 (7일 무료 체험 후 월 9,900원 정기 구독 옵션)</span>
+                <span class="kakao-check-sub" style="color:var(--slate-500); font-size:12px; display:block; margin-top:2px;">매일 아침 9시 내 매장 순위 변동을 카카오톡으로 알려주는 자동화 기능 정식 오픈 시 얼리버드 혜택을 안내해 드립니다.</span>
               </div>
             </label>
           </div>
 
           <button type="submit" class="aio-btn-submit" id="btnApplySubmit">
-            <i class="fa-solid fa-paper-plane"></i> <span>🚀 1회 무료 전략 리포트 &amp; 카톡 알림 신청하기</span>
+            <i class="fa-solid fa-paper-plane"></i> <span>🚀 1회 무료 전략 리포트 신청하기</span>
           </button>
         </form>
+
+        <!-- 개인정보보호법 법정 필수 고지문 -->
+        <div style="margin-top:12px; padding:10px 14px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; font-size:11px; color:#64748b; line-height:1.5;">
+          <span style="font-weight:700; color:#475569;">📋 개인정보 수집 및 이용 안내 (필수 고지):</span>
+          <span>• 수집 항목: 상호명, 이메일, 연락처(선택) | • 수집 목적: 스마트플레이스 1위 격차 분석 리포트 발송 및 순위 개선 안내 | • 보유 기간: 리포트 발송 및 안내 목적 달성 시까지 (삭제 요청 시 즉시 파기)</span>
+        </div>
 
         <div class="apply-guarantee" id="applyGuarantee" style="margin-top:14px; color:var(--slate-500); font-size:12px; display:flex; gap:16px; flex-wrap:wrap;">
           <span>🔒 100% 무료 1회 진단 (스팸 발송 없음)</span>
@@ -3343,18 +3349,18 @@
           window.__LAST_PLACE_SNAPSHOT = {
             storeName: data.target || (data.myPlace ? data.myPlace.name : ''),
             targetKeyword: data.query || '',
-            myRank: data.myPlace ? data.myPlace.rank : 2,
+            myRank: data.myPlace ? data.myPlace.rank : null,
             top1Name: data.gapAnalysis ? data.gapAnalysis.top1Name : (data.rankingList && data.rankingList[0] ? data.rankingList[0].name : '1위 매장'),
             myReviews: data.myPlace ? parseInt(String(data.myPlace.visitorReviews || '0').replace(/[^0-9]/g, '')) || 0 : 0,
             top1Reviews: data.gapAnalysis?.metrics?.visitorReviews ? parseInt(String(data.gapAnalysis.metrics.visitorReviews.top1 || '0').replace(/[^0-9]/g, '')) || 0 : 0,
             myBlogReviews: data.myPlace ? parseInt(String(data.myPlace.blogReviews || '0').replace(/[^0-9]/g, '')) || 0 : 0,
             top1BlogReviews: data.gapAnalysis?.metrics?.blogReviews ? parseInt(String(data.gapAnalysis.metrics.blogReviews.top1 || '0').replace(/[^0-9]/g, '')) || 0 : 0,
             myBooking: data.myPlace ? !!data.myPlace.hasBooking : false,
-            top1Booking: data.gapAnalysis?.metrics?.booking ? !!data.gapAnalysis.metrics.booking.top1 : true,
+            top1Booking: data.gapAnalysis?.metrics?.booking ? !!data.gapAnalysis.metrics.booking.top1 : false,
             myCoupon: data.myPlace ? !!data.myPlace.hasCoupon : false,
-            top1Coupon: data.gapAnalysis?.metrics?.coupon ? !!data.gapAnalysis.metrics.coupon.top1 : true,
-            mySaves: data.myPlace?.saves || '1,000+',
-            top1Saves: data.rankingList && data.rankingList[0] ? (data.rankingList[0].saves || '50,000+') : '50,000+',
+            top1Coupon: data.gapAnalysis?.metrics?.coupon ? !!data.gapAnalysis.metrics.coupon.top1 : false,
+            mySaves: data.myPlace?.saveCount || data.myPlace?.saves || '미집계',
+            top1Saves: (data.rankingList && data.rankingList[0]?.saveCount) || (data.rankingList && data.rankingList[0]?.saves) || '미집계',
             top3Places: top3List
           };
         } catch (snapErr) {
@@ -3498,22 +3504,19 @@
         }
       };
 
-      // 카톡 알림 체크 시 휴대폰 번호 필수/선택 동적 토글
+      // 카톡 사전 알림 체크 시 휴대폰 번호 필수/선택 동적 토글
       window.toggleKakaoPhoneRequired = function(isChecked) {
         const phoneInput = document.getElementById('applyPhone');
         const phoneBadge = document.getElementById('phoneReqBadge');
-        const phoneHelp = document.getElementById('phoneHelpText');
         if (phoneInput && phoneBadge) {
           if (isChecked) {
             phoneInput.required = true;
-            phoneBadge.textContent = '(카톡 알림용, 필수 *)';
+            phoneBadge.textContent = '(사전 알림용, 필수 *)';
             phoneBadge.style.color = '#2563eb';
-            if (phoneHelp) phoneHelp.textContent = '* 매일 아침 카톡 순위 알림 수신을 위해 휴대폰 번호를 입력해주세요.';
           } else {
             phoneInput.required = false;
             phoneBadge.textContent = '(선택)';
             phoneBadge.style.color = '#64748b';
-            if (phoneHelp) phoneHelp.textContent = '* 휴대폰 번호를 입력하지 않으셔도 이메일로 1회 무료 진단서가 발송됩니다.';
           }
         }
       };
@@ -3533,9 +3536,9 @@
           return;
         }
 
-        // 카톡 알림 신청 시 전화번호 필수 유효성 검사
+        // 카톡 사전 알림 대기자 신청 시에만 전화번호 유효성 검사
         if (kakaoOptIn && !phone) {
-          showToast('매일 아침 카톡 순위 알림을 받으시려면 휴대폰 번호를 입력해 주세요.');
+          showToast('사전 알림 수신을 위해 휴대폰 번호를 입력해 주세요.');
           const phoneInput = document.getElementById('applyPhone');
           if (phoneInput) {
             phoneInput.focus();
@@ -3563,18 +3566,18 @@
                 store_name: storeName,
                 target_keyword: keyword,
                 kakao_alert_opt_in: !!kakaoOptIn,
-                myRank: snap.myRank || 2,
+                myRank: snap.myRank ?? null,
                 top1Name: snap.top1Name || '1위 매장',
-                myReviews: snap.myReviews || 0,
-                top1Reviews: snap.top1Reviews || 0,
-                myBlogReviews: snap.myBlogReviews || 0,
-                top1BlogReviews: snap.top1BlogReviews || 0,
+                myReviews: snap.myReviews ?? 0,
+                top1Reviews: snap.top1Reviews ?? 0,
+                myBlogReviews: snap.myBlogReviews ?? 0,
+                top1BlogReviews: snap.top1BlogReviews ?? 0,
                 myBooking: snap.myBooking ?? false,
-                top1Booking: snap.top1Booking ?? true,
-                myCoupon: snap.myCoupon ?? true,
-                top1Coupon: snap.top1Coupon ?? true,
-                mySaves: snap.mySaves || '1,000+',
-                top1Saves: snap.top1Saves || '50,000+',
+                top1Booking: snap.top1Booking ?? false,
+                myCoupon: snap.myCoupon ?? false,
+                top1Coupon: snap.top1Coupon ?? false,
+                mySaves: snap.mySaves || '미집계',
+                top1Saves: snap.top1Saves || '미집계',
                 top3Places: snap.top3Places || []
               }
             })
