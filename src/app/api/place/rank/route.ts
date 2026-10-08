@@ -18,11 +18,13 @@ export interface PlaceItem {
   placeUrl: string;
 }
 
+export type MetricStatus = 'OPTIMAL' | 'DEFICIT' | 'MISSING' | 'ACTIVE' | 'NONE' | 'UNMEASURED';
+
 export interface MetricGap {
   top1: string | boolean;
   my: string | boolean;
   diff?: number;
-  status: 'OPTIMAL' | 'DEFICIT' | 'MISSING' | 'ACTIVE' | 'NONE';
+  status: MetricStatus;
 }
 
 export interface PlaceGapAnalysis {
@@ -391,14 +393,30 @@ export async function GET(req: Request) {
       }),
     ]);
 
-    // 2. 타깃 매장 매칭 (Match target store/business if specified)
+    // 2. 타깃 매장 정밀 매칭 (Exact Match 우선 및 일반명사 오매칭 방어)
     let myPlace: (PlaceItem & { isTop5: boolean; isTop10: boolean; percentile: number }) | null = null;
     if (cleanTarget) {
       const targetNorm = cleanTarget.toLowerCase().replace(/\s+/g, '');
-      const found = rankingData.items.find(item => {
+
+      // 1단계: 완전 일치 (Exact Match)
+      let found = rankingData.items.find(item => {
         const nameNorm = item.name.toLowerCase().replace(/\s+/g, '');
-        return nameNorm.includes(targetNorm) || targetNorm.includes(nameNorm);
+        return nameNorm === targetNorm;
       });
+
+      // 2단계: 완전 일치가 없고 입력어가 2글자 이상인 경우, 정밀 접두/포함 매칭
+      if (!found && targetNorm.length >= 2) {
+        // 단독 일반명사(업종명) 입력 시 1위 매장을 내 매장으로 오매칭하는 버그 원천 차단
+        const genericWords = ['변호사', '세무사', '회계사', '법무법인', '치과', '병원', '의원', '한의원', '카페', '식당', '맛집', '학원', '부동산', '헤어', '미용실'];
+        const isGenericOnly = genericWords.includes(targetNorm);
+
+        if (!isGenericOnly) {
+          found = rankingData.items.find(item => {
+            const nameNorm = item.name.toLowerCase().replace(/\s+/g, '');
+            return nameNorm.startsWith(targetNorm) || nameNorm.includes(targetNorm);
+          });
+        }
+      }
 
       if (found) {
         myPlace = {
@@ -410,28 +428,51 @@ export async function GET(req: Request) {
       }
     }
 
-    // 3. 1위 매장 vs 내 매장 5대 핵심 지표 정량 격차 분석 (Gap Analysis)
+    // 3. 1위 매장 vs 내 매장 5대 핵심 지표 정량 격차 분석 (Gap Analysis - 미수집 항목 정직 판정)
     let gapAnalysis: PlaceGapAnalysis | null = null;
     if (myPlace && rankingData.items.length > 0) {
       const top1 = rankingData.items[0];
 
       const parseNum = (str?: string): number => {
-        if (!str || str === '-') return 0;
+        if (!str || str === '-' || str === '미집계') return 0;
         const num = str.replace(/[^0-9]/g, '');
         return num ? parseInt(num, 10) : 0;
       };
 
+      const hasValidNum = (str?: string): boolean => {
+        if (!str || str === '-' || str === '미집계') return false;
+        return /[0-9]/.test(str);
+      };
+
+      // 1) 저장수 판정
+      const top1HasSaves = hasValidNum(top1.saveCount);
+      const myHasSaves = hasValidNum(myPlace.saveCount);
       const top1Saves = parseNum(top1.saveCount);
       const mySaves = parseNum(myPlace.saveCount);
       const savesGap = top1Saves - mySaves;
+      const savesStatus: MetricStatus = (!top1HasSaves && !myHasSaves)
+        ? 'UNMEASURED'
+        : (savesGap > 0 ? 'DEFICIT' : 'OPTIMAL');
 
+      // 2) 방문자리뷰 판정
+      const top1HasVisitor = hasValidNum(top1.visitorReviews);
+      const myHasVisitor = hasValidNum(myPlace.visitorReviews);
       const top1Visitor = parseNum(top1.visitorReviews);
       const myVisitor = parseNum(myPlace.visitorReviews);
       const visitorGap = top1Visitor - myVisitor;
+      const visitorStatus: MetricStatus = (!top1HasVisitor && !myHasVisitor)
+        ? 'UNMEASURED'
+        : (visitorGap > 0 ? 'DEFICIT' : 'OPTIMAL');
 
+      // 3) 블로그리뷰 판정
+      const top1HasBlog = hasValidNum(top1.blogReviews);
+      const myHasBlog = hasValidNum(myPlace.blogReviews);
       const top1Blog = parseNum(top1.blogReviews);
       const myBlog = parseNum(myPlace.blogReviews);
       const blogGap = top1Blog - myBlog;
+      const blogStatus: MetricStatus = (!top1HasBlog && !myHasBlog)
+        ? 'UNMEASURED'
+        : (blogGap > 0 ? 'DEFICIT' : 'OPTIMAL');
 
       gapAnalysis = {
         top1Name: top1.name,
@@ -440,20 +481,20 @@ export async function GET(req: Request) {
           saves: {
             top1: top1.saveCount || '-',
             my: myPlace.saveCount || '-',
-            diff: savesGap > 0 ? savesGap : 0,
-            status: savesGap > 0 ? 'DEFICIT' : 'OPTIMAL',
+            diff: savesStatus === 'UNMEASURED' ? 0 : (savesGap > 0 ? savesGap : 0),
+            status: savesStatus,
           },
           visitorReviews: {
             top1: top1.visitorReviews || '-',
             my: myPlace.visitorReviews || '-',
-            diff: visitorGap > 0 ? visitorGap : 0,
-            status: visitorGap > 0 ? 'DEFICIT' : 'OPTIMAL',
+            diff: visitorStatus === 'UNMEASURED' ? 0 : (visitorGap > 0 ? visitorGap : 0),
+            status: visitorStatus,
           },
           blogReviews: {
             top1: top1.blogReviews || '-',
             my: myPlace.blogReviews || '-',
-            diff: blogGap > 0 ? blogGap : 0,
-            status: blogGap > 0 ? 'DEFICIT' : 'OPTIMAL',
+            diff: blogStatus === 'UNMEASURED' ? 0 : (blogGap > 0 ? blogGap : 0),
+            status: blogStatus,
           },
           booking: {
             top1: top1.hasBooking,

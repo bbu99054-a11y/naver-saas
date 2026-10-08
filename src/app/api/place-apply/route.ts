@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
 import { getClientIp, checkIpRateLimit, escapeHtml } from '@/lib/rateLimit'
+import { safeEncrypt } from '@/lib/crypto'
 
 export async function POST(req: Request) {
   try {
@@ -26,15 +27,18 @@ export async function POST(req: Request) {
     const targetIndustry = industry || (cleanName.includes('세무') || cleanName.includes('회계') ? '세무' : (cleanName.includes('치과') ? '치과' : (cleanName.includes('학원') ? '학원' : '변호사')))
     const nowTime = new Date().toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' })
 
-    // 0. DB leads 테이블에 안전 저장 (데이터 영구 보존)
+    // 0. DB leads 테이블에 안전 암호화 저장 (데이터 영구 보존 및 헌법 제6조 준수)
     let savedLeadId = leadId
     try {
+      const encryptedEmail = safeEncrypt(cleanEmail) || cleanEmail
+      const encryptedPhone = cleanPhone ? safeEncrypt(cleanPhone) : null
+
       const savedLead = await prisma.lead.create({
         data: {
           toolSource: 'place',
           leadType: 'audit_report',
-          email: cleanEmail,
-          phone: cleanPhone,
+          email: encryptedEmail,
+          phone: encryptedPhone,
           businessName: cleanName,
           location: location ? String(location).trim() : '반경 2km',
           industry: targetIndustry,

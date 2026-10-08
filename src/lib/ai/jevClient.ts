@@ -289,7 +289,7 @@ export interface PlaceGapMetricItem {
   top1: string | boolean
   my: string | boolean
   diff?: number
-  status: 'OPTIMAL' | 'DEFICIT' | 'MISSING' | 'ACTIVE' | 'NONE'
+  status: 'OPTIMAL' | 'DEFICIT' | 'MISSING' | 'ACTIVE' | 'NONE' | 'UNMEASURED'
 }
 
 export interface PlaceGapAnalysisData {

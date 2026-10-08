@@ -27,3 +27,27 @@ export function decrypt(text: string) {
   decrypted = Buffer.concat([decrypted, decipher.final()])
   return decrypted.toString()
 }
+
+// 🛡️ 안전 암호화 (예외 발생 시 원본 보호 및 null 세이프)
+export function safeEncrypt(text: string | null | undefined): string | null {
+  if (!text) return null
+  try {
+    return encrypt(text)
+  } catch (err) {
+    console.warn('[Crypto] Encryption fallback to raw text:', err)
+    return text
+  }
+}
+
+// 🛡️ 안전 복호화 (이미 평문이거나 암호화 형식이 아닌 경우 원본 반환)
+export function safeDecrypt(text: string | null | undefined): string {
+  if (!text) return ''
+  try {
+    if (text.includes(':') && text.length > 32) {
+      return decrypt(text)
+    }
+    return text
+  } catch (err) {
+    return text
+  }
+}

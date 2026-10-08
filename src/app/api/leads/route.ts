@@ -3,6 +3,7 @@ import prisma from '@/lib/prisma'
 import { triageConsultLead, LeadTriageResult } from '@/lib/ai/jevClient'
 import { generatePlaceReportEmailHtml, PlaceReportSnapshot, calculatePlaceAuditScore, buildDeepAuditBundle } from '@/lib/email/placeReportTemplate'
 import { getClientIp, checkIpRateLimit, checkEmailCoolDown, escapeHtml } from '@/lib/rateLimit'
+import { safeEncrypt } from '@/lib/crypto'
 
 export async function POST(req: Request) {
   try {
@@ -263,15 +264,18 @@ export async function POST(req: Request) {
       console.log(`[Leads API] 쿨다운 제한으로 중복 이메일 발송 건너뜀: ${cleanEmail} (남은 시간: ${emailCoolDown.remainingSec}초)`)
     }
 
-    // 3. PostgreSQL leads 테이블에 영구 보존
+    // 3. PostgreSQL leads 테이블에 암호화 보존 (헌법 제6조 컴플라이언스 준수)
     let savedLeadId: string | null = null
     try {
+      const encryptedEmail = safeEncrypt(cleanEmail) || cleanEmail
+      const encryptedPhone = cleanPhone ? safeEncrypt(cleanPhone) : null
+
       const createdLead = await prisma.lead.create({
         data: {
           toolSource: String(toolSource),
           leadType: String(leadType),
-          email: cleanEmail,
-          phone: cleanPhone || null,
+          email: encryptedEmail,
+          phone: encryptedPhone,
           businessName: cleanName || null,
           industry: metadata.specialty || industry || null,
           location: metadata.location || null,
@@ -280,8 +284,8 @@ export async function POST(req: Request) {
             ...metadata,
             targetUserId: resolvedTargetUserId,
             clientName: cleanName,
-            clientPhone: cleanPhone,
-            cleanEmail,
+            clientPhone: encryptedPhone,
+            cleanEmail: encryptedEmail,
             earlyBirdKakaoAlert: Boolean(body.details?.kakao_alert_opt_in || metadata?.kakao_alert_opt_in),
             taxDeductionText,
             reportId: isPlaceLead ? reportSlug : undefined,

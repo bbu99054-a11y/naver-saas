@@ -3,6 +3,7 @@
 import prisma from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
+import { safeDecrypt } from '@/lib/crypto'
 
 export interface IntakeLeadItem {
   id: string
@@ -175,7 +176,7 @@ export async function getIntakeLeads(): Promise<IntakeLeadItem[]> {
       const createdTime = new Date(item.createdAt).getTime()
       const minutesAgo = Math.max(1, Math.round((now - createdTime) / (60 * 1000)))
 
-      const rawPhone = item.phone || meta.clientPhone || ''
+      const rawPhone = safeDecrypt(item.phone || meta.clientPhone || '')
       const phoneMasked = rawPhone
         ? rawPhone.replace(/(\d{3})\d{3,4}(\d{4})/, '$1-****-$2')
         : '010-****-****'
@@ -205,7 +206,7 @@ export async function getIntakeLeads(): Promise<IntakeLeadItem[]> {
         rawName,
         phoneMasked,
         rawPhone,
-        email: item.email || '',
+        email: safeDecrypt(item.email || meta.cleanEmail || ''),
         category,
         stage,
         minutesAgo,

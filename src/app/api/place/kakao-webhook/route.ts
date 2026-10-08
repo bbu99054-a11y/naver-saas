@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { fetchLiveNaverPlaceRanking, PlaceItem } from '../rank/route';
+import { getClientIp, checkIpRateLimit } from '@/lib/rateLimit';
 
 // 카카오 오픈빌더 스킬 응답 헬퍼 함수들
 function createSimpleTextResponse(text: string) {
@@ -98,18 +99,35 @@ function parseUtterance(raw: string): { query: string; target: string; isHelp: b
 
 export async function POST(req: Request) {
   try {
-    const body = await req.json().catch(() => ({}));
-    const utterance = body?.userRequest?.utterance || '';
+    // 🛡️ IP 기반 Rate Limiting (1분 최대 15회 제한 - 카카오 챗봇 무단 스크래핑 남용 방어)
+    const clientIp = getClientIp(req);
+    const ipCheck = checkIpRateLimit(clientIp, 15, 60000);
+    if (!ipCheck.allowed) {
+      return NextResponse.json(
+        createSimpleTextResponse(`조회 요청이 너무 빈번합니다. ${ipCheck.remainingSec}초 후 다시 시도해 주세요.`)
+      );
+    }
 
+    const body = await req.json().catch(() => ({}));
+
+    // 🛡️ 카카오 오픈빌더 규격 검증 (비인가 스크래퍼의 임의 호출 차단)
+    if (!body || typeof body !== 'object' || (!body.userRequest && !body.intent && !body.bot)) {
+      return NextResponse.json(
+        { error: 'Invalid Kakao OpenBuilder payload' },
+        { status: 400 }
+      );
+    }
+
+    const utterance = body?.userRequest?.utterance || '';
     const { query, target, isHelp } = parseUtterance(utterance);
 
     // 1. 사용법 요청이거나 빈 입력일 경우
     if (isHelp || !query) {
       return NextResponse.json(
         createBasicCardResponse({
-          title: '🪄 1초 플레이스 실시간 순위 조회기',
+          title: '🪄 스마트플레이스 실시간 순위 조회기',
           description:
-            '채팅창에 [키워드, 매장명]을 입력하시면 1초 만에 네이버 실시간 노출 순위를 알려드립니다!\n\n' +
+            '채팅창에 [키워드, 매장명]을 입력하시면 네이버 실시간 노출 순위를 알려드립니다!\n\n' +
             '📌 입력 예시:\n' +
             '• 강남역 맛집, 대박식당\n' +
             '• 서초동 변호사, 법무법인희망\n' +
@@ -166,7 +184,7 @@ export async function POST(req: Request) {
           title: `⏳ [${target}] 정밀 데이터 분석 중`,
           description:
             `네이버 실시간 순위 조회 요청이 몰려 분석이 진행 중입니다.\n` +
-            `아래 버튼을 누르시면 웹에서 1초 만에 결과를 확인하실 수 있습니다!`,
+            `아래 버튼을 누르시면 웹에서 즉시 결과를 확인하실 수 있습니다!`,
           buttons: [
             {
               action: 'webLink',

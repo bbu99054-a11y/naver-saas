@@ -1927,6 +1927,14 @@
       background: #dcfce7;
       color: #16a34a;
     }
+    .aio-gap-box .gap-item.unmeasured {
+      background: #f8fafc;
+      border-color: #cbd5e1;
+    }
+    .aio-gap-box .gap-item-diff.diff-unmeasured {
+      background: #f1f5f9;
+      color: #64748b;
+    }
 
     /* 통합 카드 내 신청 폼 (순백색 고대비 플랫 카드) */
     .aio-form-section {
@@ -2138,16 +2146,16 @@
     <!-- Hero -->
     <div class="hero-section">
       <div class="hero-badge">
-        <i class="fa-solid fa-arrows-rotate"></i> 네이버 스마트플레이스 공식 실측 순위 동기화 센터
+        <i class="fa-solid fa-arrows-rotate"></i> 스마트플레이스 실시간 순위 및 1위 격차 분석기
       </div>
       <h1 class="hero-title">플레이스 순위 조회 · 네이버 플레이스 순위 확인 무료</h1>
       <p class="hero-subtitle">
-        우리 매장은 오늘 몇 위일까? 키워드와 상호명을 입력하면 실시간 1위~20위 <b>플레이스 순위</b>와 1위 경쟁점 대비 <b>4대 핵심 지표 격차 진단 리포트</b>를 1초 만에 무료로 확인합니다.
+        우리 매장은 오늘 몇 위일까? 키워드와 상호명을 입력하면 실시간 1위~20위 <b>플레이스 순위</b>와 1위 경쟁점 대비 <b>4대 핵심 지표 격차 진단 리포트</b>를 실시간으로 확인합니다.
       </p>
       
       <!-- Social Proof Indicators -->
       <div class="hero-proof-row">
-        <span class="proof-chip highlight"><i class="fa-solid fa-bolt" style="color:#2563eb;"></i> ⏱️ 1초 즉시 실측 추적</span>
+        <span class="proof-chip highlight"><i class="fa-solid fa-bolt" style="color:#2563eb;"></i> ⏱️ 실시간 정밀 순위 추적</span>
         <span class="proof-chip"><i class="fa-solid fa-check-circle" style="color:#10b981;"></i> 🔄 회원가입 없이 100% 무료</span>
       </div>
     </div>
@@ -2165,7 +2173,7 @@
             <input type="text" id="inputTarget" class="search-input" placeholder="예: 법무법인 YK, 스타벅스">
           </div>
           <button type="submit" class="btn-search" id="btnSearch">
-            <i class="fa-solid fa-bolt"></i> <span>1초 순위 조회</span>
+            <i class="fa-solid fa-bolt"></i> <span>실시간 순위 조회</span>
           </button>
         </div>
       </form>
@@ -2196,7 +2204,7 @@
     <div class="loading-container" id="loadingContainer">
       <i class="fa-solid fa-circle-notch spinner-icon"></i>
       <div class="loading-txt">네이버 실시간 스마트플레이스 1위~20위 전수 수집 중...</div>
-      <div class="loading-sub">네이버 지도 API 통신 및 타깃 상호명 매칭 분석을 진행하고 있습니다.</div>
+      <div class="loading-sub">네이버 지도 실시간 데이터 수집 및 매장 지표 분석을 진행하고 있습니다.</div>
     </div>
 
     <!-- 🌟 Top Diagnosis & Keyword Volume Dual Grid (좌: 내 매장 순위 50%, 우: 네이버 공식 검색량 50%) -->
@@ -2255,7 +2263,7 @@
         <div class="ranking-title">
           <i class="fa-solid fa-list-ol" style="color:var(--primary);"></i>
           <span id="rankingTitleText">실시간 네이버 플레이스 순위표</span>
-          <span class="badge-organic" style="font-size:11.5px; background:#ecfdf5; color:#059669; padding:3px 9px; border-radius:12px; font-weight:700; border:1px solid #a7f3d0; margin-left:6px;"><i class="fa-solid fa-shield-check"></i> 실시간 자연 순위 100% (광고 제외)</span>
+          <span class="badge-organic" style="font-size:11.5px; background:#ecfdf5; color:#059669; padding:3px 9px; border-radius:12px; font-weight:700; border:1px solid #a7f3d0; margin-left:6px;"><i class="fa-solid fa-shield-check"></i> 실시간 자연 순위 (광고 제외)</span>
         </div>
         <div style="font-size:12px; color:var(--slate-500);" id="totalPlacesCount">
           총 0개 업체 검색됨
@@ -3149,7 +3157,7 @@
           showToast('서버 통신 중 오류가 발생했습니다.');
         } finally {
           btnSearch.disabled = false;
-          btnSearch.innerHTML = '<i class="fa-solid fa-bolt"></i> <span>1초 순위 조회</span>';
+          btnSearch.innerHTML = '<i class="fa-solid fa-bolt"></i> <span>실시간 순위 조회</span>';
           loadingContainer.style.display = 'none';
         }
       };
@@ -3158,7 +3166,7 @@
       function renderResults(data) {
         window.currentPlaceData = data;
         rankingTitleText.textContent = `[${data.query}] 실시간 네이버 플레이스 1위~${data.rankingList.length}위 순위표`;
-        totalPlacesCount.innerHTML = `<span style="background:#eff6ff; color:#2563eb; padding:3px 8px; border-radius:10px; font-weight:700; font-size:11.5px; border:1px solid #bfdbfe;"><i class="fa-solid fa-check-double"></i> 네이버 공식 100% 실측 팩트</span> 총 ${data.totalCount.toLocaleString()}개 업체 중 상위 ${data.rankingList.length}개 분석`;
+        totalPlacesCount.innerHTML = `<span style="background:#eff6ff; color:#2563eb; padding:3px 8px; border-radius:10px; font-weight:700; font-size:11.5px; border:1px solid #bfdbfe;"><i class="fa-solid fa-check-double"></i> 네이버 지도 실시간 실측 데이터</span> 총 ${data.totalCount.toLocaleString()}개 업체 중 상위 ${data.rankingList.length}개 분석`;
 
         const topDualGrid = document.getElementById('topDiagDualGrid');
         const powerCard = document.getElementById('keywordPowerCard');
@@ -3299,19 +3307,35 @@
           if (gapTitle) gapTitle.textContent = `🥇 1위 [${escapeHtml(g.top1Name)}] vs 우리 매장 4대 정량 격차 분석`;
 
           const m = g.metrics;
+          const getReviewDiffText = (metric) => {
+            if (metric.status === 'UNMEASURED') return '미집계 (현장 확인)';
+            if (metric.status === 'DEFICIT') return `-${metric.diff.toLocaleString()}개 부족`;
+            return '동급 이상';
+          };
+          const getReviewDiffClass = (metric) => {
+            if (metric.status === 'UNMEASURED') return 'diff-unmeasured';
+            if (metric.status === 'DEFICIT') return 'diff-deficit';
+            return 'diff-optimal';
+          };
+          const getReviewItemClass = (metric) => {
+            if (metric.status === 'UNMEASURED') return 'unmeasured';
+            if (metric.status === 'DEFICIT') return 'deficit';
+            return 'optimal';
+          };
+
           gapGrid.innerHTML = `
-            <div class="gap-item ${m.visitorReviews.status === 'DEFICIT' ? 'deficit' : 'optimal'}">
+            <div class="gap-item ${getReviewItemClass(m.visitorReviews)}">
               <div class="gap-item-lbl">✍️ 방문자 리뷰</div>
               <div class="gap-item-vals">1위: <b>${escapeHtml(m.visitorReviews.top1)}</b><br>내 매장: <b>${escapeHtml(m.visitorReviews.my)}</b></div>
-              <span class="gap-item-diff ${m.visitorReviews.status === 'DEFICIT' ? 'diff-deficit' : 'diff-optimal'}">
-                ${m.visitorReviews.status === 'DEFICIT' ? `-${m.visitorReviews.diff.toLocaleString()}개 부족` : '동급 이상'}
+              <span class="gap-item-diff ${getReviewDiffClass(m.visitorReviews)}">
+                ${getReviewDiffText(m.visitorReviews)}
               </span>
             </div>
-            <div class="gap-item ${m.blogReviews.status === 'DEFICIT' ? 'deficit' : 'optimal'}">
+            <div class="gap-item ${getReviewItemClass(m.blogReviews)}">
               <div class="gap-item-lbl">📝 블로그 리뷰</div>
               <div class="gap-item-vals">1위: <b>${escapeHtml(m.blogReviews.top1)}</b><br>내 매장: <b>${escapeHtml(m.blogReviews.my)}</b></div>
-              <span class="gap-item-diff ${m.blogReviews.status === 'DEFICIT' ? 'diff-deficit' : 'diff-optimal'}">
-                ${m.blogReviews.status === 'DEFICIT' ? `-${m.blogReviews.diff.toLocaleString()}개 부족` : '동급 이상'}
+              <span class="gap-item-diff ${getReviewDiffClass(m.blogReviews)}">
+                ${getReviewDiffText(m.blogReviews)}
               </span>
             </div>
             <div class="gap-item ${m.booking.status === 'MISSING' ? 'deficit' : 'optimal'}">
