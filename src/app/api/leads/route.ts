@@ -49,7 +49,9 @@ export async function POST(req: Request) {
 
     const cleanEmail = String(validEmail).trim().toLowerCase()
     const cleanPhone = String(phone).trim()
-    const cleanName = String(name).trim() || String(businessName).trim() || '고객'
+    const resolvedStoreName = String(body.details?.store_name || body.storeName || businessName || name || '').trim()
+    const cleanBusinessName = resolvedStoreName || String(businessName).trim() || String(name).trim() || null
+    const cleanName = String(name).trim() || resolvedStoreName || String(businessName).trim() || '고객'
     const nowTime = new Date().toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' })
 
     // 계산서 / 현금영수증 요청 정보
@@ -189,13 +191,14 @@ export async function POST(req: Request) {
     const emailCoolDown = checkEmailCoolDown(cleanEmail, 180000)
     const resendKey = process.env.RESEND_API_KEY
     const adminEmail = process.env.ADMIN_EMAIL || 'contact@postsyncapp.com'
+    let emailDispatched = false
 
     if (resendKey && emailCoolDown.allowed) {
       try {
         // [플레이스 전용 엔진] 고객에게 1:1 맞춤형 실측 리포트 이메일 1초 자동 발송
         if (isPlaceLead && placeSnapshot) {
           const emailReport = generatePlaceReportEmailHtml(placeSnapshot, reportUrl)
-          await fetch('https://api.resend.com/emails', {
+          const resendRes = await fetch('https://api.resend.com/emails', {
             method: 'POST',
             headers: {
               Authorization: `Bearer ${resendKey.trim()}`,
@@ -208,7 +211,13 @@ export async function POST(req: Request) {
               html: emailReport.html,
             }),
           })
-          console.log(`[Leads API] Place Report Email successfully dispatched to: ${cleanEmail}`)
+          if (resendRes.ok) {
+            emailDispatched = true
+            console.log(`[Leads API] Place Report Email successfully dispatched to: ${cleanEmail}`)
+          } else {
+            const errBody = await resendRes.text()
+            console.warn(`[Leads API] Resend email dispatch failed (${resendRes.status}):`, errBody)
+          }
         }
 
         // 관리자 알림 이메일 발송
@@ -277,7 +286,7 @@ export async function POST(req: Request) {
           leadType: String(leadType),
           email: encryptedEmail,
           phone: encryptedPhone,
-          businessName: cleanName || null,
+          businessName: cleanBusinessName || cleanName || null,
           industry: metadata.specialty || industry || null,
           location: metadata.location || null,
           status: 'NEW',
@@ -285,6 +294,7 @@ export async function POST(req: Request) {
             ...metadata,
             targetUserId: resolvedTargetUserId,
             clientName: cleanName,
+            clientBusinessName: cleanBusinessName,
             clientPhone: encryptedPhone,
             cleanEmail: encryptedEmail,
             earlyBirdKakaoAlert: Boolean(body.details?.kakao_alert_opt_in || metadata?.kakao_alert_opt_in),
@@ -318,9 +328,12 @@ export async function POST(req: Request) {
         : leadType === 'ebook_order'
           ? '입금 신청이 정상 접수되었습니다. 입금 확인 후 기재하신 이메일로 전자책이 즉시 발송됩니다.'
           : isPlaceLead
-            ? '🎉 플레이스 1위 격차 실측 진단서가 발급되었습니다. 기재하신 이메일로도 상세 리포트가 발송되었습니다.'
+            ? (emailDispatched
+                ? '🎉 플레이스 1위 격차 실측 진단서가 발급되었습니다. 기재하신 이메일로도 상세 리포트가 발송되었습니다.'
+                : '🎉 플레이스 1위 격차 실측 진단서가 발급되었습니다. 아래 진단서 바로보기를 통해 즉시 열람하실 수 있습니다.')
             : '신청이 정상 완료되었습니다. 기재하신 이메일로 가이드북이 순차 발송됩니다.',
       email: cleanEmail,
+      emailDispatched,
       leadType,
       leadId: savedLeadId,
       reportId: isPlaceLead ? reportSlug : undefined,

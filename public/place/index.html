@@ -460,11 +460,11 @@
         <div id="applySuccessBox" style="display:none; background:#f0fdf4; border:1.5px solid #86efac; border-radius:12px; padding:24px; text-align:center; margin-top:20px;">
           <div style="font-size:36px; margin-bottom:8px;">🎉</div>
           <h3 id="applySuccessTitle" style="font-size:18px; font-weight:900; color:#15803d; margin-bottom:6px;">플레이스싱크 1위 전략 리포트 접수 완료!</h3>
-          <p style="font-size:13.5px; color:#166534; line-height:1.6; margin-bottom:12px;">
+          <p id="applySuccessDesc" style="font-size:13.5px; color:#166534; line-height:1.6; margin-bottom:12px;">
             입력하신 이메일(<b id="applySuccessEmail" style="color:#15803d;"></b>)로 전략 리포트와 실전 액션플랜이 순차 발송됩니다.<br>
             (담당 분석팀에 실시간 알림이 안전하게 접수되었습니다.)
           </p>
-          <div style="display:inline-flex; align-items:center; gap:6px; background:#dcfce7; color:#15803d; font-size:12px; font-weight:700; padding:6px 14px; border-radius:20px; margin-bottom:14px;">
+          <div id="applySuccessBadge" style="display:inline-flex; align-items:center; gap:6px; background:#dcfce7; color:#15803d; font-size:12px; font-weight:700; padding:6px 14px; border-radius:20px; margin-bottom:14px;">
             <i class="fa-solid fa-check-circle"></i> 접수 정상 완료 (DB 영구 보존 &amp; 이메일 발송)
           </div>
           <!-- 📊 발급된 1위 실측 진단서 바로 열기 버튼 -->
@@ -1341,7 +1341,13 @@
             diagGrid.innerHTML = `
               <div class="diag-item" style="grid-column: 1 / -1;">
                 <strong>진단 결과:</strong>
-                <span>입력하신 <b>"${escapeHtml(data.target)}"</b> 상호가 상위 20위 이내에 감지되지 않았습니다. 잠재 고객 유입이 완전히 차단된 상태이므로 C-Rank 블로그 최적화 및 스마트플레이스 리뉴얼이 강력히 권장됩니다.</span>
+                <span>입력하신 <b>"${escapeHtml(data.target)}"</b> 상호가 상위 20위 이내에 감지되지 않았습니다. 잠재 고객 유입이 차단된 상태이므로 C-Rank 블로그 최적화 및 스마트플레이스 1위 세팅 점검이 시급합니다.</span>
+                <div style="margin-top:14px; padding-top:12px; border-top:1px dashed var(--slate-200); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;">
+                  <span style="font-size:12.5px; color:var(--rose); font-weight:700;"><i class="fa-solid fa-circle-exclamation"></i> 20위 밖 매장은 유입 손실이 가장 큽니다.</span>
+                  <a href="#placeApplySection" onclick="setTimeout(function(){ var el = document.getElementById('applyStoreName'); if (el) { el.value='${escapeHtml(data.target)}'; el.focus(); } }, 100);" style="display:inline-flex; align-items:center; gap:6px; background:var(--primary); color:#ffffff; font-size:12.5px; font-weight:800; padding:8px 18px; border-radius:20px; text-decoration:none; box-shadow:0 3px 10px rgba(37,99,235,0.25);">
+                    <span>📘 1페이지 진입 가이드북 무료 신청하기</span> &rarr;
+                  </a>
+                </div>
               </div>
             `;
           }
@@ -1688,6 +1694,22 @@
             if (guaranteeEl) guaranteeEl.style.display = 'none';
             if (successStoreTitle) successStoreTitle.textContent = `🎉 [${storeName}] 1위 격차 실측 진단서 발급 완료!`;
             if (successTargetEmail) successTargetEmail.textContent = email;
+            const successDesc = document.getElementById('applySuccessDesc');
+            const successBadge = document.getElementById('applySuccessBadge');
+            if (successDesc) {
+              if (data.emailDispatched) {
+                successDesc.innerHTML = `입력하신 이메일(<b style="color:#15803d;">${escapeHtml(email)}</b>)로 맞춤 전략 리포트가 성공적으로 발송되었습니다!<br>(아래 파란색 버튼을 눌러 지금 브라우저에서도 즉시 열람하실 수 있습니다.)`;
+              } else {
+                successDesc.innerHTML = `입력하신 매장의 1위 격차 실측 진단서가 실시간으로 안전하게 발급되었습니다!<br>네트워크 환경에 따라 이메일 전송이 지연될 수 있으니, <b>아래 파란색 버튼을 눌러 지금 바로 웹 진단서를 열람하세요.</b>`;
+              }
+            }
+            if (successBadge) {
+              if (data.emailDispatched) {
+                successBadge.innerHTML = `<i class="fa-solid fa-check-circle"></i> 리포트 이메일 발송 완료 &amp; DB 암호화 보존`;
+              } else {
+                successBadge.innerHTML = `<i class="fa-solid fa-file-shield"></i> 진단서 실시간 발급 완료 (웹 즉시 열람 가능)`;
+              }
+            }
 
             if (reportBtn && data.reportUrl) {
               reportBtn.href = data.reportUrl;
