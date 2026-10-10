@@ -1201,6 +1201,15 @@
           }
 
           saveRecentHistory(kw, target);
+
+          if (typeof gtag === 'function') {
+            gtag('event', 'place_search', {
+              search_keyword: kw,
+              target_store: target || '전체',
+              has_target: !!target
+            });
+          }
+
           renderResults(data);
 
           // URL Query Parameter Deep Linking Sync
@@ -1680,6 +1689,14 @@
 
           const data = await res.json();
           if (data.ok || data.success) {
+            if (typeof gtag === 'function') {
+              gtag('event', 'generate_lead', {
+                source_tool: 'place',
+                lead_type: 'gap_report',
+                store_name: storeName
+              });
+            }
+
             showToast('🎉 플레이스 1위 격차 실측 진단서가 발급되었습니다!');
             
             // Switch form to success card
@@ -1926,6 +1943,14 @@
           });
           const data = await res.json();
           if (data.ok || data.success) {
+            if (typeof gtag === 'function') {
+              gtag('event', 'generate_lead', {
+                source_tool: 'place',
+                lead_type: 'lead_magnet_pdf',
+                store_name: store || '미입력'
+              });
+            }
+
             form.style.display = 'none';
             success.style.display = 'block';
             showToast('🎉 [네이버플레이스 1위 세팅법] 발송 신청이 접수되었습니다!');
