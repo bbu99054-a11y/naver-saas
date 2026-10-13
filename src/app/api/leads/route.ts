@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
 import { triageConsultLead, LeadTriageResult } from '@/lib/ai/jevClient'
-import { generatePlaceReportEmailHtml, PlaceReportSnapshot, calculatePlaceAuditScore, buildDeepAuditBundle } from '@/lib/email/placeReportTemplate'
+import { generatePlaceReportEmailHtml, PlaceReportSnapshot, calculatePlaceAuditScore, buildDeepAuditBundle, formatReportDate } from '@/lib/email/placeReportTemplate'
 import { getClientIp, checkIpRateLimit, checkEmailCoolDown, escapeHtml } from '@/lib/rateLimit'
 import { safeEncrypt } from '@/lib/crypto'
 import crypto from 'crypto'
@@ -100,7 +100,7 @@ export async function POST(req: Request) {
         mySaves: details.mySaves || body.mySaves || '미집계',
         top1Saves: details.top1Saves || body.top1Saves || '미집계',
         reportId: reportSlug,
-        reportDate: nowTime.split(' ')[0],
+        reportDate: formatReportDate(new Date()),
         top3Places: details.top3Places || body.top3Places || []
       }
       placeSnapshot.totalScore = placeSnapshot.totalScore || calculatePlaceAuditScore(placeSnapshot)

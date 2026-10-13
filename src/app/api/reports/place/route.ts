@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
-import { PlaceReportSnapshot, calculatePlaceAuditScore, buildDeepAuditBundle, generateSaaSReportSummary } from '@/lib/email/placeReportTemplate'
+import { PlaceReportSnapshot, calculatePlaceAuditScore, buildDeepAuditBundle, generateSaaSReportSummary, formatReportDate, isValidReportDate } from '@/lib/email/placeReportTemplate'
 import { fetchPlaceRealDetails } from '@/lib/naver/placeDetailScraper'
 import { getClientIp, checkIpRateLimit } from '@/lib/rateLimit'
 import crypto from 'crypto'
@@ -78,7 +78,12 @@ export async function GET(req: Request) {
       mySaves: meta.mySaves || '미집계',
       top1Saves: meta.top1Saves || '미집계',
       reportId: id,
-      reportDate: lead.createdAt.toLocaleDateString('ko-KR')
+      reportDate: formatReportDate(lead.createdAt)
+    }
+
+    // 과거 버그로 잘려 저장된 발행일("2026.")은 리드 접수일로 대체
+    if (!isValidReportDate(snapshot.reportDate)) {
+      snapshot.reportDate = formatReportDate(lead.createdAt)
     }
 
     // 실측 데이터가 없으면 실시간 네이버 실측 분석 실행

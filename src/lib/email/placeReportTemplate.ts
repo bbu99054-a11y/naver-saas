@@ -772,7 +772,7 @@ export function evaluateReviewDelta(currentReviews: number, prevReviews?: number
       displayText: '주간 델타 수집 중 (기준선 수립 완료)',
       badgeColor: '#2563eb',
       badgeBg: '#eff6ff',
-      insightText: '오늘 측정한 수치를 1주차 기준선으로 기록하였습니다. 다음 주 월요일부터 실시간 순증감이 표시됩니다.'
+      insightText: '오늘 측정한 수치를 1주차 기준선으로 기록하였습니다. 주간 감시 서비스 출시 후 이 기준선과 비교한 순증감이 표시됩니다.'
     }
   }
 
@@ -1024,8 +1024,8 @@ export function generateWeeklySurveillanceBundle(
 
   return {
     isFirstWeekBaseline: !snapshot.prevRank,
-    baselineNoticeTitle: `📍 [1주차 알림] 최초 진단 기준선(Baseline) 실측 수립 완료 (증감 데이터는 다음 주부터 발송)`,
-    baselineNoticeDesc: `현재 리포트는 최초 진단이므로 '지난주 데이터'가 존재하지 않아 오늘 측정한 수치를 1주차 공식 기준선으로 기록했습니다. 1위 매장의 7일간 실시간 순증감(±건수)과 내 매장의 주간 추격 속도는 시스템에 축적되어 [다음 주 월요일 아침 9시 주간 감시 리포트]부터 본격 비교 분석되어 발송됩니다.`,
+    baselineNoticeTitle: `📍 [1주차 알림] 최초 진단 기준선(Baseline) 실측 수립 완료 (증감 비교는 주간 감시 서비스 출시 후 제공)`,
+    baselineNoticeDesc: `현재 리포트는 최초 진단이므로 '지난주 데이터'가 존재하지 않아 오늘 측정한 수치를 1주차 기준선으로 기록했습니다. 1위 매장의 주간 순증감(±건수)과 내 매장의 추격 속도 비교는 주간 감시 서비스 출시 후 이 기준선을 바탕으로 제공됩니다.`,
     rollingNoiseStatus: noiseStatus,
     rollingNoiseBadge: noiseBadge,
     rollingNoiseDesc: noiseDesc,
@@ -1036,7 +1036,7 @@ export function generateWeeklySurveillanceBundle(
     weeklyPaceSummary: (myRev >= top1Rev && top1Rev > 0)
       ? `누적 리뷰는 1위(${top1Rev.toLocaleString()}개)보다 앞서 있으므로, 1위의 주간 유입 페이스(주당 +${top1WeeklyRev}건)에 뒤처지지 않는 주당 +${myTargetWeeklyReviews}건의 활동성 유지가 핵심입니다.`
       : `1위 매장은 매주 약 +${top1WeeklyRev}건의 영수증 리뷰와 +${top1WeeklyBlog}건의 블로그를 확보하며 1위를 지키고 있습니다. 1위를 꺾기 위해 이번 주 최소 +${myTargetWeeklyReviews}건 유입이 필요합니다.`,
-    nextWeekDispatchSchedule: '다음 주 월요일 오전 09:00 정기 발행',
+    nextWeekDispatchSchedule: '주간 감시 서비스 출시 후 발행 (사전 신청 접수 중)',
     aiReplies,
     rank1Event,
     reviewDeltaStatus,
@@ -1064,22 +1064,24 @@ export function generateSaaSReportSummary(snapshot: PlaceReportSnapshot): SaaSRe
   const isMedicalOrLaw = industry === '의료/병원' || industry === '전문직/법률'
 
   const seoScore = snapshot.totalScore || calculatePlaceAuditScore(snapshot)
-  const seoScoreText = `${seoScore}점 / 100점 - 상위 ${Math.max(5, Math.min(45, 100 - seoScore))}% 수준`
+  const seoScoreText = `${seoScore}점 / 100점 - ${getPlaceScoreGrade(seoScore)}`
 
+  // ⚠️ 순위 구간별 평균 클릭률 차이 기반 추정치 (실제 키워드 검색량 미반영)
+  const lossBasisNote = ' (추정: 순위 구간별 평균 클릭률 차이 기준, 실제 키워드 검색량 미반영)'
   let lossClicksNum = 350
   let lossClicksText = ''
   if (rank === null) {
     lossClicksNum = 350
-    lossClicksText = '현재 20위권 밖 미노출 상태로 모바일 검색 고객 유입의 90% 이상(월 약 350명)이 경쟁 매장으로 유실 중입니다.'
+    lossClicksText = `현재 20위권 밖 미노출 상태로 모바일 검색 고객 유입의 상당 부분(월 약 ${lossClicksNum}명)이 경쟁 매장으로 이동하는 것으로 추정됩니다.${lossBasisNote}`
   } else if (rank === 1) {
     lossClicksNum = 0
     lossClicksText = '현재 1위 골든존 점유로 월 최대 유입률 달성 중 (손실 0명)'
   } else if (rank <= 3) {
     lossClicksNum = Math.max(50, (rank - 1) * 70)
-    lossClicksText = `1위 매장 대비 월 약 ${lossClicksNum}명의 잠재 고객 유입 손실 발생 중`
+    lossClicksText = `1위 매장 대비 월 약 ${lossClicksNum}명의 잠재 고객 유입 손실 발생 중${lossBasisNote}`
   } else {
     lossClicksNum = Math.min(480, Math.max(140, (rank - 1) * 80))
-    lossClicksText = `3위 매장 대비 월 약 ${lossClicksNum}명의 잠재 고객 유입 손실 발생 중`
+    lossClicksText = `3위 매장 대비 월 약 ${lossClicksNum}명의 잠재 고객 유입 손실 발생 중${lossBasisNote}`
   }
 
   const real = snapshot.realDetails
@@ -1403,7 +1405,44 @@ export function calculatePlaceAuditScore(snapshot: PlaceReportSnapshot): number 
   else if (revRatio >= 0.5) score += 10
   else if (revRatio < 0.2) score -= 5
 
+  // 블로그 리뷰 격차 반영 (1위 블로그 리뷰 데이터가 있을 때만)
+  const myBlog = Number(snapshot.myBlogReviews || 0)
+  const topBlog = Number(snapshot.top1BlogReviews || 0)
+  if (topBlog > 0) {
+    const blogRatio = myBlog / topBlog
+    if (blogRatio >= 1.0) score += 5
+    else if (blogRatio < 0.2) score -= 10
+    else if (blogRatio < 0.5) score -= 5
+  }
+
+  // 순위 상한선: 실제 노출 순위와 점수가 모순되지 않도록 제한
+  if (!isUnranked) {
+    if (rankNum > 10) score = Math.min(score, 70)
+    else if (rankNum > 3) score = Math.min(score, 85)
+  }
+
   return Math.min(100, Math.max(30, score))
+}
+
+/** 점수 등급 (지어낸 '상위 N%' 표현 대신 3단계 등급 사용) */
+export function getPlaceScoreGrade(score: number): string {
+  if (score >= 80) return '양호'
+  if (score >= 60) return '보통'
+  return '위험'
+}
+
+/** 리포트 발행일 포맷 (KST 기준 YYYY.MM.DD) */
+export function formatReportDate(date: Date): string {
+  const kst = new Date(date.getTime() + 9 * 60 * 60 * 1000)
+  const y = kst.getUTCFullYear()
+  const m = String(kst.getUTCMonth() + 1).padStart(2, '0')
+  const d = String(kst.getUTCDate()).padStart(2, '0')
+  return `${y}.${m}.${d}`
+}
+
+/** 과거 버그로 "2026." 처럼 잘려 저장된 발행일인지 판별 */
+export function isValidReportDate(value: unknown): boolean {
+  return typeof value === 'string' && /^\d{4}\.\s?\d{1,2}\.\s?\d{1,2}/.test(value)
 }
 
 export function generatePlaceReportEmailHtml(snapshot: PlaceReportSnapshot, webReportUrl: string): { subject: string; html: string } {
@@ -1494,10 +1533,10 @@ export function generatePlaceReportEmailHtml(snapshot: PlaceReportSnapshot, webR
                     <div style="background:#fff1f2;border:1px solid #fecdd3;border-radius:10px;padding:14px;text-align:center;">
                       <span style="font-size:11px;color:#be123c;font-weight:700;display:block;margin-bottom:4px;">🚨 월간 예상 유입 손실</span>
                       <div style="font-size:28px;font-weight:900;color:#e11d48;line-height:1;margin-bottom:6px;">
-                        -${saas.lossClicksNum}<span style="font-size:14px;color:#fda4af;">명 / 월</span>
+                        약 -${saas.lossClicksNum}<span style="font-size:14px;color:#fda4af;">명 / 월</span>
                       </div>
                       <span style="font-size:11px;font-weight:700;color:#9f1239;line-height:1.3;display:block;">
-                        상위권 대비 이탈 발생 중
+                        상위권 대비 이탈 추정치
                       </span>
                     </div>
                   </td>
@@ -1575,17 +1614,6 @@ export function generatePlaceReportEmailHtml(snapshot: PlaceReportSnapshot, webR
                   </div>
                 `).join('')}
               </div>
-
-              <!-- 다음 주(2주차) 예고 티저 박스 -->
-              <div style="margin-top:12px;background:#eff6ff;border:1.5px dashed #93c5fd;border-radius:8px;padding:12px 14px;">
-                <div style="font-size:11.5px;font-weight:800;color:#1d4ed8;margin-bottom:3px;">
-                  🔒 다음 주 월요일 아침 9시 예고: [${saas.nextWeekTeaser.themeTitle}]
-                </div>
-                <div style="font-size:11.5px;color:#1e40af;line-height:1.5;">
-                  ${saas.nextWeekTeaser.description}
-                  <span style="display:block;margin-top:4px;font-size:10.5px;color:#64748b;">(월 9,900원 정기 구독 시 1위 매장의 7일간 실시간 순증감(±) 대조표와 함께 매주 자동 발송됩니다.)</span>
-                </div>
-              </div>
             </td>
           </tr>
 
@@ -1656,33 +1684,12 @@ export function generatePlaceReportEmailHtml(snapshot: PlaceReportSnapshot, webR
             </td>
           </tr>
 
-          <!-- 6. 하단 고정 전환 배너 (Sticky Paywall Footer - 정가 월 9,900원) -->
+          <!-- 웹 진단서 링크 안내 -->
           <tr>
-            <td style="padding:24px;background-color:#0a192f;color:#ffffff;text-align:center;border-top:1px solid #1e3a8a;">
-              <span style="display:inline-block;background:rgba(37,99,235,0.25);border:1px solid #3b82f6;color:#93c5fd;font-size:11px;font-weight:800;padding:3px 10px;border-radius:20px;margin-bottom:10px;">
-                🛡️ 매주 월요일 정기 감시 &amp; 24시간 실시간 워치독
-              </span>
-              <h3 style="margin:0 0 8px 0;font-size:17px;font-weight:900;color:#ffffff;line-height:1.4;">
-                매주 월요일 아침 1위와의 격차를 추적하고,<br>순위 급락 시 즉각 카톡으로 알려드립니다.
-              </h3>
-              <p style="margin:0 0 18px 0;font-size:12.5px;color:#94a3b8;line-height:1.55;">
-                경쟁사의 기습 리뷰 유입과 알고리즘 롤링을 24시간 감시하여 1위를 지켜드립니다.
-              </p>
-              
-              <table role="presentation" border="0" cellspacing="0" cellpadding="0" style="margin:0 auto 16px auto;">
-                <tr>
-                  <td align="center" style="background-color:#fee500;border-radius:30px;box-shadow:0 4px 14px rgba(254,229,0,0.35);">
-                    <a href="https://pf.kakao.com/_xonxiaX" target="_blank" rel="noopener noreferrer" style="display:inline-block;padding:14px 32px;color:#191600;font-size:14.5px;font-weight:900;text-decoration:none;letter-spacing:-0.3px;">
-                      💬 월 9,900원으로 우리 매장 24시간 마케팅 비서 시작하기 &rarr;
-                    </a>
-                  </td>
-                </tr>
-              </table>
-
-              <!-- 웹 진단서 링크 -->
-              <div style="font-size:12px;color:#cbd5e1;">
-                또는 <a href="${webReportUrl}" target="_blank" rel="noopener noreferrer" style="color:#60a5fa;font-weight:700;text-decoration:underline;">[웹 진단서에서 고화질 정밀 리포트 열기 &amp; PDF 인쇄]</a>
-              </div>
+            <td style="padding:20px 24px;background-color:#ffffff;text-align:center;border-top:1px solid #e2e8f0;">
+              <a href="${webReportUrl}" target="_blank" rel="noopener noreferrer" style="display:inline-block;padding:12px 24px;background:#2563eb;color:#ffffff;font-size:13px;font-weight:700;text-decoration:none;border-radius:8px;">
+                📊 웹 진단서에서 고화질 정밀 리포트 열기 &amp; PDF 인쇄 &rarr;
+              </a>
             </td>
           </tr>
 
