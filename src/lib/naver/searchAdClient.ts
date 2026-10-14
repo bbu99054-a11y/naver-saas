@@ -67,7 +67,6 @@ export async function getMonthlyKeywordVolume(keyword: string): Promise<KeywordV
 
     if (!res.ok) {
       console.warn(`[Naver SearchAd API]: Response failed with status ${res.status}`);
-      volumeCache.set(cacheKey, { timestamp: now, data: null });
       return null;
     }
 
@@ -107,7 +106,6 @@ export async function getMonthlyKeywordVolume(keyword: string): Promise<KeywordV
 
   } catch (err) {
     console.warn('[Naver SearchAd Volume Fetch Error]:', err);
-    volumeCache.set(cacheKey, { timestamp: now, data: null });
     return null;
   }
 }

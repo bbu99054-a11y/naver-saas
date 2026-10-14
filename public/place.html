@@ -50,7 +50,9 @@
           "@type": "Organization",
           "name": "PostSync",
           "url": "https://www.postsyncapp.com"
-        }
+        },
+        "datePublished": "2026-01-01",
+        "dateModified": "2026-10-14"
       },
       {
         "@type": "SoftwareApplication",
@@ -62,7 +64,9 @@
           "price": "0",
           "priceCurrency": "KRW"
         },
-        "description": "네이버 스마트플레이스 1위부터 20위까지 특정 키워드에 대한 내 매장/사무소의 실시간 노출 순위, 1페이지 진입 여부, 경쟁사 현황을 무료로 전수 조회."
+        "description": "네이버 스마트플레이스 1위부터 20위까지 특정 키워드에 대한 내 매장/사무소의 실시간 노출 순위, 1페이지 진입 여부, 경쟁사 현황을 무료로 전수 조회.",
+        "datePublished": "2026-01-01",
+        "dateModified": "2026-10-14"
       },
       {
         "@type": "BreadcrumbList",
@@ -207,7 +211,7 @@
   </div>
   -->
 
-  <div class="main-wrapper">
+  <main class="main-wrapper">
     <!-- Hero -->
     <div class="hero-section">
       <div class="hero-badge">
@@ -949,7 +953,7 @@
               <i class="fa-solid fa-map-location-dot" style="color:#059669; font-size:16px;"></i>
               <strong style="font-size:13.5px; color:#0f172a; font-weight:800;">네이버 플레이스 실시간 순위 조회</strong>
             </div>
-            <p style="font-size:11.5px; color:#64748b; line-height:1.45; margin:0 0 10px 0;">1위부터 75위까지 실시간 순위 & 4대 정량 격차 1초 진단</p>
+            <p style="font-size:11.5px; color:#64748b; line-height:1.45; margin:0 0 10px 0;">1위부터 20위까지 실시간 순위 & 4대 정량 격차 1초 진단</p>
           </div>
           <div style="font-size:11.5px; font-weight:800; color:#2563eb; display:flex; align-items:center; gap:4px; padding-top:8px; border-top:1px dashed #e2e8f0;">
             <i class="fa-solid fa-check"></i> <span>현재 열람 중인 툴입니다</span>
@@ -1068,7 +1072,7 @@
     </section>
   
 
-  </div>
+  </main>
 
   <!-- Lead Magnet Modal -->
   <div id="leadMagnetModal" class="lead-modal-backdrop" onclick="closeModalOnBackdrop(event)">
@@ -1165,8 +1169,10 @@
       };
 
       // Main Search Handler
+      let isSearching = false;
       window.handleSearch = async function(e) {
         if (e) e.preventDefault();
+        if (isSearching) return;
         const kw = inputKeyword.value.trim();
         const target = inputTarget.value.trim();
 
@@ -1175,6 +1181,8 @@
           inputKeyword.focus();
           return;
         }
+
+        isSearching = true;
 
         // Show loading state
         btnSearch.disabled = true;
@@ -1230,6 +1238,7 @@
           console.error(err);
           showToast('서버 통신 중 오류가 발생했습니다.');
         } finally {
+          isSearching = false;
           btnSearch.disabled = false;
           btnSearch.innerHTML = '<i class="fa-solid fa-bolt"></i> <span>실시간 순위 조회</span>';
           loadingContainer.style.display = 'none';
@@ -1353,7 +1362,7 @@
                 <span>입력하신 <b>"${escapeHtml(data.target)}"</b> 상호가 상위 20위 이내에 감지되지 않았습니다. 잠재 고객 유입이 차단된 상태이므로 C-Rank 블로그 최적화 및 스마트플레이스 1위 세팅 점검이 시급합니다.</span>
                 <div style="margin-top:14px; padding-top:12px; border-top:1px dashed var(--slate-200); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;">
                   <span style="font-size:12.5px; color:var(--rose); font-weight:700;"><i class="fa-solid fa-circle-exclamation"></i> 20위 밖 매장은 유입 손실이 가장 큽니다.</span>
-                  <a href="#placeApplySection" onclick="setTimeout(function(){ var el = document.getElementById('applyStoreName'); if (el) { el.value='${escapeHtml(data.target)}'; el.focus(); } }, 100);" style="display:inline-flex; align-items:center; gap:6px; background:var(--primary); color:#ffffff; font-size:12.5px; font-weight:800; padding:8px 18px; border-radius:20px; text-decoration:none; box-shadow:0 3px 10px rgba(37,99,235,0.25);">
+                  <a href="#applySection" onclick="setTimeout(function(){ var el = document.getElementById('applyStoreName'); if (el && window.currentPlaceData && window.currentPlaceData.target) { el.value = window.currentPlaceData.target; el.focus(); } var sec = document.getElementById('applySection'); if (sec) sec.style.display = 'block'; }, 50);" style="display:inline-flex; align-items:center; gap:6px; background:var(--primary); color:#ffffff; font-size:12.5px; font-weight:800; padding:8px 18px; border-radius:20px; text-decoration:none; box-shadow:0 3px 10px rgba(37,99,235,0.25);">
                     <span>📘 1페이지 진입 가이드북 무료 신청하기</span> &rarr;
                   </a>
                 </div>
@@ -1447,7 +1456,7 @@
             blogReviews: parseInt(String(item.blogReviews || '0').replace(/[^0-9]/g, '')) || 0,
             hasBooking: !!item.hasBooking,
             hasCoupon: !!item.hasCoupon,
-            saves: item.saves || '10,000+'
+            saves: (item.saveCount && item.saveCount !== '-') ? item.saveCount : '미집계'
           }));
 
           window.__LAST_PLACE_SNAPSHOT = {
@@ -1547,7 +1556,12 @@
 
       function escapeHtml(str) {
         if (!str) return '';
-        return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        return String(str)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#39;');
       }
 
       function showToast(msg) {
@@ -1626,8 +1640,10 @@
       };
 
       // Handle PlaceSync Report Lead Application
+      let isApplying = false;
       window.handleApply = async function(e) {
         e.preventDefault();
+        if (isApplying) return;
         const storeName = document.getElementById('applyStoreName').value.trim();
         const keyword = document.getElementById('applyKeyword').value.trim();
         const email = document.getElementById('applyEmail').value.trim();
@@ -1651,11 +1667,26 @@
           return;
         }
 
+        isApplying = true;
         btn.disabled = true;
         btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> <span>리포트 생성 및 접수 중...</span>';
 
         try {
-          const snap = window.__LAST_PLACE_SNAPSHOT || {};
+          let snap = window.__LAST_PLACE_SNAPSHOT || {};
+          // 폼에 입력된 매장명이 마지막 스냅샷의 매장명과 완전히 다르면 이전 매장의 스냅샷 데이터 오염 방지
+          const normInputStore = storeName.toLowerCase().replace(/\s+/g, '');
+          const normSnapStore = (snap.storeName || '').toLowerCase().replace(/\s+/g, '');
+          const isStoreMatched = normSnapStore && (normSnapStore === normInputStore || normInputStore.includes(normSnapStore) || normSnapStore.includes(normInputStore));
+          if (!isStoreMatched) {
+            snap = {
+              storeName: storeName,
+              targetKeyword: keyword,
+              top1Name: snap.top1Name || '1위 매장',
+              top3Places: snap.top3Places || [],
+              myRank: null
+            };
+          }
+
           const res = await fetch('/api/leads', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -1730,7 +1761,7 @@
 
             if (reportBtn && data.reportUrl) {
               reportBtn.href = data.reportUrl;
-              reportBtn.innerHTML = `<i class="fa-solid fa-file-invoice"></i> <span>📊 [${storeName}] 1위 격차 실측 진단서 열기</span> &rarr;`;
+              reportBtn.innerHTML = `<i class="fa-solid fa-file-invoice"></i> <span>📊 [${escapeHtml(storeName)}] 1위 격차 실측 진단서 열기</span> &rarr;`;
             }
 
             if (successBox) {
@@ -1744,6 +1775,7 @@
           console.error(err);
           showToast('서버 통신 중 오류가 발생했습니다.');
         } finally {
+          isApplying = false;
           btn.disabled = false;
           btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> <span>🔄 1회 무료 전략 리포트 & 실전 액션플랜 받기</span>';
         }
@@ -1795,7 +1827,7 @@
           const kwSafe = escapeHtml(item.kw);
           const targetSafe = item.target ? escapeHtml(item.target) : '';
           return `
-            <div class="history-chip" onclick="quickFill('${escapeHtml(item.kw)}', '${escapeHtml(item.target)}')">
+            <div class="history-chip" data-kw="${kwSafe}" data-target="${targetSafe}" onclick="quickFill(this.dataset.kw, this.dataset.target)">
               <span class="hc-kw">${kwSafe}</span>
               ${targetSafe ? `<span class="hc-sep">·</span><span class="hc-target">${targetSafe}</span>` : ''}
               <button type="button" class="hc-del" onclick="event.stopPropagation(); removeHistoryItem(${idx})" title="삭제">&times;</button>
@@ -1910,8 +1942,10 @@
         if (banner) banner.style.display = 'none';
       };
 
+      let isFloatingSubmitting = false;
       window.handleFloatingLeadSubmit = async function(e) {
         e.preventDefault();
+        if (isFloatingSubmitting) return;
         const email = document.getElementById('modalLeadEmail').value.trim();
         const store = document.getElementById('modalLeadStore').value.trim();
         const btn = document.getElementById('btnModalLeadSubmit');
@@ -1923,6 +1957,7 @@
           return;
         }
 
+        isFloatingSubmitting = true;
         btn.disabled = true;
         btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> <span>발송 접수 중...</span>';
 
@@ -1961,6 +1996,7 @@
         } catch (err) {
           showToast('통신 오류가 발생했습니다.');
         } finally {
+          isFloatingSubmitting = false;
           btn.disabled = false;
           btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> <span>PDF 가이드북 1초 무료 받기</span>';
         }

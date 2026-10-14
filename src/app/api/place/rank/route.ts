@@ -3,6 +3,8 @@ import { diagnosePlaceWithJev } from '@/lib/ai/jevClient';
 import { getMonthlyKeywordVolume, KeywordVolumeResult } from '@/lib/naver/searchAdClient';
 import { getClientIp, checkIpRateLimit } from '@/lib/rateLimit';
 
+export const maxDuration = 30;
+
 export interface PlaceItem {
   rank: number;
   id: string;
@@ -123,6 +125,7 @@ export async function fetchLiveNaverPlaceRanking(
 
         for (const [k, val] of Object.entries(apolloState)) {
           const v = val as any;
+          if (k.startsWith('Ad:') || v?.__typename?.includes('Ad') || v?.isAd) continue;
           if (v && (v.name || v.normalizedName) && (v.category || v.roadAddress || v.address)) {
             const id = String(v.id || k.replace(/^[A-Za-z]+:/, ''));
             if (seenIds.has(id)) continue;
@@ -373,9 +376,19 @@ export async function GET(req: Request) {
       }, { status: 429 });
     }
 
-    const cacheKey = `${cleanQuery.toLowerCase()}_${coordX}_${coordY}`;
+    // 좌표값 방어 검증 (숫자 및 소수점만 허용)
+    const validCoordX = /^\d+(\.\d+)?$/.test(coordX) ? coordX : '';
+    const validCoordY = /^\d+(\.\d+)?$/.test(coordY) ? coordY : '';
+
+    const cacheKey = `${cleanQuery.toLowerCase()}_${validCoordX}_${validCoordY}`;
     const cached = cache.get(cacheKey);
     const now = Date.now();
+
+    // 인메모리 캐시 최대 크기 제한 (500개 초과 시 가장 오래된 항목 퇴출)
+    if (cache.size > 500) {
+      const oldestKey = cache.keys().next().value;
+      if (oldestKey) cache.delete(oldestKey);
+    }
 
     // 1. 네이버 플레이스 실시간 순위 및 네이버 검색광고 공식 월간 검색량 병렬 조회
     const [rankingData, searchVolume] = await Promise.all([
@@ -383,7 +396,7 @@ export async function GET(req: Request) {
         if (cached && (now - cached.timestamp < CACHE_TTL_MS)) {
           return cached.data;
         }
-        const fresh = await fetchLiveNaverPlaceRanking(cleanQuery, { x: coordX, y: coordY });
+        const fresh = await fetchLiveNaverPlaceRanking(cleanQuery, { x: validCoordX, y: validCoordY });
         cache.set(cacheKey, { timestamp: now, data: fresh });
         return fresh;
       })(),
@@ -419,6 +432,17 @@ export async function GET(req: Request) {
       }
 
       if (found) {
+        // 내 매장이 4~20위권이고 리뷰 정보가 누락('-')되어 있는 경우, 단건 정밀 보강
+        if (found.rank > 3 && (found.visitorReviews === '-' || found.blogReviews === '-')) {
+          try {
+            const rev = await fetchPlaceReviewMeta(found.id);
+            if (rev.visitorReviews !== '-') found.visitorReviews = rev.visitorReviews;
+            if (rev.blogReviews !== '-') found.blogReviews = rev.blogReviews;
+          } catch (e) {
+            // Non-blocking fallback
+          }
+        }
+
         myPlace = {
           ...found,
           isTop5: found.rank <= 5,
