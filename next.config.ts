@@ -9,6 +9,17 @@ const nextConfig: NextConfig = {
         destination: "/adcheck",
         permanent: true,
       },
+      {
+        source: "/",
+        destination: "/place",
+        permanent: false,
+        missing: [
+          {
+            type: "host",
+            value: "crop.postsyncapp.com",
+          },
+        ],
+      },
     ];
   },
   async rewrites() {
