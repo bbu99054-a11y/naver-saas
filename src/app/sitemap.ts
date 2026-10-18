@@ -4,7 +4,7 @@ import { blogPosts } from '@/lib/blogData'
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://www.postsyncapp.com'
 
-  const staticLastModified = new Date('2026-10-01T00:00:00.000Z')
+  const staticLastModified = new Date('2026-10-18T00:00:00.000Z')
 
   const staticRoutes: MetadataRoute.Sitemap = [
     {
@@ -14,28 +14,22 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1.0,
     },
     {
-      url: `${baseUrl}/pricing`,
-      lastModified: new Date('2026-09-20T00:00:00.000Z'),
-      changeFrequency: 'weekly',
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/seo-check`,
-      lastModified: staticLastModified,
-      changeFrequency: 'weekly',
-      priority: 0.9,
-    },
-    {
       url: `${baseUrl}/blog`,
       lastModified: staticLastModified,
       changeFrequency: 'daily',
-      priority: 0.8,
+      priority: 0.95,
     },
     {
-      url: `${baseUrl}/login`,
-      lastModified: new Date('2026-09-01T00:00:00.000Z'),
-      changeFrequency: 'monthly',
-      priority: 0.5,
+      url: `${baseUrl}/tools`,
+      lastModified: staticLastModified,
+      changeFrequency: 'daily',
+      priority: 0.95,
+    },
+    {
+      url: `${baseUrl}/guide/ad-law-2026`,
+      lastModified: staticLastModified,
+      changeFrequency: 'weekly',
+      priority: 0.85,
     },
     {
       url: `${baseUrl}/terms`,
@@ -54,12 +48,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: new Date('2026-09-01T00:00:00.000Z'),
       changeFrequency: 'monthly',
       priority: 0.5,
-    },
-    {
-      url: `${baseUrl}/tools`,
-      lastModified: staticLastModified,
-      changeFrequency: 'daily',
-      priority: 0.9,
     },
     {
       url: `${baseUrl}/place`,

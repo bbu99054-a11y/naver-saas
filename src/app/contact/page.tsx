@@ -5,14 +5,14 @@ import ContactForm from './ContactForm'
 
 export const metadata: Metadata = {
   title: '고객센터 & 제휴 문의 | PostSync',
-  description: 'PostSync AI 도입 문의, 기술 지원, 광고 컴플라이언스 상담 및 사업 제휴 안내입니다.',
+  description: 'PostSync 비즈니스 마케팅 연구소 및 무료 웹 유틸리티 관련 기술 지원, 광고 컴플라이언스 문의 안내입니다.',
   alternates: {
-    canonical: '/contact',
+    canonical: 'https://www.postsyncapp.com/contact',
   },
   openGraph: {
     title: '고객센터 & 제휴 문의 | PostSync',
-    description: 'PostSync AI 도입 문의, 기술 지원, 광고 컴플라이언스 상담 및 사업 제휴 안내입니다.',
-    url: 'https://postsyncapp.com/contact',
+    description: 'PostSync 비즈니스 마케팅 연구소 및 무료 웹 유틸리티 관련 기술 지원, 광고 컴플라이언스 문의 안내입니다.',
+    url: 'https://www.postsyncapp.com/contact',
   },
 }
 

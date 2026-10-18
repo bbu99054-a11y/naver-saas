@@ -363,49 +363,21 @@ export default function ToolsHubPage() {
           <EbookPromoCard toolSource="tools_hub" />
         </div> */}
 
-        {/* B2B SaaS 메인 전환 배너 (임시 비활성화) */}
-        <div className="hidden rounded-3xl bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 p-8 md:p-11 shadow-lg text-white relative overflow-hidden">
-          <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 relative z-10">
-            <div className="space-y-3">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 border border-white/30 text-white text-xs font-bold">
-                <Sparkles className="w-3.5 h-3.5" /> POSTSYNC AI SAAS
-              </span>
-              <h3 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
-                전문직 마케팅 자동화의 완전한 무인화 솔루션
-              </h3>
-              <p className="text-xs sm:text-sm text-blue-100 max-w-2xl leading-relaxed">
-                PostSync AI는 단순한 웹툴을 넘어, 변호사·의사·세무사의 네이버 블로그 스마트블록 상위 노출 원고 작성부터
-                Playwright 원클릭 예약 발행, 스레드 요약 배포, 크몽/카페 실시간 의뢰 감지까지 전 과정을 자동화합니다.
-              </p>
-            </div>
-
-            <div className="flex flex-col sm:flex-row gap-3 w-full lg:w-auto flex-shrink-0">
-              <Link
-                href="/dashboard"
-                className="px-6 py-3.5 rounded-xl font-bold text-sm bg-white hover:bg-slate-100 text-blue-600 shadow-md transition text-center flex items-center justify-center gap-2"
-              >
-                <span>3회 무료 체험 시작</span>
-                <ArrowRight className="w-4 h-4" />
-              </Link>
-              <Link
-                href="/pricing"
-                className="px-5 py-3 rounded-xl text-xs font-semibold bg-white/10 hover:bg-white/20 text-white border border-white/20 transition text-center flex items-center justify-center gap-1.5"
-              >
-                <span>요금제 보기</span>
-                <ExternalLink className="w-3 h-3 text-white" />
-              </Link>
-            </div>
-          </div>
-        </div>
-
         {/* 하단 반응형 멀티플렉스 애드센스 슬롯 */}
         <GoogleAdSlot adFormat="auto" className="mt-12" />
 
         {/* 푸터 */}
-        <div className="mt-16 pt-8 border-t border-slate-200 text-center text-xs text-slate-500 space-y-2">
-          <p>© 2026 PostSync Tools. Zero Server Cost, High Speed Micro Utility Web Engine.</p>
-          <div className="flex items-center justify-center gap-4 text-[11px] text-slate-500 font-mono">
-            <Link href="/privacy" className="hover:text-slate-900 transition">개인정보처리방침</Link>
+        <div className="mt-16 pt-8 border-t border-slate-200 text-center text-xs text-slate-500 space-y-2.5">
+          <p className="font-bold text-slate-700">© 2026 PostSync (와이엠랩스 · YM Labs). All rights reserved.</p>
+          <p className="text-[11px] text-slate-400">
+            상호명: 와이엠랩스 (YM Labs) | 대표자: 유영무 | 사업자등록번호: 736-48-01186 | 소재지: 서울특별시 송파구 송파대로 345, 103동 204호
+          </p>
+          <div className="flex flex-wrap items-center justify-center gap-4 text-[11px] text-slate-500 font-mono pt-1">
+            <Link href="/" className="hover:text-slate-900 transition">홈</Link>
+            <span>•</span>
+            <Link href="/blog" className="hover:text-slate-900 transition">인사이트 칼럼</Link>
+            <span>•</span>
+            <Link href="/privacy" className="hover:text-slate-900 transition font-bold text-slate-700">개인정보처리방침</Link>
             <span>•</span>
             <Link href="/terms" className="hover:text-slate-900 transition">이용약관</Link>
             <span>•</span>

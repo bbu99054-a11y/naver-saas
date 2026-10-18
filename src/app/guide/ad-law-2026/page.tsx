@@ -427,11 +427,11 @@ export default function AdLaw2026Page() {
             </button>
 
             <Link
-              href="/login?ref=ad-law-guide"
+              href="/adcheck"
               style={{ backgroundColor: '#4f46e5', color: '#ffffff' }}
               className="px-3.5 py-1.5 rounded-lg text-xs font-extrabold shadow-md flex items-center gap-1 transition hover:bg-indigo-600 cursor-pointer"
             >
-              <span>3회 무료 시작하기</span>
+              <span>광고법 금칙어 스캐너</span>
               <ChevronRight className="w-3.5 h-3.5" />
             </Link>
           </div>
@@ -1364,11 +1364,11 @@ export default function AdLaw2026Page() {
               💡 <strong>스마트에디터 원클릭 복사</strong> 버튼을 누르면 인포박스, 표, 벤토 카드까지 서식 깨짐 없이 100% 복사됩니다.
             </p>
             <Link
-              href="/login?ref=saas-demo"
+              href="/convert"
               style={{ backgroundColor: '#4f46e5', color: '#ffffff' }}
               className="px-5 py-2.5 rounded-xl font-black text-xs shadow-lg transition flex items-center gap-1.5 hover:bg-indigo-600 cursor-pointer whitespace-nowrap"
             >
-              <span>내 사무소 키워드로 3회 무료 생성해보기</span>
+              <span>스마트에디터 서식 변환기 바로가기</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>
@@ -1505,36 +1505,49 @@ export default function AdLaw2026Page() {
               <div className="space-y-1 text-center sm:text-left">
                 <div className="flex items-center gap-2 justify-center sm:justify-start">
                   <span style={{ backgroundColor: '#064e3b', color: '#6ee7b7' }} className="text-[10px] font-extrabold px-2 py-0.5 rounded">
-                    신용카드 등록 ZERO
+                    100% 무료 무설치
                   </span>
                   <strong style={{ color: '#ffffff' }} className="text-sm sm:text-base font-extrabold">
-                    대표님 사무소의 키워드로 안전성을 직접 검증해 보세요
+                    원고 발행 전 법정 광고 규정 위반 여부를 1초 만에 검증해 보세요
                   </strong>
                 </div>
                 <p style={{ color: '#94a3b8' }} className="text-xs">
-                  회원가입 즉시 3회 무료 체험 크레딧이 제공됩니다. 대표님의 실제 키워드로 10초 만에 생성되는 C-Rank 칼럼을 확인하세요.
+                  회원가입 없이 브라우저 메모리에서 즉시 구동되는 전문직 광고 금칙어 정밀 스캐너와 스마트플레이스 순위 진단기를 무료로 제공합니다.
                 </p>
               </div>
 
               <Link
-                href="/login?ref=ad-law-checklist"
+                href="/adcheck"
                 style={{ backgroundColor: '#4f46e5', color: '#ffffff' }}
                 className="px-6 py-3.5 rounded-xl font-extrabold text-xs sm:text-sm shadow-xl transition flex items-center gap-2 hover:bg-indigo-600 cursor-pointer whitespace-nowrap"
               >
-                <span>3회 무료 체험 시작하기</span>
+                <span>금칙어 정밀 스캐너 바로가기</span>
                 <ChevronRight className="w-4 h-4" />
               </Link>
             </div>
           </div>
         </section>
 
-        {/* 저작권 및 법적 고지 (사업자 개인정보 완전 제거) */}
+        {/* 저작권 및 법적 고지 */}
         <footer style={{ borderColor: '#e2e8f0' }} className="pt-8 border-t text-center text-xs space-y-2 print:pt-4">
-          <p style={{ color: '#0f172a' }} className="font-extrabold">PostSync 리걸·메디컬 AI 컴플라이언스 랩</p>
+          <p style={{ color: '#0f172a' }} className="font-extrabold">PostSync 비즈니스 마케팅 데이터 연구소 (와이엠랩스 · YM Labs)</p>
           <p style={{ color: '#94a3b8' }} className="text-[10px] max-w-2xl mx-auto leading-relaxed pt-2">
             본 지침서의 내용은 2026년 기준 공표된 대한변호사협회, 보건복지부, 한국세무사회, 공정거래위원회의 공식 규정과 네이버 검색 알고리즘을 분석한 정보 제공 목적의 백서이며, PostSync는 법률·의료 자문이 아닌 콘텐츠 최적화 소프트웨어를 제공합니다. 최종 광고 집행 시 전담 자문 변호사 및 소속 협회의 광고 심의를 확인하시기 바랍니다.
           </p>
-          <p style={{ color: '#cbd5e1' }} className="text-[10px] pt-1">© 2026 PostSync. All rights reserved.</p>
+          <div className="flex flex-wrap items-center justify-center gap-3 text-[11px] text-slate-500 pt-2 print:hidden">
+            <Link href="/" className="hover:text-slate-900 transition">홈</Link>
+            <span>•</span>
+            <Link href="/blog" className="hover:text-slate-900 transition">인사이트 칼럼</Link>
+            <span>•</span>
+            <Link href="/tools" className="hover:text-slate-900 transition">무료 웹툴 7종</Link>
+            <span>•</span>
+            <Link href="/terms" className="hover:text-slate-900 transition">이용약관</Link>
+            <span>•</span>
+            <Link href="/privacy" className="hover:text-slate-900 transition font-bold text-slate-700">개인정보처리방침</Link>
+            <span>•</span>
+            <Link href="/contact" className="hover:text-slate-900 transition">고객지원</Link>
+          </div>
+          <p style={{ color: '#cbd5e1' }} className="text-[10px] pt-1">© 2026 PostSync (YM Labs). All rights reserved.</p>
         </footer>
 
       </main>

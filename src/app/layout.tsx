@@ -25,16 +25,16 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.postsyncapp.com"),
   manifest: "/manifest.json",
-  title: "PostSync - 전문직 전용 AI 블로그 자동화",
-  description: "변호사, 세무사, 노무사 등 YMYL 전문직을 위한 광고법 준수 및 네이버 C-Rank 최적화 AI 포스팅 솔루션입니다.",
-  keywords: ["AI 블로그", "전문직 마케팅", "변호사 마케팅", "세무사 블로그", "자동 포스팅"],
+  title: "PostSync - 비즈니스 마케팅 데이터 연구소 & 무료 웹 유틸리티 포털",
+  description: "2026 네이버 스마트플레이스 상위노출 알고리즘 실전 칼럼, 전문직 법정 광고 컴플라이언스 가이드, 무설치 무료 비즈니스 웹툴 7종을 제공하는 디지털 마케팅 연구 포털입니다.",
+  keywords: ["스마트플레이스 순위 조회", "네이버 플레이스 상위노출", "전문직 광고 규정", "마케팅 칼럼", "무료 웹툴", "PostSync"],
   alternates: {
     canonical: "https://www.postsyncapp.com",
   },
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
-    title: "PostSync CEO",
+    title: "PostSync",
   },
   verification: {
     google: "ugoQGlNSdScisq23rSDCxHIZad-HlZLatf1TUZ5006A",
@@ -43,8 +43,8 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "PostSync - 전문직 전용 AI 블로그 자동화",
-    description: "전문직을 위한 완벽한 AI 블로그 엔진. 광고법 위반 제로, 환각 제로.",
+    title: "PostSync - 비즈니스 마케팅 데이터 연구소 & 무료 웹 유틸리티 포털",
+    description: "스마트플레이스 순위 알고리즘 심층 칼럼 35편과 100% 무료 비즈니스 웹 유틸리티 7종 허브.",
     url: "https://www.postsyncapp.com",
     siteName: "PostSync",
     type: "website",

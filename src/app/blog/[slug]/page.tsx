@@ -100,18 +100,18 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             PostSync
           </Link>
           <nav className="flex items-center gap-4 text-sm font-medium">
+            <Link href="/" className="text-slate-600 hover:text-slate-900 transition-colors hidden sm:inline">
+              포털 홈
+            </Link>
             <Link href="/blog" className="text-indigo-600 font-bold hover:text-indigo-700 transition-colors">
               칼럼 목록
             </Link>
-            <Link href="/seo-check" className="text-rose-600 font-bold hover:text-rose-700 transition-colors hidden sm:inline">
-              무료 진단
+            <Link href="/tools" className="text-slate-600 hover:text-slate-900 transition-colors hidden md:inline">
+              무료 웹툴 7종
             </Link>
-            <Link href="/pricing" className="text-slate-600 hover:text-slate-900 transition-colors hidden md:inline">
-              요금제
-            </Link>
-            <Link href="/login">
+            <Link href="/place">
               <Button className="bg-indigo-600 hover:bg-indigo-700 text-white rounded-full px-5 h-9 font-bold text-xs shadow-md shadow-indigo-100 cursor-pointer">
-                무료 시작하기
+                플레이스 순위 조회
               </Button>
             </Link>
           </nav>
@@ -288,24 +288,24 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           {/* Bottom Article CTA Card */}
           <div className="mt-14 p-8 sm:p-10 rounded-2xl bg-gradient-to-br from-[#0F172A] via-[#1E1B4B] to-[#1E293B] text-white shadow-xl border border-indigo-500/20">
             <div className="flex items-center gap-2 text-xs font-bold text-indigo-300 mb-3">
-              <Zap className="w-4 h-4 text-amber-400" /> PostSync 실전 솔루션
+              <Zap className="w-4 h-4 text-amber-400" /> PostSync 무료 비즈니스 유틸리티
             </div>
             <h3 className="text-xl sm:text-2xl font-black mb-3">
-              대행사 리스크 없이 직접 5분 만에 해결하세요.
+              우리 매장 플레이스 실시간 순위와 광고 규정, 1초 만에 무료 점검하세요.
             </h3>
             <p className="text-sm text-slate-300 mb-6 leading-relaxed">
-              복잡한 2026 전문직 광고 규정 검증부터 네이버 C-Rank 알고리즘 대응까지.<br className="hidden sm:inline" />
-              AI가 대표님의 승소 및 상담 실무 사례를 완벽한 1인칭 원고로 완성합니다.
+              회원가입이나 프로그램 설치 없이 브라우저에서 즉시 작동합니다.<br className="hidden sm:inline" />
+              네이버 스마트플레이스 1위 매장과의 4대 정량 격차 분석과 법정 광고 금칙어 검사를 무료로 이용해 보세요.
             </p>
             <div className="flex flex-col sm:flex-row gap-3">
-              <Link href="/login">
+              <Link href="/place">
                 <Button className="w-full sm:w-auto bg-indigo-500 hover:bg-indigo-600 text-white font-bold rounded-xl px-7 h-12 shadow-lg shadow-indigo-500/20 cursor-pointer">
-                  3회 무료 체험 시작 &rarr;
+                  플레이스 실시간 순위 조회 &rarr;
                 </Button>
               </Link>
-              <Link href="/seo-check">
+              <Link href="/tools">
                 <Button variant="outline" className="w-full sm:w-auto bg-white/10 hover:bg-white/20 text-white border-white/20 font-semibold rounded-xl px-6 h-12 cursor-pointer">
-                  내 블로그 무료 진단
+                  무료 웹툴 7종 허브 보기
                 </Button>
               </Link>
             </div>
@@ -316,36 +316,36 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         <aside className="hidden lg:block w-80 shrink-0">
           <div className="sticky top-28 space-y-6">
             
-            {/* Conversion Box */}
+            {/* Free Tools Utility Box */}
             <div className="bg-white p-6 rounded-2xl shadow-xl border border-indigo-100 overflow-hidden relative">
               <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/10 blur-2xl rounded-full" />
               <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-purple-500/10 blur-2xl rounded-full" />
               
               <div className="relative z-10">
                 <span className="bg-indigo-100 text-indigo-800 text-xs font-black px-3 py-1 rounded-full inline-block mb-4">
-                  🔥 전문직 마케팅 자동화
+                  ⚡ 100% 무설치 무료 웹툴
                 </span>
                 <h3 className="text-xl font-black text-slate-900 leading-tight mb-3">
-                  블로그 쓰느라<br/>퇴근을 못하고 계신가요?
+                  실시간 순위 &amp; 광고법<br/>1초 무료 진단 도구
                 </h3>
                 <p className="text-xs text-slate-600 mb-6 leading-relaxed">
-                  검색량 분석부터 1인칭 후킹 원고 작성까지. C-Rank 알고리즘을 꿰뚫는 AI 비서가 1분 만에 포스팅을 완성해 드립니다.
+                  네이버 스마트플레이스 1~20위 실시간 순위 조회기, 전문직 광고 금칙어 스캐너, 상세페이지 자동 분할기 등 7종 도구를 무료로 제공합니다.
                 </p>
                 
-                <Link href="/login" className="block w-full">
+                <Link href="/place" className="block w-full">
                   <Button className="w-full h-11 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-md shadow-indigo-200 cursor-pointer">
-                    PostSync 3회 무료 체험
+                    플레이스 순위 1초 조회
                   </Button>
                 </Link>
                 
-                <Link href="/seo-check" className="block w-full mt-2.5">
+                <Link href="/adcheck" className="block w-full mt-2.5">
                   <Button variant="outline" className="w-full h-10 border-slate-200 text-slate-700 hover:bg-slate-50 font-bold rounded-xl text-xs cursor-pointer">
-                    내 블로그 무료 SEO 진단
+                    전문직 광고 금칙어 스캐너
                   </Button>
                 </Link>
                 
                 <p className="text-[11px] text-slate-400 text-center mt-3">
-                  신용카드 등록 없이 즉시 시작
+                  회원가입 없이 브라우저에서 즉시 실행
                 </p>
               </div>
             </div>
@@ -357,7 +357,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                 <Link href="/blog" className="text-xs text-indigo-600 font-semibold hover:underline">전체보기</Link>
               </h4>
               <div className="space-y-3">
-                {blogPosts.filter(p => p.id !== post.id).slice(0, 3).map(p => (
+                {blogPosts.filter(p => p.id !== post.id).slice(0, 4).map(p => (
                   <Link key={p.id} href={`/blog/${p.slug}`} className="block group">
                     <p className="text-xs font-bold text-slate-800 group-hover:text-indigo-600 transition-colors line-clamp-2 leading-snug">
                       {p.title}
@@ -377,17 +377,37 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         </aside>
 
       </div>
+
+      {/* Article Footer */}
+      <footer className="bg-white border-t border-slate-200 py-12 px-6 text-xs text-slate-500">
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 pb-6 border-b border-slate-100">
+          <div className="font-bold text-slate-900 text-sm">PostSync 비즈니스 마케팅 연구소</div>
+          <div className="flex flex-wrap items-center justify-center gap-5 font-medium text-slate-600">
+            <Link href="/" className="hover:text-indigo-600 transition-colors">포털 홈</Link>
+            <Link href="/blog" className="hover:text-indigo-600 transition-colors">인사이트 칼럼</Link>
+            <Link href="/tools" className="hover:text-indigo-600 transition-colors">무료 웹툴 7종</Link>
+            <Link href="/place" className="hover:text-indigo-600 transition-colors">플레이스 순위 조회</Link>
+            <Link href="/terms" className="hover:text-indigo-600 transition-colors">이용약관</Link>
+            <Link href="/privacy" className="hover:text-indigo-600 transition-colors font-bold text-slate-900">개인정보처리방침</Link>
+            <Link href="/contact" className="hover:text-indigo-600 transition-colors">고객지원</Link>
+          </div>
+        </div>
+        <div className="max-w-7xl mx-auto pt-6 text-[11px] text-slate-400 space-y-1 text-center sm:text-left">
+          <p>상호명: 와이엠랩스 (YM Labs) | 대표자: 유영무 | 사업자등록번호: 736-48-01186 | 소재지: 서울특별시 송파구 송파대로 345, 103동 204호(가락동, 헬리오시티)</p>
+          <p>문의 이메일: contact@postsyncapp.com | © 2026 와이엠랩스 (YM Labs) PostSync. All rights reserved.</p>
+        </div>
+      </footer>
       
       {/* Mobile Sticky CTA */}
       <div className="lg:hidden fixed bottom-0 left-0 w-full p-4 bg-white/90 backdrop-blur-md border-t border-slate-200 z-50 flex gap-2">
-        <Link href="/login" className="flex-1">
+        <Link href="/place" className="flex-1">
           <Button className="w-full h-11 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-md text-xs sm:text-sm">
-            3회 무료 체험하기
+            플레이스 실시간 순위 조회
           </Button>
         </Link>
-        <Link href="/seo-check">
+        <Link href="/tools">
           <Button variant="outline" className="h-11 border-slate-300 text-slate-700 font-bold rounded-xl px-4 text-xs">
-            무료 진단
+            무료 웹툴 7종
           </Button>
         </Link>
       </div>

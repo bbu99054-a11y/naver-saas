@@ -15,8 +15,12 @@
     bookTitle: '2026 변호사·세무사 네이버 상위 1% 인바운드 마케팅 실전 지침서 (PDF)',
   };
 
+  // ⚠️ 애드센스 심사 중 숨김 무통장 입금 모달 DOM 강제 주입 방지 스위치
+  const IS_MONETIZATION_DOM_AUTORUN = false;
+
   // 1. Modal DOM Injection (Creates modals dynamically if not already present)
-  function ensureModals() {
+  function ensureModals(forceInject) {
+    if (!IS_MONETIZATION_DOM_AUTORUN && !forceInject) return;
     if (document.getElementById('mzModalOverlay')) return;
 
     const overlay = document.createElement('div');

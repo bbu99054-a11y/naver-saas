@@ -55,16 +55,13 @@ export default function BlogListClient() {
             </span>
           </Link>
 
-          <nav className="flex items-center gap-5 text-sm font-medium text-slate-300">
-            <Link href="/" className="hover:text-white transition-colors hidden sm:inline">홈으로</Link>
-            <Link href="/seo-check" className="text-rose-400 hover:text-rose-300 font-bold flex items-center gap-1">
-              무료 진단 <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-ping" />
-            </Link>
-            <Link href="/pricing" className="hover:text-white transition-colors hidden md:inline">요금제</Link>
-            <Link href="/login" className="text-sm font-semibold text-slate-300 hover:text-white transition-colors">로그인</Link>
-            <Link href="/login">
-              <Button className="bg-indigo-600 hover:bg-indigo-500 text-white rounded-full px-5 h-9 font-bold text-xs shadow-lg shadow-indigo-600/30 border border-indigo-400/30">
-                무료 3회 시작
+          <nav className="flex items-center gap-4 sm:gap-5 text-sm font-medium text-slate-300">
+            <Link href="/" className="hover:text-white transition-colors hidden sm:inline">포털 홈</Link>
+            <Link href="/tools" className="hover:text-white transition-colors">무료 웹툴 7종</Link>
+            <Link href="/adcheck" className="hover:text-white transition-colors hidden md:inline">광고법 스캐너</Link>
+            <Link href="/place">
+              <Button className="bg-indigo-600 hover:bg-indigo-500 text-white rounded-full px-4 sm:px-5 h-9 font-bold text-xs shadow-lg shadow-indigo-600/30 border border-indigo-400/30 cursor-pointer">
+                플레이스 순위 조회
               </Button>
             </Link>
           </nav>
@@ -203,38 +200,38 @@ export default function BlogListClient() {
         )}
       </section>
 
-      {/* Free Audit & Trial Banner */}
-      <section className="py-20 px-6 relative z-10 max-w-5xl mx-auto mt-12">
+      {/* Free Web Tools Hub Banner */}
+      <section className="py-16 px-6 relative z-10 max-w-5xl mx-auto mt-8">
         <div className="relative rounded-3xl p-8 sm:p-12 overflow-hidden bg-gradient-to-br from-indigo-900/50 via-slate-900/80 to-purple-900/40 border border-indigo-500/30 shadow-2xl">
           <div className="absolute -top-24 -right-24 w-72 h-72 bg-indigo-500/20 blur-3xl rounded-full" />
           <div className="absolute -bottom-24 -left-24 w-72 h-72 bg-violet-500/20 blur-3xl rounded-full" />
 
           <div className="relative z-10 text-center max-w-2xl mx-auto">
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-300 text-xs font-bold border border-indigo-500/30 mb-4">
-              <Zap className="w-3.5 h-3.5 text-amber-400" /> 1분 안에 완성되는 전문직 SEO 원고
+              <Zap className="w-3.5 h-3.5 text-amber-400" /> 회원가입 없는 100% 무료 비즈니스 웹 유틸리티
             </span>
             <h2 className="text-2xl sm:text-4xl font-extrabold text-white mb-4 leading-tight">
-              더 이상 대행사에 끌려다니지 마세요.
+              칼럼에서 배운 알고리즘 공식, 지금 바로 실측해 보세요
             </h2>
             <p className="text-sm sm:text-base text-slate-300 mb-8 leading-relaxed">
-              2026년 전문직 광고 규정 100% 준수 필터링과 C-Rank 알고리즘 최적화.<br className="hidden sm:inline" />
-              대표님의 실무 이력만 넣으면 상위 노출 원고가 1분 만에 완성됩니다.
+              네이버 스마트플레이스 1위~20위 실시간 순위 및 1위 매장 4대 격차 분석기부터<br className="hidden sm:inline" />
+              전문직 법정 광고 금칙어 1초 스캐너까지 브라우저에서 무료로 즉시 구동됩니다.
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link href="/login">
-                <Button size="lg" className="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl px-8 h-12 shadow-lg shadow-indigo-600/30 border border-indigo-400/30">
-                  PostSync 3회 무료 체험하기
+              <Link href="/place">
+                <Button size="lg" className="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl px-8 h-12 shadow-lg shadow-indigo-600/30 border border-indigo-400/30 cursor-pointer">
+                  플레이스 실시간 순위 조회 &rarr;
                 </Button>
               </Link>
-              <Link href="/seo-check">
-                <Button size="lg" variant="outline" className="w-full sm:w-auto bg-white/5 hover:bg-white/10 text-white border-white/10 font-bold rounded-xl px-6 h-12">
-                  내 블로그 무료 SEO 진단 &rarr;
+              <Link href="/tools">
+                <Button size="lg" variant="outline" className="w-full sm:w-auto bg-white/5 hover:bg-white/10 text-white border-white/10 font-bold rounded-xl px-6 h-12 cursor-pointer">
+                  무료 웹툴 7종 전체보기
                 </Button>
               </Link>
             </div>
             
-            <p className="text-slate-500 text-xs mt-4">신용카드 등록 없이 가입 즉시 무료 3회 제공</p>
+            <p className="text-slate-400 text-xs mt-4">설치 제로 · 회원가입 제로 · 무제한 무료 제공</p>
           </div>
         </div>
       </section>
@@ -244,9 +241,24 @@ export default function BlogListClient() {
         <GoogleAdSlot adFormat="auto" className="mx-auto" />
       </div>
 
-      {/* Footer */}
-      <footer className="py-12 border-t border-white/10 text-center text-xs text-slate-500 relative z-10">
-        <p>© 2026 와이엠랩스 (YM Labs) PostSync. All rights reserved.</p>
+      {/* Footer with Full Legal Links & Business Info */}
+      <footer className="py-12 px-6 border-t border-white/10 text-xs text-slate-400 relative z-10">
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 pb-6 border-b border-white/5">
+          <div className="font-bold text-white text-sm">PostSync 비즈니스 마케팅 연구소</div>
+          <div className="flex flex-wrap items-center justify-center gap-5 font-medium text-slate-300">
+            <Link href="/" className="hover:text-white transition-colors">포털 홈</Link>
+            <Link href="/tools" className="hover:text-white transition-colors">무료 웹툴 7종</Link>
+            <Link href="/place" className="hover:text-white transition-colors">플레이스 순위 조회</Link>
+            <Link href="/adcheck" className="hover:text-white transition-colors">광고법 스캐너</Link>
+            <Link href="/terms" className="hover:text-white transition-colors">이용약관</Link>
+            <Link href="/privacy" className="hover:text-white transition-colors font-bold text-indigo-300">개인정보처리방침</Link>
+            <Link href="/contact" className="hover:text-white transition-colors">고객지원</Link>
+          </div>
+        </div>
+        <div className="max-w-7xl mx-auto pt-6 text-[11px] text-slate-500 space-y-1.5 text-center sm:text-left">
+          <p>상호명: 와이엠랩스 (YM Labs) | 대표자: 유영무 | 사업자등록번호: 736-48-01186 | 소재지: 서울특별시 송파구 송파대로 345, 103동 204호(가락동, 헬리오시티)</p>
+          <p>문의 이메일: contact@postsyncapp.com | © 2026 와이엠랩스 (YM Labs) PostSync. All rights reserved.</p>
+        </div>
       </footer>
 
     </div>
