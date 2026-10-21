@@ -10,6 +10,7 @@ import { blogPosts, getPostBySlug } from '@/lib/blogData'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import GoogleAdSlot from '@/components/monetization/GoogleAdSlot'
+import PlaceQuickSearchWidget from '@/components/blog/PlaceQuickSearchWidget'
 
 export async function generateStaticParams() {
   return blogPosts.map((post) => ({
@@ -161,6 +162,9 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             style={{ backgroundImage: `url(${post.imageUrl})` }}
           />
 
+          {/* Place Tool Quick Search Bar - Interactive Booster */}
+          <PlaceQuickSearchWidget />
+
           {/* In-Article Top AdSense Slot */}
           <div className="my-8">
             <GoogleAdSlot adFormat="horizontal" className="max-w-[728px] mx-auto" />
@@ -171,10 +175,12 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
               components={{
+                // Prevent duplicate <H1> tags (SEO violation): Demote markdown # to <h2>
                 h1: ({ children }) => (
-                  <h1 className="text-2xl sm:text-3xl font-black text-slate-950 mt-10 mb-6 leading-tight tracking-tight border-b-2 border-slate-200 pb-3">
-                    {children}
-                  </h1>
+                  <h2 className="text-xl sm:text-2xl font-black text-slate-900 mt-12 mb-5 pb-3 border-b-2 border-indigo-100 flex items-center gap-3">
+                    <span className="w-2.5 h-6 bg-gradient-to-b from-indigo-600 to-violet-600 rounded-full inline-block shrink-0" />
+                    <span>{children}</span>
+                  </h2>
                 ),
                 h2: ({ children }) => (
                   <h2 className="text-xl sm:text-2xl font-black text-slate-900 mt-12 mb-5 pb-3 border-b-2 border-indigo-100 flex items-center gap-3">
