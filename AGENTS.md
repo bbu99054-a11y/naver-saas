@@ -90,8 +90,8 @@ pm run build) 및 검증 완료 후 보고하고, 대표님이 명시적으로 '
   - 빠른 처리 및 목차/요약 생성: Gemini 3.6 Flash
   - 고품질 본문 및 전문직 심층 칼럼: Gemini 3.1 Pro / Claude 3.5 Sonnet
 * **2026 생성형 엔진 최적화 (GEO & Google AI Overviews):**
-  - 검색 AI(Google SGE, Perplexity, ChatGPT Search)가 인용하기 쉽도록 **Answer-First (결론 우선 두괄식)** 구조를 유지합니다. 본문 첫 3줄 안에 질문에 대한 직접적이고 정량적인 답변을 제시합니다.
-  - **JSON-LD 구조화 데이터** (Article + FAQPage + HowTo)를 HTML 헤더에 필수로 유지합니다.
+  - 검색 AI(Google AI Overviews/AI Mode, 네이버 AI 브리핑, Perplexity, ChatGPT Search)가 인용하기 쉽도록 **Answer-First (결론 우선 두괄식)** 구조를 유지합니다. 본문 첫 3줄 안에 질문에 대한 직접적이고 정량적인 답변을 제시합니다.
+  - **JSON-LD 구조화 데이터:** `Article`(또는 `BlogPosting`) + 저자 정보(`author` → `Person`, 자격·프로필 포함) + `Organization`을 필수로 유지합니다. `FAQPage`·`HowTo`는 선택 사항입니다(구글 리치결과는 HowTo 2023년 9월, FAQ 2026년 5월 종료. 기존 마크업은 남겨 두어도 무방하나 리치결과를 노린 신규 추가는 하지 않습니다). 세부 집필 기준은 [SEO_GEO_AEO_CONTENT_WRITING_GUIDE_2026.md](file:///C:/workspace/postsync/SEO_GEO_AEO_CONTENT_WRITING_GUIDE_2026.md)를 따릅니다.
 * **네이버 C-Rank & 스마트블록 최적화:**
   - 전문성(E-E-A-T)을 입증하는 구조화된 소제목(h2, h3), 비교 테이블, 인포그래픽 카드 요소를 적극 활용합니다.
 * **프론트엔드 디자인 원칙:**
