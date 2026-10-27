@@ -16,12 +16,12 @@ export interface BlogPost {
 
 export const CATEGORIES = [
   { id: 'all', label: '전체 보기' },
-  { id: 'lawyer', label: '⚖️ 변호사' },
-  { id: 'tax', label: '📊 세무사 · 회계사' },
-  { id: 'labor', label: '🤝 공인노무사' },
-  { id: 'medical', label: '🩺 의사 · 병원' },
-  { id: 'admin', label: '📜 행정사' },
-  { id: 'strategy', label: '💡 마케팅 전략 & 대행사 분석' },
+  { id: 'place', label: '📍 스마트플레이스 상위노출' },
+  { id: 'strategy', label: '🔑 마케팅 전략 & C-Rank' },
+  { id: 'medical', label: '🩺 병의원 · 로컬매장' },
+  { id: 'lawyer', label: '⚖️ 변호사 · 법무' },
+  { id: 'tax', label: '📊 세무 · 회계' },
+  { id: 'labor', label: '🤝 노무 · 행정' },
 ] as const;
 
 import { pSeoPlacePosts } from './pSeoPlacePosts';

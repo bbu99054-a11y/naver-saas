@@ -2,14 +2,16 @@ import { Metadata } from 'next'
 import BlogListClient from './BlogListClient'
 
 export const metadata: Metadata = {
-  title: '전문직 인바운드 마케팅 칼럼 & 전략 블로그 | PostSync',
-  description: '변호사, 세무사, 노무사, 의사, 행정사를 위한 2026 네이버 C-Rank 알고리즘 및 광고 컴플라이언스 상위노출 전략 칼럼 모음.',
+  title: '스마트플레이스 상위노출 & 로컬 마케팅 실전 칼럼 | PostSync',
+  description:
+    '2026 네이버 스마트플레이스 노출 알고리즘(NPlaceRank), 영수증 리뷰·저장수 관리, 대표키워드 세팅, 블로그 C-Rank 및 업종별 광고 심의 대응 전략 칼럼 아카이브.',
   alternates: {
     canonical: 'https://www.postsyncapp.com/blog',
   },
   openGraph: {
-    title: '전문직 인바운드 마케팅 칼럼 | PostSync',
-    description: '대행사 횡포에서 벗어나 네이버 C-Rank와 구글 GEO를 장악하는 전문직 실전 마케팅 칼럼.',
+    title: '스마트플레이스 상위노출 & 로컬 마케팅 실전 칼럼 | PostSync',
+    description:
+      '네이버 플레이스 1페이지 진입 공식, 경쟁 매장 정량 격차 분석법, C-Rank 블로그 및 광고 컴플라이언스 실전 가이드를 확인하세요.',
     url: 'https://www.postsyncapp.com/blog',
     type: 'website',
   },
