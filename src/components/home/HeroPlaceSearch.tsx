@@ -26,16 +26,18 @@ export default function HeroPlaceSearch({
   const [keyword, setKeyword] = useState(defaultKeyword)
   const [target, setTarget] = useState(defaultTarget)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
 
   const navigateToPlace = (kwInput: string, targetInput: string) => {
     const kw = kwInput.trim()
     const tgt = targetInput.trim()
 
     if (!kw) {
-      alert('조회할 지역과 업종 키워드(예: 성수동 카페, 강남역 피부과)를 입력해 주세요.')
+      setErrorMessage('조회할 지역과 키워드(예: 성수동 카페, 강남역 피부과)를 입력해 주세요.')
       return
     }
 
+    setErrorMessage('')
     setIsSubmitting(true)
 
     try {
@@ -94,12 +96,22 @@ export default function HeroPlaceSearch({
             <input
               type="text"
               value={keyword}
-              onChange={(e) => setKeyword(e.target.value)}
+              onChange={(e) => {
+                setKeyword(e.target.value)
+                if (errorMessage) setErrorMessage('')
+              }}
               placeholder="지역+업종 (예: 강남역 피부과)"
-              className="w-full pl-8 pr-3 py-2.5 text-xs bg-slate-50 focus:bg-white border border-slate-200 focus:border-slate-800 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none transition"
-              required
+              className={`w-full pl-8 pr-3 py-2.5 text-xs bg-slate-50 focus:bg-white border rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none transition ${
+                errorMessage ? 'border-red-500 focus:border-red-600' : 'border-slate-200 focus:border-slate-800'
+              }`}
             />
           </div>
+          {errorMessage && (
+            <p className="text-[11px] text-red-600 font-bold flex items-center gap-1">
+              <span>⚠️</span>
+              <span>{errorMessage}</span>
+            </p>
+          )}
           <div className="relative">
             <Store className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
             <input
@@ -156,21 +168,31 @@ export default function HeroPlaceSearch({
 
   // Concept A (Dub.co + Toss Style) Hero Floating Pill Search
   return (
-    <div className="w-full max-w-4xl mx-auto space-y-4 break-keep">
+    <div className="w-full max-w-4xl mx-auto space-y-3 break-keep">
       <form
         onSubmit={handleSubmit}
-        className="bg-white rounded-2xl sm:rounded-full border border-slate-200/90 shadow-xl shadow-slate-200/50 p-2 sm:p-2.5 flex flex-col sm:flex-row items-stretch sm:items-center gap-2 transition-all focus-within:border-slate-400 focus-within:shadow-2xl"
+        className={`bg-white rounded-2xl sm:rounded-full border p-2 sm:p-2.5 flex flex-col sm:flex-row items-stretch sm:items-center gap-2 transition-all ${
+          errorMessage
+            ? 'border-red-400 shadow-xl shadow-red-500/10 focus-within:border-red-500'
+            : 'border-slate-200/90 shadow-xl shadow-slate-200/50 focus-within:border-slate-400 focus-within:shadow-2xl'
+        }`}
       >
         {/* 키워드 인풋 */}
         <div className="flex-1 relative flex items-center min-w-0">
-          <MapPin className="w-4 h-4 text-slate-400 absolute left-4 shrink-0 pointer-events-none" />
+          <MapPin
+            className={`w-4 h-4 absolute left-4 shrink-0 pointer-events-none transition-colors ${
+              errorMessage ? 'text-red-500' : 'text-slate-400'
+            }`}
+          />
           <input
             type="text"
             value={keyword}
-            onChange={(e) => setKeyword(e.target.value)}
+            onChange={(e) => {
+              setKeyword(e.target.value)
+              if (errorMessage) setErrorMessage('')
+            }}
             placeholder="지역+업종 (예: 성수동 카페, 강남역 피부과)"
             className="w-full pl-11 pr-4 py-3 sm:py-3.5 text-sm sm:text-base text-slate-900 placeholder-slate-400 font-medium bg-transparent border-0 focus:outline-none focus:ring-0"
-            required
           />
         </div>
 
@@ -200,6 +222,13 @@ export default function HeroPlaceSearch({
         </button>
       </form>
 
+      {errorMessage && (
+        <p className="text-xs text-red-600 font-bold flex items-center justify-center sm:justify-start gap-1.5 px-3">
+          <span>⚠️</span>
+          <span>{errorMessage}</span>
+        </p>
+      )}
+
       {/* 하단 보조 칩 및 신뢰 뱃지 */}
       <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-2 text-xs">
         <div className="flex flex-wrap items-center justify-center sm:justify-start gap-1.5">
@@ -226,7 +255,7 @@ export default function HeroPlaceSearch({
           </span>
           <span className="inline-flex items-center gap-1">
             <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-            <span>실시간 1위~75위</span>
+            <span>실시간 1위~20위</span>
           </span>
           <span className="inline-flex items-center gap-1">
             <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />

@@ -11,7 +11,6 @@ import {
   FileText,
   ArrowRight
 } from 'lucide-react'
-import GoogleAdSlot from './GoogleAdSlot'
 import EbookPromoCard from './EbookPromoCard'
 import SaasBridgeBanner from './SaasBridgeBanner'
 import LeadMagnetModal from './LeadMagnetModal'
@@ -23,8 +22,6 @@ export interface ToolContainerProps {
   subtitle?: string
   badge?: string
   description?: string
-  showTopAd?: boolean
-  showBottomAd?: boolean
   showSidebar?: boolean
   leadMagnetTitle?: string
   leadMagnetDesc?: string
@@ -37,8 +34,6 @@ export default function ToolContainer({
   subtitle,
   badge = '100% 무료 초소형 웹 유틸리티',
   description,
-  showTopAd = true,
-  showBottomAd = true,
   showSidebar = true,
   leadMagnetTitle,
   leadMagnetDesc
@@ -59,37 +54,21 @@ export default function ToolContainer({
               무료 웹툴 허브
             </Link>
             <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
-            <span className="font-bold text-blue-600 truncate max-w-[150px] sm:max-w-xs">{title}</span>
+            <span className="font-bold text-slate-900">{title}</span>
           </div>
-
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => setModalOpen(true)}
-              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 rounded-lg text-xs font-bold transition-all"
-            >
-              <Gift className="w-3.5 h-3.5 text-emerald-600" />
-              무료 리포트 신청
-            </button>
-
+          <div className="flex items-center gap-3">
             <Link
-              href="/dashboard/write"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-extrabold shadow-sm transition-all"
+              href="/tools"
+              className="text-xs font-bold text-slate-600 hover:text-blue-600 flex items-center gap-1 transition-colors"
             >
-              <Sparkles className="w-3.5 h-3.5 text-amber-300" />
-              SaaS 체험
+              <Layers className="w-3.5 h-3.5" />
+              <span>전체 도구</span>
             </Link>
           </div>
         </div>
       </header>
 
-      {/* 2. 상단 애드센스 슬롯 (가로형 728x90) */}
-      {showTopAd && (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-3">
-          <GoogleAdSlot adFormat="horizontal" className="max-w-[728px] mx-auto" />
-        </div>
-      )}
-
-      {/* 3. 툴 헤더 소개 영역 */}
+      {/* 2. 툴 헤더 소개 영역 */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-6 pb-4">
         <div className="flex flex-col gap-2">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded-full text-xs font-extrabold w-fit">
@@ -112,7 +91,7 @@ export default function ToolContainer({
         </div>
       </div>
 
-      {/* 4. 메인 작업 영역: 7:3 분할 반응형 그리드 */}
+      {/* 3. 메인 작업 영역: 7:3 분할 반응형 그리드 */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 pt-2">
         <div className={`grid grid-cols-1 ${showSidebar ? 'lg:grid-cols-12 gap-8' : 'gap-6'}`}>
           {/* 좌측 메인 툴 컴포넌트 영역 */}
@@ -148,7 +127,7 @@ export default function ToolContainer({
             </div>
           </div>
 
-          {/* 우측 4대 수익화 사이드바 영역 */}
+          {/* 우측 사이드바 영역 */}
           {showSidebar && (
             <aside className="lg:col-span-4 space-y-6">
               {/* 수익화 블록 1: 전문직 전자책 카드 */}
@@ -156,26 +135,12 @@ export default function ToolContainer({
 
               {/* 수익화 블록 2: SaaS 유료 전환 배너 */}
               <SaasBridgeBanner toolName={title} />
-
-              {/* 수익화 블록 3: 사이드바 반응형 광고 슬롯 */}
-              <div className="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
-                <GoogleAdSlot adFormat="rectangle" />
-              </div>
             </aside>
           )}
         </div>
       </main>
 
-      {/* 5. 하단 멀티플렉스 애드센스 슬롯 */}
-      {showBottomAd && (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-8">
-          <div className="bg-white rounded-2xl border border-slate-200 p-4 sm:p-6 shadow-sm">
-            <GoogleAdSlot adFormat="auto" />
-          </div>
-        </div>
-      )}
-
-      {/* 6. 공통 리드 수집 모달 */}
+      {/* 4. 공통 리드 수집 모달 */}
       <LeadMagnetModal
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}

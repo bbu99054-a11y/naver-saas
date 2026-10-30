@@ -59,11 +59,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <head>
-        <script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3734423172731921"
-          crossOrigin="anonymous"
-        />
         {/* Google Analytics 4 (GA4) */}
         <script
           async

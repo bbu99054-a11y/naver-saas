@@ -16,7 +16,6 @@ import {
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { blogPosts } from '@/lib/blogData'
-import GoogleAdSlot from '@/components/monetization/GoogleAdSlot'
 
 const CURATED_CATEGORIES = [
   { id: 'all', label: '전체 보기' },
@@ -169,11 +168,6 @@ export default function BlogListClient() {
         </div>
       </section>
 
-      {/* 상단 애드센스 슬롯 */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 my-4">
-        <GoogleAdSlot adFormat="horizontal" className="max-w-[728px] mx-auto" />
-      </div>
-
       {/* 4. 칼럼 카드 그리드 (제8조 한국어 조판 최적화) */}
       <section className="py-6 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         {filteredPosts.length === 0 ? (
@@ -272,7 +266,7 @@ export default function BlogListClient() {
             칼럼에서 확인한 플레이스 상위노출 공식, 지금 내 매장에 바로 대입해 보세요
           </h2>
           <p className="text-xs sm:text-sm text-slate-300 max-w-2xl mx-auto leading-[1.65] text-pretty">
-            네이버 스마트플레이스 1위~75위 실시간 노출 순위 조회부터 1위 매장과의 방문자리뷰·블로그리뷰·예약·쿠폰 격차까지 1초 만에 진단합니다.
+            네이버 스마트플레이스 1위~20위 실시간 노출 순위 조회부터 1위 매장과의 방문자리뷰·블로그리뷰·예약·쿠폰 격차까지 1초 만에 진단합니다.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
@@ -289,11 +283,6 @@ export default function BlogListClient() {
           </div>
         </div>
       </section>
-
-      {/* 하단 애드센스 슬롯 */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 mb-12">
-        <GoogleAdSlot adFormat="auto" className="mx-auto" />
-      </div>
 
       {/* 6. 글로벌 푸터 */}
       <footer className="bg-white py-12 px-4 sm:px-6 lg:px-8 border-t border-slate-200/80 text-xs text-slate-500">

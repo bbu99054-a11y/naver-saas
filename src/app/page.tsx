@@ -6,6 +6,7 @@ import {
   Scale,
   QrCode,
   ArrowRight,
+  ArrowLeftRight,
   ShieldCheck,
   TrendingUp,
   Sparkles,
@@ -22,7 +23,7 @@ import HeroPlaceSearch from '@/components/home/HeroPlaceSearch'
 export const metadata: Metadata = {
   title: 'PostSync - 네이버 스마트플레이스 실시간 순위 조회 & 로컬 마케팅 분석 포털',
   description:
-    '네이버 스마트플레이스 1위~75위 실시간 순위 조회, 1위 매장과의 4대 정량 격차(방문자리뷰·블로그리뷰·예약·쿠폰) 분석, 월간 키워드 검색량 측정, 매장 리뷰 QR 빌더 및 소개글 금칙어 스캐너를 제공하는 로컬 비즈니스 마케팅 포털입니다.',
+    '네이버 스마트플레이스 1위~20위 실시간 순위 조회, 1위 매장과의 4대 정량 격차(방문자리뷰·블로그리뷰·예약·쿠폰) 분석, 월간 키워드 검색량 측정, 매장 리뷰 QR 빌더 및 소개글 금칙어 스캐너를 제공하는 로컬 비즈니스 마케팅 포털입니다.',
   alternates: {
     canonical: 'https://www.postsyncapp.com',
   },
@@ -42,7 +43,7 @@ const CORE_PLACE_TOOLS = [
     id: 'place',
     name: '스마트플레이스 실시간 순위 & 1위 격차 조회기',
     href: '/place',
-    badge: '실시간 1위~75위 · 검색량 측정',
+    badge: '실시간 1위~20위 · 검색량 측정',
     target: '자영업 매장 · 병의원 · 미용실 · 학원 · 전문직',
     desc: '검색 키워드와 상호명을 입력하면 네이버 플레이스 실시간 노출 등수, 공식 월간 검색량, 1위 경쟁 매장과의 방문자리뷰·블로그리뷰·예약·쿠폰 격차를 즉시 실측합니다.',
     icon: MapPin,
@@ -78,9 +79,9 @@ const CORE_PLACE_TOOLS = [
 
 const SECONDARY_UTILITIES = [
   {
-    name: 'ChatGPT·노션 ➔ 네이버 블로그 서식 변환기',
+    name: '블로그 스마트에디터 ONE 서식 변환기',
     href: '/convert',
-    desc: '스마트에디터 ONE 표·인용구 깨짐 방지 복사',
+    desc: 'ChatGPT·노션 마크다운을 네이버 블로그 서식으로 원클릭 변환',
   },
   {
     name: '상세페이지 자동 분할 & 리사이징 스튜디오',
@@ -90,7 +91,7 @@ const SECONDARY_UTILITIES = [
   {
     name: '채용 포털별 자소서 글자수 & 바이트 계산기',
     href: '/byte',
-    desc: '3대 취업포털 바이트 공식 및 키워드 밀도 계산',
+    desc: '네이버 블로그 및 주요 포털 글자수·바이트 계산',
   },
   {
     name: '공공기관 HWPX 무설치 브라우저 뷰어',
@@ -302,7 +303,7 @@ export default function HomePage() {
               <div className="flex items-center justify-between">
                 <span className="text-[11px] font-bold text-slate-400">COVERAGE</span>
                 <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200">
-                  전수 1위~75위
+                  실시간 1위~20위
                 </span>
               </div>
               <strong className="text-sm sm:text-base font-extrabold text-slate-900 block pt-1">
@@ -315,7 +316,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* 3. 핵심 3대 솔루션 카드 그리드 (Dub.co 스타일의 단정한 피처 쇼케이스) */}
+        {/* 3. 핵심 4대 솔루션 카드 그리드 (Dub.co 스타일의 단정한 피처 쇼케이스) */}
         <section className="space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 border-b border-slate-200/80 pb-5">
             <div>
@@ -323,17 +324,17 @@ export default function HomePage() {
                 CORE SMART PLACE TOOLKIT
               </span>
               <h2 className="text-2xl sm:text-3xl font-black text-slate-900 mt-1 text-balance">
-                플레이스 상위노출과 매장 운영을 위한 3대 핵심 도구
+                플레이스 상위노출과 매장 운영을 위한 4대 핵심 도구
               </h2>
               <p className="text-xs sm:text-sm text-slate-600 mt-1 leading-relaxed">
-                순위 확인 후 매장 내 리뷰 QR 비치와 상세설명 금칙어 점검까지 회원가입 없이 바로 실행할 수 있습니다.
+                순위 확인 후 매장 내 리뷰 QR 비치와 상세설명 금칙어 점검, 블로그 서식 변환까지 회원가입 없이 바로 실행할 수 있습니다.
               </p>
             </div>
             <Link
-              href="/place"
+              href="/tools"
               className="text-xs sm:text-sm font-bold text-slate-900 hover:text-emerald-700 inline-flex items-center gap-1 shrink-0 transition"
             >
-              <span>플레이스 순위 조회기 전체화면</span>
+              <span>3대 핵심 툴 전체보기</span>
               <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
@@ -699,9 +700,9 @@ export default function HomePage() {
               </ul>
             </div>
 
-            {/* 부가 업무 무료 유틸리티 안전 보존 구역 */}
+            {/* 소상공인 실무 유틸리티 안전 보존 구역 */}
             <div className="md:col-span-2 space-y-2.5">
-              <div className="font-bold text-slate-900 text-xs uppercase tracking-wider">부가 업무 유틸리티</div>
+              <div className="font-bold text-slate-900 text-xs uppercase tracking-wider">소상공인 실무 유틸리티</div>
               <ul className="space-y-1.5 text-xs text-slate-400">
                 {SECONDARY_UTILITIES.map((util) => (
                   <li key={util.href}>

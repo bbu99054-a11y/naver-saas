@@ -13,7 +13,6 @@ import { Button } from '@/components/ui/button'
 import { blogPosts, getPostBySlug } from '@/lib/blogData'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
-import GoogleAdSlot from '@/components/monetization/GoogleAdSlot'
 import PlaceQuickSearchWidget from '@/components/blog/PlaceQuickSearchWidget'
 import HeroPlaceSearch from '@/components/home/HeroPlaceSearch'
 
@@ -204,11 +203,6 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           {/* 본문 상단 플레이스 즉시 검색 위젯 */}
           <PlaceQuickSearchWidget />
 
-          {/* 상단 애드센스 슬롯 */}
-          <div className="my-8">
-            <GoogleAdSlot adFormat="horizontal" className="max-w-[728px] mx-auto" />
-          </div>
-
           {/* 마크다운 커스텀 컴포넌트 렌더링 영역 (제8조 조판 규칙 적용) */}
           <div className="blog-content">
             <ReactMarkdown
@@ -324,11 +318,6 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             </ReactMarkdown>
           </div>
 
-          {/* 하단 애드센스 슬롯 */}
-          <div className="my-10 pt-6 border-t border-slate-100">
-            <GoogleAdSlot adFormat="auto" className="mx-auto" />
-          </div>
-
           {/* 칼럼 하단 CTA 배너 */}
           <div className="mt-14 p-8 sm:p-10 rounded-3xl bg-slate-900 text-white shadow-xl border border-slate-800 space-y-4">
             <div className="flex items-center gap-2 text-xs font-bold text-emerald-400">
@@ -383,10 +372,6 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
               </div>
             </div>
 
-            {/* 사이드바 애드센스 슬롯 */}
-            <div className="bg-white p-3 rounded-2xl border border-slate-200/90 shadow-2xs flex items-center justify-center overflow-hidden">
-              <GoogleAdSlot adFormat="rectangle" />
-            </div>
           </div>
         </aside>
       </div>

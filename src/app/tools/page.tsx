@@ -1,36 +1,32 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import GoogleAdSlot from '@/components/monetization/GoogleAdSlot';
-import EbookPromoCard from '@/components/monetization/EbookPromoCard';
 import {
-  ShieldCheck,
-  Zap,
   Layers,
   ArrowRight,
   Scale,
-  Crop,
-  Calculator,
-  FileCode2,
   MapPin,
   QrCode,
   Sparkles,
   Lock,
-  ExternalLink,
   ChevronRight,
-  CheckCircle2
+  CheckCircle2,
+  Zap,
+  Scissors,
+  Binary,
+  FileText,
 } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: '무료 비즈니스 초소형 웹 유틸리티 허브 | PostSync Tools',
+  title: '스마트플레이스 & 마케팅 무료 초소형 웹 유틸리티 허브 | PostSync Tools',
   description:
-    '설치 없이 브라우저에서 1초 만에 업무를 해결하는 무료 초소형 웹툴 7종 모음. 네이버 플레이스 순위 조회기, 상세페이지 슬라이서, 전문직 광고 금칙어 스캐너, 자소서 바이트 계산기, HWPX 안심 뷰어, 캠페인 UTM & QR 빌더, 웹 포맷 변환기.',
+    '설치 없이 브라우저에서 1초 만에 업무를 해결하는 무료 초소형 웹툴 모음. 네이버 스마트플레이스 실시간 순위 조회기, 매장 영수증 리뷰·저장 QR 빌더, 플레이스 상세설명 및 광고법 금칙어 스캐너, 블로그 스마트에디터 서식 변환기.',
   alternates: {
     canonical: '/tools',
   },
   openGraph: {
-    title: 'PostSync 무료 비즈니스 초소형 웹 유틸리티 허브 (7대 웹툴)',
+    title: 'PostSync 스마트플레이스 & 로컬 마케팅 무료 웹 유틸리티 허브',
     description:
-      '설치 제로, 가입 제로, 서버 전송 제로. 브라우저에서 즉시 구동되는 100% 무료 비즈니스 웹 유틸리티 7종 모음입니다.',
+      '설치 제로, 가입 제로, 서버 전송 제로. 브라우저에서 즉시 구동되는 100% 무료 비즈니스 웹 유틸리티 모음입니다.',
     url: 'https://www.postsyncapp.com/tools',
     siteName: 'PostSync Tools',
     locale: 'ko_KR',
@@ -38,107 +34,91 @@ export const metadata: Metadata = {
   },
 };
 
-const TOOLS = [
+const CORE_TOOLS = [
   {
     id: 'place',
     title: '네이버 플레이스 실시간 순위 조회기',
-    badge: '1위~75위 실시간 분석 (LIVE)',
+    badge: '1위~20위 실시간 정밀 순위 (LIVE)',
     isLive: true,
     href: '/place',
     icon: MapPin,
     color: 'from-emerald-500 to-teal-600',
     borderGlow: 'border-2 border-emerald-600 shadow-md shadow-emerald-500/10 hover:shadow-xl',
-    target: '소상공인 · 병원 · 식당 · 전문직',
-    desc: '키워드와 상호명만 입력하면 네이버 스마트플레이스 1위부터 75위까지 내 매장의 실시간 노출 순위와 1페이지 진입률을 1초 만에 분석하고 진단 리포트를 제공합니다.',
-    features: ['1위~75위 실시간 순위 추적', '1페이지 진입률 진단', '네이버 예약 연동 여부 점검'],
+    target: '소상공인 · 병원 · 식당 · 학원 · 전문직',
+    desc: '키워드와 상호명만 입력하면 네이버 스마트플레이스 1위부터 20위까지 내 매장의 실시간 노출 순위, 공식 월간 검색량, 1위 경쟁점과의 4대 정량 격차를 1초 만에 실측합니다.',
+    features: ['1위~20위 실시간 순위 추적', '공식 월간 검색량 측정', '1위 매장 4대 정량 격차 진단'],
   },
   {
-    id: 'crop',
-    title: '이커머스 상세페이지 자동 분할 & 리사이징 스튜디오',
-    badge: '무손실 1초 분할 (LIVE)',
+    id: 'utm',
+    title: '매장 카운터 저장·영수증 리뷰 & 캠페인 고화질 QR 빌더',
+    badge: '인쇄용 PNG/SVG QR 즉시 생성 (LIVE)',
     isLive: true,
-    href: '/crop',
-    icon: Crop,
+    href: '/utm',
+    icon: QrCode,
     color: 'from-blue-600 to-indigo-600',
     borderGlow: 'border-2 border-blue-600 shadow-md shadow-blue-500/10 hover:shadow-xl',
-    target: '스마트스토어 · 쿠팡 셀러 & 디자이너',
-    desc: '20,000px 이상의 긴 상세페이지 이미지를 네이버(860px) 및 쿠팡(780px) 권장 너비로 자동 조절하고 3,000px 단위 무손실 슬라이싱 후 순서대로 ZIP 압축 다운로드합니다.',
-    features: ['HTML5 Canvas 무손실 연산', 'ZIP 번들 즉시 생성', '서버 업로드 $0 무제한'],
+    target: '오프라인 매장 사장님 · 로컬 마케터',
+    desc: '테이블이나 카운터에 비치하여 방문 고객이 스마트폰 카메라로 스캔 즉시 네이버 플레이스 저장하기·영수증 리뷰·네이버 예약으로 이동하게 만드는 고화질 QR과 추적 링크를 1초 만에 생성합니다.',
+    features: ['네이버 플레이스 저장/리뷰 프리셋', '인쇄용 고화질 SVG/PNG QR 생성', 'GA4 유입 추적 파라미터 내장'],
   },
   {
     id: 'adcheck',
-    title: '전문직 법정 광고 규정 & 금칙어 1초 스캐너',
+    title: '플레이스 상세설명 & 의료·전문직 광고법 금칙어 스캐너',
     badge: '2026 법정 규정 완벽 대조 (LIVE)',
     isLive: true,
     href: '/adcheck',
     icon: Scale,
     color: 'from-violet-600 to-purple-600',
     borderGlow: 'border-2 border-violet-600 shadow-md shadow-violet-500/10 hover:shadow-xl',
-    target: '변호사 · 의사 · 세무사 · 노무사 · 행정사',
-    desc: '변호사법 제23조, 의료법 제56조 등 2026 법정 광고 규정을 실시간 대조하여 과태료 및 자격정지 리스크를 1초 만에 스캔하고 안전한 법률 대체어로 일괄 변환합니다.',
-    features: ['100% 브라우저 메모리 연산', '준수도 100점 만점 산출', '원클릭 법률 안전 대체어 치환'],
+    target: '병의원 · 전문직 · 로컬 매장 · 체험단 운영자',
+    desc: '플레이스 상세설명이나 블로그 홍보 원고 등록 전, 검색 누락(저품질) 및 과태료를 유발하는 과장·보장성 금칙어를 1초 만에 검출하고 안전한 합법 대체 문구로 원클릭 치환합니다.',
+    features: ['100% 브라우저 메모리 로컬 연산', '2026 의료법·변호사법 규정 완벽 대조', '원클릭 안전 대체어 치환'],
+  },
+];
+
+const UTILITY_TOOLS = [
+  {
+    id: 'convert',
+    title: '블로그 스마트에디터 서식 변환기',
+    badge: 'ONE 서식 호환',
+    href: '/convert',
+    icon: Layers,
+    desc: 'ChatGPT·노션 마크다운을 네이버 블로그 스마트에디터 ONE 서식으로 원클릭 변환 및 복사합니다.',
+  },
+  {
+    id: 'crop',
+    title: '상세페이지 분할 & 크롭 스튜디오',
+    badge: '무손실 이미지 슬라이서',
+    href: '/crop',
+    icon: Scissors,
+    desc: '스마트스토어·상세페이지 규격에 맞게 이미지를 고화질로 자동 분할 및 리사이징합니다.',
   },
   {
     id: 'byte',
-    title: '취업 포털별 자소서 글자수 & 바이트 정밀 계산기',
-    badge: '사람인·잡코리아 3사 공식 로직 (LIVE)',
-    isLive: true,
+    title: '포털별 글자수 & 바이트 계산기',
+    badge: '네이버 공식 기준',
     href: '/byte',
-    icon: Calculator,
-    color: 'from-amber-500 to-orange-600',
-    borderGlow: 'border-2 border-amber-600 shadow-md shadow-amber-500/10 hover:shadow-xl',
-    target: '취업 준비생 · 이직자 · 공시생',
-    desc: '사람인, 잡코리아, 인크루트의 상이한 바이트 계산 로직(EUC-KR 2바이트, UTF-8 3바이트, 엔터키 1/2바이트)을 탭별로 동시 비교 분석하고 키워드 밀도를 시각화합니다.',
-    features: ['3대 채용 사이트 바이트 공식 지원', '키워드 반복 밀도 시각화', 'LocalStorage 실시간 자동 저장'],
+    icon: Binary,
+    desc: '네이버 블로그 및 주요 포털 기준 공백 포함/제외 글자수와 바이트 수를 실시간 계산합니다.',
   },
   {
     id: 'hwpx',
-    title: '공공기관 HWPX 무설치 안심 뷰어 & 텍스트 변환기',
-    badge: '100% 무설치 안심 열람 (LIVE)',
-    isLive: true,
+    title: '공공기관 HWPX 무설치 뷰어',
+    badge: '로컬 메모리 추출',
     href: '/hwpx',
-    icon: FileCode2,
-    color: 'from-pink-500 to-rose-600',
-    borderGlow: 'border-2 border-pink-600 shadow-md shadow-pink-500/10 hover:shadow-xl',
-    target: '공무원 · 연구원 · 수험생 · 기획자',
-    desc: '한컴오피스 뷰어 설치 없이 공공기관 HWPX 문서를 브라우저 메모리에서 안전하게 압축 해제하여 표(Table)와 서식을 보존하며 마크다운 및 텍스트로 즉시 변환합니다.',
-    features: ['서버 전송 $0 100% 로컬 보안', '표(Table) 마크다운 자동 변환', '이미지 및 텍스트 원클릭 복사'],
-  },
-  {
-    id: 'utm',
-    title: '한국형 마케팅 캠페인 UTM & 고화질 QR코드 빌더',
-    badge: '원클릭 단축 & QR 생성 (LIVE)',
-    isLive: true,
-    href: '/utm',
-    icon: QrCode,
-    color: 'from-cyan-500 to-blue-600',
-    borderGlow: 'border-2 border-cyan-600 shadow-md shadow-cyan-500/10 hover:shadow-xl',
-    target: '퍼포먼스 마케터 · 인플루언서 · 오프라인 매장',
-    desc: '네이버 블로그, 인스타그램, 당근마켓, 카카오톡 등 한국형 매체별 맞춤 파라미터 프리셋을 지원하며 인쇄용 고해상도 QR코드를 1초 만에 즉시 제작합니다.',
-    features: ['한국형 주요 매체 프리셋 내장', '인쇄용 고화질 SVG/PNG QR 생성', '파라미터 즉시 복사 및 검증'],
-  },
-  {
-    id: 'convert',
-    title: 'ChatGPT·노션 ➔ 네이버 블로그 서식 1초 변환기',
-    badge: '스마트에디터 ONE 서식 완벽 호환 (LIVE)',
-    isLive: true,
-    href: '/convert',
-    icon: Layers,
-    color: 'from-emerald-600 to-green-600',
-    borderGlow: 'border-2 border-emerald-600 shadow-md shadow-emerald-500/10 hover:shadow-xl',
-    target: '블로거 · 마케터 · 노션/ChatGPT 사용자',
-    desc: 'ChatGPT, Claude, Notion에서 작성한 마크다운 및 표(Table)를 네이버 블로그 스마트에디터 ONE에 서식 깨짐 없이 원클릭 복사·붙여넣기할 수 있는 전용 클립보드 변환기입니다.',
-    features: ['표(Table) & 소제목 서식 100% 보존', '1초 원클릭 HTML 클립보드 복사', '100% 브라우저 로컬 안전 연산'],
+    icon: FileText,
+    desc: '소상공인 지원사업 등 공공기관 한글(HWPX) 문서를 별도 설치 없이 브라우저에서 즉시 열람합니다.',
   },
 ];
 
 export default function ToolsHubPage() {
+  const allTools = [...CORE_TOOLS, ...UTILITY_TOOLS];
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
-    name: 'PostSync 무료 비즈니스 초소형 웹 유틸리티 7선',
-    description: '설치 없이 브라우저에서 1초 만에 구동되는 100% 무료 비즈니스 웹 유틸리티 7종 모음',
-    itemListElement: TOOLS.map((t, idx) => ({
+    name: 'PostSync 스마트플레이스 & 로컬 마케팅 무료 웹 유틸리티',
+    description: '설치 없이 브라우저에서 1초 만에 구동되는 100% 무료 비즈니스 웹 유틸리티 모음',
+    itemListElement: allTools.map((t, idx) => ({
       '@type': 'ListItem',
       position: idx + 1,
       item: {
@@ -158,7 +138,7 @@ export default function ToolsHubPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 selection:bg-blue-600 selection:text-white">
+    <div className="min-h-screen bg-slate-50 text-slate-900 selection:bg-blue-600 selection:text-white break-keep break-words">
       {/* Search Engine Structured Data: ItemList Schema */}
       <script
         type="application/ld+json"
@@ -179,16 +159,16 @@ export default function ToolsHubPage() {
           <span className="text-blue-600 font-semibold">Tools Hub</span>
         </nav>
 
-        {/* 히어로 영역 (토스 스타일 클린 헤드라인) */}
+        {/* 히어로 영역 */}
         <div className="text-center space-y-4 mb-14 md:mb-16">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-xs font-bold shadow-xs">
             <Sparkles className="w-4 h-4 text-blue-600" />
-            <span>PostSync 초소형 유틸리티 웹 소프트웨어 허브</span>
+            <span>PostSync 스마트플레이스 &amp; 로컬 마케팅 웹 유틸리티 허브</span>
           </div>
 
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 tracking-tight leading-tight">
-            업무 생산성을 10배 높이는 <br className="hidden sm:inline" />
-            <span className="text-blue-600">무료 초소형 웹 유틸리티</span>
+            스마트플레이스 상위노출과 매장 관리를 위한 <br className="hidden sm:inline" />
+            <span className="text-blue-600">3대 무료 핵심 웹 유틸리티</span>
           </h1>
 
           <p className="text-sm sm:text-base text-slate-600 max-w-2xl mx-auto leading-relaxed">
@@ -209,12 +189,9 @@ export default function ToolsHubPage() {
           </div>
         </div>
 
-        {/* 상단 반응형 애드센스 슬롯 */}
-        <GoogleAdSlot adFormat="horizontal" className="mb-12 max-w-[728px] mx-auto" />
-
-        {/* 5대 유틸리티 툴 카드 그리드 (토스 스타일 카드) */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16">
-          {TOOLS.map((tool) => {
+        {/* 3대 플레이스 핵심 툴 카드 그리드 */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+          {CORE_TOOLS.map((tool) => {
             const Icon = tool.icon;
             return (
               <div
@@ -266,26 +243,63 @@ export default function ToolsHubPage() {
 
                 {/* 링크 액션 */}
                 <div>
-                  {tool.isLive ? (
-                    <Link
-                      href={tool.href}
-                      className="w-full py-3.5 px-4 rounded-xl font-bold text-sm bg-blue-600 hover:bg-blue-700 text-white shadow-md shadow-blue-500/20 transition flex items-center justify-center gap-2 group-hover:scale-[1.01]"
-                    >
-                      <span>지금 바로 무료 진단하기</span>
-                      <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition" />
-                    </Link>
-                  ) : (
-                    <div className="w-full py-3 px-4 rounded-xl font-medium text-xs bg-slate-100 text-slate-400 text-center border border-slate-200">
-                      정식 런칭 준비 중입니다 (Coming Soon)
-                    </div>
-                  )}
+                  <Link
+                    href={tool.href}
+                    className="w-full py-3.5 px-4 rounded-xl font-bold text-sm bg-blue-600 hover:bg-blue-700 text-white shadow-md shadow-blue-500/20 transition flex items-center justify-center gap-2 group-hover:scale-[1.01]"
+                  >
+                    <span>지금 바로 무료 사용하기</span>
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition" />
+                  </Link>
                 </div>
               </div>
             );
           })}
         </div>
 
-        {/* 📚 2026 비즈니스 & 플레이스 상위노출 실전 가이드 (인터널 링크 그물망) */}
+        {/* 🛠️ 소상공인 실무 보조 유틸리티 섹션 */}
+        <div className="mb-16">
+          <div className="mb-6">
+            <span className="text-xs font-bold text-slate-400 font-mono tracking-wider uppercase">SUB UTILITIES</span>
+            <h2 className="text-lg sm:text-xl font-extrabold text-slate-900 mt-0.5">
+              소상공인 &amp; 마케터 실무 보조 유틸리티
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-500 mt-1">
+              매장 운영과 콘텐츠 발행에 필요한 초경량 웹툴 모음입니다.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {UTILITY_TOOLS.map((u) => {
+              const Icon = u.icon;
+              return (
+                <Link
+                  key={u.id}
+                  href={u.href}
+                  className="p-5 rounded-2xl bg-white border border-slate-200 hover:border-blue-400 hover:shadow-sm transition-all group flex flex-col justify-between"
+                >
+                  <div>
+                    <div className="w-9 h-9 rounded-xl bg-slate-100 group-hover:bg-blue-50 group-hover:text-blue-600 text-slate-600 flex items-center justify-center mb-3 transition">
+                      <Icon className="w-4 h-4" />
+                    </div>
+                    <span className="text-[10px] font-bold text-slate-400 font-mono">{u.badge}</span>
+                    <h3 className="text-sm font-bold text-slate-900 group-hover:text-blue-600 transition mt-0.5 mb-1.5">
+                      {u.title}
+                    </h3>
+                    <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed">
+                      {u.desc}
+                    </p>
+                  </div>
+                  <div className="pt-3 mt-3 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-slate-600 group-hover:text-blue-600">
+                    <span>도구 열기</span>
+                    <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition" />
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* 📚 2026 비즈니스 & 플레이스 상위노출 실전 가이드 */}
         <div className="mb-14 p-6 sm:p-8 rounded-3xl bg-white border border-slate-200 shadow-xs">
           <div className="flex items-center justify-between flex-wrap gap-4 mb-6">
             <div>
@@ -299,11 +313,11 @@ export default function ToolsHubPage() {
               className="text-xs sm:text-sm font-bold text-blue-600 hover:text-blue-700 transition flex items-center gap-1.5"
             >
               <span>전체 칼럼 보기</span>
-              <ArrowRight className="w-3.5 h-3.5" />
+              <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
             <Link
               href="/blog/naver-place-rank-checker-free"
               className="p-4 rounded-2xl bg-slate-50 hover:bg-blue-50/50 border border-slate-200 hover:border-blue-300 transition group block"
@@ -358,14 +372,6 @@ export default function ToolsHubPage() {
           </div>
         </div>
 
-        {/* 2026 전문직 마케팅 PDF 전자책 프로모션 카드 (초기 트래픽 안착 시까지 임시 비활성화) */}
-        {/* <div className="mb-12">
-          <EbookPromoCard toolSource="tools_hub" />
-        </div> */}
-
-        {/* 하단 반응형 멀티플렉스 애드센스 슬롯 */}
-        <GoogleAdSlot adFormat="auto" className="mt-12" />
-
         {/* 푸터 */}
         <div className="mt-16 pt-8 border-t border-slate-200 text-center text-xs text-slate-500 space-y-2.5">
           <p className="font-bold text-slate-700">© 2026 PostSync (와이엠랩스 · YM Labs). All rights reserved.</p>
@@ -374,6 +380,12 @@ export default function ToolsHubPage() {
           </p>
           <div className="flex flex-wrap items-center justify-center gap-4 text-[11px] text-slate-500 font-mono pt-1">
             <Link href="/" className="hover:text-slate-900 transition">홈</Link>
+            <span>•</span>
+            <Link href="/place" className="hover:text-slate-900 transition">플레이스 순위</Link>
+            <span>•</span>
+            <Link href="/utm" className="hover:text-slate-900 transition">매장 QR</Link>
+            <span>•</span>
+            <Link href="/adcheck" className="hover:text-slate-900 transition">금칙어 검사</Link>
             <span>•</span>
             <Link href="/blog" className="hover:text-slate-900 transition">인사이트 칼럼</Link>
             <span>•</span>

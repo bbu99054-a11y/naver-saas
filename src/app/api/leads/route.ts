@@ -1,27 +1,25 @@
 import { NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
-import { triageConsultLead, LeadTriageResult } from '@/lib/ai/jevClient'
-import { generatePlaceReportEmailHtml, PlaceReportSnapshot, calculatePlaceAuditScore, buildDeepAuditBundle, formatReportDate } from '@/lib/email/placeReportTemplate'
-import { getClientIp, checkIpRateLimit, checkEmailCoolDown, escapeHtml } from '@/lib/rateLimit'
+import { getClientIp, checkIpRateLimit, escapeHtml } from '@/lib/rateLimit'
 import { safeEncrypt } from '@/lib/crypto'
-import crypto from 'crypto'
 
 export async function POST(req: Request) {
   try {
-    // 🛡️ IP 기반 Rate Limiting (1분당 최대 4회 신청 제한 - 매크로 및 서버 자원 남용 방어)
+    // 🛡️ IP 기반 Rate Limiting (1분당 최대 5회 신청 제한 - 매크로 및 서버 자원 남용 방어)
     const clientIp = getClientIp(req)
-    const ipCheck = checkIpRateLimit(clientIp, 4, 60000)
+    const ipCheck = checkIpRateLimit(clientIp, 5, 60000)
     if (!ipCheck.allowed) {
       return NextResponse.json(
         { error: `신청 요청이 너무 빈번합니다. ${ipCheck.remainingSec}초 후 다시 시도해 주세요.` },
         { status: 429 }
       )
     }
+
     const body = await req.json()
     const {
       toolSource: rawToolSource,
       sourceTool: rawSourceTool,
-      leadType = 'lead_magnet', // 'lead_magnet' | 'ebook_order' | 'consulting'
+      leadType = 'inquiry',
       email,
       phone = '',
       name = '',
@@ -32,86 +30,23 @@ export async function POST(req: Request) {
       ref = null,
     } = body
 
-    const toolSource = String(rawToolSource || rawSourceTool || (body.details?.store_name || String(body.rewardName || '').includes('플레이스') ? 'place' : 'unknown')).trim()
+    const toolSource = String(rawToolSource || rawSourceTool || 'contact').trim().slice(0, 50)
     const resolvedTargetUserId = targetUserId || metadata.targetUserId || ref || null
 
-    let validEmail = email
-    if (!validEmail || !String(validEmail).includes('@')) {
-      if (leadType === 'consulting' && phone) {
-        validEmail = `${String(phone).replace(/[^0-9]/g, '') || 'client'}@postsync.consult`
-      } else {
-        return NextResponse.json(
-          { error: '올바른 이메일 주소를 입력해 주세요.' },
-          { status: 400 }
-        )
-      }
+    if (!email || !String(email).includes('@')) {
+      return NextResponse.json(
+        { error: '올바른 이메일 주소를 입력해 주세요.' },
+        { status: 400 }
+      )
     }
 
-    const cleanEmail = String(validEmail).trim().toLowerCase()
-    const cleanPhone = String(phone).trim()
-    const resolvedStoreName = String(body.details?.store_name || body.storeName || businessName || name || '').trim()
-    const cleanBusinessName = resolvedStoreName || String(businessName).trim() || String(name).trim() || null
-    const cleanName = String(name).trim() || resolvedStoreName || String(businessName).trim() || '고객'
+    const cleanEmail = String(email).trim().toLowerCase().slice(0, 100)
+    const cleanPhone = String(phone).trim().slice(0, 30)
+    const cleanName = String(name).trim().slice(0, 50) || '고객'
+    const cleanBusinessName = String(businessName || name).trim().slice(0, 100) || null
     const nowTime = new Date().toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' })
 
-    // 계산서 / 현금영수증 요청 정보
-    const taxType = metadata.taxDeductionType || body.taxDeductionType || 'NONE'
-    const taxNum = String(metadata.taxDeductionNum || body.taxDeductionNum || '').trim()
-    let taxDeductionText = '미발행'
-    if (taxType === 'PERSONAL') {
-      taxDeductionText = `개인 소득공제용 현금영수증 (${taxNum || cleanPhone || '번호 미기재'})`
-    } else if (taxType === 'BUSINESS') {
-      taxDeductionText = `사업자 지출증빙용 세금계산서 (${taxNum || '사업자번호 미기재'})`
-    }
-
-    // 🧠 Jev (TypeSafe AI System One) 초고속 실시간 긴급도/수임가치 판별 (0.05초)
-    let jevTriage: LeadTriageResult | null = null
-    if (leadType === 'consulting') {
-      jevTriage = await triageConsultLead({
-        specialty: metadata.specialty || industry,
-        stage: metadata.stage,
-        summary: metadata.summary,
-        name: cleanName,
-        phone: cleanPhone,
-      })
-    }
-
-    // 📍 플레이스 실측 리포트 및 가이드북 신청 분기 정밀화
-    const details = body.details || {}
-    const isPlaceAuditLead = (toolSource === 'place' || String(body.rewardName || '').includes('플레이스')) &&
-      (Boolean(details.top1Name) || Boolean(details.target_keyword) || details.myRank !== undefined)
-    const isPlaceGuideLead = (toolSource === 'place' || String(body.rewardName || '').includes('플레이스') || String(body.rewardName || '').includes('세팅법')) && !isPlaceAuditLead
-    const isPlaceLead = isPlaceAuditLead || isPlaceGuideLead || !!details.store_name
-
-    const reportSlug = 'ps' + crypto.randomBytes(4).toString('hex')
-    const reportUrl = `https://postsyncapp.com/report/place-audit.html?id=${reportSlug}`
-
-    let placeSnapshot: PlaceReportSnapshot | null = null
-    if (isPlaceAuditLead) {
-      placeSnapshot = {
-        storeName: details.store_name || body.storeName || cleanName,
-        targetKeyword: details.target_keyword || body.keyword || metadata.target_keyword || '플레이스',
-        myRank: (details.myRank !== undefined && details.myRank !== null) ? details.myRank : (body.myRank ?? null),
-        top1Name: details.top1Name || body.top1Name || '1위 매장',
-        myReviews: details.myReviews || body.myReviews || 0,
-        top1Reviews: details.top1Reviews || body.top1Reviews || 0,
-        myBlogReviews: details.myBlogReviews || body.myBlogReviews || 0,
-        top1BlogReviews: details.top1BlogReviews || body.top1BlogReviews || 0,
-        myBooking: details.myBooking ?? body.myBooking ?? false,
-        top1Booking: details.top1Booking ?? body.top1Booking ?? false,
-        myCoupon: details.myCoupon ?? body.myCoupon ?? false,
-        top1Coupon: details.top1Coupon ?? body.top1Coupon ?? false,
-        mySaves: details.mySaves || body.mySaves || '미집계',
-        top1Saves: details.top1Saves || body.top1Saves || '미집계',
-        reportId: reportSlug,
-        reportDate: formatReportDate(new Date()),
-        top3Places: Array.isArray(details.top3Places) ? details.top3Places.slice(0, 3) : []
-      }
-      placeSnapshot.totalScore = placeSnapshot.totalScore || calculatePlaceAuditScore(placeSnapshot)
-      placeSnapshot.deepAudit = buildDeepAuditBundle(placeSnapshot)
-    }
-
-    // 1. PostgreSQL leads 테이블에 암호화 보존 (DB 저장 최우선 실행 - 데이터 유실 및 404 링크 발송 방어)
+    // 1. PostgreSQL leads 테이블에 암호화 보존
     let savedLeadId: string | null = null
     try {
       const encryptedEmail = safeEncrypt(cleanEmail) || cleanEmail
@@ -119,11 +54,11 @@ export async function POST(req: Request) {
 
       const createdLead = await prisma.lead.create({
         data: {
-          toolSource: String(toolSource).slice(0, 50),
+          toolSource,
           leadType: String(leadType).slice(0, 50),
           email: encryptedEmail,
           phone: encryptedPhone,
-          businessName: cleanBusinessName ? cleanBusinessName.slice(0, 100) : null,
+          businessName: cleanBusinessName,
           industry: (metadata.specialty || industry || null)?.slice(0, 100) || null,
           location: metadata.location ? String(metadata.location).slice(0, 100) : null,
           status: 'NEW',
@@ -134,108 +69,32 @@ export async function POST(req: Request) {
             clientBusinessName: cleanBusinessName,
             clientPhone: encryptedPhone,
             cleanEmail: encryptedEmail,
-            earlyBirdKakaoAlert: Boolean(body.details?.kakao_alert_opt_in || metadata?.kakao_alert_opt_in),
-            taxDeductionText,
-            reportId: isPlaceAuditLead ? reportSlug : undefined,
-            reportSnapshot: placeSnapshot || undefined,
-            webReportUrl: isPlaceAuditLead ? reportUrl : undefined,
-            jevTriage: jevTriage ? {
-              isUrgent: jevTriage.isUrgent,
-              urgencyScore: jevTriage.urgencyScore,
-              retainerTier: jevTriage.retainerTier,
-              retainerAmountLabel: jevTriage.retainerAmountLabel,
-              recommendedAction: jevTriage.recommendedAction,
-              actionText: jevTriage.actionText,
-              confidence: jevTriage.confidence,
-              model: jevTriage.model
-            } : null,
-          }
-        }
+          },
+        },
       })
       savedLeadId = createdLead.id
-      console.log(`[Leads API] Lead successfully saved to DB: ${savedLeadId}`)
     } catch (dbErr) {
       console.error('[Leads API] DB save error (continuing response):', dbErr)
     }
 
-    // 2. 외부 알림 엔진 병렬 발송 (Telegram + Resend, Promise.allSettled)
+    // 2. 외부 알림 엔진 병렬 발송 (Telegram + Resend)
     const tgToken = process.env.TELEGRAM_BOT_TOKEN
     const tgChatId = process.env.TELEGRAM_CHAT_ID
     const resendKey = process.env.RESEND_API_KEY
     const adminEmail = process.env.ADMIN_EMAIL || 'contact@postsyncapp.com'
-    const emailCoolDown = checkEmailCoolDown(cleanEmail, 180000)
-    let emailDispatched = false
 
     const notificationTasks: Promise<any>[] = []
 
-    // 2-1. Telegram 실시간 관리자 알림
+    // 2-1. Telegram 관리자 실시간 알림
     if (tgToken && tgChatId) {
-      let msg = ''
-      if (leadType === 'consulting') {
-        const urgentBadge = jevTriage?.isUrgent ? '🚨 [골든타임 긴급]' : '⚖️ [일반 상담]'
-        msg = `${urgentBadge} 사건 1분 안심 진단 접수 - ${toolSource.toUpperCase()}\n\n` +
-          `🧠 [Jev AI 실시간 긴급도 판별 결과]\n` +
-          `• 긴급도 지수: ${jevTriage ? jevTriage.urgencyScore : 85}% (${jevTriage?.isUrgent ? '골든타임 대응 요망' : '일반 대응'})\n` +
-          `• 추정 수임 가치: ${jevTriage ? jevTriage.retainerAmountLabel : '상담 후 산정'}\n` +
-          `• 권장 액션: ${jevTriage ? jevTriage.actionText : '10분 내 유선 연결 권장'}\n\n` +
-          `⚖️ 상담 분야: ${metadata.specialty || industry || '미선택'}\n` +
-          `📍 진행 단계: ${metadata.stage || '미선택'}\n` +
-          `👤 의뢰인: ${cleanName}\n` +
-          `📱 연락처: ${cleanPhone || '미기재'}\n` +
-          `📧 이메일: ${cleanEmail}\n` +
-          `📝 사건 요약: ${metadata.summary || '상세 사연 미기재'}\n` +
-          `⏱ 신청일시: ${nowTime}\n\n` +
-          `🔥 [수임 골든타임 10분] 지금 바로 의뢰인에게 유선 전화를 연결하여 방문 상담을 확정하세요!`
-      } else if (leadType === 'ebook_order') {
-        const bankName = process.env.NEXT_PUBLIC_BANK_NAME || '국민은행'
-        const bankAccount = process.env.NEXT_PUBLIC_BANK_ACCOUNT || ''
-        const bankHolder = process.env.NEXT_PUBLIC_BANK_HOLDER || ''
-        const bankInfoStr = bankAccount ? `[${bankName} ${bankAccount} ${bankHolder}]` : '[등록 계좌 정보]'
-
-        msg = `💰 [전자책 계좌이체 주문 접수 - ${toolSource.toUpperCase()}]\n\n` +
-          `📚 상품명: ${metadata.bookTitle || '2026 변호사·세무사 네이버 상위 1% 인바운드 마케팅 실전 지침서 (PDF)'}\n` +
-          `💵 결제금액: ${metadata.amount ? Number(metadata.amount).toLocaleString() + '원' : '39,000원'}\n` +
-          `👤 입금자명: ${cleanName}\n` +
-          `📧 수신 이메일: ${cleanEmail}\n` +
-          `📱 연락처: ${cleanPhone || '미기재'}\n` +
-          `🧾 증빙요청: ${taxDeductionText}\n` +
-          `⏱ 신청일시: ${nowTime}\n\n` +
-          `👉 ${bankInfoStr} 입금 확인 후 PDF 발송 및 홈택스 영수증/계산서를 발행하세요.`
-      } else if (isPlaceAuditLead) {
-        msg = `📍 [플레이스 1위 격차 심층 리포트 신청 - ${toolSource.toUpperCase()}]\n\n` +
-          `🏢 상호명: ${placeSnapshot?.storeName || cleanName}\n` +
-          `🎯 타깃 키워드: ${placeSnapshot?.targetKeyword || '미기재'}\n` +
-          `📧 수신 이메일: ${cleanEmail}\n` +
-          `📱 연락처: ${cleanPhone || '미기재'}\n` +
-          `📊 산출 종합점수: ${placeSnapshot?.totalScore || 70}점\n` +
-          `⏱ 신청일시: ${nowTime}\n\n` +
-          `🔗 고객 발급 진단서: ${reportUrl}\n` +
-          `👉 고객 이메일로 1:1 맞춤형 정량 실측 진단서가 자동 발송되었습니다.`
-      } else if (isPlaceGuideLead) {
-        msg = `📘 [플레이스 1위 세팅 가이드 신청 - ${toolSource.toUpperCase()}]\n\n` +
-          `🏢 상호명: ${cleanName}\n` +
-          `📧 수신 이메일: ${cleanEmail}\n` +
-          `📱 연락처: ${cleanPhone || '미기재'}\n` +
-          `⏱ 신청일시: ${nowTime}\n\n` +
-          `👉 고객에게 2026 플레이스 1위 세팅 가이드북 링크가 자동 발송되었습니다.`
-      } else if (leadType === 'inquiry') {
-        msg = `📩 [고객센터 1:1 온라인 문의 접수 - ${toolSource.toUpperCase()}]\n\n` +
-          `👤 성함/로펌: ${cleanName}\n` +
-          `📱 연락처: ${cleanPhone || '미기재'}\n` +
-          `📧 수신 이메일: ${cleanEmail}\n` +
-          `📌 문의 유형: ${metadata.inquiryType || '일반 문의'}\n` +
-          `📝 문의 내용:\n${metadata.message || '상세 내용 없음'}\n\n` +
-          `⏱ 접수일시: ${nowTime}\n` +
-          `👉 신속하게 확인 후 유선 연락 또는 이메일 회신을 진행하세요.`
-      } else {
-        msg = `🎁 [무료 리드 마그넷 신청 접수 - ${toolSource.toUpperCase()}]\n\n` +
-          `📄 신청자료: ${metadata.docTitle || '[무료 퀵가이드] 네이버 플레이스 1위 세팅법 & 변호사·세무사 합법 수임 칼럼 템플릿 (PDF)'}\n` +
-          `📧 수신 이메일: ${cleanEmail}\n` +
-          `📱 연락처: ${cleanPhone || '미기재'}\n` +
-          `⚖️ 업종/상호: ${industry || businessName || '일반'}\n` +
-          `⏱ 신청일시: ${nowTime}\n\n` +
-          `👉 신청 고객에게 맞춤 가이드북 PDF를 발송하세요.`
-      }
+      const msg = `📩 [온라인 문의/리드 접수 - ${toolSource.toUpperCase()}]\n\n` +
+        `👤 성함/상호: ${cleanName}\n` +
+        `📱 연락처: ${cleanPhone || '미기재'}\n` +
+        `📧 이메일: ${cleanEmail}\n` +
+        `📌 문의 유형: ${metadata.inquiryType || leadType || '일반 문의'}\n` +
+        `📝 문의 내용:\n${metadata.message || '상세 내용 없음'}\n\n` +
+        `⏱ 접수일시: ${nowTime}\n` +
+        `👉 확인 후 신속하게 유선 연락 또는 이메일 회신을 진행하세요.`
 
       notificationTasks.push(
         fetch(`https://api.telegram.org/bot${tgToken.trim()}/sendMessage`, {
@@ -251,111 +110,8 @@ export async function POST(req: Request) {
       )
     }
 
-    // 2-2. 고객 이메일 발송 (동일 이메일 3분 쿨다운 적용)
-    if (resendKey && emailCoolDown.allowed) {
-      if (isPlaceAuditLead && placeSnapshot) {
-        const emailReport = generatePlaceReportEmailHtml(placeSnapshot, reportUrl)
-        notificationTasks.push(
-          fetch('https://api.resend.com/emails', {
-            method: 'POST',
-            headers: {
-              Authorization: `Bearer ${resendKey.trim()}`,
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              from: 'PostSync AI 진단센터 <contact@postsyncapp.com>',
-              to: [cleanEmail],
-              subject: emailReport.subject,
-              html: emailReport.html,
-            }),
-          }).then(res => {
-            if (res.ok) {
-              emailDispatched = true
-              console.log(`[Leads API] Place Report Email successfully dispatched to: ${cleanEmail}`)
-            } else {
-              res.text().then(errBody => console.warn(`[Leads API] Resend email dispatch failed (${res.status}):`, errBody))
-            }
-          }).catch(err => {
-            console.error('[Leads API Customer Email Exception]:', err)
-          })
-        )
-      } else if (isPlaceGuideLead || String(body.rewardName || '').includes('세팅법') || String(body.rewardName || '').includes('가이드')) {
-        const guideUrl = 'https://postsyncapp.com/ebook/quickguide-2026.html'
-        notificationTasks.push(
-          fetch('https://api.resend.com/emails', {
-            method: 'POST',
-            headers: {
-              Authorization: `Bearer ${resendKey.trim()}`,
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              from: 'PostSync AI 전략연구소 <contact@postsyncapp.com>',
-              to: [cleanEmail],
-              subject: `[전략 가이드북] 2026 네이버 스마트플레이스 1위 세팅 실전 시크릿 (${cleanName} 사장님 귀하)`,
-              html: `
-                <div style="font-family: -apple-system, BlinkMacSystemFont, 'Pretendard', sans-serif; max-width: 600px; margin: 0 auto; padding: 24px 20px; background: #ffffff; color: #1e293b; line-height: 1.7;">
-                  <div style="text-align: center; margin-bottom: 24px; padding-bottom: 20px; border-bottom: 2px solid #f1f5f9;">
-                    <span style="display: inline-block; background: #eff6ff; color: #1d4ed8; font-weight: 800; font-size: 12px; padding: 4px 12px; border-radius: 9999px; border: 1px solid #bfdbfe; margin-bottom: 8px;">2026 최신 개정판 배포</span>
-                    <h1 style="font-size: 20px; font-weight: 900; color: #0f172a; margin: 8px 0 4px;">네이버 스마트플레이스 1위 세팅 실전 가이드북</h1>
-                    <p style="font-size: 13px; color: #64748b; margin: 0;">신청하신 ${escapeHtml(cleanName)} 사장님께 가이드북 열람 링크를 전달드립니다.</p>
-                  </div>
-                  <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; margin-bottom: 24px;">
-                    <p style="margin: 0 0 10px; font-size: 14px; font-weight: 700; color: #0f172a;">📘 이번 가이드북 핵심 체크리스트:</p>
-                    <ul style="margin: 0; padding-left: 18px; font-size: 13.5px; color: #475569;">
-                      <li style="margin-bottom: 6px;">플레이스 소개글 첫 25자 내 메인 키워드 최적 배치 공식</li>
-                      <li style="margin-bottom: 6px;">네이버 예약/쿠폰 연동으로 체류시간 2.4배 늘리는 법</li>
-                      <li style="margin-bottom: 6px;">방문자 영수증 리뷰 작성률을 3배 높이는 사장님 실전 응대법</li>
-                      <li>경쟁사 상위노출 방어 및 어뷰징 패널티 원천 차단 체크리스트</li>
-                    </ul>
-                  </div>
-                  <div style="text-align: center; margin: 28px 0;">
-                    <a href="${guideUrl}" target="_blank" rel="noopener noreferrer" style="display: inline-block; background: #1d4ed8; color: #ffffff; text-decoration: none; font-size: 15px; font-weight: 800; padding: 14px 28px; border-radius: 10px; box-shadow: 0 4px 12px rgba(29, 78, 216, 0.3);">
-                      📖 [무료 열람] 2026 플레이스 1위 세팅 가이드북 열기 &rarr;
-                    </a>
-                  </div>
-                  <p style="font-size: 12px; color: #94a3b8; text-align: center; margin-top: 24px; border-top: 1px solid #f1f5f9; padding-top: 16px;">
-                    본 메일은 PostSync 플레이스 도구에서 가이드북을 요청하신 분께 자동 발송되었습니다.<br>
-                    문의: <a href="mailto:contact@postsyncapp.com" style="color: #64748b;">contact@postsyncapp.com</a>
-                  </p>
-                </div>
-              `,
-            }),
-          }).then(res => {
-            if (res.ok) {
-              emailDispatched = true
-              console.log(`[Leads API] Place Guide Email successfully dispatched to: ${cleanEmail}`)
-            }
-          }).catch(err => {
-            console.error('[Leads API Guide Email Exception]:', err)
-          })
-        )
-      }
-    } else if (!emailCoolDown.allowed) {
-      console.log(`[Leads API] 쿨다운 제한으로 중복 이메일 발송 건너뜀: ${cleanEmail} (남은 시간: ${emailCoolDown.remainingSec}초)`)
-    }
-
-    // 2-3. 관리자 알림 이메일 발송 (고객 쿨다운과 무관하게 관리자는 100% 실시간 수신)
+    // 2-2. 관리자 이메일 알림
     if (resendKey) {
-      let subject = `[신규 리드] ${cleanEmail} - ${toolSource} 가이드북 신청`
-      let titleText = '신규 리드 마그넷 신청'
-
-      if (leadType === 'consulting') {
-        subject = `🚨 [사건 진단 접수] ${cleanName}님 (${cleanPhone}) - ${metadata.specialty || '법률 상담'}`
-        titleText = '사건 1분 안심 진단 접수 (골든타임)'
-      } else if (leadType === 'ebook_order') {
-        subject = `[전자책 주문] ${cleanName}님 39,000원 계좌이체 신청 (${cleanEmail})`
-        titleText = '전자책 무통장 입금 신청'
-      } else if (leadType === 'inquiry') {
-        subject = `📩 [고객 문의] ${cleanName}님 - ${metadata.inquiryType || '온라인 문의 접수'}`
-        titleText = '고객센터 1:1 온라인 문의 접수'
-      } else if (isPlaceAuditLead) {
-        subject = `📍 [플레이스 진단] ${placeSnapshot?.storeName || cleanName} (${placeSnapshot?.targetKeyword || ''}) 리포트 발급`
-        titleText = '플레이스 1위 격차 진단서 자동 발급'
-      } else if (isPlaceGuideLead) {
-        subject = `📘 [플레이스 가이드] ${cleanName}님 - 1위 세팅법 신청`
-        titleText = '플레이스 1위 세팅법 가이드북 신청'
-      }
-
       notificationTasks.push(
         fetch('https://api.resend.com/emails', {
           method: 'POST',
@@ -366,21 +122,18 @@ export async function POST(req: Request) {
           body: JSON.stringify({
             from: 'PostSync 알림 <contact@postsyncapp.com>',
             to: [adminEmail],
-            subject: subject,
+            subject: `📩 [고객 문의] ${cleanName}님 - ${metadata.inquiryType || '온라인 문의 접수'}`,
             html: `
               <div style="font-family: sans-serif; font-size: 15px; line-height: 1.7; color: #334155; padding: 20px;">
-                <h2 style="color: #1e3a8a;">🔔 ${escapeHtml(titleText)}</h2>
+                <h2 style="color: #1e3a8a;">🔔 고객 1:1 온라인 문의 접수</h2>
                 <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; margin: 16px 0;">
                   <p><strong>유입 출처:</strong> ${escapeHtml(toolSource)}</p>
                   <p><strong>이름/상호명:</strong> ${escapeHtml(cleanName)}</p>
                   <p><strong>이메일:</strong> ${escapeHtml(cleanEmail)}</p>
                   <p><strong>연락처:</strong> ${escapeHtml(cleanPhone || '미기재')}</p>
-                  ${metadata.inquiryType ? `<p><strong>문의 유형:</strong> ${escapeHtml(metadata.inquiryType)}</p>` : ''}
+                  ${metadata.inquiryType ? `<p><strong>문의 유형:</strong> ${escapeHtml(String(metadata.inquiryType))}</p>` : ''}
                   ${metadata.message ? `<div style="margin-top:12px; padding:12px; background:#ffffff; border:1px solid #cbd5e1; border-radius:6px; font-size:14px; white-space:pre-wrap;"><strong>문의 내용:</strong><br/>${escapeHtml(String(metadata.message))}</div>` : ''}
-                  ${isPlaceAuditLead ? `<p><strong>🔗 발급 리포트 링크:</strong> <a href="${reportUrl}">${escapeHtml(reportUrl)}</a></p>` : ''}
-                  <p><strong>증빙 요청:</strong> ${escapeHtml(taxDeductionText)}</p>
-                  <p><strong>신청 일시:</strong> ${escapeHtml(nowTime)}</p>
-                  ${metadata.amount ? `<p><strong>주문 금액:</strong> ${Number(metadata.amount).toLocaleString()}원</p>` : ''}
+                  <p><strong>접수 일시:</strong> ${escapeHtml(nowTime)}</p>
                 </div>
               </div>
             `,
@@ -397,26 +150,10 @@ export async function POST(req: Request) {
 
     return NextResponse.json({
       success: true,
-      message: leadType === 'inquiry'
-        ? '문의가 정상적으로 접수되었습니다. 전담 매니저가 확인 후 4시간 이내에 회신드리겠습니다.'
-        : leadType === 'ebook_order'
-          ? '입금 신청이 정상 접수되었습니다. 입금 확인 후 기재하신 이메일로 전자책이 즉시 발송됩니다.'
-          : isPlaceAuditLead
-            ? (emailDispatched
-                ? '🎉 플레이스 1위 격차 실측 진단서가 발급되었습니다. 기재하신 이메일로도 상세 리포트가 발송되었습니다.'
-                : '🎉 플레이스 1위 격차 실측 진단서가 발급되었습니다. 아래 진단서 바로보기를 통해 즉시 열람하실 수 있습니다.')
-            : isPlaceGuideLead
-              ? (emailDispatched
-                  ? '🎉 2026 플레이스 1위 세팅 실전 가이드북이 이메일로 성공적으로 발송되었습니다.'
-                  : '🎉 신청이 접수되었습니다. 2026 플레이스 1위 세팅 가이드북을 기재하신 이메일로 발송해 드립니다.')
-              : '신청이 정상 완료되었습니다. 기재하신 이메일로 가이드북이 순차 발송됩니다.',
+      message: '문의가 정상적으로 접수되었습니다. 전담 매니저가 확인 후 신속히 회신드리겠습니다.',
       email: cleanEmail,
-      emailDispatched,
       leadType,
       leadId: savedLeadId,
-      reportId: isPlaceAuditLead ? reportSlug : undefined,
-      reportUrl: isPlaceAuditLead ? `/report/place-audit.html?id=${reportSlug}` : undefined,
-      triage: jevTriage,
     })
   } catch (err: any) {
     console.error('[Leads API Exception]:', err)

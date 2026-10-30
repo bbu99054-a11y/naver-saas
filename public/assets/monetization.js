@@ -7,15 +7,15 @@
   // Common Bank Info (Synced with PostSync billing system)
   // Common Bank Info (Synced with PostSync billing system)
   const BANK_INFO = {
-    bankName: '국민은행',
-    accountNumber: '93043922640',
-    holder: '유영무',
+    bankName: '와이엠랩스 안내 계좌',
+    accountNumber: '고객센터 별도 안내',
+    holder: '와이엠랩스',
     amount: 39000,
     formattedAmount: '39,000원',
-    bookTitle: '2026 변호사·세무사 네이버 상위 1% 인바운드 마케팅 실전 지침서 (PDF)',
+    bookTitle: '2026 네이버 스마트플레이스 상위 1% 실전 지침서 (PDF)',
   };
 
-  // ⚠️ 애드센스 심사 중 숨김 무통장 입금 모달 DOM 강제 주입 방지 스위치
+  // 무통장 입금 모달 DOM 강제 주입 방지 스위치
   const IS_MONETIZATION_DOM_AUTORUN = false;
 
   // 1. Modal DOM Injection (Creates modals dynamically if not already present)

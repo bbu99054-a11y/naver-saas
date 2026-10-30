@@ -109,7 +109,7 @@ export default function PlaceQuickSearchWidget({
             <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> 회원가입·설치 없음
           </span>
           <span className="inline-flex items-center gap-1">
-            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> 네이버 지도 실시간 1~75위 대조
+            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> 네이버 모바일 통합검색 실시간 1~20위 대조
           </span>
           <span className="inline-flex items-center gap-1">
             <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> 자가 검색 어뷰징 위험 0%

@@ -166,8 +166,6 @@
     gtag('config', 'G-7WTMC1GBC8');
   </script>
 
-  <!-- Google AdSense -->
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3734423172731921" crossorigin="anonymous"></script>
 
   <!-- Fonts & Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -193,29 +191,19 @@
       </a>
       <nav class="pd-header-nav" aria-label="플레이스싱크 빠른 이동">
         <a href="#placeSearchForm" class="pd-nav-link"><i class="fa-solid fa-magnifying-glass"></i> 순위 조회</a>
-        <a href="#rankingCard" class="pd-nav-link"><i class="fa-solid fa-list-ol"></i> 1~20위 순위표</a>
-        <a href="#seoGuideSection" class="pd-nav-link"><i class="fa-solid fa-book-bookmark"></i> 알고리즘 가이드</a>
-        <a href="https://pf.kakao.com/_xonxiaX/chat" target="_blank" rel="noopener noreferrer" class="pd-nav-btn"><i class="fa-solid fa-comment"></i> 카톡 1초 조회</a>
+        <a href="/utm" class="pd-nav-link"><i class="fa-solid fa-qrcode"></i> 매장 리뷰 QR</a>
+        <a href="/adcheck" class="pd-nav-link"><i class="fa-solid fa-scale-balanced"></i> 금칙어 점검</a>
+        <a href="/blog" class="pd-nav-link"><i class="fa-solid fa-book-bookmark"></i> 상위노출 칼럼</a>
       </nav>
     </div>
   </header>
 
-  <!-- Top Sticky Lead Banner (Deactivated to prevent intrusive UX)
-  <div id="topLeadBanner" class="top-lead-banner" onclick="openLeadModal()" style="display:none;">
-    <div class="tlb-inner">
-      <span class="tlb-badge"><i class="fa-solid fa-gift"></i> PDF 무료 배포</span>
-      <span class="tlb-title"><b>네이버플레이스 1위 세팅법</b> 2026 최신 실전 가이드북</span>
-      <span class="tlb-cta">1초 무료 받기 <i class="fa-solid fa-arrow-right"></i></span>
-    </div>
-    <button type="button" class="tlb-close" onclick="closeTopLeadBanner(event)" title="닫기">&times;</button>
-  </div>
-  -->
 
   <main class="main-wrapper">
     <!-- Hero -->
     <div class="hero-section">
       <div class="hero-badge">
-        <i class="fa-solid fa-arrows-rotate"></i> 스마트플레이스 실시간 순위 및 1위 격차 분석기
+        <i class="fa-solid fa-arrows-rotate"></i> 네이버 모바일 통합검색 실측 기준 · 스마트플레이스 실시간 순위 및 1위 격차 분석기
       </div>
       <h1 class="hero-title">플레이스 순위 조회 · 네이버 플레이스 순위 확인 무료</h1>
       <p class="hero-subtitle">
@@ -238,8 +226,8 @@
             <input type="text" id="inputKeyword" class="search-input" placeholder="예: 강남역 변호사, 서초동 세무사, 성수동 카페" required autofocus>
           </div>
           <div class="form-group">
-            <label for="inputTarget"><i class="fa-solid fa-store"></i> 내 매장 / 사무소 상호명 (선택)</label>
-            <input type="text" id="inputTarget" class="search-input" placeholder="예: 법무법인 YK, 스타벅스">
+            <label for="inputTarget"><i class="fa-solid fa-store"></i> 내 매장 상호명 <span style="font-size:11px; font-weight:600; color:#64748b;">(선택 · 미입력 시 1~20위 전체 실측)</span></label>
+            <input type="text" id="inputTarget" class="search-input" placeholder="상호명 입력 시 1위와 4대 격차 자동 분석 (예: 스타벅스)">
           </div>
           <button type="submit" class="btn-search" id="btnSearch">
             <i class="fa-solid fa-bolt"></i> <span>실시간 순위 조회</span>
@@ -357,26 +345,26 @@
         </table>
       </div>
     </div>
-<!-- 2️⃣ 🌟 올인원 통합 진단 & 1위 탈환 솔루션 카드 (정보성 가이드 하단 배치로 자연스러운 전환 유도) -->
-    <section class="all-in-one-solution-card apply-section" id="applySection" style="margin-top: 36px;">
+    <!-- 2️⃣ 🌟 1위 경쟁점 대비 정량 격차 분석 카드 (Gap Analysis) -->
+    <section class="all-in-one-solution-card apply-section" id="applySection" style="margin-top: 36px; display: none;">
       <div class="aio-header">
         <div class="aio-badge">
-          <i class="fa-solid fa-crown" style="color:#fbbf24;"></i> 1위 탈환 실전 처방 &amp; 리포트 발송
+          <i class="fa-solid fa-crown" style="color:#fbbf24;"></i> 1위 경쟁점 4대 정량 격차 실측
         </div>
-        <h2 class="aio-title">1위 경쟁점 대비 정량 격차 분석 &amp; 긴급 처방</h2>
+        <h2 class="aio-title">1위 경쟁점 대비 정량 격차 분석</h2>
         <p class="aio-subtitle">
-          실시간 1위 매장과의 4대 핵심 격차를 확인하고, 1위 탈환 전략 리포트와 매일 아침 카톡 순위 알림을 한곳에서 신청하세요.
+          네이버 모바일 통합검색 실측 데이터를 바탕으로 1위 매장과 내 매장의 4대 핵심 지표 격차를 진단합니다.
         </p>
       </div>
 
-      <!-- 파트 A: 1위 대비 4대 핵심 정량 격차 대시보드 (Gap Analysis) -->
+      <!-- 1위 대비 4대 핵심 정량 격차 대시보드 (Gap Analysis) -->
       <div class="aio-gap-box" id="jevGapDashboardBox" style="display:none;">
         <div class="gap-header">
           <div class="gap-title">
             <i class="fa-solid fa-scale-balanced" style="color:#2563eb;"></i>
             <span id="gapTop1Title">🥇 1위 매장 vs 우리 매장 4대 정량 격차 분석</span>
           </div>
-          <span style="font-size:11px; font-weight:700; color:#0369a1; background:#e0f2fe; padding:3px 10px; border-radius:12px; border:1px solid #bae6fd;">실시간 실측 데이터</span>
+          <span style="font-size:11px; font-weight:700; color:#0369a1; background:#e0f2fe; padding:3px 10px; border-radius:12px; border:1px solid #bae6fd;">네이버 모바일 실측 데이터</span>
         </div>
         <div class="gap-grid" id="gapGrid">
           <!-- Injected via JS -->
@@ -395,95 +383,6 @@
             <button type="button" onclick="copyDiagnosisSummaryText()" class="btn-gap-share" style="display:inline-flex; align-items:center; gap:6px; background:#f0fdf4; color:#15803d; border:1px solid #bbf7d0; padding:8px 14px; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer; transition:all 0.2s;">
               <i class="fa-solid fa-clipboard-check"></i> <span>격차 분석 요약 복사</span>
             </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- 파트 B: 무료 심층 전략 리포트 &amp; 카톡 순위 알림 통합 신청 폼 -->
-      <div class="aio-form-section">
-        <h3 class="aio-form-title">
-          <i class="fa-solid fa-file-invoice" style="color:#2563eb;"></i>
-          <span>우리 매장 맞춤 1위 탈환 심층 전략 리포트 신청</span>
-        </h3>
-        <p class="aio-form-desc">
-          1위 경쟁사의 리뷰 급증 원인, C-Rank 블로그 침투 키워드, 그리고 이번 주 우리 매장이 당장 실행해야 할 상위노출 처방전이 담긴 <b>실전 전략 리포트 1회를 무료</b>로 이메일 발송해 드립니다.
-        </p>
-
-        <form class="apply-form" id="placeApplyForm" onsubmit="handleApply(event)">
-          <div class="aio-form-grid">
-            <div class="aio-field">
-              <label for="applyStoreName"><i class="fa-solid fa-store" style="color:#2563eb;"></i> 내 매장 상호명</label>
-              <input type="text" id="applyStoreName" placeholder="예: 법무법인 로앤심, 마디쌩쌩 신경외과" required>
-            </div>
-            <div class="aio-field">
-              <label for="applyKeyword"><i class="fa-solid fa-magnifying-glass" style="color:#2563eb;"></i> 분석 희망 키워드</label>
-              <input type="text" id="applyKeyword" placeholder="예: 문정동 변호사, 동탄 신경외과">
-            </div>
-            <div class="aio-field">
-              <label for="applyEmail"><i class="fa-solid fa-envelope" style="color:#2563eb;"></i> 무료 진단서 받아볼 이메일 (필수 *)</label>
-              <input type="email" id="applyEmail" placeholder="name@example.com" required>
-            </div>
-            <div class="aio-field">
-              <label for="applyPhone" id="applyPhoneLabel"><i class="fa-solid fa-phone" style="color:#2563eb;"></i> 대표 연락처 <span id="phoneReqBadge" style="color:#64748b; font-weight:700; font-size:11px;">(선택)</span></label>
-              <input type="tel" id="applyPhone" placeholder="010-0000-0000" pattern="[0-9]{3}-?[0-9]{3,4}-?[0-9]{4}">
-            </div>
-          </div>
-
-          <!-- 🔔 카톡 매일 순위 변동 알림(출시 예정) 얼리버드 대기자 등록 -->
-          <div class="apply-kakao-optin" style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:12px 14px; margin-bottom:16px;">
-            <label class="kakao-check-label" style="display:flex; align-items:flex-start; gap:10px; cursor:pointer;">
-              <input type="checkbox" id="applyKakaoOptIn" onchange="toggleKakaoPhoneRequired(this.checked)" style="margin-top:3px; accent-color:#2563eb; width:16px; height:16px;">
-              <div class="kakao-check-text">
-                <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
-                  <strong style="color:var(--slate-800); font-size:13.5px;">🔔 [선택] 매일 아침 순위 변동 자동 알림 기능 출시 시 사전 알림 받기</strong>
-                  <span style="background:#e0e7fe; color:#2563eb; font-size:11px; font-weight:800; padding:2px 8px; border-radius:10px;">출시 대기자 등록</span>
-                </div>
-                <span class="kakao-check-sub" style="color:var(--slate-500); font-size:12px; display:block; margin-top:2px;">매일 아침 9시 내 매장 순위 변동을 카카오톡으로 알려주는 자동화 기능 정식 오픈 시 얼리버드 혜택을 안내해 드립니다.</span>
-              </div>
-            </label>
-          </div>
-
-          <button type="submit" class="aio-btn-submit" id="btnApplySubmit">
-            <i class="fa-solid fa-paper-plane"></i> <span>🚀 1회 무료 전략 리포트 신청하기</span>
-          </button>
-        </form>
-
-        <!-- 개인정보보호법 법정 필수 고지문 -->
-        <div style="margin-top:12px; padding:10px 14px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; font-size:11px; color:#64748b; line-height:1.5;">
-          <span style="font-weight:700; color:#475569;">📋 개인정보 수집 및 이용 안내 (필수 고지):</span>
-          <span>• 수집 항목: 상호명, 이메일, 연락처(선택) | • 수집 목적: 스마트플레이스 1위 격차 분석 리포트 발송 및 순위 개선 안내 | • 보유 기간: 리포트 발송 및 안내 목적 달성 시까지 (삭제 요청 시 즉시 파기)</span>
-        </div>
-
-        <div class="apply-guarantee" id="applyGuarantee" style="margin-top:14px; color:var(--slate-500); font-size:12px; display:flex; gap:16px; flex-wrap:wrap;">
-          <span>🔒 100% 무료 1회 진단 (스팸 발송 없음)</span>
-          <span>⚡ 신청 후 전문 분석 리포트 순차 전송</span>
-          <span>⭐ 네이버 스마트플레이스 1위 동기화 솔루션</span>
-        </div>
-
-        <!-- 접수 완료 안내 박스 -->
-        <div id="applySuccessBox" style="display:none; background:#f0fdf4; border:1.5px solid #86efac; border-radius:12px; padding:24px; text-align:center; margin-top:20px;">
-          <div style="font-size:36px; margin-bottom:8px;">🎉</div>
-          <h3 id="applySuccessTitle" style="font-size:18px; font-weight:900; color:#15803d; margin-bottom:6px;">플레이스싱크 1위 전략 리포트 접수 완료!</h3>
-          <p id="applySuccessDesc" style="font-size:13.5px; color:#166534; line-height:1.6; margin-bottom:12px;">
-            입력하신 이메일(<b id="applySuccessEmail" style="color:#15803d;"></b>)로 전략 리포트와 실전 액션플랜이 순차 발송됩니다.<br>
-            (담당 분석팀에 실시간 알림이 안전하게 접수되었습니다.)
-          </p>
-          <div id="applySuccessBadge" style="display:inline-flex; align-items:center; gap:6px; background:#dcfce7; color:#15803d; font-size:12px; font-weight:700; padding:6px 14px; border-radius:20px; margin-bottom:14px;">
-            <i class="fa-solid fa-check-circle"></i> 접수 정상 완료 (DB 영구 보존 &amp; 이메일 발송)
-          </div>
-          <!-- 📊 발급된 1위 실측 진단서 바로 열기 버튼 -->
-          <div id="applySuccessReportWrap" style="margin: 10px 0 16px 0;">
-            <a id="applySuccessReportLink" href="/report/place-audit.html" target="_blank" rel="noopener noreferrer" style="display:inline-flex; align-items:center; gap:8px; background:#2563eb; color:#ffffff; font-size:14px; font-weight:800; padding:12px 24px; border-radius:30px; text-decoration:none; box-shadow:0 4px 14px rgba(37,99,235,0.35); transition:transform 0.15s;">
-              <i class="fa-solid fa-file-invoice"></i> <span>📊 [발급 완료] 내 매장 1위 격차 실측 진단서 열기</span> &rarr;
-            </a>
-          </div>
-          <div id="applyKakaoActionWrap" style="margin-top:10px; padding-top:14px; border-top:1px dashed #86efac;">
-            <p style="font-size:12.5px; color:#166534; font-weight:700; margin-bottom:10px;">
-              ⚡ 마지막 1초: 카카오톡 공식 채널을 추가해 두시면 리포트 도착 알림과 순위 변동을 받아보실 수 있습니다.
-            </p>
-            <a href="https://pf.kakao.com/_xonxiaX" target="_blank" rel="noopener noreferrer" style="display:inline-flex; align-items:center; gap:8px; background:#fee500; color:#191919; font-size:13px; font-weight:800; padding:11px 22px; border-radius:10px; text-decoration:none; box-shadow:0 2px 8px rgba(0,0,0,0.1); transition:transform 0.15s;">
-              <i class="fa-solid fa-comment"></i> 💬 [플레이스싱크] 카카오톡 공식 채널로 매일 아침 9시 실시간 순위 변동 알림 연동 <i class="fa-solid fa-arrow-right"></i>
-            </a>
           </div>
         </div>
       </div>
@@ -874,48 +773,9 @@
       </div>
     </div>
 
-    <!-- Ebook Promo Card (플레이스 전문직·자영업 1% 지침서) -->
-    <div class="ebook-promo-card" style="display: none !important; margin-top: 24px;">
-      <div class="ebook-promo-badge"><i class="fa-solid fa-crown"></i> 2026 추천 필독 실전서</div>
-      <div class="ebook-book-wrap">
-        <div class="ebook-cover-thumb">
-          <div class="ebook-cover-title" style="font-size: 9.5px; line-height: 1.25;">2026 스마트플레이스<br><span style="color:#60a5fa; font-size: 10.5px;">상위 1%</span><br>실전 지침서</div>
-          <div class="ebook-cover-author">PostSync Lab</div>
-        </div>
-        <div>
-          <div class="ebook-info-title">2026 네이버 스마트플레이스 상위 1% 인바운드 마케팅 실전 지침서</div>
-          <div class="ebook-info-desc">스마트플레이스 1위 선점 &amp; 포토 리뷰 전환 공식 &amp; 저품질 0건 완벽 매뉴얼</div>
-        </div>
-      </div>
-      <div class="ebook-price-row">
-        <span class="ebook-price-original">₩89,000</span>
-        <span class="ebook-price-final">₩39,000<span>(PDF)</span></span>
-      </div>
-      <div class="ebook-btn-group">
-        <button type="button" class="btn-ebook-order" onclick="openLeadModal()">
-          <i class="fa-solid fa-bolt"></i> 1초 계좌이체 주문 (39,000원)
-        </button>
-        <button type="button" class="btn-ebook-preview" onclick="openLeadModal()">
-          <i class="fa-solid fa-book-open"></i> 핵심 목차 미리보기
-        </button>
-      </div>
-    </div>
 
-    <!-- SaaS Bridge Banner (플레이스싱크 AI 자동화 브릿지) -->
-    <div class="saas-bridge-card" style="display: none !important; margin-top: 24px;">
-      <div class="saas-bridge-header">
-        <div class="saas-bridge-icon"><i class="fa-solid fa-robot"></i></div>
-        <div class="saas-bridge-title">PostSync AI: 24시간 네이버 상위노출 머신</div>
-      </div>
-      <p class="saas-bridge-desc">
-        원장님, 대표님은 본업에만 집중하십시오. PostSync AI가 365일 24시간 네이버 스마트플레이스와 C-Rank 블로그를 분석하여 상위 1% 잠재 고객 유입과 예약 전화를 대표님 스마트폰으로 직접 연결해 드립니다.
-      </p>
-      <a href="https://postsyncapp.com" target="_blank" class="btn-saas-bridge">
-        상위노출 자동화 무료체험 <i class="fa-solid fa-arrow-right"></i>
-      </a>
-    </div>
 
-    <!-- 🛠️ PostSync 무료 초소형 웹 유틸리티 7선 (Internal Mesh & Viral Share) -->
+    <!-- 🛠️ PostSync 플레이스 & 로컬 마케팅 무료 핵심 웹 유틸리티 4선 (Internal Mesh & Viral Share) -->
     <section class="ps-tools-mesh-section" style="margin-top: 36px; margin-bottom: 24px; padding: 26px 22px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 16px;">
       <!-- 헤더 & 바이럴 공유 툴바 -->
       <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid #e2e8f0;">
@@ -924,7 +784,7 @@
             <i class="fa-solid fa-toolbox"></i> 100% 무설치 · 브라우저 메모리 연산 · 서버 전송 제로
           </div>
           <h3 style="font-size: 16.5px; font-weight: 800; color: #0f172a; margin: 0; letter-spacing: -0.3px;">
-            PostSync 생산성 초소형 웹 유틸리티 7선 (무료 패밀리 툴)
+            스마트플레이스 &amp; 로컬 마케팅 무료 핵심 웹 유틸리티
           </h3>
         </div>
         <!-- 공유 버튼 및 전체 허브 이동 -->
@@ -933,18 +793,18 @@
             <i class="fa-solid fa-share-nodes" style="color: #2563eb;"></i> <span>도구 링크 복사</span>
           </button>
           <a href="/tools" style="display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; background: #2563eb; color: #ffffff; border-radius: 8px; font-size: 12px; font-weight: 700; text-decoration: none; transition: background 0.2s;">
-            <span>전체 7종 허브</span> <i class="fa-solid fa-arrow-right" style="font-size: 11px;"></i>
+            <span>전체 툴 허브</span> <i class="fa-solid fa-arrow-right" style="font-size: 11px;"></i>
           </a>
         </div>
       </div>
 
-      <!-- 7대 툴 카드 반응형 그리드 -->
+      <!-- 4대 핵심 툴 카드 반응형 그리드 -->
       <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px;">
 
         <div style="display:flex; flex-direction:column; justify-content:space-between; padding:16px 18px; background:#ffffff; border:2px solid #2563eb; border-radius:12px; box-shadow:0 4px 14px rgba(37,99,235,0.08); position:relative;">
           <div>
             <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
-              <span style="font-size:11px; font-weight:800; color:#2563eb; background:#eff6ff; padding:2px 8px; border-radius:8px;">소상공인·병원·식당</span>
+              <span style="font-size:11px; font-weight:800; color:#2563eb; background:#eff6ff; padding:2px 8px; border-radius:8px;">소상공인·병원·식당·학원</span>
               <span style="font-size:10.5px; font-weight:800; color:#16a34a; background:#f0fdf4; border:1px solid #bbf7d0; padding:2px 6px; border-radius:6px; display:inline-flex; align-items:center; gap:4px;">
                 <span style="width:6px; height:6px; background:#16a34a; border-radius:50%; display:inline-block;"></span> 현재 이용 중
               </span>
@@ -959,35 +819,33 @@
             <i class="fa-solid fa-check"></i> <span>현재 열람 중인 툴입니다</span>
           </div>
         </div>
-      
 
-        <a href="/crop" style="display:flex; flex-direction:column; justify-content:space-between; padding:16px 18px; background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; text-decoration:none; transition:all 0.2s ease; box-shadow:0 1px 3px rgba(0,0,0,0.03);" onmouseover="this.style.borderColor='#93c5fd'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(37,99,235,0.08)';" onmouseout="this.style.borderColor='#e2e8f0'; this.style.transform='translateY(0)'; this.style.boxShadow='0 1px 3px rgba(0,0,0,0.03)';">
+        <a href="/utm" style="display:flex; flex-direction:column; justify-content:space-between; padding:16px 18px; background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; text-decoration:none; transition:all 0.2s ease; box-shadow:0 1px 3px rgba(0,0,0,0.03);" onmouseover="this.style.borderColor='#93c5fd'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(37,99,235,0.08)';" onmouseout="this.style.borderColor='#e2e8f0'; this.style.transform='translateY(0)'; this.style.boxShadow='0 1px 3px rgba(0,0,0,0.03)';">
           <div>
             <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
-              <span style="font-size:11px; font-weight:800; color:#64748b; background:#f1f5f9; padding:2px 8px; border-radius:8px;">스마트스토어·쿠팡 셀러</span>
+              <span style="font-size:11px; font-weight:800; color:#64748b; background:#f1f5f9; padding:2px 8px; border-radius:8px;">오프라인 매장 사장님</span>
               <span style="font-size:11px; color:#94a3b8; font-weight:700;">100% 무료</span>
             </div>
             <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
-              <i class="fa-solid fa-crop-simple" style="color:#2563eb; font-size:16px;"></i>
-              <strong style="font-size:13.5px; color:#1e293b; font-weight:800;">상세페이지 자동 분할 & 리사이징</strong>
+              <i class="fa-solid fa-qrcode" style="color:#4f46e5; font-size:16px;"></i>
+              <strong style="font-size:13.5px; color:#1e293b; font-weight:800;">매장 저장·영수증 리뷰 QR 빌더</strong>
             </div>
-            <p style="font-size:11.5px; color:#64748b; line-height:1.45; margin:0 0 10px 0;">20,000px 초장축 이미지 무손실 슬라이싱 & 순서별 ZIP 압축 다운로드</p>
+            <p style="font-size:11.5px; color:#64748b; line-height:1.45; margin:0 0 10px 0;">카운터 비치용 저장 유도 및 영수증 리뷰 고화질 QR 1초 생성</p>
           </div>
           <div style="font-size:11.5px; font-weight:800; color:#2563eb; display:flex; align-items:center; gap:4px; padding-top:8px; border-top:1px dashed #f1f5f9;">
             <span>도구 바로가기</span> <i class="fa-solid fa-arrow-right" style="font-size:10px;"></i>
           </div>
         </a>
-      
 
         <a href="/adcheck" style="display:flex; flex-direction:column; justify-content:space-between; padding:16px 18px; background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; text-decoration:none; transition:all 0.2s ease; box-shadow:0 1px 3px rgba(0,0,0,0.03);" onmouseover="this.style.borderColor='#93c5fd'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(37,99,235,0.08)';" onmouseout="this.style.borderColor='#e2e8f0'; this.style.transform='translateY(0)'; this.style.boxShadow='0 1px 3px rgba(0,0,0,0.03)';">
           <div>
             <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
-              <span style="font-size:11px; font-weight:800; color:#64748b; background:#f1f5f9; padding:2px 8px; border-radius:8px;">변호사·세무사·의사·노무사</span>
+              <span style="font-size:11px; font-weight:800; color:#64748b; background:#f1f5f9; padding:2px 8px; border-radius:8px;">병원·전문직·로컬매장</span>
               <span style="font-size:11px; color:#94a3b8; font-weight:700;">100% 무료</span>
             </div>
             <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
               <i class="fa-solid fa-scale-balanced" style="color:#7c3aed; font-size:16px;"></i>
-              <strong style="font-size:13.5px; color:#1e293b; font-weight:800;">전문직 법정 광고 규정 & 금칙어 스캐너</strong>
+              <strong style="font-size:13.5px; color:#1e293b; font-weight:800;">플레이스 소개글 & 광고법 금칙어 스캐너</strong>
             </div>
             <p style="font-size:11.5px; color:#64748b; line-height:1.45; margin:0 0 10px 0;">2026 법정 광고 규정 실시간 대조 및 과태료 0원 안전 대체어 치환</p>
           </div>
@@ -995,124 +853,29 @@
             <span>도구 바로가기</span> <i class="fa-solid fa-arrow-right" style="font-size:10px;"></i>
           </div>
         </a>
-      
-
-        <a href="/byte" style="display:flex; flex-direction:column; justify-content:space-between; padding:16px 18px; background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; text-decoration:none; transition:all 0.2s ease; box-shadow:0 1px 3px rgba(0,0,0,0.03);" onmouseover="this.style.borderColor='#93c5fd'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(37,99,235,0.08)';" onmouseout="this.style.borderColor='#e2e8f0'; this.style.transform='translateY(0)'; this.style.boxShadow='0 1px 3px rgba(0,0,0,0.03)';">
-          <div>
-            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
-              <span style="font-size:11px; font-weight:800; color:#64748b; background:#f1f5f9; padding:2px 8px; border-radius:8px;">취업준비생·이직자</span>
-              <span style="font-size:11px; color:#94a3b8; font-weight:700;">100% 무료</span>
-            </div>
-            <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
-              <i class="fa-solid fa-calculator" style="color:#d97706; font-size:16px;"></i>
-              <strong style="font-size:13.5px; color:#1e293b; font-weight:800;">자소서 글자수 & 바이트 정밀 계산기</strong>
-            </div>
-            <p style="font-size:11.5px; color:#64748b; line-height:1.45; margin:0 0 10px 0;">사람인·잡코리아 3사 공식 바이트 로직 완벽 비교 & 키워드 밀도 분석</p>
-          </div>
-          <div style="font-size:11.5px; font-weight:800; color:#2563eb; display:flex; align-items:center; gap:4px; padding-top:8px; border-top:1px dashed #f1f5f9;">
-            <span>도구 바로가기</span> <i class="fa-solid fa-arrow-right" style="font-size:10px;"></i>
-          </div>
-        </a>
-      
-
-        <a href="/hwpx" style="display:flex; flex-direction:column; justify-content:space-between; padding:16px 18px; background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; text-decoration:none; transition:all 0.2s ease; box-shadow:0 1px 3px rgba(0,0,0,0.03);" onmouseover="this.style.borderColor='#93c5fd'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(37,99,235,0.08)';" onmouseout="this.style.borderColor='#e2e8f0'; this.style.transform='translateY(0)'; this.style.boxShadow='0 1px 3px rgba(0,0,0,0.03)';">
-          <div>
-            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
-              <span style="font-size:11px; font-weight:800; color:#64748b; background:#f1f5f9; padding:2px 8px; border-radius:8px;">공무원·행정사·직장인</span>
-              <span style="font-size:11px; color:#94a3b8; font-weight:700;">100% 무료</span>
-            </div>
-            <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
-              <i class="fa-solid fa-file-lines" style="color:#0284c7; font-size:16px;"></i>
-              <strong style="font-size:13.5px; color:#1e293b; font-weight:800;">공공기관 HWPX 무설치 안심 뷰어</strong>
-            </div>
-            <p style="font-size:11.5px; color:#64748b; line-height:1.45; margin:0 0 10px 0;">한글 프로그램 없이 브라우저 메모리에서 1초 만에 공문서 즉시 열람</p>
-          </div>
-          <div style="font-size:11.5px; font-weight:800; color:#2563eb; display:flex; align-items:center; gap:4px; padding-top:8px; border-top:1px dashed #f1f5f9;">
-            <span>도구 바로가기</span> <i class="fa-solid fa-arrow-right" style="font-size:10px;"></i>
-          </div>
-        </a>
-      
-
-        <a href="/utm" style="display:flex; flex-direction:column; justify-content:space-between; padding:16px 18px; background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; text-decoration:none; transition:all 0.2s ease; box-shadow:0 1px 3px rgba(0,0,0,0.03);" onmouseover="this.style.borderColor='#93c5fd'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(37,99,235,0.08)';" onmouseout="this.style.borderColor='#e2e8f0'; this.style.transform='translateY(0)'; this.style.boxShadow='0 1px 3px rgba(0,0,0,0.03)';">
-          <div>
-            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
-              <span style="font-size:11px; font-weight:800; color:#64748b; background:#f1f5f9; padding:2px 8px; border-radius:8px;">퍼포먼스 마케터·기획자</span>
-              <span style="font-size:11px; color:#94a3b8; font-weight:700;">100% 무료</span>
-            </div>
-            <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
-              <i class="fa-solid fa-qrcode" style="color:#4f46e5; font-size:16px;"></i>
-              <strong style="font-size:13.5px; color:#1e293b; font-weight:800;">캠페인 UTM & QR코드 원스톱 빌더</strong>
-            </div>
-            <p style="font-size:11.5px; color:#64748b; line-height:1.45; margin:0 0 10px 0;">GA4 5대 파라미터 조합 및 벡터 고화질 QR코드 1초 생성</p>
-          </div>
-          <div style="font-size:11.5px; font-weight:800; color:#2563eb; display:flex; align-items:center; gap:4px; padding-top:8px; border-top:1px dashed #f1f5f9;">
-            <span>도구 바로가기</span> <i class="fa-solid fa-arrow-right" style="font-size:10px;"></i>
-          </div>
-        </a>
-      
 
         <a href="/convert" style="display:flex; flex-direction:column; justify-content:space-between; padding:16px 18px; background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; text-decoration:none; transition:all 0.2s ease; box-shadow:0 1px 3px rgba(0,0,0,0.03);" onmouseover="this.style.borderColor='#93c5fd'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(37,99,235,0.08)';" onmouseout="this.style.borderColor='#e2e8f0'; this.style.transform='translateY(0)'; this.style.boxShadow='0 1px 3px rgba(0,0,0,0.03)';">
           <div>
             <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
-              <span style="font-size:11px; font-weight:800; color:#64748b; background:#f1f5f9; padding:2px 8px; border-radius:8px;">블로거·콘텐츠 마케터</span>
+              <span style="font-size:11px; font-weight:800; color:#64748b; background:#f1f5f9; padding:2px 8px; border-radius:8px;">블로거·로컬 마케터</span>
               <span style="font-size:11px; color:#94a3b8; font-weight:700;">100% 무료</span>
             </div>
             <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
               <i class="fa-solid fa-arrow-right-arrow-left" style="color:#ea580c; font-size:16px;"></i>
-              <strong style="font-size:13.5px; color:#1e293b; font-weight:800;">웹 문서 포맷 변환 & 스마트에디터 변환기</strong>
+              <strong style="font-size:13.5px; color:#1e293b; font-weight:800;">블로그 스마트에디터 ONE 서식 변환기</strong>
             </div>
-            <p style="font-size:11.5px; color:#64748b; line-height:1.45; margin:0 0 10px 0;">마크다운·HTML·네이버 스마트에디터 ONE 서식 원클릭 완벽 호환</p>
+            <p style="font-size:11.5px; color:#64748b; line-height:1.45; margin:0 0 10px 0;">마크다운·HTML·네이버 스마트에디터 ONE 서식 1초 완벽 호환</p>
           </div>
           <div style="font-size:11.5px; font-weight:800; color:#2563eb; display:flex; align-items:center; gap:4px; padding-top:8px; border-top:1px dashed #f1f5f9;">
             <span>도구 바로가기</span> <i class="fa-solid fa-arrow-right" style="font-size:10px;"></i>
           </div>
         </a>
-      
+
       </div>
     </section>
   
 
   </main>
-
-  <!-- Lead Magnet Modal -->
-  <div id="leadMagnetModal" class="lead-modal-backdrop" onclick="closeModalOnBackdrop(event)">
-    <div class="lead-modal-card">
-      <button type="button" class="lead-modal-close" onclick="closeLeadModal()">&times;</button>
-      <div style="display:inline-flex; align-items:center; gap:6px; background:#eff6ff; color:#1d4ed8; font-size:11px; font-weight:800; padding:4px 10px; border-radius:20px; margin-bottom:10px;">
-        <i class="fa-solid fa-file-pdf"></i> 2026 실전 시크릿 리포트
-      </div>
-      <h3 style="font-size:18px; font-weight:900; color:#0f172a; margin-bottom:6px; letter-spacing:-0.3px;">
-        🎁 네이버플레이스 1위 세팅법 (PDF 무료 배포)
-      </h3>
-      <p style="font-size:13px; color:#475569; line-height:1.55; margin-bottom:18px;">
-        지도 1~3위를 장악하는 3분 체크리스트와 즉시 복사해 쓰는 합법 소개글 카피 템플릿을 이메일로 즉시 발송해 드립니다.
-      </p>
-
-      <form id="floatingLeadForm" onsubmit="handleFloatingLeadSubmit(event)">
-        <div style="margin-bottom:12px;">
-          <label style="display:block; font-size:12px; font-weight:700; color:#334155; margin-bottom:4px;">받아보실 이메일 주소</label>
-          <input type="email" id="modalLeadEmail" class="apply-input" placeholder="name@example.com" required style="width:100%;">
-        </div>
-        <div style="margin-bottom:16px;">
-          <label style="display:block; font-size:12px; font-weight:700; color:#334155; margin-bottom:4px;">매장 상호명 (선택)</label>
-          <input type="text" id="modalLeadStore" class="apply-input" placeholder="예: OO식당, OO법률사무소" style="width:100%;">
-        </div>
-        <button type="submit" id="btnModalLeadSubmit" class="btn-apply-submit" style="width:100%; border-radius:10px;">
-          <i class="fa-solid fa-paper-plane"></i> <span>PDF 가이드북 1초 무료 받기</span>
-        </button>
-      </form>
-
-      <div id="modalLeadSuccess" style="display:none; text-align:center; padding:16px 0;">
-        <div style="font-size:32px; margin-bottom:6px;">🎉</div>
-        <h4 style="font-size:16px; font-weight:800; color:#15803d; margin-bottom:4px;">가이드북 발송 접수 완료!</h4>
-        <p style="font-size:12.5px; color:#475569;">입력하신 이메일로 가이드북이 순차 발송됩니다.</p>
-      </div>
-
-      <div style="margin-top:12px; text-align:center; font-size:11px; color:#94a3b8;">
-        <i class="fa-solid fa-shield-halved"></i> 스팸 없음 · 입력 정보는 자료 전송 외 절대 사용되지 않습니다.
-      </div>
-    </div>
-  </div>
 
   <!-- PlaceSync Standalone Footer -->
   <footer class="placesync-footer placedoctor-footer">
@@ -1127,11 +890,15 @@
             <i class="fa-solid fa-comment" style="color:#fee500;"></i> 카카오톡 채널 상담
           </a>
           <a href="#placeSearchForm">순위 조회</a>
-          <a href="#seoGuideSection">알고리즘 가이드</a>
+          <a href="/utm">매장 QR</a>
+          <a href="/adcheck">금칙어 검사</a>
+          <a href="/convert">서식 변환</a>
+          <a href="/crop">이미지 크롭</a>
+          <a href="/byte">글자수 계산기</a>
+          <a href="/tools">전체 도구</a>
           <a href="/terms">이용약관</a>
           <a href="/privacy">개인정보처리방침</a>
           <a href="/contact">고객지원</a>
-          <a href="mailto:contact@postsyncapp.com">제휴 문의</a>
         </div>
       </div>
       <div class="pdf-bottom" style="display:flex; flex-direction:column; gap:4px; font-size:11px; color:#94a3b8; text-align:center; padding-top:12px; border-top:1px solid rgba(255,255,255,0.08);">
@@ -1365,8 +1132,8 @@
                 <span>입력하신 <b>"${escapeHtml(data.target)}"</b> 상호가 상위 20위 이내에 감지되지 않았습니다. 잠재 고객 유입이 차단된 상태이므로 C-Rank 블로그 최적화 및 스마트플레이스 1위 세팅 점검이 시급합니다.</span>
                 <div style="margin-top:14px; padding-top:12px; border-top:1px dashed var(--slate-200); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;">
                   <span style="font-size:12.5px; color:var(--rose); font-weight:700;"><i class="fa-solid fa-circle-exclamation"></i> 20위 밖 매장은 유입 손실이 가장 큽니다.</span>
-                  <a href="#applySection" onclick="setTimeout(function(){ var el = document.getElementById('applyStoreName'); if (el && window.currentPlaceData && window.currentPlaceData.target) { el.value = window.currentPlaceData.target; el.focus(); } var sec = document.getElementById('applySection'); if (sec) sec.style.display = 'block'; }, 50);" style="display:inline-flex; align-items:center; gap:6px; background:var(--primary); color:#ffffff; font-size:12.5px; font-weight:800; padding:8px 18px; border-radius:20px; text-decoration:none; box-shadow:0 3px 10px rgba(37,99,235,0.25);">
-                    <span>📘 1페이지 진입 가이드북 무료 신청하기</span> &rarr;
+                  <a href="#seoGuideSection" style="display:inline-flex; align-items:center; gap:6px; background:var(--primary); color:#ffffff; font-size:12.5px; font-weight:800; padding:8px 18px; border-radius:20px; text-decoration:none; box-shadow:0 3px 10px rgba(37,99,235,0.25);">
+                    <span>📘 2026 플레이스 상위노출 가이드 보기</span> &rarr;
                   </a>
                 </div>
               </div>
@@ -1450,38 +1217,6 @@
           gapBox.style.display = 'none';
         }
 
-        // 🌟 [Place Report Engine] 실측 진단 스냅샷 캐싱 (상위 1~3위 갭 매트릭스 포함)
-        try {
-          const top3List = (data.rankingList || []).slice(0, 3).map((item, idx) => ({
-            name: item.name || `${idx + 1}위 매장`,
-            rank: idx + 1,
-            visitorReviews: parseInt(String(item.visitorReviews || item.reviews || '0').replace(/[^0-9]/g, '')) || 0,
-            blogReviews: parseInt(String(item.blogReviews || '0').replace(/[^0-9]/g, '')) || 0,
-            hasBooking: !!item.hasBooking,
-            hasCoupon: !!item.hasCoupon,
-            saves: (item.saveCount && item.saveCount !== '-') ? item.saveCount : '미집계'
-          }));
-
-          window.__LAST_PLACE_SNAPSHOT = {
-            storeName: data.target || (data.myPlace ? data.myPlace.name : ''),
-            targetKeyword: data.query || '',
-            myRank: data.myPlace ? data.myPlace.rank : null,
-            top1Name: data.gapAnalysis ? data.gapAnalysis.top1Name : (data.rankingList && data.rankingList[0] ? data.rankingList[0].name : '1위 매장'),
-            myReviews: data.myPlace ? parseInt(String(data.myPlace.visitorReviews || '0').replace(/[^0-9]/g, '')) || 0 : 0,
-            top1Reviews: data.gapAnalysis?.metrics?.visitorReviews ? parseInt(String(data.gapAnalysis.metrics.visitorReviews.top1 || '0').replace(/[^0-9]/g, '')) || 0 : 0,
-            myBlogReviews: data.myPlace ? parseInt(String(data.myPlace.blogReviews || '0').replace(/[^0-9]/g, '')) || 0 : 0,
-            top1BlogReviews: data.gapAnalysis?.metrics?.blogReviews ? parseInt(String(data.gapAnalysis.metrics.blogReviews.top1 || '0').replace(/[^0-9]/g, '')) || 0 : 0,
-            myBooking: data.myPlace ? !!data.myPlace.hasBooking : false,
-            top1Booking: data.gapAnalysis?.metrics?.booking ? !!data.gapAnalysis.metrics.booking.top1 : false,
-            myCoupon: data.myPlace ? !!data.myPlace.hasCoupon : false,
-            top1Coupon: data.gapAnalysis?.metrics?.coupon ? !!data.gapAnalysis.metrics.coupon.top1 : false,
-            mySaves: data.myPlace?.saveCount || data.myPlace?.saves || '미집계',
-            top1Saves: (data.rankingList && data.rankingList[0]?.saveCount) || (data.rankingList && data.rankingList[0]?.saves) || '미집계',
-            top3Places: top3List
-          };
-        } catch (snapErr) {
-          console.warn('[Place Snapshot Cache Warning]:', snapErr);
-        }
 
         // 4. Render Table (Clean 5-Metric Columns)
         rankingCard.style.display = 'block';
@@ -1521,20 +1256,10 @@
           `;
         }).join('');
 
-        // 5. Show & Auto-fill All-in-One Solution Box (applySection)
+        // 5. Show All-in-One Solution Box (applySection)
         const applySection = document.getElementById('applySection');
-        const applyStoreName = document.getElementById('applyStoreName');
-        const applyKeyword = document.getElementById('applyKeyword');
-
         if (applySection) {
-          applySection.style.display = 'block';
-        }
-
-        if (applyStoreName) {
-          applyStoreName.value = data.target || (data.myPlace ? data.myPlace.name : '');
-        }
-        if (applyKeyword) {
-          applyKeyword.value = data.query || '';
+          applySection.style.display = data.gapAnalysis ? 'block' : 'none';
         }
 
         // 몇 위인지 바로 한눈에 보이도록 상단 고정 헤더(75px)를 고려한 정밀 오프셋 부드러운 스크롤
@@ -1600,188 +1325,6 @@
         const item = document.getElementById(`guideAccItem-${index}`);
         if (!item) return;
         item.classList.toggle('active');
-      };
-
-      window.openApplySection = function(e) {
-        if (e && e.preventDefault) e.preventDefault();
-        const sec = document.getElementById('applySection');
-        if (sec) {
-          sec.style.display = 'block';
-          const kwInput = document.getElementById('inputKeyword');
-          const targetInput = document.getElementById('inputTarget');
-          const storeEl = document.getElementById('applyStoreName');
-          const kwEl = document.getElementById('applyKeyword');
-          if (storeEl && !storeEl.value && targetInput && targetInput.value) {
-            storeEl.value = targetInput.value.trim();
-          }
-          if (kwEl && !kwEl.value && kwInput && kwInput.value) {
-            kwEl.value = kwInput.value.trim();
-          }
-          sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          const emailEl = document.getElementById('applyEmail');
-          if (emailEl) {
-            setTimeout(() => emailEl.focus(), 400);
-          }
-        }
-      };
-
-      // 카톡 사전 알림 체크 시 휴대폰 번호 필수/선택 동적 토글
-      window.toggleKakaoPhoneRequired = function(isChecked) {
-        const phoneInput = document.getElementById('applyPhone');
-        const phoneBadge = document.getElementById('phoneReqBadge');
-        if (phoneInput && phoneBadge) {
-          if (isChecked) {
-            phoneInput.required = true;
-            phoneBadge.textContent = '(사전 알림용, 필수 *)';
-            phoneBadge.style.color = '#2563eb';
-          } else {
-            phoneInput.required = false;
-            phoneBadge.textContent = '(선택)';
-            phoneBadge.style.color = '#64748b';
-          }
-        }
-      };
-
-      // Handle PlaceSync Report Lead Application
-      let isApplying = false;
-      window.handleApply = async function(e) {
-        e.preventDefault();
-        if (isApplying) return;
-        const storeName = document.getElementById('applyStoreName').value.trim();
-        const keyword = document.getElementById('applyKeyword').value.trim();
-        const email = document.getElementById('applyEmail').value.trim();
-        const phone = document.getElementById('applyPhone').value.trim();
-        const btn = document.getElementById('btnApplySubmit');
-        const kakaoOptIn = document.getElementById('applyKakaoOptIn')?.checked ?? false;
-
-        if (!storeName || !email) {
-          showToast('매장명과 이메일을 입력해 주세요.');
-          return;
-        }
-
-        // 카톡 사전 알림 대기자 신청 시에만 전화번호 유효성 검사
-        if (kakaoOptIn && !phone) {
-          showToast('사전 알림 수신을 위해 휴대폰 번호를 입력해 주세요.');
-          const phoneInput = document.getElementById('applyPhone');
-          if (phoneInput) {
-            phoneInput.focus();
-            phoneInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          }
-          return;
-        }
-
-        isApplying = true;
-        btn.disabled = true;
-        btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> <span>리포트 생성 및 접수 중...</span>';
-
-        try {
-          let snap = window.__LAST_PLACE_SNAPSHOT || {};
-          // 폼에 입력된 매장명이 마지막 스냅샷의 매장명과 완전히 다르면 이전 매장의 스냅샷 데이터 오염 방지
-          const normInputStore = storeName.toLowerCase().replace(/\s+/g, '');
-          const normSnapStore = (snap.storeName || '').toLowerCase().replace(/\s+/g, '');
-          const isStoreMatched = normSnapStore && (normSnapStore === normInputStore || normInputStore.includes(normSnapStore) || normSnapStore.includes(normInputStore));
-          if (!isStoreMatched) {
-            snap = {
-              storeName: storeName,
-              targetKeyword: keyword,
-              top1Name: snap.top1Name || '1위 매장',
-              top3Places: snap.top3Places || [],
-              myRank: null
-            };
-          }
-
-          const res = await fetch('/api/leads', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              email: email,
-              phone: phone || undefined,
-              leadType: 'lead_magnet',
-              sourceTool: 'place',
-              toolSource: 'place',
-              rewardName: '플레이스싱크 1회 무료 전략 리포트 & 실전 액션플랜',
-              details: {
-                store_name: storeName,
-                target_keyword: keyword,
-                kakao_alert_opt_in: !!kakaoOptIn,
-                myRank: snap.myRank ?? null,
-                top1Name: snap.top1Name || '1위 매장',
-                myReviews: snap.myReviews ?? 0,
-                top1Reviews: snap.top1Reviews ?? 0,
-                myBlogReviews: snap.myBlogReviews ?? 0,
-                top1BlogReviews: snap.top1BlogReviews ?? 0,
-                myBooking: snap.myBooking ?? false,
-                top1Booking: snap.top1Booking ?? false,
-                myCoupon: snap.myCoupon ?? false,
-                top1Coupon: snap.top1Coupon ?? false,
-                mySaves: snap.mySaves || '미집계',
-                top1Saves: snap.top1Saves || '미집계',
-                top3Places: snap.top3Places || []
-              }
-            })
-          });
-
-          const data = await res.json();
-          if (data.ok || data.success) {
-            if (typeof gtag === 'function') {
-              gtag('event', 'generate_lead', {
-                source_tool: 'place',
-                lead_type: 'gap_report',
-                store_name: storeName
-              });
-            }
-
-            showToast('🎉 플레이스 1위 격차 실측 진단서가 발급되었습니다!');
-            
-            // Switch form to success card
-            const formEl = document.getElementById('placeApplyForm');
-            const guaranteeEl = document.getElementById('applyGuarantee');
-            const successBox = document.getElementById('applySuccessBox');
-            const successStoreTitle = document.getElementById('applySuccessTitle') || document.getElementById('successStoreTitle');
-            const successTargetEmail = document.getElementById('applySuccessEmail') || document.getElementById('successTargetEmail');
-            const reportBtn = document.getElementById('applySuccessReportLink');
-
-            if (formEl) formEl.style.display = 'none';
-            if (guaranteeEl) guaranteeEl.style.display = 'none';
-            if (successStoreTitle) successStoreTitle.textContent = `🎉 [${storeName}] 1위 격차 실측 진단서 발급 완료!`;
-            if (successTargetEmail) successTargetEmail.textContent = email;
-            const successDesc = document.getElementById('applySuccessDesc');
-            const successBadge = document.getElementById('applySuccessBadge');
-            if (successDesc) {
-              if (data.emailDispatched) {
-                successDesc.innerHTML = `입력하신 이메일(<b style="color:#15803d;">${escapeHtml(email)}</b>)로 맞춤 전략 리포트가 성공적으로 발송되었습니다!<br>(아래 파란색 버튼을 눌러 지금 브라우저에서도 즉시 열람하실 수 있습니다.)`;
-              } else {
-                successDesc.innerHTML = `입력하신 매장의 1위 격차 실측 진단서가 실시간으로 안전하게 발급되었습니다!<br>네트워크 환경에 따라 이메일 전송이 지연될 수 있으니, <b>아래 파란색 버튼을 눌러 지금 바로 웹 진단서를 열람하세요.</b>`;
-              }
-            }
-            if (successBadge) {
-              if (data.emailDispatched) {
-                successBadge.innerHTML = `<i class="fa-solid fa-check-circle"></i> 리포트 이메일 발송 완료 &amp; DB 암호화 보존`;
-              } else {
-                successBadge.innerHTML = `<i class="fa-solid fa-file-shield"></i> 진단서 실시간 발급 완료 (웹 즉시 열람 가능)`;
-              }
-            }
-
-            if (reportBtn && data.reportUrl) {
-              reportBtn.href = data.reportUrl;
-              reportBtn.innerHTML = `<i class="fa-solid fa-file-invoice"></i> <span>📊 [${escapeHtml(storeName)}] 1위 격차 실측 진단서 열기</span> &rarr;`;
-            }
-
-            if (successBox) {
-              successBox.style.display = 'block';
-              successBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }
-          } else {
-            showToast(data.error || '신청에 실패했습니다. 다시 시도해 주세요.');
-          }
-        } catch (err) {
-          console.error(err);
-          showToast('서버 통신 중 오류가 발생했습니다.');
-        } finally {
-          isApplying = false;
-          btn.disabled = false;
-          btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> <span>🔄 1회 무료 전략 리포트 & 실전 액션플랜 받기</span>';
-        }
       };
 
       // ===== PlaceSync Recent Search History (localStorage) =====
@@ -1912,98 +1455,6 @@
         }
       };
 
-      // ===== Floating Mini Lead Magnet Modal =====
-      window.openLeadModal = function() {
-        const modal = document.getElementById('leadMagnetModal');
-        if (modal) {
-          modal.classList.add('open');
-          const emailInput = document.getElementById('modalLeadEmail');
-          if (emailInput) setTimeout(() => emailInput.focus(), 150);
-        }
-      };
-
-      window.closeLeadModal = function() {
-        const modal = document.getElementById('leadMagnetModal');
-        if (modal) modal.classList.remove('open');
-      };
-
-      window.closeModalOnBackdrop = function(e) {
-        if (e.target && e.target.id === 'leadMagnetModal') {
-          closeLeadModal();
-        }
-      };
-
-      window.closeTopLeadBanner = function(e) {
-        if (e) e.stopPropagation();
-        const banner = document.getElementById('topLeadBanner');
-        if (banner) banner.style.display = 'none';
-      };
-
-      window.closeFloatingLead = function(e) {
-        if (e) e.stopPropagation();
-        const banner = document.getElementById('topLeadBanner') || document.getElementById('floatingLeadMagnet');
-        if (banner) banner.style.display = 'none';
-      };
-
-      let isFloatingSubmitting = false;
-      window.handleFloatingLeadSubmit = async function(e) {
-        e.preventDefault();
-        if (isFloatingSubmitting) return;
-        const email = document.getElementById('modalLeadEmail').value.trim();
-        const store = document.getElementById('modalLeadStore').value.trim();
-        const btn = document.getElementById('btnModalLeadSubmit');
-        const form = document.getElementById('floatingLeadForm');
-        const success = document.getElementById('modalLeadSuccess');
-
-        if (!email) {
-          showToast('이메일 주소를 입력해 주세요.');
-          return;
-        }
-
-        isFloatingSubmitting = true;
-        btn.disabled = true;
-        btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> <span>발송 접수 중...</span>';
-
-        try {
-          const res = await fetch('/api/leads', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              email: email,
-              leadType: 'lead_magnet',
-              sourceTool: 'place',
-              rewardName: '네이버플레이스 1위 세팅법 (PDF 무료 배포)',
-              details: {
-                store_name: store || '미입력',
-                trigger_source: 'floating_mini_badge'
-              }
-            })
-          });
-          const data = await res.json();
-          if (data.ok || data.success) {
-            if (typeof gtag === 'function') {
-              gtag('event', 'generate_lead', {
-                source_tool: 'place',
-                lead_type: 'lead_magnet_pdf',
-                store_name: store || '미입력'
-              });
-            }
-
-            form.style.display = 'none';
-            success.style.display = 'block';
-            showToast('🎉 [네이버플레이스 1위 세팅법] 발송 신청이 접수되었습니다!');
-            setTimeout(() => closeLeadModal(), 3000);
-          } else {
-            showToast(data.error || '접수에 실패했습니다.');
-          }
-        } catch (err) {
-          showToast('통신 오류가 발생했습니다.');
-        } finally {
-          isFloatingSubmitting = false;
-          btn.disabled = false;
-          btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> <span>PDF 가이드북 1초 무료 받기</span>';
-        }
-      };
 
     })();
   </script>

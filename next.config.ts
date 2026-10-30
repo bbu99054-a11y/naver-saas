@@ -9,6 +9,41 @@ const nextConfig: NextConfig = {
         destination: "/adcheck",
         permanent: true,
       },
+      {
+        source: "/thumbscan",
+        destination: "/convert",
+        permanent: true,
+      },
+      {
+        source: "/seo-check",
+        destination: "/place",
+        permanent: true,
+      },
+      {
+        source: "/login",
+        destination: "/place",
+        permanent: true,
+      },
+      {
+        source: "/dashboard/:path*",
+        destination: "/place",
+        permanent: true,
+      },
+      {
+        source: "/pricing",
+        destination: "/place",
+        permanent: true,
+      },
+      {
+        source: "/consult",
+        destination: "/place",
+        permanent: true,
+      },
+      {
+        source: "/onboarding",
+        destination: "/place",
+        permanent: true,
+      },
     ];
   },
   async rewrites() {

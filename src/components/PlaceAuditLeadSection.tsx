@@ -47,7 +47,7 @@ function PlaceAuditLeadContent() {
     setErrorMsg('')
 
     try {
-      const res = await fetch('/api/place-apply', {
+      const res = await fetch('/api/leads', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -58,7 +58,7 @@ function PlaceAuditLeadContent() {
       })
 
       const data = await res.json()
-      if (res.ok && data.success) {
+      if (res.ok && (data.success || data.id)) {
         setSuccessData({ name: submitName, email: submitEmail })
       } else {
         setErrorMsg(data.error || '신청 처리 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.')
