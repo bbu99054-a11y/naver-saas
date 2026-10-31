@@ -80,7 +80,7 @@ export function extractCommercialCoords(query: string): CommercialCoords | null 
     { keywords: ['청담역', '청담동', '청담'], name: '청담', x: '127.0532', y: '37.5195' },
     { keywords: ['홍대입구역', '홍대입구', '홍대', '연남동', '연남', '합정역', '합정', '상수역', '망원동', '망원'], name: '홍대/합정', x: '126.9245', y: '37.5568' },
     { keywords: ['신촌역', '신촌', '이대역', '이대'], name: '신촌', x: '126.9368', y: '37.5552' },
-    { keywords: ['잠실역', '잠실', '송파', '방이동', '석촌호수', '문정역', '문정동', '문정'], name: '잠실/송파', x: '127.1002', y: '37.5133' },
+    { keywords: ['잠실역', '잠실', '송파', '방이동', '석촌호수', '문정역', '문정동', '문정', '가락동', '가락역', '가락', '헬리오시티', '헬리오', '오금동', '삼전동', '거여동', '마천동', '풍납동'], name: '잠실/송파', x: '127.1002', y: '37.5133' },
     { keywords: ['여의도역', '여의도', '더현대'], name: '여의도', x: '126.9242', y: '37.5216' },
     { keywords: ['성수역', '성수동', '성수', '서울숲'], name: '성수', x: '127.0559', y: '37.5445' },
     { keywords: ['건대입구역', '건대입구', '건대'], name: '건대', x: '127.0709', y: '37.5404' },
@@ -201,7 +201,8 @@ async function fetchPlaceReviewMeta(placeId: string): Promise<{ visitorReviews: 
  */
 async function fetchPcmapPlaces(q: string, posX?: string, posY?: string): Promise<PlaceItem[]> {
   try {
-    const pcmapUrl = `https://pcmap.place.naver.com/place/list?query=${q}&x=${posX || '127.0276'}&y=${posY || '37.4979'}`;
+    const coordParam = posX && posY ? `&x=${posX}&y=${posY}` : '';
+    const pcmapUrl = `https://pcmap.place.naver.com/place/list?query=${q}${coordParam}`;
     const res = await fetch(pcmapUrl, {
       headers: {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
@@ -209,7 +210,7 @@ async function fetchPcmapPlaces(q: string, posX?: string, posY?: string): Promis
         'Accept-Language': 'ko-KR,ko;q=0.9',
         'Referer': 'https://map.naver.com/',
       },
-      signal: AbortSignal.timeout(4000),
+      signal: AbortSignal.timeout(8000),
       next: { revalidate: 300 }
     });
 
@@ -313,9 +314,9 @@ async function fetchPcmapPlaces(q: string, posX?: string, posY?: string): Promis
 
 /**
  * 🚀 네이버 플레이스 실시간 1~20위 정밀 수집 엔진
- * 1차 기본: 네이버 모바일 통합검색 (빠른 응답 속도 & 차단 없음)
- * 2차 폴백: 네이버 PC 웹 통합검색
- * 3차 폴백: 네이버 지도 PCMAP (짧은 타임아웃)
+ * 1차 최우선 기본 엔진: 네이버 지도 PCMAP GraphQL Apollo State (50개 매장 실시간 전수 데이터 1회 고속 수집)
+ * 2차 폴백 엔진: 네이버 모바일 통합검색 (빠른 응답 속도 & Cheerio 정밀 파서)
+ * 3차 폴백 엔진: 네이버 PC 웹 통합검색
  */
 export async function fetchLiveNaverPlaceRanking(
   query: string,
@@ -329,7 +330,20 @@ export async function fetchLiveNaverPlaceRanking(
   const posY = coords?.y?.trim();
   const coordParam = posX && posY ? `&x=${posX}&y=${posY}` : '';
 
-  // 1. [1차 기본 엔진] 네이버 모바일 통합검색 Cheerio 정밀 파서 (초고속 실시간 수집, 429 차단 없음)
+  // 1. [1차 최우선 기본 엔진] 네이버 지도 PCMAP GraphQL Apollo State (50개 매장 실시간 전수 데이터 1회 고속 수집)
+  try {
+    const pcmapItems = await fetchPcmapPlaces(q, posX, posY);
+    if (pcmapItems.length > 0) {
+      return {
+        totalCount: Math.max(pcmapItems.length, 20),
+        items: pcmapItems,
+      };
+    }
+  } catch (pcmapErr) {
+    console.warn('[1차 지도 PCMAP 수집 지연, 2차 모바일 통합검색 폴백 가동]:', pcmapErr);
+  }
+
+  // 2. [2차 폴백 엔진] 네이버 모바일 통합검색 Cheerio 정밀 파서 (초고속 실시간 수집, 429 차단 없음)
   try {
     const mUrl = `https://m.search.naver.com/search.naver?query=${q}${coordParam}`;
     const res = await fetch(mUrl, {
@@ -491,10 +505,10 @@ export async function fetchLiveNaverPlaceRanking(
       }
     }
   } catch (err) {
-    console.warn('[1차 모바일 수집 지연, 2차 PC 웹 검색 폴백 가동]:', err);
+    console.warn('[2차 모바일 수집 지연, 3차 PC 웹 검색 폴백 가동]:', err);
   }
 
-  // 2. [2차 폴백] 네이버 PC 웹 통합검색 스마트플레이스 파서
+  // 3. [3차 폴백 엔진] 네이버 PC 웹 통합검색 스마트플레이스 파서
   try {
     const pcUrl = `https://search.naver.com/search.naver?where=nexearch&query=${q}`;
     const res = await fetch(pcUrl, {
@@ -587,37 +601,46 @@ export async function fetchLiveNaverPlaceRanking(
       });
 
       if (items.length > 0) {
-        // 상위 3개 매장 실측 리뷰 보강
-        const top3 = items.slice(0, 3);
-        await Promise.allSettled(
-          top3.map(async (item) => {
-            const rev = await fetchPlaceReviewMeta(item.id);
-            if (rev.visitorReviews !== '-') item.visitorReviews = rev.visitorReviews;
-            if (rev.blogReviews !== '-') item.blogReviews = rev.blogReviews;
-          })
-        );
+        // 20위 미만인 경우 PCMAP 실시간 데이터로 20위까지 전수 보강
+        if (items.length < 20) {
+          try {
+            const supplement = await fetchPcmapPlaces(q, posX, posY);
+            for (const sp of supplement) {
+              if (seenIds.has(sp.id)) continue;
+              const nameKey = sp.name.toLowerCase().replace(/\s+/g, '');
+              if (seenNames.has(nameKey)) continue;
+
+              seenIds.add(sp.id);
+              seenNames.add(nameKey);
+              sp.rank = items.length + 1;
+              items.push(sp);
+              if (items.length >= 20) break;
+            }
+          } catch (suppErr) {
+            console.warn('[3차 PC 웹 PCMAP 20위 보강 지연]:', suppErr);
+          }
+        }
+
+        // 상위 3개 매장 실측 리뷰 보강 (누락된 항목만 선택 보강)
+        const top3Missing = items.slice(0, 3).filter(it => it.visitorReviews === '-' || it.blogReviews === '-');
+        if (top3Missing.length > 0) {
+          await Promise.allSettled(
+            top3Missing.map(async (item) => {
+              const rev = await fetchPlaceReviewMeta(item.id);
+              if (rev.visitorReviews !== '-') item.visitorReviews = rev.visitorReviews;
+              if (rev.blogReviews !== '-') item.blogReviews = rev.blogReviews;
+            })
+          );
+        }
 
         return {
-          totalCount: items.length,
+          totalCount: Math.max(items.length, 20),
           items,
         };
       }
     }
   } catch (err) {
-    console.warn('[2차 PC 웹 검색 폴백 지연, 3차 PCMAP 안전망 가동]:', err);
-  }
-
-  // 3. [3차 폴백] 네이버 지도 PCMAP
-  try {
-    const pcmapItems = await fetchPcmapPlaces(q, posX, posY);
-    if (pcmapItems.length > 0) {
-      return {
-        totalCount: Math.max(pcmapItems.length, 20),
-        items: pcmapItems,
-      };
-    }
-  } catch (err) {
-    console.warn('[3차 PCMAP 수집 오류]:', err);
+    console.warn('[3차 PC 웹 검색 폴백 지연]:', err);
   }
 
   throw new Error('네이버 플레이스 실시간 순위 조회 응답이 지연되었습니다. 잠시 후 다시 시도해 주세요.');
