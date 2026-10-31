@@ -327,6 +327,7 @@
         </div>
       </div>
 
+      <!-- 데스크톱 순위표 테이블 뷰 (PC) -->
       <div class="ranking-table-wrap">
         <table class="ranking-table">
           <thead>
@@ -343,6 +344,11 @@
             <!-- Injected via JS -->
           </tbody>
         </table>
+      </div>
+
+      <!-- 모바일 전용 반응형 카드 뷰 (스마트폰 ≤640px) -->
+      <div class="ranking-mobile-list" id="rankingMobileList">
+        <!-- Injected via JS -->
       </div>
     </div>
     <!-- 2️⃣ 🌟 1위 경쟁점 대비 정량 격차 분석 카드 (Gap Analysis) -->
@@ -1218,18 +1224,47 @@
         }
 
 
-        // 4. Render Table (Clean 5-Metric Columns)
+        // 4. Render Table (Clean 5-Metric Columns for Desktop & Cards for Mobile)
         rankingCard.style.display = 'block';
+        const rankingMobileList = document.getElementById('rankingMobileList');
+
         if (!data.rankingList || data.rankingList.length === 0) {
           rankingTableBody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:30px; color:var(--slate-400);">검색 결과가 없습니다. 다른 지역명이나 업종을 입력해보세요.</td></tr>';
+          if (rankingMobileList) {
+            rankingMobileList.innerHTML = '<div style="text-align:center; padding:30px; color:var(--slate-400);">검색 결과가 없습니다.</div>';
+          }
           return;
         }
 
-        const targetNorm = data.target ? data.target.toLowerCase().replace(/\s+/g, '') : '';
+        function normToken(s) {
+          if (!s) return '';
+          return String(s)
+            .toLowerCase()
+            .replace(/\(.*?\)|\[.*?\]/g, '')
+            .replace(/^(주식회사|사단법인|재단법인|법무법인|세무법인|회계법인|\(주\)|주\))/g, '')
+            .replace(/(?:역점|지점|본점|직영점|점)$/g, '')
+            .replace(/[^\w\s가-힣]/g, '')
+            .replace(/\s+/g, '');
+        }
 
+        function isStoreMatch(target, name) {
+          if (!target || !name) return false;
+          const tNorm = String(target).toLowerCase().replace(/\s+/g, '');
+          const nNorm = String(name).toLowerCase().replace(/\s+/g, '');
+          if (tNorm === nNorm) return true;
+          const tToken = normToken(target);
+          const nToken = normToken(name);
+          if (tToken && nToken && tToken === nToken) return true;
+          if (tToken.length >= 2) {
+            if (nToken.includes(tToken) || tToken.includes(nToken)) return true;
+            if (nNorm.includes(tNorm) || tNorm.includes(nNorm)) return true;
+          }
+          return false;
+        }
+
+        // 데스크톱 테이블 렌더링
         rankingTableBody.innerHTML = data.rankingList.map(item => {
-          const nameNorm = item.name.toLowerCase().replace(/\s+/g, '');
-          const isMatch = targetNorm && (nameNorm.includes(targetNorm) || targetNorm.includes(nameNorm));
+          const isMatch = isStoreMatch(data.target, item.name);
           const rowClass = isMatch ? 'row-highlight' : '';
 
           return `
@@ -1255,6 +1290,49 @@
             </tr>
           `;
         }).join('');
+
+        // 모바일 최적화 카드 리스트 렌더링 (가로 스크롤 잘림 원천 방지)
+        if (rankingMobileList) {
+          rankingMobileList.innerHTML = data.rankingList.map(item => {
+            const isMatch = isStoreMatch(data.target, item.name);
+            const cardClass = isMatch ? 'rm-card rm-highlight' : 'rm-card';
+
+            return `
+              <div class="${cardClass}">
+                <div class="rm-card-top">
+                  <div class="rm-rank-badge ${item.rank <= 3 ? 'top3' : ''}">
+                    ${item.rank === 1 ? '🥇 1위' : item.rank === 2 ? '🥈 2위' : item.rank === 3 ? '🥉 3위' : item.rank + '위'}
+                  </div>
+                  <div class="rm-name-wrap">
+                    <a href="${escapeHtml(item.placeUrl)}" target="_blank" rel="noopener" class="rm-store-name">
+                      ${escapeHtml(item.name)}
+                    </a>
+                    <span class="rm-category">${escapeHtml(item.category || '플레이스')}</span>
+                    ${isMatch ? '<span class="rm-my-tag">내 매장</span>' : ''}
+                  </div>
+                </div>
+                <div class="rm-card-metrics">
+                  <div class="rm-metric-chip">
+                    <span class="rm-chip-lbl">방문자 리뷰</span>
+                    <span class="rm-chip-val">${escapeHtml(item.visitorReviews || '-')}</span>
+                  </div>
+                  <div class="rm-metric-chip">
+                    <span class="rm-chip-lbl">블로그 리뷰</span>
+                    <span class="rm-chip-val" style="color:var(--slate-600);">${escapeHtml(item.blogReviews || '-')}</span>
+                  </div>
+                  <div class="rm-metric-chip">
+                    <span class="rm-chip-lbl">네이버 예약</span>
+                    ${item.hasBooking ? '<span class="rm-tag-on"><i class="fa-solid fa-check"></i> 연동</span>' : '<span class="rm-tag-off">미연동</span>'}
+                  </div>
+                  <div class="rm-metric-chip">
+                    <span class="rm-chip-lbl">플레이스 쿠폰</span>
+                    ${item.hasCoupon ? '<span class="rm-tag-coupon"><i class="fa-solid fa-gift"></i> 있음</span>' : '<span class="rm-tag-off">없음</span>'}
+                  </div>
+                </div>
+              </div>
+            `;
+          }).join('');
+        }
 
         // 5. Show All-in-One Solution Box (applySection)
         const applySection = document.getElementById('applySection');

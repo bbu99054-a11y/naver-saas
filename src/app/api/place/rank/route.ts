@@ -49,6 +49,21 @@ export interface CommercialCoords {
 }
 
 /**
+ * 🏪 상호명 지능형 정규화 함수 (Fuzzy 매칭용 토큰 추출)
+ * 지점명 괄호, 법인 접두어, 지점 접미어, 특수문자를 정제하여 핵심 브랜드명을 추출
+ */
+export function normalizeStoreToken(name: string): string {
+  if (!name) return '';
+  return name
+    .toLowerCase()
+    .replace(/\(.*?\)|\[.*?\]/g, '') // (주), (성수점), [본점] 등 괄호 내용 제거
+    .replace(/^(주식회사|사단법인|재단법인|법무법인|세무법인|회계법인|\(주\)|주\))/g, '')
+    .replace(/(?:역점|지점|본점|직영점|점)$/g, '') // 지점 접미어 제거
+    .replace(/[^\w\s가-힣]/g, '') // 특수문자 제거
+    .replace(/\s+/g, '');
+}
+
+/**
  * 🗺️ 검색어 키워드 기반 스마트 상권 좌표 매핑 함수 (전국 50대 핵심 상권)
  * WGS84 좌표 기준 (x: 경도 Longitude 126~129, y: 위도 Latitude 33~38)
  */
@@ -179,6 +194,121 @@ async function fetchPlaceReviewMeta(placeId: string): Promise<{ visitorReviews: 
     // Non-blocking timeout or error
   }
   return { visitorReviews: '-', blogReviews: '-' };
+}
+
+/**
+ * 🗺️ 네이버 지도 PCMAP GraphQL Apollo State 정밀 순위 파서 (1~50위 전수 수집 헬퍼)
+ */
+async function fetchPcmapPlaces(q: string, posX?: string, posY?: string): Promise<PlaceItem[]> {
+  try {
+    const pcmapUrl = `https://pcmap.place.naver.com/place/list?query=${q}&x=${posX || '127.0276'}&y=${posY || '37.4979'}`;
+    const res = await fetch(pcmapUrl, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+        'Accept-Language': 'ko-KR,ko;q=0.9',
+        'Referer': 'https://map.naver.com/',
+      },
+      signal: AbortSignal.timeout(4000),
+      next: { revalidate: 300 }
+    });
+
+    if (!res.ok) return [];
+    const html = await res.text();
+    const apolloMatch = html.match(/__APOLLO_STATE__\s*=\s*(\{[\s\S]*?\});\s*(?:<\/script>|\n)/);
+    if (!apolloMatch) return [];
+
+    const apolloState = JSON.parse(apolloMatch[1]);
+    const root = apolloState['ROOT_QUERY'] || {};
+    const placeListKeys = Object.keys(root).filter(k => k.startsWith('placeList('));
+    
+    // items가 가장 많은 placeList 선택 (display: 50 최우선)
+    let bestPl: any = null;
+    let maxLen = 0;
+    for (const k of placeListKeys) {
+      const count = root[k]?.businesses?.items?.length || 0;
+      if (count > maxLen) {
+        maxLen = count;
+        bestPl = root[k];
+      }
+    }
+
+    const items: PlaceItem[] = [];
+    const seenIds = new Set<string>();
+    const seenNames = new Set<string>();
+    const candidateRefs = bestPl?.businesses?.items || [];
+
+    for (const ref of candidateRefs) {
+      const v = apolloState[ref.__ref];
+      if (!v) continue;
+      const id = String(v.id || '');
+      const name = String(v.name || '').trim();
+      if (!id || !name || seenIds.has(id)) continue;
+      const nameKey = name.toLowerCase().replace(/\s+/g, '');
+      if (seenNames.has(nameKey)) continue;
+
+      seenIds.add(id);
+      seenNames.add(nameKey);
+
+      items.push({
+        rank: items.length + 1,
+        id,
+        name,
+        category: v.category || '스마트플레이스 등록점',
+        address: v.roadAddress || v.address || v.commonAddress || '지역 중심 상권 소재',
+        phone: v.phone || v.virtualPhone || '',
+        hasBooking: Boolean(v.hasBooking || v.bookingUrl),
+        hasCoupon: Boolean(v.coupon && v.coupon.total > 0),
+        visitorReviews: v.visitorReviewCount ? String(v.visitorReviewCount).replace(/\B(?=(\d{3})+(?!\d))/g, ',') : '-',
+        blogReviews: v.blogCafeReviewCount ? String(v.blogCafeReviewCount).replace(/\B(?=(\d{3})+(?!\d))/g, ',') : '-',
+        saveCount: v.saveCount ? String(v.saveCount).replace(/\B(?=(\d{3})+(?!\d))/g, ',') : '-',
+        placeUrl: `https://m.place.naver.com/place/${id}`,
+      });
+
+      if (items.length >= 20) break;
+    }
+
+    // ROOT_QUERY가 비어있을 경우 전체 Apollo State 순회 폴백
+    if (items.length === 0) {
+      for (const [k, val] of Object.entries(apolloState)) {
+        const v = val as any;
+        if (k.startsWith('Ad:') || v?.__typename?.includes('Ad') || v?.isAd) continue;
+        if (v && (v.name || v.normalizedName) && (v.category || v.roadAddress || v.address)) {
+          const id = String(v.id || k.replace(/^[A-Za-z]+:/, ''));
+          if (seenIds.has(id)) continue;
+          const name = String(v.name || v.normalizedName || '').trim();
+          if (!name || name.length < 2) continue;
+          const nameKey = name.toLowerCase().replace(/\s+/g, '');
+          if (seenNames.has(nameKey)) continue;
+
+          seenIds.add(id);
+          seenNames.add(nameKey);
+
+          items.push({
+            rank: items.length + 1,
+            id,
+            name,
+            category: v.category || '스마트플레이스 등록점',
+            address: v.roadAddress || v.address || v.commonAddress || '지역 중심 상권 소재',
+            phone: v.phone || v.virtualPhone || '',
+            hasBooking: Boolean(v.hasBooking || v.bookingUrl),
+            hasCoupon: Boolean(v.coupon && v.coupon.total > 0),
+            visitorReviews: v.visitorReviewCount ? String(v.visitorReviewCount).replace(/\B(?=(\d{3})+(?!\d))/g, ',') : '-',
+            blogReviews: v.blogCafeReviewCount ? String(v.blogCafeReviewCount).replace(/\B(?=(\d{3})+(?!\d))/g, ',') : '-',
+            saveCount: v.saveCount ? String(v.saveCount).replace(/\B(?=(\d{3})+(?!\d))/g, ',') : '-',
+            placeUrl: `https://m.place.naver.com/place/${id}`,
+          });
+
+          if (items.length >= 20) break;
+        }
+      }
+    }
+
+    return items;
+  } catch (err) {
+    console.warn('[PCMAP 수집 실패]:', err);
+    return [];
+  }
 }
 
 /**
@@ -322,6 +452,26 @@ export async function fetchLiveNaverPlaceRanking(
       });
 
       if (items.length > 0) {
+        // 20위 미만인 경우 PCMAP 실시간 데이터로 20위까지 전수 보강
+        if (items.length < 20) {
+          try {
+            const supplement = await fetchPcmapPlaces(q, posX, posY);
+            for (const sp of supplement) {
+              if (seenIds.has(sp.id)) continue;
+              const nameKey = sp.name.toLowerCase().replace(/\s+/g, '');
+              if (seenNames.has(nameKey)) continue;
+
+              seenIds.add(sp.id);
+              seenNames.add(nameKey);
+              sp.rank = items.length + 1;
+              items.push(sp);
+              if (items.length >= 20) break;
+            }
+          } catch (suppErr) {
+            console.warn('[PCMAP 20위 보강 지연]:', suppErr);
+          }
+        }
+
         // 상위 3개 매장 실측 리뷰 보강 (WAF 안전선 준수)
         const top3Missing = items.slice(0, 3).filter(it => it.visitorReviews === '-' || it.blogReviews === '-');
         if (top3Missing.length > 0) {
@@ -335,7 +485,7 @@ export async function fetchLiveNaverPlaceRanking(
         }
 
         return {
-          totalCount: items.length,
+          totalCount: Math.max(items.length, 20),
           items,
         };
       }
@@ -457,65 +607,14 @@ export async function fetchLiveNaverPlaceRanking(
     console.warn('[2차 PC 웹 검색 폴백 지연, 3차 PCMAP 안전망 가동]:', err);
   }
 
-  // 3. [3차 폴백] 네이버 지도 PCMAP (짧은 3초 타임아웃)
+  // 3. [3차 폴백] 네이버 지도 PCMAP
   try {
-    const pcmapUrl = `https://pcmap.place.naver.com/place/list?query=${q}&x=${posX || '127.0276'}&y=${posY || '37.4979'}`;
-    const res = await fetch(pcmapUrl, {
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
-        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-        'Accept-Language': 'ko-KR,ko;q=0.9',
-        'Referer': 'https://map.naver.com/',
-      },
-      signal: AbortSignal.timeout(3000),
-      next: { revalidate: 300 }
-    });
-
-    if (res.ok) {
-      const html = await res.text();
-      const apolloMatch = html.match(/__APOLLO_STATE__\s*=\s*(\{[\s\S]*?\});\s*(?:<\/script>|\n)/);
-      if (apolloMatch) {
-        const apolloState = JSON.parse(apolloMatch[1]);
-        const items: PlaceItem[] = [];
-        const seenIds = new Set<string>();
-
-        for (const [k, val] of Object.entries(apolloState)) {
-          const v = val as any;
-          if (k.startsWith('Ad:') || v?.__typename?.includes('Ad') || v?.isAd) continue;
-          if (v && (v.name || v.normalizedName) && (v.category || v.roadAddress || v.address)) {
-            const id = String(v.id || k.replace(/^[A-Za-z]+:/, ''));
-            if (seenIds.has(id)) continue;
-            seenIds.add(id);
-
-            const name = String(v.name || v.normalizedName || '').trim();
-            if (!name || name.length < 2) continue;
-
-            items.push({
-              rank: items.length + 1,
-              id,
-              name,
-              category: v.category || '스마트플레이스 등록점',
-              address: v.roadAddress || v.address || v.commonAddress || '지역 중심 상권 소재',
-              phone: v.phone || v.virtualPhone || '',
-              hasBooking: Boolean(v.hasBooking || v.bookingUrl),
-              hasCoupon: Boolean(v.coupon && v.coupon.total > 0),
-              visitorReviews: v.visitorReviewCount ? String(v.visitorReviewCount).replace(/\B(?=(\d{3})+(?!\d))/g, ',') : '-',
-              blogReviews: v.blogCafeReviewCount ? String(v.blogCafeReviewCount).replace(/\B(?=(\d{3})+(?!\d))/g, ',') : '-',
-              saveCount: v.saveCount ? String(v.saveCount).replace(/\B(?=(\d{3})+(?!\d))/g, ',') : '-',
-              placeUrl: `https://m.place.naver.com/place/${id}`,
-            });
-
-            if (items.length >= 20) break;
-          }
-        }
-
-        if (items.length > 0) {
-          return {
-            totalCount: items.length,
-            items,
-          };
-        }
-      }
+    const pcmapItems = await fetchPcmapPlaces(q, posX, posY);
+    if (pcmapItems.length > 0) {
+      return {
+        totalCount: Math.max(pcmapItems.length, 20),
+        items: pcmapItems,
+      };
     }
   } catch (err) {
     console.warn('[3차 PCMAP 수집 오류]:', err);
@@ -611,10 +710,11 @@ export async function GET(req: Request) {
       }
     }
 
-    // 3. 타깃 매장 정밀 매칭 (Exact Match 우선 및 일반명사 오매칭 방어)
+    // 3. 타깃 매장 정밀 매칭 (Exact Match -> Token Match -> Partial Match)
     let myPlace: (PlaceItem & { isTop5: boolean; isTop10: boolean; percentile: number }) | null = null;
     if (cleanTarget) {
       const targetNorm = cleanTarget.toLowerCase().replace(/\s+/g, '');
+      const targetToken = normalizeStoreToken(cleanTarget);
 
       // 1단계: 완전 일치 (Exact Match)
       let found = rankingData.items.find(item => {
@@ -622,15 +722,29 @@ export async function GET(req: Request) {
         return nameNorm === targetNorm;
       });
 
-      // 2단계: 완전 일치가 없고 입력어가 2글자 이상인 경우, 정밀 접두/포함 매칭
+      // 2단계: 정규화 토큰 완전 일치 (예: '한입베이글' vs '한입베이글 성수점', '(주)스타벅스' vs '스타벅스')
+      if (!found && targetToken.length >= 2) {
+        found = rankingData.items.find(item => {
+          const nameToken = normalizeStoreToken(item.name);
+          return nameToken === targetToken;
+        });
+      }
+
+      // 3단계: 부분/포함 매칭 (일반명사 단독 입력 오매칭 방어)
       if (!found && targetNorm.length >= 2) {
         const genericWords = ['변호사', '세무사', '회계사', '법무법인', '치과', '병원', '의원', '한의원', '카페', '식당', '맛집', '학원', '부동산', '헤어', '미용실'];
-        const isGenericOnly = genericWords.includes(targetNorm);
+        const isGenericOnly = genericWords.includes(targetNorm) || genericWords.includes(targetToken);
 
         if (!isGenericOnly) {
           found = rankingData.items.find(item => {
             const nameNorm = item.name.toLowerCase().replace(/\s+/g, '');
-            return nameNorm.startsWith(targetNorm) || nameNorm.includes(targetNorm);
+            const nameToken = normalizeStoreToken(item.name);
+            return (
+              nameNorm.startsWith(targetNorm) ||
+              nameNorm.includes(targetNorm) ||
+              targetNorm.includes(nameNorm) ||
+              (targetToken.length >= 2 && (nameToken.includes(targetToken) || targetToken.includes(nameToken)))
+            );
           });
         }
       }
