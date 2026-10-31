@@ -223,11 +223,11 @@
         <div class="search-grid">
           <div class="form-group">
             <label for="inputKeyword"><i class="fa-solid fa-magnifying-glass"></i> 검색 키워드 (지역명 + 업종)</label>
-            <input type="text" id="inputKeyword" class="search-input" placeholder="예: 강남역 변호사, 서초동 세무사, 성수동 카페" required autofocus>
+            <input type="text" id="inputKeyword" class="search-input" placeholder="예: 강남역 변호사, 서초동 세무사, 성수동 카페" maxlength="50" required autofocus>
           </div>
           <div class="form-group">
             <label for="inputTarget"><i class="fa-solid fa-store"></i> 내 매장 상호명 <span style="font-size:11px; font-weight:600; color:#64748b;">(선택 · 미입력 시 1~20위 전체 실측)</span></label>
-            <input type="text" id="inputTarget" class="search-input" placeholder="상호명 입력 시 1위와 4대 격차 자동 분석 (예: 스타벅스)">
+            <input type="text" id="inputTarget" class="search-input" placeholder="상호명 입력 시 1위와 4대 격차 자동 분석 (예: 스타벅스)" maxlength="50">
           </div>
           <button type="submit" class="btn-search" id="btnSearch">
             <i class="fa-solid fa-bolt"></i> <span>실시간 순위 조회</span>
@@ -795,7 +795,7 @@
         </div>
         <!-- 공유 버튼 및 전체 허브 이동 -->
         <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-          <button type="button" onclick="navigator.clipboard.writeText(window.location.href); alert('✨ 현재 도구 주소가 클립보드에 복사되었습니다! 필요한 동료나 단톡방에 공유해보세요.');" style="display: inline-flex; align-items: center; gap: 6px; padding: 7px 13px; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 12px; font-weight: 700; color: #334155; cursor: pointer; transition: all 0.2s;">
+          <button type="button" onclick="navigator.clipboard.writeText(window.location.href); showToast('✨ 현재 도구 주소가 클립보드에 복사되었습니다!');" style="display: inline-flex; align-items: center; gap: 6px; padding: 7px 13px; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 12px; font-weight: 700; color: #334155; cursor: pointer; transition: all 0.2s;">
             <i class="fa-solid fa-share-nodes" style="color: #2563eb;"></i> <span>도구 링크 복사</span>
           </button>
           <a href="/tools" style="display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; background: #2563eb; color: #ffffff; border-radius: 8px; font-size: 12px; font-weight: 700; text-decoration: none; transition: background 0.2s;">
@@ -1454,7 +1454,7 @@
             <div class="history-chip" data-kw="${kwSafe}" data-target="${targetSafe}" onclick="quickFill(this.dataset.kw, this.dataset.target)">
               <span class="hc-kw">${kwSafe}</span>
               ${targetSafe ? `<span class="hc-sep">·</span><span class="hc-target">${targetSafe}</span>` : ''}
-              <button type="button" class="hc-del" onclick="event.stopPropagation(); removeHistoryItem(${idx})" title="삭제">&times;</button>
+              <button type="button" class="hc-del" onclick="event.stopPropagation(); removeHistoryItem(${idx})" title="삭제" aria-label="최근 검색 기록 삭제">&times;</button>
             </div>
           `;
         }).join('');

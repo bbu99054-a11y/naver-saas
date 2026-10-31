@@ -18,6 +18,15 @@
   <meta property="og:description" content="표, 소제목, 인용구가 깨지지 않는 네이버 스마트에디터 ONE 전용 서식 복사기. 100% 브라우저 로컬 $0 무료 웹툴">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.postsyncapp.com/convert">
+  <meta property="og:image" content="https://www.postsyncapp.com/placesync_profile_A.jpg">
+  <meta property="og:site_name" content="PostSync 스마트에디터 변환기">
+  <meta property="og:locale" content="ko_KR">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="ChatGPT·노션 ➔ 네이버 블로그 서식 1초 변환기 | PostSync">
+  <meta name="twitter:description" content="표, 소제목, 인용구가 깨지지 않는 네이버 스마트에디터 ONE 전용 서식 복사기. 100% 브라우저 로컬 $0 무료 웹툴">
+  <meta name="twitter:image" content="https://www.postsyncapp.com/placesync_profile_A.jpg">
   
   <!-- Google Analytics 4 (GA4) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-7WTMC1GBC8"></script>
@@ -65,7 +74,7 @@
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; }
-    body { background-color: #f8fafc; color: var(--slate-900); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+    body { background-color: #f8fafc; color: var(--slate-900); line-height: 1.6; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
 
     /* Top Global Integrated Header */
     header.header-integrated {
@@ -731,6 +740,7 @@
         <textarea 
           class="editor-textarea" 
           id="markdownInput" 
+          maxlength="50000"
           spellcheck="false" 
           placeholder="여기에 ChatGPT, Claude, 노션, 벨로그에서 작성한 마크다운(Markdown)이나 글을 붙여넣으세요...
 
@@ -905,8 +915,8 @@
         </div>
       </div>
       <form class="lead-magnet-form" onsubmit="handleLeadMagnetSubmit(event, 'convert', '[무료 퀵가이드] 네이버 블로그 AI 글쓰기 프롬프트 & 서식 템플릿 (PDF)')">
-        <input type="email" class="lead-magnet-input" placeholder="치트시트를 받아보실 이메일 주소" required>
-        <input type="tel" class="lead-magnet-input" placeholder="연락처 (선택 - 알림용)" style="flex: 0 1 180px;">
+        <input type="email" class="lead-magnet-input" placeholder="치트시트를 받아보실 이메일 주소" maxlength="100" required>
+        <input type="tel" class="lead-magnet-input" placeholder="연락처 (선택 - 알림용)" maxlength="30" style="flex: 0 1 180px;">
         <button type="submit" class="btn-lead-submit">
           <i class="fa-solid fa-paper-plane"></i> <span>무료 치트시트 즉시 받기</span>
         </button>
@@ -978,7 +988,7 @@
         </div>
         <!-- 공유 버튼 및 전체 허브 이동 -->
         <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-          <button type="button" onclick="navigator.clipboard.writeText(window.location.href); alert('✨ 현재 도구 주소가 클립보드에 복사되었습니다! 필요한 동료나 단톡방에 공유해보세요.');" style="display: inline-flex; align-items: center; gap: 6px; padding: 7px 13px; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 12px; font-weight: 700; color: #334155; cursor: pointer; transition: all 0.2s;">
+          <button type="button" onclick="navigator.clipboard.writeText(window.location.href); showToast('✨ 현재 도구 주소가 클립보드에 복사되었습니다!');" style="display: inline-flex; align-items: center; gap: 6px; padding: 7px 13px; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 12px; font-weight: 700; color: #334155; cursor: pointer; transition: all 0.2s;">
             <i class="fa-solid fa-share-nodes" style="color: #2563eb;"></i> <span>도구 링크 복사</span>
           </button>
           <a href="/tools" style="display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; background: #2563eb; color: #ffffff; border-radius: 8px; font-size: 12px; font-weight: 700; text-decoration: none; transition: background 0.2s;">
@@ -1340,12 +1350,18 @@
     });
 
     // Main Copy Action (SmartEditor ONE Clipboard Injection)
-    document.getElementById('btnCopyNaver').addEventListener('click', async () => {
+    const btnCopyNaver = document.getElementById('btnCopyNaver');
+    btnCopyNaver.addEventListener('click', async () => {
+      if (btnCopyNaver.disabled) return;
       const text = markdownInput.value.trim();
       if (!text) {
         showToast('⚠️ 변환할 원고나 마크다운을 먼저 입력해주세요.');
         return;
       }
+
+      btnCopyNaver.disabled = true;
+      const origHtml = btnCopyNaver.innerHTML;
+      btnCopyNaver.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>서식 복사 중...</span>';
 
       // Ensure wrapped in a safe container with 860px max width and clear font declaration
       const clipboardHtml = `
@@ -1379,9 +1395,15 @@
       } catch (err) {
         console.error('Clipboard copy error:', err);
         // Fallback text copy
-        navigator.clipboard.writeText(text).then(() => {
+        try {
+          await navigator.clipboard.writeText(text);
           showToast('📋 텍스트 복사 완료! (브라우저 권한상 일반 텍스트로 복사되었습니다)');
-        });
+        } catch (_) {}
+      } finally {
+        setTimeout(() => {
+          btnCopyNaver.disabled = false;
+          btnCopyNaver.innerHTML = origHtml;
+        }, 500);
       }
     });
 

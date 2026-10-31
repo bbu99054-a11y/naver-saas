@@ -12,6 +12,21 @@ export const metadata: Metadata = {
     title: '고객지원 및 서비스 안내 | PostSync',
     description: 'PostSync 스마트플레이스 순위 분석 및 무료 마케팅 웹 유틸리티 이용 안내, 자주 묻는 질문(FAQ) 및 공식 지원 창구입니다.',
     url: 'https://www.postsyncapp.com/contact',
+    type: 'website',
+    images: [
+      {
+        url: 'https://www.postsyncapp.com/placesync_profile_A.jpg',
+        width: 1200,
+        height: 630,
+        alt: '고객지원 및 서비스 안내 | PostSync',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: '고객지원 및 서비스 안내 | PostSync',
+    description: 'PostSync 스마트플레이스 순위 분석 및 무료 마케팅 웹 유틸리티 이용 안내, 자주 묻는 질문(FAQ) 및 공식 지원 창구입니다.',
+    images: ['https://www.postsyncapp.com/placesync_profile_A.jpg'],
   },
 }
 

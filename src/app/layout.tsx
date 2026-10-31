@@ -18,8 +18,8 @@ export const viewport: Viewport = {
   themeColor: "#0f172a",
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
+
+
 };
 
 export const metadata: Metadata = {
@@ -49,6 +49,20 @@ export const metadata: Metadata = {
     siteName: "PostSync",
     type: "website",
     locale: "ko_KR",
+    images: [
+      {
+        url: "https://www.postsyncapp.com/placesync_profile_A.jpg",
+        width: 1200,
+        height: 630,
+        alt: "PostSync 비즈니스 마케팅 데이터 연구소 & 무료 웹 유틸리티 포털",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "PostSync - 비즈니스 마케팅 데이터 연구소 & 무료 웹 유틸리티 포털",
+    description: "스마트플레이스 순위 알고리즘 심층 칼럼 35편과 100% 무료 비즈니스 웹 유틸리티 7종 허브.",
+    images: ["https://www.postsyncapp.com/placesync_profile_A.jpg"],
   }
 };
 

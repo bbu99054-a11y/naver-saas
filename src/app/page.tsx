@@ -35,6 +35,20 @@ export const metadata: Metadata = {
     siteName: 'PostSync 플레이스 연구소',
     locale: 'ko_KR',
     type: 'website',
+    images: [
+      {
+        url: 'https://www.postsyncapp.com/placesync_profile_A.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'PostSync 플레이스 실시간 순위 & 분석 포털',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'PostSync - 네이버 스마트플레이스 실시간 순위 조회 & 로컬 마케팅 분석 포털',
+    description: '키워드와 상호명만 입력하면 네이버 플레이스 실시간 순위와 1위 매장 대비 리뷰·예약·저장수 격차를 1초 만에 분석합니다.',
+    images: ['https://www.postsyncapp.com/placesync_profile_A.jpg'],
   },
 }
 

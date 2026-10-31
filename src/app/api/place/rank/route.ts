@@ -631,8 +631,8 @@ export async function GET(req: Request) {
     const rawCoordX = searchParams.get('x') || '';
     const rawCoordY = searchParams.get('y') || '';
 
-    const cleanQuery = query.replace(/[.,!?~#*]+$/, '').trim();
-    const cleanTarget = target.trim();
+    const cleanQuery = query.replace(/[.,!?~#*]+$/, '').replace(/<[^>]*>/g, '').trim();
+    const cleanTarget = target.replace(/<[^>]*>/g, '').trim();
 
     if (!cleanQuery) {
       return NextResponse.json({
@@ -645,6 +645,13 @@ export async function GET(req: Request) {
       return NextResponse.json({
         success: false,
         error: '검색 키워드는 50자 이내로 입력해 주세요.',
+      }, { status: 400 });
+    }
+
+    if (cleanTarget.length > 50) {
+      return NextResponse.json({
+        success: false,
+        error: '매장 상호명은 50자 이내로 입력해 주세요.',
       }, { status: 400 });
     }
 

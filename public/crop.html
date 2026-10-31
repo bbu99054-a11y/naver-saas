@@ -18,6 +18,15 @@
   <meta property="og:description" content="10,000px 장문 상세페이지를 860px/780px로 자동 리사이징 & 균등 분할. 서버 업로드 0% 무료 웹툴">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.postsyncapp.com/crop">
+  <meta property="og:image" content="https://www.postsyncapp.com/placesync_profile_A.jpg">
+  <meta property="og:site_name" content="PostSync 상세페이지 리사이저">
+  <meta property="og:locale" content="ko_KR">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="스마트스토어·쿠팡 상세페이지 1초 자동 자르기 & 리사이저 | PostSync">
+  <meta name="twitter:description" content="10,000px 장문 상세페이지를 860px/780px로 자동 리사이징 & 균등 분할. 서버 업로드 0% 무료 웹툴">
+  <meta name="twitter:image" content="https://www.postsyncapp.com/placesync_profile_A.jpg">
   
   <!-- Google Analytics 4 (GA4) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-7WTMC1GBC8"></script>
@@ -60,7 +69,7 @@
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; }
-    body { background-color: #f8fafc; color: var(--slate-900); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+    body { background-color: #f8fafc; color: var(--slate-900); line-height: 1.6; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
 
     /* Top Global Integrated Header */
     header.header-integrated {
@@ -1144,8 +1153,8 @@
         </div>
       </div>
       <form class="lead-magnet-form" onsubmit="handleLeadMagnetSubmit(event, 'crop', '[무료 퀵가이드] 스마트스토어·쿠팡 상세페이지 구매전환율 3배 높이는 기획 치트시트 (PDF)')">
-        <input type="email" class="lead-magnet-input" placeholder="치트시트를 받아보실 이메일 주소" required>
-        <input type="tel" class="lead-magnet-input" placeholder="연락처 (선택 - 알림용)" style="flex: 0 1 180px;">
+        <input type="email" class="lead-magnet-input" placeholder="치트시트를 받아보실 이메일 주소" maxlength="100" required>
+        <input type="tel" class="lead-magnet-input" placeholder="연락처 (선택 - 알림용)" maxlength="30" style="flex: 0 1 180px;">
         <button type="submit" class="btn-lead-submit">
           <i class="fa-solid fa-paper-plane"></i> <span>무료 치트시트 즉시 받기</span>
         </button>
@@ -1217,7 +1226,7 @@
         </div>
         <!-- 공유 버튼 및 전체 허브 이동 -->
         <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-          <button type="button" onclick="navigator.clipboard.writeText(window.location.href); alert('✨ 현재 도구 주소가 클립보드에 복사되었습니다! 필요한 동료나 단톡방에 공유해보세요.');" style="display: inline-flex; align-items: center; gap: 6px; padding: 7px 13px; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 12px; font-weight: 700; color: #334155; cursor: pointer; transition: all 0.2s;">
+          <button type="button" onclick="navigator.clipboard.writeText(window.location.href); showToast('✨ 현재 도구 주소가 클립보드에 복사되었습니다!');" style="display: inline-flex; align-items: center; gap: 6px; padding: 7px 13px; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 12px; font-weight: 700; color: #334155; cursor: pointer; transition: all 0.2s;">
             <i class="fa-solid fa-share-nodes" style="color: #2563eb;"></i> <span>도구 링크 복사</span>
           </button>
           <a href="/tools" style="display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; background: #2563eb; color: #ffffff; border-radius: 8px; font-size: 12px; font-weight: 700; text-decoration: none; transition: background 0.2s;">
@@ -1432,7 +1441,7 @@
 
       function handleFile(file) {
         if (!file.type.startsWith('image/')) {
-          alert('이미지 파일(JPG, PNG, WEBP)만 업로드할 수 있습니다.');
+          showToast('이미지 파일(JPG, PNG, WEBP)만 업로드할 수 있습니다.');
           return;
         }
 
@@ -1584,52 +1593,64 @@
 
       // 5. Intentional 1.5s Progress Delay & ZIP Packaging (Ad Viewability Hack)
       btnExecute.addEventListener('click', async () => {
-        if (!currentImage || sliceCaches.length === 0) return;
+        if (!currentImage || sliceCaches.length === 0 || btnExecute.disabled) return;
 
-        // Show Modal
-        progressModal.style.display = 'flex';
-        progressBarFill.style.width = '0%';
-        modalStatusText.textContent = '무손실 규격 연산 및 슬라이싱 최적화 중...';
+        btnExecute.disabled = true;
+        const origBtnText = btnExecute.innerHTML;
+        btnExecute.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>압축 처리 중...</span>';
 
-        // 1.5s simulated progressive steps to ensure ad viewability
-        await animateProgress(0, 40, 400);
-        modalStatusText.textContent = '메모리상 번호순 정렬 및 ZIP 아카이브 압축 중...';
-        await animateProgress(40, 85, 600);
-
-        // Actual ZIP creation via JSZip
-        const zip = new JSZip();
-        const baseName = (currentFile.name.replace(/\.[^/.]+$/, '') || 'detail_page').replace(/[^a-zA-Z0-9가-힣_-]/g, '_');
-        const useWebp = document.getElementById('chkUseWebp')?.checked ?? true;
-        const ext = useWebp ? 'webp' : 'jpg';
-
-        for (const item of sliceCaches) {
-          const sliceNum = String(item.index).padStart(2, '0');
-          const fileName = `${sliceNum}_${baseName}_${item.width}px.${ext}`;
-          
-          // Data URL to base64 (supports both webp and jpeg)
-          const base64Data = item.dataUrl.replace(/^data:image\/[a-zA-Z0-9+-]+;base64,/, '');
-          zip.file(fileName, base64Data, { base64: true });
-        }
-
-        modalStatusText.textContent = 'ZIP 패키징 완료! 다운로드를 시작합니다...';
-        await animateProgress(85, 100, 400);
-
-        // Generate Blob
-        const zipBlob = await zip.generateAsync({ type: 'blob' });
-
-        // Trigger Download
-        const downloadLink = document.createElement('a');
-        downloadLink.href = URL.createObjectURL(zipBlob);
-        downloadLink.download = `${baseName}_cropped_pack.zip`;
-        document.body.appendChild(downloadLink);
-        downloadLink.click();
-        document.body.removeChild(downloadLink);
-
-        // Close modal after 400ms
-        setTimeout(() => {
-          progressModal.style.display = 'none';
+        try {
+          // Show Modal
+          progressModal.style.display = 'flex';
           progressBarFill.style.width = '0%';
-        }, 400);
+          modalStatusText.textContent = '무손실 규격 연산 및 슬라이싱 최적화 중...';
+
+          // 1.5s simulated progressive steps to ensure ad viewability
+          await animateProgress(0, 40, 400);
+          modalStatusText.textContent = '메모리상 번호순 정렬 및 ZIP 아카이브 압축 중...';
+          await animateProgress(40, 85, 600);
+
+          // Actual ZIP creation via JSZip
+          const zip = new JSZip();
+          const baseName = (currentFile.name.replace(/\.[^/.]+$/, '') || 'detail_page').replace(/[^a-zA-Z0-9가-힣_-]/g, '_');
+          const useWebp = document.getElementById('chkUseWebp')?.checked ?? true;
+          const ext = useWebp ? 'webp' : 'jpg';
+
+          for (const item of sliceCaches) {
+            const sliceNum = String(item.index).padStart(2, '0');
+            const fileName = `${sliceNum}_${baseName}_${item.width}px.${ext}`;
+            
+            // Data URL to base64 (supports both webp and jpeg)
+            const base64Data = item.dataUrl.replace(/^data:image\/[a-zA-Z0-9+-]+;base64,/, '');
+            zip.file(fileName, base64Data, { base64: true });
+          }
+
+          modalStatusText.textContent = 'ZIP 패키징 완료! 다운로드를 시작합니다...';
+          await animateProgress(85, 100, 400);
+
+          // Generate Blob
+          const zipBlob = await zip.generateAsync({ type: 'blob' });
+
+          // Trigger Download
+          const downloadLink = document.createElement('a');
+          downloadLink.href = URL.createObjectURL(zipBlob);
+          downloadLink.download = `${baseName}_cropped_pack.zip`;
+          document.body.appendChild(downloadLink);
+          downloadLink.click();
+          document.body.removeChild(downloadLink);
+
+          // Close modal after 400ms
+          setTimeout(() => {
+            progressModal.style.display = 'none';
+            progressBarFill.style.width = '0%';
+          }, 400);
+        } catch (err) {
+          console.error('[Crop Packaging Error]:', err);
+          progressModal.style.display = 'none';
+        } finally {
+          btnExecute.disabled = false;
+          btnExecute.innerHTML = origBtnText;
+        }
       });
 
       // WebP Toggle Change Listener

@@ -26,7 +26,12 @@
   <meta property="og:title" content="마케팅 유입 추적 링크(UTM) & 고화질 QR코드 생성기">
   <meta property="og:description" content="인스타·블로그·플레이스 방문자가 어디서 몇 명 왔는지 1초 만에 추적 링크(UTM) 및 인쇄용 QR코드 무료 생성.">
   <meta property="og:url" content="https://www.postsyncapp.com/utm">
+  <meta property="og:image" content="https://www.postsyncapp.com/placesync_profile_A.jpg">
+  <meta property="og:locale" content="ko_KR">
   <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="마케팅 유입 추적 링크(UTM) & 고화질 QR코드 생성기">
+  <meta name="twitter:description" content="인스타·블로그·플레이스 방문자가 어디서 몇 명 왔는지 1초 만에 추적 링크(UTM) 및 인쇄용 QR코드 무료 생성.">
+  <meta name="twitter:image" content="https://www.postsyncapp.com/placesync_profile_A.jpg">
 
 
   <!-- Typography & Icons -->
@@ -1001,7 +1006,7 @@
             <span>도착 웹사이트 URL <span class="req">*</span></span>
             <span class="hint">방문자가 최종 도달할 랜딩페이지</span>
           </label>
-          <input type="url" id="inputUrl" class="form-input" placeholder="https://yourbrand.com/event" value="https://postsyncapp.com">
+          <input type="url" id="inputUrl" class="form-input" placeholder="https://yourbrand.com/event" value="https://postsyncapp.com" maxlength="500">
         </div>
 
         <div class="form-row">
@@ -1010,14 +1015,14 @@
               <span>캠페인 소스 (Source) <span class="req">*</span></span>
               <span class="hint">utm_source</span>
             </label>
-            <input type="text" id="inputSource" class="form-input" placeholder="예: instagram, naver_blog" value="instagram">
+            <input type="text" id="inputSource" class="form-input" placeholder="예: instagram, naver_blog" value="instagram" maxlength="100">
           </div>
           <div class="form-group">
             <label for="inputMedium">
               <span>캠페인 매체 (Medium) <span class="req">*</span></span>
               <span class="hint">utm_medium</span>
             </label>
-            <input type="text" id="inputMedium" class="form-input" placeholder="예: social, blog, cpc" value="social">
+            <input type="text" id="inputMedium" class="form-input" placeholder="예: social, blog, cpc" value="social" maxlength="100">
           </div>
         </div>
 
@@ -1026,7 +1031,7 @@
             <span>캠페인 이름 (Campaign) <span class="req">*</span></span>
             <span class="hint">utm_campaign (목적/상품명)</span>
           </label>
-          <input type="text" id="inputCampaign" class="form-input" placeholder="예: 2026_spring_launch" value="2026_growth_promo">
+          <input type="text" id="inputCampaign" class="form-input" placeholder="예: 2026_spring_launch" value="2026_growth_promo" maxlength="100">
         </div>
 
         <div class="form-row">
@@ -1035,14 +1040,14 @@
               <span>캠페인 키워드 (Term)</span>
               <span class="hint">utm_term (선택)</span>
             </label>
-            <input type="text" id="inputTerm" class="form-input" placeholder="예: ai_marketing, seo">
+            <input type="text" id="inputTerm" class="form-input" placeholder="예: ai_marketing, seo" maxlength="100">
           </div>
           <div class="form-group">
             <label for="inputContent">
               <span>콘텐츠 구분 (Content)</span>
               <span class="hint">utm_content (선택)</span>
             </label>
-            <input type="text" id="inputContent" class="form-input" placeholder="예: bio_link, hero_banner">
+            <input type="text" id="inputContent" class="form-input" placeholder="예: bio_link, hero_banner" maxlength="100">
           </div>
         </div>
 
@@ -1296,8 +1301,8 @@
         </div>
       </div>
       <form class="lead-magnet-form" onsubmit="handleLeadMagnetSubmit(event, 'utm', '[무료 퀵가이드] GA4 UTM 트래킹 세팅법 (PDF)')">
-        <input type="email" class="lead-magnet-input" placeholder="치트시트를 받아보실 이메일 주소" required>
-        <input type="tel" class="lead-magnet-input" placeholder="연락처 (선택 - 알림용)" style="flex: 0 1 180px;">
+        <input type="email" class="lead-magnet-input" placeholder="치트시트를 받아보실 이메일 주소" maxlength="100" required>
+        <input type="tel" class="lead-magnet-input" placeholder="연락처 (선택 - 알림용)" maxlength="30" style="flex: 0 1 180px;">
         <button type="submit" class="btn-lead-submit">
           <i class="fa-solid fa-paper-plane"></i> <span>무료 치트시트 즉시 받기</span>
         </button>
@@ -1369,7 +1374,7 @@
         </div>
         <!-- 공유 버튼 및 전체 허브 이동 -->
         <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-          <button type="button" onclick="navigator.clipboard.writeText(window.location.href); alert('✨ 현재 도구 주소가 클립보드에 복사되었습니다! 필요한 동료나 단톡방에 공유해보세요.');" style="display: inline-flex; align-items: center; gap: 6px; padding: 7px 13px; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 12px; font-weight: 700; color: #334155; cursor: pointer; transition: all 0.2s;">
+          <button type="button" onclick="navigator.clipboard.writeText(window.location.href); showToast('✨ 현재 도구 주소가 클립보드에 복사되었습니다!');" style="display: inline-flex; align-items: center; gap: 6px; padding: 7px 13px; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 12px; font-weight: 700; color: #334155; cursor: pointer; transition: all 0.2s;">
             <i class="fa-solid fa-share-nodes" style="color: #2563eb;"></i> <span>도구 링크 복사</span>
           </button>
           <a href="/tools" style="display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; background: #2563eb; color: #ffffff; border-radius: 8px; font-size: 12px; font-weight: 700; text-decoration: none; transition: background 0.2s;">
@@ -1768,7 +1773,7 @@
             <td style="font-weight:700; color:var(--slate-800);">${escapeHtml(item.campaign)}</td>
             <td class="hist-url-cell" title="${escapeHtml(item.url)}">${escapeHtml(item.url)}</td>
             <td style="text-align:center;">
-              <button class="btn-hist" onclick="copyText('${escapeJs(item.url)}')"><i class="fa-solid fa-copy"></i></button>
+              <button class="btn-hist" onclick="copyText('${escapeJs(item.url)}')" aria-label="링크 복사" title="링크 복사"><i class="fa-solid fa-copy"></i></button>
             </td>
           </tr>
         `).join('');

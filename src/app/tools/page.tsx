@@ -31,6 +31,20 @@ export const metadata: Metadata = {
     siteName: 'PostSync Tools',
     locale: 'ko_KR',
     type: 'website',
+    images: [
+      {
+        url: 'https://www.postsyncapp.com/placesync_profile_A.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'PostSync 스마트플레이스 & 로컬 마케팅 무료 웹 유틸리티 허브',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'PostSync 스마트플레이스 & 로컬 마케팅 무료 웹 유틸리티 허브',
+    description: '설치 제로, 가입 제로, 서버 전송 제로. 브라우저에서 즉시 구동되는 100% 무료 비즈니스 웹 유틸리티 모음입니다.',
+    images: ['https://www.postsyncapp.com/placesync_profile_A.jpg'],
   },
 };
 

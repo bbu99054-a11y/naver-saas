@@ -18,6 +18,23 @@
   // 무통장 입금 모달 DOM 강제 주입 방지 스위치
   const IS_MONETIZATION_DOM_AUTORUN = false;
 
+  function mzNotify(msg) {
+    if (typeof window.showToast === 'function') {
+      window.showToast(msg);
+      return;
+    }
+    let t = document.getElementById('globalToast');
+    if (!t) {
+      t = document.createElement('div');
+      t.id = 'globalToast';
+      t.className = 'toast-box';
+      document.body.appendChild(t);
+    }
+    t.innerHTML = `<i class="fa-solid fa-circle-info" style="color:#60a5fa;"></i> <span>${msg}</span>`;
+    t.classList.add('show');
+    setTimeout(() => { t.classList.remove('show'); }, 2500);
+  }
+
   // 1. Modal DOM Injection (Creates modals dynamically if not already present)
   function ensureModals(forceInject) {
     if (!IS_MONETIZATION_DOM_AUTORUN && !forceInject) return;
@@ -35,7 +52,7 @@
       <div class="mz-modal-dialog" id="mzTocDialog" style="display:none;">
         <div class="mz-modal-header">
           <h3 class="mz-modal-title">📖 『2026 변호사·세무사 네이버 상위 1% 인바운드 마케팅 실전 지침서』 핵심 목차</h3>
-          <button type="button" class="mz-modal-close" onclick="closeMonetizationModal()">&times;</button>
+          <button type="button" class="mz-modal-close" onclick="closeMonetizationModal()" aria-label="닫기" title="닫기">&times;</button>
         </div>
         <div class="mz-modal-body">
           <div style="font-size:12.5px; color:#475569; margin-bottom:16px; line-height:1.5;">
@@ -83,7 +100,7 @@
       <div class="mz-modal-dialog" id="mzOrderDialog" style="display:none;">
         <div class="mz-modal-header">
           <h3 class="mz-modal-title">💳 전자책 무통장 입금 신청</h3>
-          <button type="button" class="mz-modal-close" onclick="closeMonetizationModal()">&times;</button>
+          <button type="button" class="mz-modal-close" onclick="closeMonetizationModal()" aria-label="닫기" title="닫기">&times;</button>
         </div>
         <div class="mz-modal-body">
           <div class="mz-bank-box">
@@ -113,15 +130,15 @@
           <form id="mzOrderForm" onsubmit="handleEbookOrderSubmit(event)">
             <div class="mz-form-group">
               <label for="mzOrderName"><i class="fa-solid fa-user"></i> 입금자명 (필수)</label>
-              <input type="text" id="mzOrderName" class="mz-form-input" placeholder="예: 홍길동 (입금자명과 일치해야 확인이 빠릅니다)" required>
+              <input type="text" id="mzOrderName" class="mz-form-input" placeholder="예: 홍길동 (입금자명과 일치해야 확인이 빠릅니다)" maxlength="50" required>
             </div>
             <div class="mz-form-group">
               <label for="mzOrderEmail"><i class="fa-solid fa-envelope"></i> 전자책(PDF) 수신 이메일 (필수)</label>
-              <input type="email" id="mzOrderEmail" class="mz-form-input" placeholder="name@example.com" required>
+              <input type="email" id="mzOrderEmail" class="mz-form-input" placeholder="name@example.com" maxlength="100" required>
             </div>
             <div class="mz-form-group">
               <label for="mzOrderPhone"><i class="fa-solid fa-phone"></i> 연락처 (필수 - 입금 확인 알림용)</label>
-              <input type="tel" id="mzOrderPhone" class="mz-form-input" placeholder="010-0000-0000" required>
+              <input type="tel" id="mzOrderPhone" class="mz-form-input" placeholder="010-0000-0000" maxlength="30" required>
             </div>
 
             <!-- 현금영수증 / 세금계산서 발행 선택 (메인 도메인 연동) -->
@@ -142,7 +159,7 @@
                 </label>
               </div>
               <div class="mz-tax-input-wrap" id="mzTaxNumWrap">
-                <input type="text" id="mzTaxNum" class="mz-form-input" placeholder="현금영수증용 휴대폰 번호 ('-' 제외)" style="font-size:12.5px;">
+                <input type="text" id="mzTaxNum" class="mz-form-input" placeholder="현금영수증용 휴대폰 번호 ('-' 제외)" maxlength="30" style="font-size:12.5px;">
               </div>
             </div>
 
@@ -170,7 +187,7 @@
       <div class="mz-modal-dialog" id="mzLeadDialog" style="display:none; max-width:460px;">
         <div class="mz-modal-header" style="background:#f0fdf4; border-bottom:1px solid #bbf7d0;">
           <h3 class="mz-modal-title" style="color:#14532d; font-size:15.5px;"><i class="fa-solid fa-gift" style="color:#16a34a;"></i> [무료 퀵가이드] 네이버 플레이스 1위 & 칼럼 템플릿</h3>
-          <button type="button" class="mz-modal-close" onclick="closeMonetizationModal()">&times;</button>
+          <button type="button" class="mz-modal-close" onclick="closeMonetizationModal()" aria-label="닫기" title="닫기">&times;</button>
         </div>
         <div class="mz-modal-body">
           <div style="font-size:12.5px; color:#166534; margin-bottom:14px; line-height:1.55;">
@@ -179,11 +196,11 @@
           <form id="mzLeadModalForm" onsubmit="handleModalLeadSubmit(event)">
             <div class="mz-form-group">
               <label for="mzLeadModalEmail"><i class="fa-solid fa-envelope"></i> 받아보실 이메일 (필수)</label>
-              <input type="email" id="mzLeadModalEmail" class="mz-form-input" placeholder="name@example.com" required>
+              <input type="email" id="mzLeadModalEmail" class="mz-form-input" placeholder="name@example.com" maxlength="100" required>
             </div>
             <div class="mz-form-group">
               <label for="mzLeadModalPhone"><i class="fa-solid fa-phone"></i> 연락처 (선택 - 알림용)</label>
-              <input type="tel" id="mzLeadModalPhone" class="mz-form-input" placeholder="010-0000-0000">
+              <input type="tel" id="mzLeadModalPhone" class="mz-form-input" placeholder="010-0000-0000" maxlength="30">
             </div>
             <button type="submit" class="btn-lead-submit" id="mzBtnModalLeadSubmit" style="width:100%; justify-content:center; padding:12px; font-size:13.5px; margin-top:8px;">
               <i class="fa-solid fa-download"></i> <span>무료 퀵가이드 1초 받기</span>
@@ -313,17 +330,17 @@
     const taxNum = taxNumInput ? taxNumInput.value.trim() : '';
 
     if (!name || !email) {
-      alert('입금자명과 이메일 주소를 정확히 입력해 주세요.');
+      mzNotify('입금자명과 이메일 주소를 정확히 입력해 주세요.');
       return;
     }
 
     if (!phone) {
-      alert('입금 확인 및 안내를 위해 연락처(휴대폰 번호)를 입력해 주세요.');
+      mzNotify('입금 확인 및 안내를 위해 연락처(휴대폰 번호)를 입력해 주세요.');
       return;
     }
 
     if (taxType === 'BUSINESS' && !taxNum) {
-      alert('세금계산서 발행을 위해 사업자등록번호(10자리)를 입력해 주세요.');
+      mzNotify('세금계산서 발행을 위해 사업자등록번호(10자리)를 입력해 주세요.');
       if (taxNumInput) taxNumInput.focus();
       return;
     }
@@ -375,11 +392,11 @@
         }
         if (successBox) successBox.style.display = 'block';
       } else {
-        alert(data.error || '접수 중 오류가 발생했습니다. 다시 시도해 주세요.');
+        mzNotify(data.error || '접수 중 오류가 발생했습니다. 다시 시도해 주세요.');
       }
     } catch (err) {
       console.error(err);
-      alert('네트워크 오류가 발생했습니다. 다시 시도해 주세요.');
+      mzNotify('네트워크 오류가 발생했습니다. 다시 시도해 주세요.');
     } finally {
       btn.disabled = false;
       btn.innerHTML = '<i class="fa-solid fa-check-circle"></i> <span>입금 신청 완료 및 주문 접수</span>';
@@ -397,7 +414,7 @@
     const successMsg = document.getElementById('mzLeadModalSuccessMsg');
 
     if (!emailInput || !emailInput.value.trim()) {
-      alert('가이드북을 받아보실 이메일을 입력해 주세요.');
+      mzNotify('가이드북을 받아보실 이메일을 입력해 주세요.');
       return;
     }
 
@@ -429,11 +446,11 @@
           }
         }
       } else {
-        alert(data.error || '신청 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.');
+        mzNotify(data.error || '신청 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.');
       }
     } catch (err) {
       console.error(err);
-      alert('네트워크 오류가 발생했습니다. 다시 시도해 주세요.');
+      mzNotify('네트워크 오류가 발생했습니다. 다시 시도해 주세요.');
     } finally {
       submitBtn.disabled = false;
       submitBtn.innerHTML = '<i class="fa-solid fa-download"></i> <span>무료 퀵가이드 1초 받기</span>';
@@ -450,7 +467,7 @@
     const successBox = form.parentElement.querySelector('.lead-magnet-success');
 
     if (!emailInput || !emailInput.value.trim()) {
-      alert('가이드북을 받아보실 이메일을 입력해 주세요.');
+      mzNotify('가이드북을 받아보실 이메일을 입력해 주세요.');
       return;
     }
 
@@ -488,11 +505,11 @@
           `;
         }
       } else {
-        alert(data.error || '신청 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.');
+        mzNotify(data.error || '신청 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.');
       }
     } catch (err) {
       console.error(err);
-      alert('네트워크 오류가 발생했습니다. 다시 시도해 주세요.');
+      mzNotify('네트워크 오류가 발생했습니다. 다시 시도해 주세요.');
     } finally {
       submitBtn.disabled = false;
       submitBtn.innerHTML = originalText;

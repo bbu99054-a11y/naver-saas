@@ -101,6 +101,7 @@ export default function HeroPlaceSearch({
                 if (errorMessage) setErrorMessage('')
               }}
               placeholder="지역+업종 (예: 강남역 피부과)"
+              maxLength={50}
               className={`w-full pl-8 pr-3 py-2.5 text-xs bg-slate-50 focus:bg-white border rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none transition ${
                 errorMessage ? 'border-red-500 focus:border-red-600' : 'border-slate-200 focus:border-slate-800'
               }`}
@@ -119,6 +120,7 @@ export default function HeroPlaceSearch({
               value={target}
               onChange={(e) => setTarget(e.target.value)}
               placeholder="내 매장 상호명 (선택 입력)"
+              maxLength={50}
               className="w-full pl-8 pr-3 py-2.5 text-xs bg-slate-50 focus:bg-white border border-slate-200 focus:border-slate-800 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none transition"
             />
           </div>
@@ -192,6 +194,7 @@ export default function HeroPlaceSearch({
               if (errorMessage) setErrorMessage('')
             }}
             placeholder="지역+업종 (예: 성수동 카페, 강남역 피부과)"
+            maxLength={50}
             className="w-full pl-11 pr-4 py-3 sm:py-3.5 text-sm sm:text-base text-slate-900 placeholder-slate-400 font-medium bg-transparent border-0 focus:outline-none focus:ring-0"
           />
         </div>
@@ -207,6 +210,7 @@ export default function HeroPlaceSearch({
             value={target}
             onChange={(e) => setTarget(e.target.value)}
             placeholder="내 매장명 (선택, 미입력 시 전체)"
+            maxLength={50}
             className="w-full pl-11 pr-4 py-3 sm:py-3.5 text-sm sm:text-base text-slate-900 placeholder-slate-400 font-medium bg-transparent border-0 focus:outline-none focus:ring-0"
           />
         </div>

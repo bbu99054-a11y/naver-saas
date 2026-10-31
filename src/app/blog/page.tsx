@@ -14,6 +14,20 @@ export const metadata: Metadata = {
       '네이버 플레이스 1페이지 진입 공식, 경쟁 매장 정량 격차 분석법, C-Rank 블로그 및 광고 컴플라이언스 실전 가이드를 확인하세요.',
     url: 'https://www.postsyncapp.com/blog',
     type: 'website',
+    images: [
+      {
+        url: 'https://www.postsyncapp.com/placesync_profile_A.jpg',
+        width: 1200,
+        height: 630,
+        alt: '스마트플레이스 상위노출 & 로컬 마케팅 실전 칼럼 | PostSync',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: '스마트플레이스 상위노출 & 로컬 마케팅 실전 칼럼 | PostSync',
+    description: '네이버 플레이스 1페이지 진입 공식, 경쟁 매장 정량 격차 분석법, C-Rank 블로그 및 광고 컴플라이언스 실전 가이드.',
+    images: ['https://www.postsyncapp.com/placesync_profile_A.jpg'],
   },
 }
 

@@ -26,7 +26,12 @@
   <meta property="og:title" content="자소서 글자수 바이트 계산기 & 네이버 블로그 C-Rank 키워드 밀도 분석기">
   <meta property="og:description" content="사람인/잡코리아/NCS 자소서 바이트 규격 실시간 비교 및 네이버 블로그 C-Rank 상위노출 키워드 밀도 1초 진단 (100% 로컬 보안 연산).">
   <meta property="og:url" content="https://www.postsyncapp.com/byte">
+  <meta property="og:image" content="https://www.postsyncapp.com/placesync_profile_A.jpg">
+  <meta property="og:locale" content="ko_KR">
   <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="자소서 글자수 바이트 계산기 & 네이버 블로그 C-Rank 키워드 밀도 분석기">
+  <meta name="twitter:description" content="사람인/잡코리아/NCS 자소서 바이트 규격 실시간 비교 및 네이버 블로그 C-Rank 상위노출 키워드 밀도 1초 진단 (100% 로컬 보안 연산).">
+  <meta name="twitter:image" content="https://www.postsyncapp.com/placesync_profile_A.jpg">
 
 
   <!-- Typography & Icons -->
@@ -726,12 +731,12 @@
           </div>
           <div class="tool-btn-group">
             <button class="btn-tool btn-tool-primary" id="btnCopyText"><i class="fa-solid fa-copy"></i> 복사하기</button>
-            <button class="btn-tool" id="btnClearText" style="color:var(--rose);"><i class="fa-solid fa-trash-can"></i></button>
+            <button class="btn-tool" id="btnClearText" style="color:var(--rose);" aria-label="텍스트 전체 비우기" title="텍스트 전체 비우기"><i class="fa-solid fa-trash-can"></i></button>
           </div>
         </div>
 
         <div class="editor-body">
-          <textarea id="mainEditor" class="text-editor" placeholder="여기에 자기소개서 원고나 블로그 포스팅 초안을 붙여넣으세요. 실시간으로 글자수, 플랫폼별 바이트, 네이버 C-Rank 키워드 밀도가 분석됩니다..." autofocus></textarea>
+          <textarea id="mainEditor" class="text-editor" maxlength="50000" placeholder="여기에 자기소개서 원고나 블로그 포스팅 초안을 붙여넣으세요. 실시간으로 글자수, 플랫폼별 바이트, 네이버 C-Rank 키워드 밀도가 분석됩니다..." autofocus></textarea>
         </div>
 
         <div class="editor-footer-status">
@@ -983,8 +988,8 @@
         </div>
       </div>
       <form class="lead-magnet-form" onsubmit="handleLeadMagnetSubmit(event, 'byte', '[무료 퀵가이드] 대기업 서류 합격 자소서 글자수 공식 (PDF)')">
-        <input type="email" class="lead-magnet-input" placeholder="퀵가이드를 받아보실 이메일 주소" required>
-        <input type="tel" class="lead-magnet-input" placeholder="연락처 (선택 - 알림용)" style="flex: 0 1 180px;">
+        <input type="email" class="lead-magnet-input" placeholder="퀵가이드를 받아보실 이메일 주소" maxlength="100" required>
+        <input type="tel" class="lead-magnet-input" placeholder="연락처 (선택 - 알림용)" maxlength="30" style="flex: 0 1 180px;">
         <button type="submit" class="btn-lead-submit">
           <i class="fa-solid fa-paper-plane"></i> <span>무료 퀵가이드 즉시 받기</span>
         </button>
@@ -1056,7 +1061,7 @@
         </div>
         <!-- 공유 버튼 및 전체 허브 이동 -->
         <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-          <button type="button" onclick="navigator.clipboard.writeText(window.location.href); alert('✨ 현재 도구 주소가 클립보드에 복사되었습니다! 필요한 동료나 단톡방에 공유해보세요.');" style="display: inline-flex; align-items: center; gap: 6px; padding: 7px 13px; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 12px; font-weight: 700; color: #334155; cursor: pointer; transition: all 0.2s;">
+          <button type="button" onclick="navigator.clipboard.writeText(window.location.href); showToast('✨ 현재 도구 주소가 클립보드에 복사되었습니다!');" style="display: inline-flex; align-items: center; gap: 6px; padding: 7px 13px; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 12px; font-weight: 700; color: #334155; cursor: pointer; transition: all 0.2s;">
             <i class="fa-solid fa-share-nodes" style="color: #2563eb;"></i> <span>도구 링크 복사</span>
           </button>
           <a href="/tools" style="display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; background: #2563eb; color: #ffffff; border-radius: 8px; font-size: 12px; font-weight: 700; text-decoration: none; transition: background 0.2s;">

@@ -44,6 +44,7 @@ export async function POST(req: Request) {
     const cleanPhone = String(phone).trim().slice(0, 30)
     const cleanName = String(name).trim().slice(0, 50) || '고객'
     const cleanBusinessName = String(businessName || name).trim().slice(0, 100) || null
+    const cleanMessage = metadata?.message ? String(metadata.message).trim().slice(0, 2000) : ''
     const nowTime = new Date().toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' })
 
     // 1. PostgreSQL leads 테이블에 암호화 보존
@@ -92,7 +93,7 @@ export async function POST(req: Request) {
         `📱 연락처: ${cleanPhone || '미기재'}\n` +
         `📧 이메일: ${cleanEmail}\n` +
         `📌 문의 유형: ${metadata.inquiryType || leadType || '일반 문의'}\n` +
-        `📝 문의 내용:\n${metadata.message || '상세 내용 없음'}\n\n` +
+        `📝 문의 내용:\n${cleanMessage || '상세 내용 없음'}\n\n` +
         `⏱ 접수일시: ${nowTime}\n` +
         `👉 확인 후 신속하게 유선 연락 또는 이메일 회신을 진행하세요.`
 

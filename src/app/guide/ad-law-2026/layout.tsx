@@ -15,11 +15,20 @@ export const metadata: Metadata = {
     siteName: 'PostSync Legal & Medical Compliance Lab',
     locale: 'ko_KR',
     type: 'article',
+    images: [
+      {
+        url: 'https://www.postsyncapp.com/placesync_profile_A.jpg',
+        width: 1200,
+        height: 630,
+        alt: '2026 전문직 AI 마케팅 & 온라인 광고 규정 단속 대응 공식 지침서',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: '2026 전문직 AI 마케팅 & 온라인 광고 규정 단속 대응 공식 지침서',
     description: '2026년 개정 광고 규제 20대 금지어 및 네이버 AI 브리핑 대응 가이드북 (무료 배포)',
+    images: ['https://www.postsyncapp.com/placesync_profile_A.jpg'],
   },
 }
 

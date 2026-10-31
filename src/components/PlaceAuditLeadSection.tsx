@@ -181,6 +181,7 @@ function PlaceAuditLeadContent() {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="예: 강남더블유치과 또는 링크"
+                maxLength={100}
                 className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
               />
             </div>
@@ -194,6 +195,7 @@ function PlaceAuditLeadContent() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="doctor@example.com"
+                maxLength={100}
                 className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
               />
             </div>

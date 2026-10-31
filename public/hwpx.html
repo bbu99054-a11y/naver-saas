@@ -26,7 +26,12 @@
   <meta property="og:title" content="공공기관 HWPX 안심 변환기 & 노설치 웹 뷰어">
   <meta property="og:description" content="한컴오피스 설치 없이 1초 만에 HWPX 문서를 텍스트/마크다운/이미지로 안전 추출 (100% 로컬 보안 연산).">
   <meta property="og:url" content="https://www.postsyncapp.com/hwpx">
+  <meta property="og:image" content="https://www.postsyncapp.com/placesync_profile_A.jpg">
+  <meta property="og:locale" content="ko_KR">
   <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="공공기관 HWPX 안심 변환기 & 노설치 웹 뷰어">
+  <meta name="twitter:description" content="한컴오피스 설치 없이 1초 만에 HWPX 문서를 텍스트/마크다운/이미지로 안전 추출 (100% 로컬 보안 연산).">
+  <meta name="twitter:image" content="https://www.postsyncapp.com/placesync_profile_A.jpg">
 
 
   <!-- Typography & Icons -->
@@ -67,7 +72,7 @@
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif; }
-    body { background-color: #f8fafc; color: var(--slate-900); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+    body { background-color: #f8fafc; color: var(--slate-900); line-height: 1.6; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
 
     /* Top Global Integrated Header */
     header.header-integrated {
@@ -927,8 +932,8 @@
         </div>
       </div>
       <form class="lead-magnet-form" onsubmit="handleLeadMagnetSubmit(event, 'hwpx', '[무료 퀵가이드] 정부 지원사업 공공 입찰 통과 서식 치트시트 (PDF)')">
-        <input type="email" class="lead-magnet-input" placeholder="치트시트를 받아보실 이메일 주소" required>
-        <input type="tel" class="lead-magnet-input" placeholder="연락처 (선택 - 알림용)" style="flex: 0 1 180px;">
+        <input type="email" class="lead-magnet-input" placeholder="치트시트를 받아보실 이메일 주소" maxlength="100" required>
+        <input type="tel" class="lead-magnet-input" placeholder="연락처 (선택 - 알림용)" maxlength="30" style="flex: 0 1 180px;">
         <button type="submit" class="btn-lead-submit">
           <i class="fa-solid fa-paper-plane"></i> <span>무료 치트시트 즉시 받기</span>
         </button>
@@ -1000,7 +1005,7 @@
         </div>
         <!-- 공유 버튼 및 전체 허브 이동 -->
         <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-          <button type="button" onclick="navigator.clipboard.writeText(window.location.href); alert('✨ 현재 도구 주소가 클립보드에 복사되었습니다! 필요한 동료나 단톡방에 공유해보세요.');" style="display: inline-flex; align-items: center; gap: 6px; padding: 7px 13px; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 12px; font-weight: 700; color: #334155; cursor: pointer; transition: all 0.2s;">
+          <button type="button" onclick="navigator.clipboard.writeText(window.location.href); showToast('✨ 현재 도구 주소가 클립보드에 복사되었습니다!');" style="display: inline-flex; align-items: center; gap: 6px; padding: 7px 13px; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 12px; font-weight: 700; color: #334155; cursor: pointer; transition: all 0.2s;">
             <i class="fa-solid fa-share-nodes" style="color: #2563eb;"></i> <span>도구 링크 복사</span>
           </button>
           <a href="/tools" style="display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; background: #2563eb; color: #ffffff; border-radius: 8px; font-size: 12px; font-weight: 700; text-decoration: none; transition: background 0.2s;">
@@ -1476,6 +1481,7 @@
 
       // Copy Active Tab Content
       btnCopyActive.addEventListener('click', () => {
+        if (btnCopyActive.disabled) return;
         let contentToCopy = '';
         if (activeTab === 'markdown') {
           contentToCopy = currentParsedData.markdown;
@@ -1490,28 +1496,45 @@
           return;
         }
 
+        btnCopyActive.disabled = true;
         navigator.clipboard.writeText(contentToCopy).then(() => {
           showToast(`📋 ${activeTab.toUpperCase()} 내용이 클립보드에 복사되었습니다!`);
+        }).finally(() => {
+          setTimeout(() => { btnCopyActive.disabled = false; }, 400);
         });
       });
 
       // Download Active Tab Content
-      btnDownloadActive.addEventListener('click', () => {
+      btnDownloadActive.addEventListener('click', async () => {
+        if (btnDownloadActive.disabled) return;
         const base = (currentParsedData.fileName || 'document').replace(/\.hwpx$/i, '');
 
-        if (activeTab === 'markdown') {
-          downloadBlob(new Blob([currentParsedData.markdown], { type: 'text/markdown;charset=utf-8' }), `${base}.md`);
-        } else if (activeTab === 'text') {
-          downloadBlob(new Blob([currentParsedData.plainText], { type: 'text/plain;charset=utf-8' }), `${base}.txt`);
-        } else if (activeTab === 'images') {
-          if (currentParsedData.images.length === 0) {
-            showToast('다운로드할 이미지가 없습니다.');
-            return;
+        btnDownloadActive.disabled = true;
+        const origText = btnDownloadActive.innerHTML;
+        btnDownloadActive.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>다운로드 중...</span>';
+
+        try {
+          if (activeTab === 'markdown') {
+            downloadBlob(new Blob([currentParsedData.markdown], { type: 'text/markdown;charset=utf-8' }), `${base}.md`);
+          } else if (activeTab === 'text') {
+            downloadBlob(new Blob([currentParsedData.plainText], { type: 'text/plain;charset=utf-8' }), `${base}.txt`);
+          } else if (activeTab === 'images') {
+            if (currentParsedData.images.length === 0) {
+              showToast('다운로드할 이미지가 없습니다.');
+              return;
+            }
+            await downloadImagesAsZip(base);
+          } else {
+            // HTML Preview download
+            downloadBlob(new Blob([currentParsedData.html], { type: 'text/html;charset=utf-8' }), `${base}_preview.html`);
           }
-          downloadImagesAsZip(base);
-        } else {
-          // HTML Preview download
-          downloadBlob(new Blob([currentParsedData.html], { type: 'text/html;charset=utf-8' }), `${base}_preview.html`);
+        } catch (e) {
+          console.error(e);
+        } finally {
+          setTimeout(() => {
+            btnDownloadActive.disabled = false;
+            btnDownloadActive.innerHTML = origText;
+          }, 500);
         }
       });
 
