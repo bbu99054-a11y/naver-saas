@@ -1530,11 +1530,21 @@
                   </button>
                 </div>
 
-                <div style="margin-top:12px; display:flex; flex-direction:column; gap:8px;">
-                  <label style="display:inline-flex; align-items:center; gap:8px; font-size:12.5px; color:#1e293b; font-weight:700; cursor:pointer;">
-                    <input type="checkbox" id="placeLeadPrivacyAgree" style="width:16px; height:16px; accent-color:#2563eb; cursor:pointer;" />
-                    <span>[필수] 맞춤 처방 리포트 및 검증 파트너 3곳 비교견적 안내를 위한 개인정보 수집·이용 동의 (<a href="/privacy" target="_blank" style="color:#2563eb; text-decoration:underline;">전문 보기</a>)</span>
+                <div style="margin-top:14px; padding:12px 14px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; display:flex; flex-direction:column; gap:8px;">
+                  <label style="display:inline-flex; align-items:flex-start; gap:8px; font-size:12.5px; color:#1e293b; font-weight:700; cursor:pointer;">
+                    <input type="checkbox" id="placeLeadPrivacyAgree" style="width:16px; height:16px; accent-color:#2563eb; cursor:pointer; margin-top:2px;" checked />
+                    <span>[필수] 맞춤 처방 리포트 안내를 위한 개인정보 수집·이용 동의 (<a href="/privacy" target="_blank" style="color:#2563eb; text-decoration:underline;">전문 보기</a>)</span>
                   </label>
+                  <label style="display:inline-flex; align-items:flex-start; gap:8px; font-size:12.5px; color:#1e293b; font-weight:700; cursor:pointer;">
+                    <input type="checkbox" id="placeLeadThirdPartyAgree" style="width:16px; height:16px; accent-color:#2563eb; cursor:pointer; margin-top:2px;" checked />
+                    <span>[필수] 맞춤 3곳 비교견적 및 무료 체험 혜택 제공을 위한 개인정보 제3자 제공 동의</span>
+                  </label>
+                  <div style="margin-top:2px; padding:8px 10px; background:#ffffff; border:1px solid #cbd5e1; border-radius:6px; font-size:11px; color:#475569; line-height:1.55;">
+                    <div>• <b>제공받는 자:</b> PostSync 제휴 공식 인증 마케팅 대행사 및 체험단 플랫폼 파트너사</div>
+                    <div>• <b>제공 항목:</b> 상호명, 연락처, 매장 진단 현황, 선택 처방 및 희망 견적 조건</div>
+                    <div>• <b>제공 목적:</b> 매장 조건별 맞춤 비교견적서 발송, 무료 체험권 안내 및 상담</div>
+                    <div>• <b>보유 기간:</b> 견적 안내 및 상담 완료 시까지 (최대 1년 보관 후 즉시 파기)</div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1997,6 +2007,7 @@
         const storeEl = document.getElementById('placeLeadStoreInput');
         const phoneEl = document.getElementById('placeLeadPhoneInput');
         const agreeEl = document.getElementById('placeLeadPrivacyAgree');
+        const thirdPartyAgreeEl = document.getElementById('placeLeadThirdPartyAgree');
         const btnEl = document.getElementById('btnSubmitPlaceLead');
         const formInner = document.getElementById('placeLeadFormInner');
 
@@ -2031,6 +2042,12 @@
         if (agreeEl && !agreeEl.checked) {
           showToast('맞춤 처방 및 비교견적 안내를 위해 개인정보 수집·이용에 동의해 주세요.');
           if (agreeEl) agreeEl.focus();
+          return;
+        }
+
+        if (thirdPartyAgreeEl && !thirdPartyAgreeEl.checked) {
+          showToast('상위 3곳 비교견적 안내를 위해 개인정보 제3자 제공에 동의해 주세요.');
+          if (thirdPartyAgreeEl) thirdPartyAgreeEl.focus();
           return;
         }
 
@@ -2080,6 +2097,8 @@
                 storeStatus: storeStatusVal,
                 budgetRange: budgetRangeVal,
                 callbackTime: callbackTimeVal,
+                thirdPartyConsent: Boolean(thirdPartyAgreeEl && thirdPartyAgreeEl.checked),
+                consentTimestamp: new Date().toISOString(),
                 placeUrl,
                 location: kw,
                 keyword: kw,

@@ -25,7 +25,7 @@ export default function PrivacyPage() {
             Privacy Policy
           </div>
           <h1 className="text-3xl md:text-4xl font-extrabold text-white mt-4 mb-2">개인정보 처리방침</h1>
-          <p className="text-sm text-slate-400">시행일자: 2026년 8월 18일 | 최종 수정일: 2026년 8월 19일</p>
+          <p className="text-sm text-slate-400">시행일자: 2026년 8월 18일 | 최종 수정일: 2026년 11월 3일</p>
         </div>
 
         <div className="space-y-10 text-slate-300 leading-relaxed text-sm md:text-base">
@@ -154,9 +154,40 @@ export default function PrivacyPage() {
             </div>
           </section>
 
-          {/* 5. 개인정보보호 책임자 */}
+                    {/* 5. 제3자 제공 */}
+          <section className="space-y-3">
+            <h2 className="text-lg md:text-xl font-bold text-white">5. 개인정보의 제3자 제공</h2>
+            <p>
+              회사는 이용자의 개인정보를 원칙적으로 외부에 제공하지 않습니다. 단, 이용자가 스마트플레이스 맞춤 처방 및 비교견적 상담 서비스를 이용하기 위해 제3자 제공에 직접 동의한 경우에 한하여 아래와 같이 최소한의 범위 내에서 제공합니다.
+            </p>
+            <div className="overflow-x-auto">
+              <table className="w-full text-xs md:text-sm text-left border border-white/10 rounded-lg overflow-hidden mt-3">
+                <thead className="bg-slate-800 text-white">
+                  <tr>
+                    <th className="p-3 border-b border-white/10">제공받는 자</th>
+                    <th className="p-3 border-b border-white/10">제공 목적</th>
+                    <th className="p-3 border-b border-white/10">제공 항목</th>
+                    <th className="p-3 border-b border-white/10">보유 및 이용 기간</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-white/5 bg-slate-900/50">
+                  <tr>
+                    <td className="p-3 font-medium text-white">PostSync 제휴 공식 인증 마케팅 대행사 및 체험단 플랫폼 파트너사</td>
+                    <td className="p-3">매장 조건별 맞춤 비교견적서 발송, 무료 체험권 안내 및 상담</td>
+                    <td className="p-3">상호명, 담당자 연락처, 업종/지역, 매장 진단 현황, 선택 처방 및 희망 견적 조건</td>
+                    <td className="p-3 text-indigo-300 font-semibold">견적 안내 및 상담 완료 시까지 (최대 1년 보관 후 즉시 파기)</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p className="text-xs text-slate-400 pt-1">
+              ※ 이용자는 개인정보의 제3자 제공 동의를 거부할 권리가 있으며, 동의를 거부하더라도 스마트플레이스 무료 순위 조회 및 기본 웹툴 서비스는 제한 없이 이용하실 수 있습니다.
+            </p>
+          </section>
+
+          {/* 6. 개인정보보호 책임자 */}
           <section className="bg-indigo-950/30 p-6 rounded-2xl border border-indigo-500/20 space-y-3">
-            <h2 className="text-lg md:text-xl font-bold text-indigo-300">5. 개인정보 보호책임자 및 고충 처리</h2>
+            <h2 className="text-lg md:text-xl font-bold text-indigo-300">6. 개인정보 보호책임자 및 고충 처리</h2>
             <p>회사는 개인정보 처리에 관한 업무를 총괄해서 책임지고, 정보주체의 권익 구제 및 불만 처리를 위하여 아래와 같이 개인정보 보호책임자를 지정하고 있습니다.</p>
             <div className="pt-2 text-sm text-slate-300 space-y-1">
               <p><strong>[개인정보 보호책임자]</strong></p>
@@ -170,7 +201,7 @@ export default function PrivacyPage() {
 
           {/* 권익침해 구제방법 */}
           <section className="space-y-3 text-xs md:text-sm text-slate-400">
-            <h2 className="text-base md:text-lg font-bold text-white">6. 권익침해 구제방법</h2>
+            <h2 className="text-base md:text-lg font-bold text-white">7. 권익침해 구제방법</h2>
             <p>정보주체는 아래 기관에 개인정보 침해에 대한 피해구제, 상담 등을 문의하실 수 있습니다.</p>
             <ul className="list-disc pl-5 space-y-1">
               <li>개인정보분쟁조정위원회: (국번없이) 1833-6972 (www.kopico.go.kr)</li>
