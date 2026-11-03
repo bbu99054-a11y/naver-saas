@@ -11,7 +11,6 @@ import {
   FileText,
   ArrowRight
 } from 'lucide-react'
-import EbookPromoCard from './EbookPromoCard'
 import SaasBridgeBanner from './SaasBridgeBanner'
 import LeadMagnetModal from './LeadMagnetModal'
 
@@ -130,10 +129,7 @@ export default function ToolContainer({
           {/* 우측 사이드바 영역 */}
           {showSidebar && (
             <aside className="lg:col-span-4 space-y-6">
-              {/* 수익화 블록 1: 전문직 전자책 카드 */}
-              <EbookPromoCard toolSource={toolId} />
-
-              {/* 수익화 블록 2: SaaS 유료 전환 배너 */}
+              {/* 수익화 블록: SaaS 유료 전환 배너 */}
               <SaasBridgeBanner toolName={title} />
             </aside>
           )}

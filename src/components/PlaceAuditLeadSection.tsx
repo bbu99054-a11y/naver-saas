@@ -80,12 +80,22 @@ function PlaceAuditLeadContent() {
           신청이 정상 접수되었습니다!
         </h3>
         <p className="text-sm text-slate-600 max-w-lg mx-auto leading-relaxed">
-          <strong className="text-emerald-700">[{successData.name}]</strong> 귀하의 분석 요청이 등록되었습니다.<br />
-          담당 연구팀의 승인 즉시 네이버 플레이스 데이터를 실시간 분석하여<br />
-          <span className="font-mono font-bold text-slate-800 underline">{successData.email}</span>로 A4 1장 PDF 리포트가 발송됩니다.
+          <strong className="text-emerald-700">[{successData.name}]</strong> 귀하의 분석 요청이 자동 등록되었습니다.<br />
+          등록하신 이메일(<span className="font-mono font-bold text-slate-800 underline">{successData.email}</span>)로 1장 실전 분석 리포트가 발송됩니다.
         </p>
-        <div className="mt-5 inline-block bg-white border border-emerald-200 text-emerald-800 text-xs px-4 py-2 rounded-full font-bold shadow-sm">
-          ⏱ 영업시간 내 평균 1~2분 소요
+        <div className="mt-5 flex flex-wrap justify-center gap-3">
+          <a
+            href={`/utm?store=${encodeURIComponent(successData.name)}&target=review`}
+            className="inline-flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-extrabold px-4 py-2.5 rounded-xl transition shadow-sm"
+          >
+            🖨️ 영수증 리뷰 QR 안내판 즉시 제작 →
+          </a>
+          <a
+            href={`/adcheck?prof=restaurant&store=${encodeURIComponent(successData.name)}`}
+            className="inline-flex items-center gap-1.5 bg-white border border-emerald-300 hover:bg-emerald-50 text-emerald-800 text-xs sm:text-sm font-extrabold px-4 py-2.5 rounded-xl transition shadow-sm"
+          >
+            ✍️ 소개글 2,000자 SEO 검사 →
+          </a>
         </div>
       </div>
     )
@@ -114,8 +124,8 @@ function PlaceAuditLeadContent() {
       </h2>
 
       <p className="text-xs sm:text-sm text-slate-600 mb-6 leading-relaxed">
-        변호사·세무사·의료광고 심의 규정을 100% 준수한 A4 1장 실전 브리핑 덱(PDF)을 발급해 드립니다.<br className="hidden sm:inline" />
-        <strong>복잡한 회원가입 없이</strong> 신청 즉시 담당 연구팀이 데이터를 정밀 분석하여 이메일로 전달합니다.
+        반경 2km 경쟁사 순위·리뷰 비교 분석 및 NPlaceRank 핵심 지표를 요약한 1장 실전 분석 리포트를 발급해 드립니다.<br className="hidden sm:inline" />
+        <strong>복잡한 회원가입 없이</strong> 신청 즉시 자동화 분석 시스템을 통해 이메일로 전달됩니다.
       </p>
 
       {/* Mode 1: 1-Click for Cold Email Traffic */}

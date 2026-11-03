@@ -61,6 +61,7 @@ const nextConfig: NextConfig = {
         },
         { source: "/adcheck", destination: "/adcheck.html" },
         { source: "/place", destination: "/place.html" },
+        { source: "/reply", destination: "/reply.html" },
         { source: "/crop", destination: "/crop.html" },
         { source: "/byte", destination: "/byte.html" },
         { source: "/hwpx", destination: "/hwpx.html" },
@@ -70,6 +71,7 @@ const nextConfig: NextConfig = {
       afterFiles: [
         { source: "/crop", destination: "/crop.html" },
         { source: "/place", destination: "/place.html" },
+        { source: "/reply", destination: "/reply.html" },
         { source: "/adcheck", destination: "/adcheck.html" },
         { source: "/byte", destination: "/byte.html" },
         { source: "/hwpx", destination: "/hwpx.html" },

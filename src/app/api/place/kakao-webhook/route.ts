@@ -230,8 +230,8 @@ export async function POST(req: Request) {
             },
             {
               action: 'webLink',
-              label: '🚀 플레이스 상위노출 1:1 상담',
-              webLinkUrl: 'http://pf.kakao.com/_xonxiaX/chat'
+              label: '🖨️ 영수증 리뷰 QR 안내판 제작',
+              webLinkUrl: `https://www.postsyncapp.com/utm?store=${encodeURIComponent(found.name)}&target=review`
             }
           ]
         })
@@ -255,10 +255,10 @@ export async function POST(req: Request) {
             webLinkUrl: webDetailUrl
           },
           {
-            action: 'webLink',
-            label: '🚀 1위 노출 1:1 무료 진단받기',
-            webLinkUrl: 'http://pf.kakao.com/_xonxiaX/chat'
-          }
+              action: 'webLink',
+              label: '✍️ 플레이스 소개글 SEO 진단',
+              webLinkUrl: `https://www.postsyncapp.com/adcheck?prof=restaurant&store=${encodeURIComponent(target)}&kw=${encodeURIComponent(query)}`
+            }
         ]
       })
     );

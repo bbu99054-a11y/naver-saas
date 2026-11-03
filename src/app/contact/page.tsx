@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Sparkles, ArrowLeft, Mail, Building2, ShieldCheck, HelpCircle, CheckCircle2 } from 'lucide-react'
+import GlobalHeader from '@/components/common/GlobalHeader'
 
 export const metadata: Metadata = {
   title: '고객지원 및 서비스 안내 | PostSync',
@@ -33,7 +34,7 @@ export const metadata: Metadata = {
 const FAQS = [
   {
     q: '스마트플레이스 순위 조회는 정말 100% 무료인가요?',
-    a: '네, 완전 무료입니다. 별도의 회원가입이나 유료 결제 없이 네이버 스마트플레이스 1위부터 20위까지의 실시간 노출 순위와 1위 매장 대비 4대 정량 격차(방문자리뷰·블로그리뷰·예약·쿠폰)를 즉시 실측할 수 있습니다.',
+    a: '네, 완전 무료입니다. 별도의 회원가입이나 유료 결제 없이 네이버 스마트플레이스 1위부터 20위까지의 실시간 노출 순위와 1위 매장 대비 4대 지표 차이(방문자리뷰·블로그리뷰·예약·쿠폰)를 즉시 비교 진단할 수 있습니다.',
   },
   {
     q: '입력한 매장 정보나 원고 데이터가 외부 서버에 저장되나요?',
@@ -52,22 +53,8 @@ const FAQS = [
 export default function ContactPage() {
   return (
     <div className="min-h-screen bg-slate-900 text-slate-200 font-sans selection:bg-indigo-500/30 break-keep break-words">
-      {/* Header */}
-      <header className="border-b border-white/10 bg-slate-950/70 backdrop-blur-md sticky top-0 z-50">
-        <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 text-white hover:opacity-80 transition-opacity">
-            <ArrowLeft className="w-4 h-4 text-slate-400" />
-            <span className="text-sm font-medium text-slate-400">포털 홈으로 이동</span>
-          </Link>
-          <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-indigo-600 flex items-center justify-center text-white shadow-md shadow-indigo-500/20">
-              <Sparkles className="w-4 h-4" />
-            </div>
-            <span className="text-base font-bold text-white tracking-tight">PostSync</span>
-            <span className="text-[10px] bg-indigo-500/20 text-indigo-300 px-2 py-0.5 rounded-full border border-indigo-500/30 font-semibold">Help Center</span>
-          </div>
-        </div>
-      </header>
+      {/* Global Header */}
+      <GlobalHeader />
 
       {/* Main Content */}
       <main className="max-w-4xl mx-auto px-6 py-16 space-y-12">

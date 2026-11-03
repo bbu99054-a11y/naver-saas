@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import GlobalHeader from '@/components/common/GlobalHeader'
 
 export const metadata: Metadata = {
   title: '2026 전문직 AI 마케팅 & 온라인 광고 규정 단속 대응 공식 지침서 | PostSync',
@@ -10,7 +11,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: '2026 전문직 AI 마케팅 & 온라인 광고 규정 단속 대응 공식 지침서',
     description:
-      '과태료 0건, 수임 전환 4배! 변호사·의사·세무사·노무사 2026년 개정 광고 규제 20대 금지어 사전 및 네이버 AI 브리핑 상위노출 지침서 (A4 소장용 전자책 PDF 제공)',
+      '과태료 0건, 수임 전환 4배! 변호사·의사·세무사·노무사 2026년 개정 광고 규제 20대 금지어 사전 및 네이버 AI 브리핑 상위노출 지침서 (A4 소장용 실전 가이드 PDF 제공)',
     url: 'https://www.postsyncapp.com/guide/ad-law-2026',
     siteName: 'PostSync Legal & Medical Compliance Lab',
     locale: 'ko_KR',
@@ -37,5 +38,10 @@ export default function AdLawLayout({
 }: {
   children: React.ReactNode
 }) {
-  return <>{children}</>
+  return (
+    <>
+      <GlobalHeader />
+      {children}
+    </>
+  )
 }

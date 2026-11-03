@@ -420,7 +420,7 @@ export default function AdLaw2026Page() {
               onClick={handlePrint}
               style={{ backgroundColor: '#0f172a', color: '#ffffff' }}
               className="px-3 py-1.5 rounded-lg text-xs font-bold shadow-sm flex items-center gap-1.5 transition hover:bg-slate-800 cursor-pointer"
-              title="A4 규격 전자책 인쇄 또는 PDF 저장"
+              title="A4 규격 실전 가이드 인쇄 또는 PDF 저장"
             >
               <Download className="w-3.5 h-3.5 text-blue-400" />
               <span>📄 소장용 PDF / 인쇄</span>
@@ -542,7 +542,7 @@ export default function AdLaw2026Page() {
             <div style={{ backgroundColor: '#f8fafc', borderColor: '#e2e8f0' }} className="p-3.5 rounded-xl border">
               <span style={{ color: '#64748b' }} className="block text-[11px] font-bold">소장 규격</span>
               <strong style={{ color: '#0f172a' }} className="font-extrabold text-sm block mt-0.5">
-                A4 전자책 인쇄 최적화 (12P)
+                A4 실전 가이드 인쇄 최적화 (12P)
               </strong>
             </div>
           </div>

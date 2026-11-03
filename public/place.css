@@ -1122,14 +1122,14 @@
       grid-template-columns: 1fr;
     }
 
-    /* 📊 네이버 광고 공식 월간 검색량 전광판 카드 (화사하고 깨끗한 밝은 테마) */
+    /* 📊 네이버 광고 공식 월간 검색량 전광판 카드 */
     .keyword-power-card {
-      background: linear-gradient(135deg, #ffffff 0%, #f0f7ff 100%);
+      background: #ffffff;
       border-radius: var(--radius-lg);
       padding: 22px 24px;
       color: var(--slate-800);
-      border: 1.5px solid #bae6fd;
-      box-shadow: 0 4px 18px -2px rgba(14, 165, 233, 0.12);
+      border: 1px solid var(--slate-200);
+      box-shadow: var(--shadow-sm);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -1258,7 +1258,7 @@
       line-height: 1.4;
     }
 
-    /* 🩺 1위 vs 내 매장 5대 정량 지표 격차 대시보드 */
+    /* 🩺 1위 vs 내 매장 5대 정량 지표 비교 대시보드 */
     .gap-dashboard-box {
       background: #ffffff;
       border: 1.5px solid #e0e7ff;
@@ -1403,15 +1403,15 @@
     .diagnosis-card {
       display: none;
       background: #ffffff;
-      border: 2px solid var(--primary);
+      border: 1px solid var(--slate-200);
       border-radius: var(--radius-lg);
-      padding: 24px 28px;
-      box-shadow: var(--shadow-md);
+      padding: 22px 24px;
+      box-shadow: var(--shadow-sm);
       margin-bottom: 24px;
       position: relative;
       overflow: hidden;
     }
-    .diagnosis-card.top1 { border-color: #f59e0b; background: linear-gradient(to bottom, #fffbeb, #ffffff); }
+    .diagnosis-card.top1 { border-color: var(--slate-300); background: #ffffff; }
     .diag-header {
       display: flex;
       justify-content: space-between;
@@ -1785,70 +1785,62 @@
     }
     footer a { color: var(--slate-700); text-decoration: none; font-weight: 600; }
 
-    /* 🌟 올인원 통합 진단 & 1위 탈환 솔루션 카드 (옵션 1: 일렉트릭 사파이어 블루 고대비 테마) */
+    /* 🌟 올인원 맞춤형 솔루션 카드 */
     .all-in-one-solution-card {
       display: none;
-      background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 50%, #e0e7ff 100%);
-      border: 2px solid #3b82f6;
+      background: #ffffff;
+      border: 1px solid var(--slate-200);
       border-radius: var(--radius-lg);
-      padding: 34px 28px;
-      margin-top: 14px;
-      margin-bottom: 38px;
-      box-shadow: 0 16px 40px -8px rgba(37, 99, 235, 0.22), 0 0 0 1px rgba(96, 165, 250, 0.35);
+      padding: 28px 24px;
+      margin-top: 24px;
+      margin-bottom: 32px;
+      box-shadow: var(--shadow-sm);
       color: var(--slate-800);
       position: relative;
-      overflow: hidden;
     }
     .all-in-one-solution-card::before {
-      content: "";
-      position: absolute;
-      top: -50px;
-      right: -50px;
-      width: 250px;
-      height: 250px;
-      background: radial-gradient(circle, rgba(59, 130, 246, 0.2) 0%, transparent 70%);
-      pointer-events: none;
+      display: none;
     }
     .aio-header {
-      margin-bottom: 22px;
-      padding-bottom: 18px;
-      border-bottom: 1.5px solid rgba(59, 130, 246, 0.2);
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--slate-100);
     }
     .aio-badge {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      background: #2563eb;
-      color: #ffffff;
-      border: 1px solid #1d4ed8;
+      background: #eff6ff;
+      color: #1d4ed8;
+      border: 1px solid #bfdbfe;
       font-size: 11.5px;
-      font-weight: 800;
-      padding: 5px 14px;
-      border-radius: 20px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 999px;
       margin-bottom: 10px;
-      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+      box-shadow: none;
     }
     .aio-title {
-      font-size: 22px;
-      font-weight: 900;
+      font-size: 20px;
+      font-weight: 800;
       color: #0f172a;
-      letter-spacing: -0.4px;
+      letter-spacing: -0.3px;
       margin-bottom: 6px;
     }
     .aio-subtitle {
-      font-size: 14px;
-      color: #334155;
+      font-size: 13.5px;
+      color: #475569;
       line-height: 1.5;
     }
 
     /* 통합 카드 내 gap-dashboard (순백색 고대비 플랫 카드) */
     .aio-gap-box {
       background: #ffffff;
-      border: 1.5px solid #bfdbfe;
-      border-radius: 14px;
+      border: 1px solid var(--slate-200);
+      border-radius: 12px;
       padding: 18px;
-      margin-bottom: 24px;
-      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.06);
+      margin-bottom: 20px;
+      box-shadow: none;
     }
     .aio-gap-box .gap-header {
       display: flex;
@@ -1860,8 +1852,8 @@
     }
     .aio-gap-box .gap-title {
       font-size: 13.5px;
-      font-weight: 800;
-      color: #1d4ed8;
+      font-weight: 700;
+      color: #0f172a;
       display: flex;
       align-items: center;
       gap: 6px;
@@ -1872,19 +1864,19 @@
       gap: 10px;
     }
     .aio-gap-box .gap-item {
-      background: #f8fafc;
-      border: 1px solid #e2e8f0;
+      background: #ffffff;
+      border: 1px solid var(--slate-200);
       border-radius: 10px;
-      padding: 11px 8px;
+      padding: 12px 10px;
       text-align: center;
     }
     .aio-gap-box .gap-item.deficit {
-      background: #fff1f2;
-      border-color: #fecdd3;
+      background: #ffffff;
+      border-color: #e2e8f0;
     }
     .aio-gap-box .gap-item.optimal {
-      background: #f0fdf4;
-      border-color: #bbf7d0;
+      background: #ffffff;
+      border-color: #e2e8f0;
     }
     .aio-gap-box .gap-item-lbl {
       font-size: 11px;
@@ -1894,25 +1886,25 @@
     }
     .aio-gap-box .gap-item-vals {
       font-size: 12px;
-      font-weight: 700;
+      font-weight: 600;
       color: #1e293b;
       line-height: 1.4;
     }
     .aio-gap-box .gap-item-diff {
       display: inline-block;
       font-size: 11px;
-      font-weight: 800;
+      font-weight: 700;
       padding: 2px 7px;
       border-radius: 6px;
       margin-top: 6px;
     }
     .aio-gap-box .gap-item-diff.diff-deficit {
-      background: #ffe4e6;
-      color: #e11d48;
+      background: #f1f5f9;
+      color: #334155;
     }
     .aio-gap-box .gap-item-diff.diff-optimal {
-      background: #dcfce7;
-      color: #16a34a;
+      background: #ecfdf5;
+      color: #059669;
     }
     .aio-gap-box .gap-item.unmeasured {
       background: #f8fafc;

@@ -15,6 +15,7 @@ import {
   Binary,
   FileText,
 } from 'lucide-react';
+import GlobalHeader from '@/components/common/GlobalHeader';
 
 export const metadata: Metadata = {
   title: '스마트플레이스 & 마케팅 무료 초소형 웹 유틸리티 허브 | PostSync Tools',
@@ -52,20 +53,20 @@ const CORE_TOOLS = [
   {
     id: 'place',
     title: '네이버 플레이스 실시간 순위 조회기',
-    badge: '1위~20위 실시간 정밀 순위 (LIVE)',
+    badge: '1위~20위 실시간 순위',
     isLive: true,
     href: '/place',
     icon: MapPin,
     color: 'from-emerald-500 to-teal-600',
     borderGlow: 'border-2 border-emerald-600 shadow-md shadow-emerald-500/10 hover:shadow-xl',
     target: '소상공인 · 병원 · 식당 · 학원 · 전문직',
-    desc: '키워드와 상호명만 입력하면 네이버 스마트플레이스 1위부터 20위까지 내 매장의 실시간 노출 순위, 공식 월간 검색량, 1위 경쟁점과의 4대 정량 격차를 1초 만에 실측합니다.',
-    features: ['1위~20위 실시간 순위 추적', '공식 월간 검색량 측정', '1위 매장 4대 정량 격차 진단'],
+    desc: '키워드와 상호명만 입력하면 네이버 스마트플레이스 1위부터 20위까지 내 매장의 실시간 노출 순위, 공식 월간 검색량, 1위 경쟁점과의 4대 핵심 지표 차이를 1초 만에 실측합니다.',
+    features: ['1위~20위 실시간 순위 추적', '공식 월간 검색량 측정', '1위 매장 4대 핵심 지표 비교'],
   },
   {
     id: 'utm',
     title: '매장 카운터 저장·영수증 리뷰 & 캠페인 고화질 QR 빌더',
-    badge: '인쇄용 PNG/SVG QR 즉시 생성 (LIVE)',
+    badge: '인쇄용 PNG/SVG QR 생성',
     isLive: true,
     href: '/utm',
     icon: QrCode,
@@ -78,7 +79,7 @@ const CORE_TOOLS = [
   {
     id: 'adcheck',
     title: '플레이스 상세설명 & 의료·전문직 광고법 금칙어 스캐너',
-    badge: '2026 법정 규정 완벽 대조 (LIVE)',
+    badge: '법정 심의 규정 실시간 대조',
     isLive: true,
     href: '/adcheck',
     icon: Scale,
@@ -87,6 +88,19 @@ const CORE_TOOLS = [
     target: '병의원 · 전문직 · 로컬 매장 · 체험단 운영자',
     desc: '플레이스 상세설명이나 블로그 홍보 원고 등록 전, 검색 누락(저품질) 및 과태료를 유발하는 과장·보장성 금칙어를 1초 만에 검출하고 안전한 합법 대체 문구로 원클릭 치환합니다.',
     features: ['100% 브라우저 메모리 로컬 연산', '2026 의료법·변호사법 규정 완벽 대조', '원클릭 안전 대체어 치환'],
+  },
+  {
+    id: 'reply',
+    title: 'AI 플레이스 소개글 2,000자 · 리뷰 답글 · 새소식 생성기',
+    badge: '상세설명 2,000자 & 답글 무료',
+    isLive: true,
+    href: '/reply?mode=intro',
+    icon: Sparkles,
+    color: 'from-amber-500 to-rose-600',
+    borderGlow: 'border-2 border-amber-500 shadow-md shadow-amber-500/10 hover:shadow-xl',
+    target: '상세설명 글자수 부족 · 영수증 리뷰 관리 사장님',
+    desc: '상세설명 글자수 부족분을 해결하는 첫 3줄 키워드 후킹 2,000자 소개글과 영수증 리뷰 맞춤 답글 3종, 주간 새소식을 회원가입 없이 10초 만에 무료로 생성합니다.',
+    features: ['상세설명 2,000자 SEO 구조화 생성', '영수증 리뷰 톤앤매너별 답글 3종', '주간 플레이스 새소식 원고 자동 작성'],
   },
 ];
 
@@ -153,6 +167,7 @@ export default function ToolsHubPage() {
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 selection:bg-blue-600 selection:text-white break-keep break-words">
+      <GlobalHeader />
       {/* Search Engine Structured Data: ItemList Schema */}
       <script
         type="application/ld+json"
@@ -180,9 +195,9 @@ export default function ToolsHubPage() {
             <span>PostSync 스마트플레이스 &amp; 로컬 마케팅 웹 유틸리티 허브</span>
           </div>
 
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 tracking-tight leading-tight">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 leading-[1.28]">
             스마트플레이스 상위노출과 매장 관리를 위한 <br className="hidden sm:inline" />
-            <span className="text-blue-600">3대 무료 핵심 웹 유틸리티</span>
+            <span className="text-blue-600">4대 무료 핵심 웹 유틸리티</span>
           </h1>
 
           <p className="text-sm sm:text-base text-slate-600 max-w-2xl mx-auto leading-relaxed">
@@ -203,8 +218,8 @@ export default function ToolsHubPage() {
           </div>
         </div>
 
-        {/* 3대 플레이스 핵심 툴 카드 그리드 */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+        {/* 4대 플레이스 핵심 툴 카드 그리드 */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16">
           {CORE_TOOLS.map((tool) => {
             const Icon = tool.icon;
             return (
@@ -273,11 +288,10 @@ export default function ToolsHubPage() {
         {/* 🛠️ 소상공인 실무 보조 유틸리티 섹션 */}
         <div className="mb-16">
           <div className="mb-6">
-            <span className="text-xs font-bold text-slate-400 font-mono tracking-wider uppercase">SUB UTILITIES</span>
-            <h2 className="text-lg sm:text-xl font-extrabold text-slate-900 mt-0.5">
+            <h2 className="text-lg sm:text-xl font-bold text-[#1F2328] mt-0.5">
               소상공인 &amp; 마케터 실무 보조 유틸리티
             </h2>
-            <p className="text-xs sm:text-sm text-slate-500 mt-1">
+            <p className="text-xs sm:text-sm text-[#57606a] mt-1">
               매장 운영과 콘텐츠 발행에 필요한 초경량 웹툴 모음입니다.
             </p>
           </div>
@@ -341,7 +355,7 @@ export default function ToolsHubPage() {
                 네이버 플레이스 순위 확인 사이트 추천 및 1초 진단
               </div>
               <p className="text-xs text-slate-500 line-clamp-2">
-                내 매장의 실시간 노출 순위와 1위 경쟁점과의 4대 정량 격차 분석법
+                내 매장의 실시간 노출 순위와 1위 경쟁점과의 4대 지표 비교 분석법
               </p>
             </Link>
 

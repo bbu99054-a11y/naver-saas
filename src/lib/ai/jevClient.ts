@@ -372,14 +372,14 @@ export async function diagnosePlaceWithJev(params: DiagnosePlaceParams): Promise
     actionChecklist.push(`🎟️ [쿠폰 신설 권장] '첫 방문 할인' 또는 '알림받기 전용 혜택 쿠폰'을 발행하여 플레이스 클릭률과 저장수를 동시에 끌어올리세요.`)
   }
 
-  // 액션 3: 리뷰 & C-Rank 지수 격차 방어
+  // 액션 3: 리뷰 & C-Rank 지수 차이 방어
   const visitorDiff = gapAnalysis?.metrics?.visitorReviews?.diff || 0
   const blogDiff = gapAnalysis?.metrics?.blogReviews?.diff || 0
 
   if (gapAnalysis && gapAnalysis.metrics.visitorReviews.status === 'DEFICIT' && visitorDiff > 0) {
-    actionChecklist.push(`⭐ [영수증 리뷰 격차: ${visitorDiff.toLocaleString()}개 부족] 1위 대비 실시간 리뷰 수가 부족합니다. 현장 QR코드를 비치하여 당일 고객 영수증 포토리뷰를 집중 유도하고 정성 답글 100%를 유지하세요.`)
+    actionChecklist.push(`⭐ [영수증 리뷰 부족분: ${visitorDiff.toLocaleString()}개] 1위 대비 실시간 리뷰 수가 부족합니다. 현장 QR코드를 비치하여 당일 고객 영수증 포토리뷰를 집중 유도하고 정성 답글 100%를 유지하세요.`)
   } else if (gapAnalysis && gapAnalysis.metrics.blogReviews.status === 'DEFICIT' && blogDiff > 0) {
-    actionChecklist.push(`📝 [블로그 침투 격차: ${blogDiff.toLocaleString()}건 부족] 1위 매장은 블로그 리뷰 ${gapAnalysis.metrics.blogReviews.top1}건을 장악 중입니다. 지도 장소 첨부형 C-Rank 양질의 블로그 원고를 월 2~4회 축적하여 외부 검색 점수를 보강하세요.`)
+    actionChecklist.push(`📝 [블로그 침투 부족분: ${blogDiff.toLocaleString()}건] 1위 매장은 블로그 리뷰 ${gapAnalysis.metrics.blogReviews.top1}건을 장악 중입니다. 지도 장소 첨부형 C-Rank 양질의 블로그 원고를 월 2~4회 축적하여 외부 검색 점수를 보강하세요.`)
   } else if (isRank1) {
     actionChecklist.push(`👑 [1위 수성 락인 전략] 2~3위 경쟁사의 추격을 방어하기 위해 주 1회 플레이스 '새소식' 발행과 최신 리뷰 답글 100%를 48시간 이내에 전담 관리하세요.`)
   } else {

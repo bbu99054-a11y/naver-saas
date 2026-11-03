@@ -15,6 +15,7 @@ import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import PlaceQuickSearchWidget from '@/components/blog/PlaceQuickSearchWidget'
 import HeroPlaceSearch from '@/components/home/HeroPlaceSearch'
+import GlobalHeader from '@/components/common/GlobalHeader'
 
 export async function generateStaticParams() {
   return blogPosts.map((post) => ({
@@ -96,62 +97,8 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      {/* 1. 상단 글로벌 네비게이션 헤더 (플레이스 툴·메인·블로그 목록과 100% 통일된 딥 슬레이트 다크 테마) */}
-      <header className="sticky top-0 z-50 bg-[#0f172a] text-white border-b border-slate-800/90 shadow-md">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-8">
-            <Link href="/" className="flex items-center gap-2.5 group">
-              <div className="w-9 h-9 rounded-xl bg-blue-600 text-white flex items-center justify-center font-black text-lg shadow-sm group-hover:bg-blue-500 transition">
-                P
-              </div>
-              <div>
-                <div className="flex items-center gap-1.5">
-                  <span className="text-lg font-black tracking-tight text-white">PostSync</span>
-                  <span className="text-[10px] font-extrabold px-1.5 py-0.5 rounded-full bg-slate-800 text-emerald-400 border border-emerald-500/30">
-                    PLACE LAB
-                  </span>
-                </div>
-                <p className="text-[11px] text-slate-400 font-medium hidden sm:block leading-none mt-0.5">
-                  스마트플레이스 순위 분석 &amp; 로컬 마케팅 포털
-                </p>
-              </div>
-            </Link>
-
-            <nav className="hidden lg:flex items-center gap-6 text-sm font-semibold text-slate-300">
-              <Link href="/place" className="hover:text-white transition flex items-center gap-1">
-                <MapPin className="w-4 h-4 text-emerald-400" />
-                <span>플레이스 순위 조회</span>
-              </Link>
-              <Link href="/utm" className="hover:text-white transition">
-                매장 리뷰·QR 생성
-              </Link>
-              <Link href="/adcheck" className="hover:text-white transition">
-                소개글 금칙어 검사
-              </Link>
-              <Link href="/blog" className="text-white hover:text-emerald-400 font-bold transition">
-                플레이스 공략 칼럼 ({blogPosts.length})
-              </Link>
-            </nav>
-          </div>
-
-          <div className="flex items-center gap-2.5">
-            <Link
-              href="/blog"
-              className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-bold text-slate-300 bg-slate-800/90 hover:bg-slate-700 hover:text-white transition border border-slate-700"
-            >
-              <BookOpen className="w-3.5 h-3.5 text-slate-400" />
-              <span>칼럼 목록</span>
-            </Link>
-            <Link
-              href="/place"
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold text-white bg-blue-600 hover:bg-blue-500 shadow-sm transition"
-            >
-              <Search className="w-3.5 h-3.5" />
-              <span>순위 1초 진단</span>
-            </Link>
-          </div>
-        </div>
-      </header>
+      {/* 1. 상단 글로벌 네비게이션 헤더 */}
+      <GlobalHeader />
 
       {/* 2. 본문 + 우측 고정 사이드바 컨테이너 */}
       <div className="py-10 pb-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto flex flex-col lg:flex-row gap-10">
@@ -324,10 +271,10 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
               <Zap className="w-4 h-4 text-emerald-400" /> PostSync 스마트플레이스 실시간 분석
             </div>
             <h3 className="text-xl sm:text-2xl font-black text-balance">
-              지금 내 매장 플레이스 순위와 1위 매장 격차를 1초 만에 확인하세요
+              지금 내 매장 플레이스 순위와 1위 매장과의 차이를 1초 만에 비교 진단하세요
             </h3>
             <p className="text-sm text-slate-300 leading-relaxed text-pretty">
-              회원가입이나 프로그램 설치 없이 브라우저에서 즉시 작동합니다. 네이버 스마트플레이스 1위 매장과의 4대 정량 격차 분석과 소개글 금칙어 검사를 무료로 이용해 보세요.
+              회원가입이나 프로그램 설치 없이 브라우저에서 즉시 작동합니다. 네이버 스마트플레이스 1위 매장과의 4대 지표 비교 분석과 소개글 금칙어 검사를 무료로 이용해 보세요.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 pt-2">
               <Link href="/place">

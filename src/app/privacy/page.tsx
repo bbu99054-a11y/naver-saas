@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { Sparkles, ArrowLeft, ShieldCheck } from 'lucide-react'
+import GlobalHeader from '@/components/common/GlobalHeader'
 
 export const metadata: Metadata = {
   title: '개인정보 처리방침 | PostSync',
@@ -14,20 +15,7 @@ export default function PrivacyPage() {
   return (
     <div className="min-h-screen bg-slate-900 text-slate-200">
       {/* Header */}
-      <header className="border-b border-white/10 bg-slate-950/50 backdrop-blur-md sticky top-0 z-50">
-        <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 text-white hover:opacity-80 transition-opacity">
-            <ArrowLeft className="w-4 h-4 text-slate-400" />
-            <span className="text-sm font-medium text-slate-400">메인으로 돌아가기</span>
-          </Link>
-          <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-lg bg-indigo-600 flex items-center justify-center text-white">
-              <Sparkles className="w-3.5 h-3.5" />
-            </div>
-            <span className="text-sm font-bold text-white">PostSync</span>
-          </div>
-        </div>
-      </header>
+      <GlobalHeader />
 
       {/* Main Content */}
       <main className="max-w-4xl mx-auto px-6 py-16">
@@ -54,13 +42,18 @@ export default function PrivacyPage() {
           <section className="space-y-3">
             <h2 className="text-lg md:text-xl font-bold text-white">1. 수집하는 개인정보의 항목 및 수집 방법</h2>
             <div className="bg-slate-800/60 p-4 rounded-xl space-y-2 border border-white/5">
-              <p><strong>가. 회원가입 및 서비스 이용 시 수집 항목:</strong></p>
+              <p><strong>가. 스마트플레이스 진단 처방 및 비교견적 상담 시:</strong></p>
+              <ul className="list-disc pl-5 space-y-1 text-slate-300">
+                <li><strong>필수 항목:</strong> 매장 상호명, 담당자 휴대폰 번호, 분석 대상 키워드</li>
+                <li><strong>수집 방법:</strong> 웹페이지 폼 입력을 통한 이용자의 능동적 직접 동의 및 수집 (전화번호는 AES 암호화하여 안전하게 보관됩니다)</li>
+              </ul>
+              <p className="pt-2"><strong>나. 회원가입 및 서비스 이용 시 수집 항목:</strong></p>
               <ul className="list-disc pl-5 space-y-1 text-slate-300">
                 <li><strong>필수 항목:</strong> 이메일 주소, 비밀번호(암호화 단방향 해시), 이름(닉네임), 직종/분야</li>
                 <li><strong>유료 결제 시:</strong> 주문번호, 결제키, 결제금액, 승인일시 (신용카드 번호 등 민감 금융 정보는 PG사 토스페이먼츠에서 직접 암호화 처리하며 회사는 저장하지 않습니다)</li>
                 <li><strong>선택 항목 (연동 시):</strong> 워드프레스/티스토리 API 연동 토큰(AES-256 암호화 저장)</li>
               </ul>
-              <p className="pt-2"><strong>나. 서비스 이용 과정에서 자동 생성·수집되는 정보:</strong></p>
+              <p className="pt-2"><strong>다. 서비스 이용 과정에서 자동 생성·수집되는 정보:</strong></p>
               <ul className="list-disc pl-5 space-y-1 text-slate-300">
                 <li>접속 IP 정보, 쿠키(Cookie), 서비스 이용 기록, 접속 로그, 불량 이용 기록</li>
               </ul>
@@ -71,7 +64,8 @@ export default function PrivacyPage() {
           <section className="space-y-3">
             <h2 className="text-lg md:text-xl font-bold text-white">2. 개인정보의 처리 목적</h2>
             <ul className="list-disc pl-5 space-y-2 text-slate-300">
-              <li><strong>서비스 제공 및 계약의 이행:</strong> 맞춤형 AI 블로그 SEO 원고 생성 엔진 제공, 크레딧 결제 및 정산, 콘텐츠 저장/보관</li>
+              <li><strong>스마트플레이스 맞춤 진단 및 상담:</strong> 네이버 스마트플레이스 상권 순위 분석 결과 안내, 1위 매장 대비 차이 보강을 위한 맞춤 처방 분석 및 인증 솔루션 비교견적 안내</li>
+              <li><strong>서비스 제공 및 계약의 이행:</strong> 플레이스 분석 포털 및 마케팅 웹툴 제공, 크레딧 결제 및 정산, 콘텐츠 저장/보관</li>
               <li><strong>회원 관리:</strong> 회원제 서비스 이용에 따른 본인 식별·인증, 불량 회원의 부정이용 방지, 가입의사 확인, 고객 문의 대응</li>
               <li><strong>신규 서비스 개발 및 통계 분석:</strong> AI 프롬프트 품질 개선, 서비스 접속 빈도 및 통계적 이용 분석</li>
             </ul>
@@ -91,6 +85,11 @@ export default function PrivacyPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-white/5 bg-slate-900/50">
+                  <tr>
+                    <td className="p-3">스마트플레이스 진단 처방 및 상담 문의 기록</td>
+                    <td className="p-3">정보주체 동의 (개인정보 보호법)</td>
+                    <td className="p-3 text-emerald-400 font-semibold">상담 완료 후 1년 (요청 시 즉시 파기)</td>
+                  </tr>
                   <tr>
                     <td className="p-3">계약 또는 청약철회 등에 관한 기록</td>
                     <td className="p-3">전자상거래 등에서의 소비자보호에 관한 법률</td>

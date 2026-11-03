@@ -4,32 +4,80 @@ import { blogPosts } from '@/lib/blogData'
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://www.postsyncapp.com'
 
-  const staticLastModified = new Date('2026-10-18T00:00:00.000Z')
+  const staticLastModified = new Date('2026-11-03T00:00:00.000Z')
 
   const staticRoutes: MetadataRoute.Sitemap = [
     {
-      url: baseUrl,
+      url: `${baseUrl}/place`,
       lastModified: staticLastModified,
       changeFrequency: 'daily',
       priority: 1.0,
     },
     {
-      url: `${baseUrl}/blog`,
+      url: baseUrl,
       lastModified: staticLastModified,
       changeFrequency: 'daily',
       priority: 0.95,
     },
     {
-      url: `${baseUrl}/tools`,
+      url: `${baseUrl}/utm`,
       lastModified: staticLastModified,
       changeFrequency: 'daily',
       priority: 0.95,
+    },
+    {
+      url: `${baseUrl}/adcheck`,
+      lastModified: staticLastModified,
+      changeFrequency: 'daily',
+      priority: 0.95,
+    },
+    {
+      url: `${baseUrl}/reply`,
+      lastModified: staticLastModified,
+      changeFrequency: 'daily',
+      priority: 0.95,
+    },
+    {
+      url: `${baseUrl}/blog`,
+      lastModified: staticLastModified,
+      changeFrequency: 'daily',
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/tools`,
+      lastModified: staticLastModified,
+      changeFrequency: 'weekly',
+      priority: 0.85,
     },
     {
       url: `${baseUrl}/guide/ad-law-2026`,
       lastModified: staticLastModified,
       changeFrequency: 'weekly',
       priority: 0.85,
+    },
+    {
+      url: `${baseUrl}/convert`,
+      lastModified: staticLastModified,
+      changeFrequency: 'weekly',
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/crop`,
+      lastModified: staticLastModified,
+      changeFrequency: 'monthly',
+      priority: 0.3,
+    },
+    {
+      url: `${baseUrl}/byte`,
+      lastModified: staticLastModified,
+      changeFrequency: 'monthly',
+      priority: 0.3,
+    },
+    {
+      url: `${baseUrl}/hwpx`,
+      lastModified: staticLastModified,
+      changeFrequency: 'monthly',
+      priority: 0.3,
     },
     {
       url: `${baseUrl}/terms`,
@@ -48,48 +96,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: new Date('2026-09-01T00:00:00.000Z'),
       changeFrequency: 'monthly',
       priority: 0.5,
-    },
-    {
-      url: `${baseUrl}/place`,
-      lastModified: staticLastModified,
-      changeFrequency: 'daily',
-      priority: 0.95,
-    },
-    {
-      url: `${baseUrl}/crop`,
-      lastModified: staticLastModified,
-      changeFrequency: 'daily',
-      priority: 0.95,
-    },
-    {
-      url: `${baseUrl}/adcheck`,
-      lastModified: staticLastModified,
-      changeFrequency: 'daily',
-      priority: 0.95,
-    },
-    {
-      url: `${baseUrl}/byte`,
-      lastModified: staticLastModified,
-      changeFrequency: 'daily',
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/hwpx`,
-      lastModified: staticLastModified,
-      changeFrequency: 'daily',
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/utm`,
-      lastModified: staticLastModified,
-      changeFrequency: 'daily',
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/convert`,
-      lastModified: staticLastModified,
-      changeFrequency: 'daily',
-      priority: 0.95,
     },
   ]
 

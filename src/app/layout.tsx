@@ -18,16 +18,14 @@ export const viewport: Viewport = {
   themeColor: "#0f172a",
   width: "device-width",
   initialScale: 1,
-
-
 };
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.postsyncapp.com"),
   manifest: "/manifest.json",
-  title: "PostSync - 비즈니스 마케팅 데이터 연구소 & 무료 웹 유틸리티 포털",
-  description: "2026 네이버 스마트플레이스 상위노출 알고리즘 실전 칼럼, 전문직 법정 광고 컴플라이언스 가이드, 무설치 무료 비즈니스 웹툴 7종을 제공하는 디지털 마케팅 연구 포털입니다.",
-  keywords: ["스마트플레이스 순위 조회", "네이버 플레이스 상위노출", "전문직 광고 규정", "마케팅 칼럼", "무료 웹툴", "PostSync"],
+  title: "[무료] 네이버 플레이스 순위 조회 · 리뷰 QR 생성 · 소개글 진단 (가입 없음) | PostSync",
+  description: "회원가입·설치 없이 3초 만에 내 매장 스마트플레이스 실시간 순위와 1위 매장 리뷰·예약·소개글 차이를 비교 진단하세요. 테이블용 영수증 리뷰 QR 안내판 인쇄부터 AI 소개글 생성·금칙어 검사까지 100% 무료.",
+  keywords: ["네이버 플레이스 순위 조회", "스마트플레이스 순위", "플레이스 상위노출", "영수증 리뷰 QR코드", "스마트플레이스 소개글", "플레이스 금칙어", "PostSync"],
   alternates: {
     canonical: "https://www.postsyncapp.com",
   },
@@ -43,8 +41,8 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "PostSync - 비즈니스 마케팅 데이터 연구소 & 무료 웹 유틸리티 포털",
-    description: "스마트플레이스 순위 알고리즘 심층 칼럼 35편과 100% 무료 비즈니스 웹 유틸리티 7종 허브.",
+    title: "[무료] 네이버 플레이스 순위 조회 · 리뷰 QR 생성 · 소개글 진단 (가입 없음) | PostSync",
+    description: "회원가입·설치 없이 3초 만에 내 매장 스마트플레이스 실시간 순위와 1위 매장 리뷰·예약·소개글 차이를 비교 진단하세요. 테이블용 영수증 리뷰 QR 안내판 인쇄부터 AI 소개글 생성·금칙어 검사까지 100% 무료.",
     url: "https://www.postsyncapp.com",
     siteName: "PostSync",
     type: "website",
@@ -54,14 +52,14 @@ export const metadata: Metadata = {
         url: "https://www.postsyncapp.com/placesync_profile_A.jpg",
         width: 1200,
         height: 630,
-        alt: "PostSync 비즈니스 마케팅 데이터 연구소 & 무료 웹 유틸리티 포털",
+        alt: "PostSync 스마트플레이스 순위 분석 및 마케팅 툴킷",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "PostSync - 비즈니스 마케팅 데이터 연구소 & 무료 웹 유틸리티 포털",
-    description: "스마트플레이스 순위 알고리즘 심층 칼럼 35편과 100% 무료 비즈니스 웹 유틸리티 7종 허브.",
+    title: "[무료] 네이버 플레이스 순위 조회 · 리뷰 QR 생성 · 소개글 진단 (가입 없음) | PostSync",
+    description: "회원가입·설치 없이 3초 만에 내 매장 스마트플레이스 실시간 순위와 1위 매장 리뷰·예약·소개글 차이를 비교 진단하세요. 테이블용 영수증 리뷰 QR 안내판 인쇄부터 AI 소개글 생성·금칙어 검사까지 100% 무료.",
     images: ["https://www.postsyncapp.com/placesync_profile_A.jpg"],
   }
 };
@@ -73,6 +71,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <head>
+        {/* Pretendard Variable Dynamic Subset (WOFF2) */}
+        <link
+          rel="stylesheet"
+          as="style"
+          crossOrigin="anonymous"
+          href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
+        />
         {/* Google Analytics 4 (GA4) */}
         <script
           async

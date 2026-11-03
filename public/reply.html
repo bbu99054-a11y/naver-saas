@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>[무료] 네이버 플레이스 AI 리뷰 답글 & 새소식 10초 생성기 (가입 없음) | PostSync</title>
+  <meta name="description" content="영수증 리뷰 답글 달기 귀찮으셨나요? 24시간 이내 키워드 품은 정성 답글로 플레이스 상위노출 지수를 올리세요. 사장님 맞춤 3가지 스타일 답글 및 주간 새소식을 10초 만에 무료로 생성하고 바로 복사하세요.">
+  <meta name="keywords" content="네이버 플레이스 리뷰 답글, 영수증 리뷰 답글 예시, 플레이스 사장님 답글 템플릿, 플레이스 새소식 작성법, 스마트플레이스 AI 답글">
+  
+  <link rel="canonical" href="https://www.postsyncapp.com/reply">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💬</text></svg>">
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="[무료] 네이버 플레이스 AI 리뷰 답글 & 새소식 10초 생성기 (가입 없음)">
+  <meta property="og:description" content="24시간 이내 키워드를 품은 정성 답글로 플레이스 상위노출 점수를 확보하세요. 3가지 맞춤 스타일 답글을 1초 만에 무료 생성.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.postsyncapp.com/reply">
+  <meta property="og:image" content="https://www.postsyncapp.com/placesync_profile_A.jpg">
+  
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="[무료] 네이버 플레이스 AI 리뷰 답글 & 새소식 10초 생성기">
+  <meta name="twitter:description" content="24시간 이내 키워드를 품은 정성 답글로 플레이스 상위노출 점수를 확보하세요. 3가지 맞춤 스타일 답글을 1초 만에 무료 생성.">
+  <meta name="twitter:image" content="https://www.postsyncapp.com/placesync_profile_A.jpg">
+
+  <!-- Schema.org SoftwareApplication JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "PostSync 플레이스 AI 리뷰 답글 & 새소식 생성기",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "All",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "KRW"
+    },
+    "description": "네이버 스마트플레이스 영수증 방문자 리뷰에 대해 24시간 내 키워드를 자연스럽게 포함하는 사장님 맞춤 답글 3종 및 주간 새소식을 10초 만에 생성하는 무료 AI 도구"
+  }
+  </script>
+
+  <!-- Google Fonts & FontAwesome -->
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --emerald: #059669;
+      --slate-50: #f8fafc;
+      --slate-100: #f1f5f9;
+      --slate-200: #e2e8f0;
+      --slate-300: #cbd5e1;
+      --slate-600: #475569;
+      --slate-700: #334155;
+      --slate-800: #1e293b;
+      --slate-900: #0f172a;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: "Pretendard", -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+      font-synthesis: none;
+    }
+    body {
+      background-color: var(--slate-50);
+      color: var(--slate-800);
+      line-height: 1.65;
+      word-break: keep-all;
+      overflow-wrap: break-word;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+
+    /* Main Container */
+    .main-wrapper {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 32px 16px 60px;
+      width: 100%;
+      flex: 1;
+    }
+
+    /* Hero Header */
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      color: #1e40af;
+      font-size: 12px;
+      font-weight: 800;
+      padding: 4px 12px;
+      border-radius: 9999px;
+      margin-bottom: 12px;
+    }
+    .hero-title {
+      font-size: 26px;
+      font-weight: 900;
+      color: var(--slate-900);
+      line-height: 1.35;
+      text-wrap: balance;
+      margin-bottom: 10px;
+    }
+    .hero-desc {
+      font-size: 14.5px;
+      color: var(--slate-600);
+      max-width: 680px;
+      text-wrap: pretty;
+      margin-bottom: 24px;
+    }
+
+    /* Card Box */
+    .card-box {
+      background: #ffffff;
+      border: 1px solid var(--slate-200);
+      border-radius: 20px;
+      padding: 24px sm:32px;
+      padding: 24px;
+      box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05);
+      margin-bottom: 24px;
+    }
+
+    /* Tabs */
+    .tab-header {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      border-bottom: 1px solid var(--slate-200);
+      padding-bottom: 12px;
+      margin-bottom: 20px;
+    }
+    .tab-btn {
+      padding: 8px 16px;
+      font-size: 13.5px;
+      font-weight: 800;
+      border-radius: 10px;
+      border: none;
+      background: var(--slate-100);
+      color: var(--slate-600);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+    }
+    .tab-btn.active {
+      background: var(--primary);
+      color: #ffffff;
+      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
+    }
+
+    /* Form Fields */
+    .form-group {
+      margin-bottom: 18px;
+    }
+    .form-label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--slate-700);
+      margin-bottom: 6px;
+    }
+    .form-label .sub {
+      font-size: 11.5px;
+      font-weight: 500;
+      color: #64748b;
+    }
+    .form-input, .form-textarea {
+      width: 100%;
+      padding: 11px 14px;
+      font-size: 14px;
+      border: 1px solid var(--slate-300);
+      border-radius: 12px;
+      background: #ffffff;
+      outline: none;
+      transition: border 0.15s ease, box-shadow 0.15s ease;
+    }
+    .form-input:focus, .form-textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    }
+    .form-textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    /* Tone Selector */
+    .tone-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+    @media (max-width: 600px) {
+      .tone-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    .tone-btn {
+      padding: 9px 8px;
+      font-size: 12.5px;
+      font-weight: 700;
+      border: 1px solid var(--slate-200);
+      border-radius: 10px;
+      background: #ffffff;
+      color: var(--slate-700);
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.15s ease;
+    }
+    .tone-btn:hover {
+      border-color: var(--primary);
+      background: #f8fafc;
+    }
+    .tone-btn.active {
+      border-color: var(--primary);
+      background: #eff6ff;
+      color: var(--primary);
+      font-weight: 800;
+    }
+
+    /* Quick Example Pills */
+    .example-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+    .example-pill {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--slate-600);
+      background: var(--slate-100);
+      padding: 4px 10px;
+      border-radius: 9999px;
+      border: 1px solid var(--slate-200);
+      cursor: pointer;
+      transition: all 0.12s ease;
+    }
+    .example-pill:hover {
+      background: #e2e8f0;
+      color: var(--slate-900);
+    }
+
+    /* Action Button */
+    .btn-submit {
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(135deg, var(--primary) 0%, #1d4ed8 100%);
+      color: #ffffff;
+      border: none;
+      border-radius: 14px;
+      font-size: 15px;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 20px;
+    }
+    .btn-submit:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(37, 99, 235, 0.45);
+    }
+    .btn-submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    /* Result Box */
+    .result-section {
+      display: none;
+      margin-top: 28px;
+      animation: fadeIn 0.25s ease-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .result-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+    .result-title {
+      font-size: 16px;
+      font-weight: 900;
+      color: var(--slate-900);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .reply-card {
+      background: #ffffff;
+      border: 1px solid var(--slate-200);
+      border-radius: 14px;
+      padding: 16px 18px;
+      margin-bottom: 12px;
+      position: relative;
+      transition: border 0.15s ease;
+    }
+    .reply-card:hover {
+      border-color: #93c5fd;
+    }
+    .reply-type-badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--primary);
+      background: #eff6ff;
+      padding: 2px 8px;
+      border-radius: 6px;
+      margin-bottom: 8px;
+    }
+    .reply-text {
+      font-size: 13.5px;
+      line-height: 1.6;
+      color: var(--slate-800);
+      white-space: pre-line;
+      margin-bottom: 12px;
+    }
+    .reply-card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid var(--slate-100);
+      padding-top: 10px;
+    }
+    .char-count {
+      font-size: 11.5px;
+      color: #94a3b8;
+    }
+    .btn-copy {
+      background: #f1f5f9;
+      border: 1px solid var(--slate-300);
+      color: var(--slate-700);
+      font-size: 12px;
+      font-weight: 800;
+      padding: 6px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+    }
+    .btn-copy:hover {
+      background: #e2e8f0;
+      color: var(--slate-900);
+    }
+    .btn-copy.copied {
+      background: #ecfdf5;
+      color: #059669;
+      border-color: #a7f3d0;
+    }
+
+    /* Admin Direct Link */
+    .admin-link-box {
+      margin-top: 16px;
+      text-align: center;
+    }
+    .admin-link-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12.5px;
+      font-weight: 800;
+      color: #0369a1;
+      background: #e0f2fe;
+      border: 1px solid #bae6fd;
+      padding: 8px 16px;
+      border-radius: 9999px;
+      transition: all 0.15s ease;
+    }
+    .admin-link-btn:hover {
+      background: #bae6fd;
+    }
+
+    /* Cross Linking Footer */
+    .cross-suite {
+      margin-top: 36px;
+      border-top: 1px solid var(--slate-200);
+      padding-top: 28px;
+    }
+    .cross-title {
+      font-size: 15px;
+      font-weight: 900;
+      color: var(--slate-900);
+      margin-bottom: 14px;
+    }
+    .cross-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+    @media (max-width: 640px) {
+      .cross-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .cross-card {
+      background: #ffffff;
+      border: 1px solid var(--slate-200);
+      border-radius: 14px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.15s ease;
+    }
+    .cross-card:hover {
+      border-color: var(--primary);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
+    }
+    .cross-card-icon {
+      font-size: 20px;
+      margin-bottom: 8px;
+    }
+    .cross-card-title {
+      font-size: 13.5px;
+      font-weight: 800;
+      color: var(--slate-900);
+      margin-bottom: 4px;
+    }
+    .cross-card-desc {
+      font-size: 11.5px;
+      color: var(--slate-600);
+      line-height: 1.45;
+      margin-bottom: 10px;
+    }
+    .cross-card-action {
+      font-size: 11.5px;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    /* Global Toast */
+    .toast-box {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(40px);
+      background: #0f172a;
+      color: #ffffff;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 10px 20px;
+      border-radius: 9999px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .toast-box.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    footer {
+      border-top: 1px solid var(--slate-200);
+      background: #ffffff;
+      padding: 24px 16px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--slate-600);
+      margin-top: auto;
+    }
+  </style>
+  <link rel="stylesheet" href="/assets/monetization.css">
+</head>
+<body>
+
+  <!-- Top Navigation -->
+    <!-- Top Global Unified Header -->
+  <header class="header-integrated">
+    <div class="header-inner">
+      <div class="header-left">
+        <a href="/" class="brand" title="PostSync 홈으로 이동">
+          <div class="brand-logo-p">P</div>
+          <div class="brand-text-wrap">
+            <span class="brand-name">PostSync</span>
+            <span class="brand-badge">LAB</span>
+          </div>
+        </a>
+        <nav class="header-tools-nav" aria-label="메인 네비게이션">
+          <a href="/place" class="nav-item "><i class="fa-solid fa-map-location-dot"></i> 순위 조회</a>
+          <a href="/utm" class="nav-item "><i class="fa-solid fa-qrcode"></i> 리뷰 QR</a>
+          <a href="/reply" class="nav-item active"><i class="fa-solid fa-wand-magic-sparkles"></i> AI 소개글</a>
+          <a href="/adcheck" class="nav-item "><i class="fa-solid fa-scale-balanced"></i> 금칙어 검사</a>
+          <a href="/blog" class="nav-item "><i class="fa-solid fa-book-bookmark"></i> 공략 칼럼</a>
+        </nav>
+      </div>
+      <div class="header-right-actions">
+        <a href="/tools" class="btn-head-tools"><i class="fa-solid fa-table-cells-large"></i> 전체 도구</a>
+        <a href="/place" class="btn-head-cta"><i class="fa-solid fa-magnifying-glass"></i> 순위 1초 진단</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-wrapper">
+    <div class="hero-badge">
+      <i class="fa-solid fa-sparkles text-blue-600"></i>
+      2026 스마트플레이스 순위 최신성 &amp; 상세설명 2,000자 SEO 무료 생성 도구
+    </div>
+    <h1 class="hero-title">
+      [무료] 네이버 플레이스 AI 소개글 2,000자 · 리뷰 답글 · 새소식 생성기
+    </h1>
+    <p class="hero-desc">
+      상세설명 글자수가 부족해 순위가 밀리고 있나요? 첫 3줄 키워드 후킹이 적용된 <b>플레이스 상세설명(2,000자 규격)</b>과 <b>영수증 리뷰 정성 답글 3종</b>, <b>주간 새소식</b>을 회원가입 없이 100% 무료로 생성하세요.
+    </p>
+
+    <!-- Card Form -->
+    <div class="card-box">
+      <!-- Tabs -->
+      <div class="tab-header">
+        <button type="button" class="tab-btn active" id="tabReview" onclick="switchMode('review')">
+          <i class="fa-solid fa-comments"></i> 영수증 리뷰 답글 3종
+        </button>
+        <button type="button" class="tab-btn" id="tabIntro" onclick="switchMode('intro')">
+          <i class="fa-solid fa-wand-magic-sparkles"></i> AI 소개글(상세설명) 2,000자 생성
+        </button>
+        <button type="button" class="tab-btn" id="tabNews" onclick="switchMode('news')">
+          <i class="fa-solid fa-bullhorn"></i> 주간 플레이스 새소식 작성
+        </button>
+      </div>
+
+      <form id="replyForm" onsubmit="handleGenerate(event)">
+        <!-- 1. Store Name & Keyword Grid -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+          <div class="form-group">
+            <label class="form-label" for="storeName">
+              <span>🏢 내 매장 상호명 <span style="color:#ef4444;">*</span></span>
+            </label>
+            <input type="text" id="storeName" class="form-input" placeholder="예: 김밥천국 강남역점" required maxlength="50">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="keyword">
+              <span>🔑 타깃 검색 키워드 <span class="sub">(SEO 가산점용)</span></span>
+            </label>
+            <input type="text" id="keyword" class="form-input" placeholder="예: 강남역 분식 맛집" maxlength="40">
+          </div>
+        </div>
+
+        <!-- 2. Tone Selector (Only for Review mode) -->
+        <div class="form-group" id="toneGroup">
+          <label class="form-label">
+            <span>🎭 답글 톤앤매너 선택</span>
+          </label>
+          <div class="tone-grid">
+            <button type="button" class="tone-btn active" data-tone="friendly" onclick="selectTone('friendly')">
+              😊 친근·다정
+            </button>
+            <button type="button" class="tone-btn" data-tone="polite" onclick="selectTone('polite')">
+              🤝 정중·격조
+            </button>
+            <button type="button" class="tone-btn" data-tone="witty" onclick="selectTone('witty')">
+              💡 센스·위트
+            </button>
+            <button type="button" class="tone-btn" data-tone="complaint" onclick="selectTone('complaint')">
+              🛡️ 불만·정중방어
+            </button>
+          </div>
+        </div>
+
+        <!-- 3. Review Content Input -->
+        <div class="form-group">
+          <label class="form-label" for="customerReview">
+            <span id="contentLabel">📝 손님이 남긴 리뷰 본문</span>
+            <span class="sub" id="charCounter">0 / 500자</span>
+          </label>
+          <textarea id="customerReview" class="form-textarea" placeholder="손님이 남긴 영수증 리뷰 또는 배달 리뷰 내용을 그대로 복사해 붙여넣으세요." maxlength="500" oninput="updateCharCount()"></textarea>
+          
+          <div class="example-pills" id="examplePills">
+            <span class="example-pill" onclick="fillExample('음식이 깔끔하고 정갈해서 가족들과 함께 맛있게 먹고 갑니다. 재방문 의사 100%예요!')">
+              예시 1: 맛·가족 만족 후기
+            </span>
+            <span class="example-pill" onclick="fillExample('직원분들이 너무 친절해서 대접받는 기분이었어요. 고기 퀄리티가 정말 훌륭합니다.')">
+              예시 2: 친절·서비스 칭찬
+            </span>
+            <span class="example-pill" onclick="fillExample('주말이라 그런지 웨이팅이 조금 길었고 주차장이 협소해서 아쉬웠지만 맛은 있었습니다.')">
+              예시 3: 웨이팅·주차 아쉬움
+            </span>
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn-submit" id="btnSubmit">
+          <i class="fa-solid fa-wand-magic-sparkles"></i>
+          <span id="btnSubmitText">⚡ 10초 만에 AI 맞춤 답글 3종 생성하기</span>
+        </button>
+      </form>
+
+      <!-- Results Area -->
+      <div class="result-section" id="resultSection">
+        <div class="result-header">
+          <div class="result-title">
+            <i class="fa-solid fa-circle-check" style="color:#059669;"></i>
+            <span id="resultHeaderTitle">생성 완료! 마음에 드는 답글을 복사해 사용하세요</span>
+          </div>
+        </div>
+
+        <div id="replyCardsContainer">
+          <!-- Reply Cards Dynamically Injected -->
+        </div>
+
+        <div class="admin-link-box">
+          <a href="https://smartplace.naver.com" target="_blank" rel="noopener noreferrer" class="admin-link-btn">
+            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+            네이버 스마트플레이스 관리자 바로가기 (새창)
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cross Suite Grid -->
+    <div class="cross-suite">
+      <div class="cross-title">🎯 PostSync 스마트플레이스 4대 무료 도구</div>
+      <div class="cross-grid">
+        <a href="/place" class="cross-card">
+          <div>
+            <div class="cross-card-icon">🔍</div>
+            <div class="cross-card-title">실시간 순위 1초 조회</div>
+            <div class="cross-card-desc">1위~20위 네이버 실측 순위 및 1위 매장과의 리뷰·예약 4대 핵심 지표 비교 분석표 제공.</div>
+          </div>
+          <span class="cross-card-action">순위 조회하기 →</span>
+        </a>
+
+        <a href="/utm" class="cross-card">
+          <div>
+            <div class="cross-card-icon">🖨️</div>
+            <div class="cross-card-title">영수증 리뷰 QR 안내판</div>
+            <div class="cross-card-desc">테이블 및 카운터 비치용 A6 아크릴 텐트 안내판을 1초 만에 생성하고 바로 인쇄.</div>
+          </div>
+          <span class="cross-card-action">안내판 만들기 →</span>
+        </a>
+
+        <a href="/adcheck" class="cross-card">
+          <div>
+            <div class="cross-card-icon">✍️</div>
+            <div class="cross-card-title">소개글 2,000자 SEO 검사</div>
+            <div class="cross-card-desc">2,000자 권장 분량, 모바일 첫 3줄 키워드 배치 및 과장광고 심의 금칙어를 1초 검사.</div>
+          </div>
+          <span class="cross-card-action">소개글 검사하기 →</span>
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <!-- Global Toast -->
+  <div id="globalToast" class="toast-box">
+    <i class="fa-solid fa-circle-info" style="color:#60a5fa;"></i>
+    <span id="toastMsg">클립보드에 복사되었습니다.</span>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <p>상호명: 와이엠랩스 (YM Labs) · 대표자: 유영무 · 사업자등록번호: 736-48-01186 · 고객센터: contact@postsyncapp.com</p>
+    <p style="margin-top: 4px; color: #94a3b8;">© 2026 PostSync. 모든 권리 보유. 네이버(NAVER)의 공식 서비스가 아닌 독립된 실측 마케팅 웹툴입니다.</p>
+  </footer>
+
+  <script>
+    let currentMode = 'review';
+    let currentTone = 'friendly';
+
+    // Parse Query Params (?store=...&kw=...&mode=...)
+    window.addEventListener('DOMContentLoaded', () => {
+      const params = new URLSearchParams(window.location.search);
+      const store = params.get('store');
+      const kw = params.get('kw') || params.get('keyword');
+      const modeParam = params.get('mode');
+      if (store) document.getElementById('storeName').value = decodeURIComponent(store);
+      if (kw) document.getElementById('keyword').value = decodeURIComponent(kw);
+      if (modeParam === 'intro' || modeParam === 'news' || modeParam === 'review') {
+        switchMode(modeParam);
+      }
+    });
+
+    function showToast(msg) {
+      const toast = document.getElementById('globalToast');
+      const msgEl = document.getElementById('toastMsg');
+      msgEl.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 2400);
+    }
+
+    function switchMode(mode) {
+      currentMode = mode;
+      document.getElementById('tabReview').classList.toggle('active', mode === 'review');
+      const tabIntro = document.getElementById('tabIntro');
+      if (tabIntro) tabIntro.classList.toggle('active', mode === 'intro');
+      document.getElementById('tabNews').classList.toggle('active', mode === 'news');
+
+      const toneGroup = document.getElementById('toneGroup');
+      const contentLabel = document.getElementById('contentLabel');
+      const reviewInput = document.getElementById('customerReview');
+      const btnSubmitText = document.getElementById('btnSubmitText');
+      const examplePills = document.getElementById('examplePills');
+
+      if (mode === 'intro') {
+        toneGroup.style.display = 'none';
+        contentLabel.textContent = '✨ 우리 매장만의 핵심 강점 · 대표 메뉴 · 특징 (선택 입력)';
+        reviewInput.placeholder = '예: 매일 아침 직접 굽는 천연발효 소금빵, 성수역 3번 출구 도보 2분, 단체석 및 주차 완비, 네이버 예약 시 아메리카노 1잔 증정';
+        btnSubmitText.textContent = '⚡ 10초 만에 AI 플레이스 소개글 2,000자 무료 생성하기';
+        examplePills.innerHTML = `
+          <span class="example-pill" onclick="fillExample('당일 손질한 1++ 한우만을 사용하며 프라이빗 룸 완비, 네이버 예약 방문 시 된장술밥 서비스를 드립니다.')">식당·고기집 강점 예시</span>
+          <span class="example-pill" onclick="fillExample('1:1 맞춤 두피·모발 진단, 정찰제 시술, 첫 방문 네이버 예약 시 프리미엄 클리닉 20% 할인 혜택을 드립니다.')">미용실·뷰티 강점 예시</span>
+          <span class="example-pill" onclick="fillExample('15년 경력 대표 원장 직접 상담, 야간 진료 운영, 과잉 없는 정직한 맞춤 솔루션을 제공합니다.')">병원·전문직 강점 예시</span>
+        `;
+      } else if (mode === 'news') {
+        toneGroup.style.display = 'none';
+        contentLabel.textContent = '📢 이번 주 알릴 소식/이벤트 주제';
+        reviewInput.placeholder = '예: 봄맞이 제철 주꾸미 정식 개시, 첫 방문 테이블당 음료수 1캔 무료 쿠폰 행사 등';
+        btnSubmitText.textContent = '⚡ 10초 만에 네이버 새소식 초안 작성하기';
+        examplePills.innerHTML = `
+          <span class="example-pill" onclick="fillExample('봄맞이 신메뉴 출시 기념으로 네이버 예약 방문 시 테이블당 시원한 음료수를 무료 증정합니다!')">신메뉴 이벤트</span>
+          <span class="example-pill" onclick="fillExample('영수증 리뷰를 작성해 주신 모든 분께 다음 방문 시 사용 가능한 2,000원 할인 쿠폰을 드립니다.')">리뷰 쿠폰 행사</span>
+          <span class="example-pill" onclick="fillExample('단체 모임 및 룸 예약 고객님을 위해 프라이빗 룸 세팅과 주차장 무료 이용 혜택을 제공합니다.')">단체석/주차 안내</span>
+        `;
+      } else {
+        toneGroup.style.display = 'block';
+        contentLabel.textContent = '📝 손님이 남긴 리뷰 본문';
+        reviewInput.placeholder = '손님이 남긴 영수증 리뷰 또는 배달 리뷰 내용을 그대로 복사해 붙여넣으세요.';
+        btnSubmitText.textContent = '⚡ 10초 만에 AI 맞춤 답글 3종 생성하기';
+        examplePills.innerHTML = `
+          <span class="example-pill" onclick="fillExample('음식이 깔끔하고 정갈해서 가족들과 함께 맛있게 먹고 갑니다. 재방문 의사 100%예요!')">예시 1: 맛·가족 만족 후기</span>
+          <span class="example-pill" onclick="fillExample('직원분들이 너무 친절해서 대접받는 기분이었어요. 고기 퀄리티가 정말 훌륭합니다.')">예시 2: 친절·서비스 칭찬</span>
+          <span class="example-pill" onclick="fillExample('주말이라 그런지 웨이팅이 조금 길었고 주차장이 협소해서 아쉬웠지만 맛은 있었습니다.')">예시 3: 웨이팅·주차 아쉬움</span>
+        `;
+      }
+      document.getElementById('resultSection').style.display = 'none';
+    }
+
+    function selectTone(tone) {
+      currentTone = tone;
+      document.querySelectorAll('.tone-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-tone') === tone);
+      });
+    }
+
+    function fillExample(text) {
+      const input = document.getElementById('customerReview');
+      input.value = text;
+      updateCharCount();
+    }
+
+    function updateCharCount() {
+      const len = document.getElementById('customerReview').value.length;
+      document.getElementById('charCounter').textContent = `${len} / 500자`;
+    }
+
+    async function handleGenerate(e) {
+      e.preventDefault();
+
+      const storeName = document.getElementById('storeName').value.trim();
+      const customerReview = document.getElementById('customerReview').value.trim();
+      const keyword = document.getElementById('keyword').value.trim();
+
+      if (!storeName) {
+        showToast('매장 상호명을 입력해 주세요.');
+        document.getElementById('storeName').focus();
+        return;
+      }
+
+      const btnSubmit = document.getElementById('btnSubmit');
+      const btnSubmitText = document.getElementById('btnSubmitText');
+      btnSubmit.disabled = true;
+      btnSubmitText.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> AI 맞춤 문장 작성 중... (약 2초)';
+
+      try {
+        const res = await fetch('/api/place/reply', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            storeName,
+            customerReview,
+            keyword,
+            tone: currentTone,
+            mode: currentMode
+          })
+        });
+
+        const json = await res.json();
+        if (!res.ok || json.error) {
+          throw new Error(json.error || '답글 생성에 실패했습니다.');
+        }
+
+        renderResults(json.mode, json.data);
+      } catch (err) {
+        showToast(err.message || '일시적 오류가 발생했습니다. 다시 시도해 주세요.');
+      } finally {
+        btnSubmit.disabled = false;
+        btnSubmitText.innerHTML = currentMode === 'intro'
+          ? '⚡ 10초 만에 AI 플레이스 소개글 2,000자 무료 생성하기'
+          : currentMode === 'news'
+          ? '⚡ 10초 만에 네이버 새소식 초안 작성하기'
+          : '⚡ 10초 만에 AI 맞춤 답글 3종 생성하기';
+      }
+    }
+
+    function renderResults(mode, data) {
+      const container = document.getElementById('replyCardsContainer');
+      const section = document.getElementById('resultSection');
+      const titleEl = document.getElementById('resultHeaderTitle');
+
+      container.innerHTML = '';
+
+      if (mode === 'intro') {
+        titleEl.textContent = '스마트플레이스 [상세설명 2,000자 규격] 맞춤 원고가 완성되었습니다!';
+        const storeVal = document.getElementById('storeName').value.trim();
+        const kwVal = document.getElementById('keyword').value.trim();
+        const fullText = data.fullDescription || '';
+        const oneLine = data.oneLineIntro || '';
+        const recKws = Array.isArray(data.recommendedKeywords) ? data.recommendedKeywords : [];
+
+        const card = document.createElement('div');
+        card.className = 'reply-card';
+        card.innerHTML = `
+          ${recKws.length ? `
+            <div class="reply-type-badge">🔑 스마트플레이스 관리자 추천 대표키워드 5개</div>
+            <div style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px;">
+              ${recKws.map(k => `<span style="background:#eff6ff; color:#1d4ed8; border:1px solid #bfdbfe; padding:4px 10px; border-radius:999px; font-size:12px; font-weight:800;">#${escapeHtml(k)}</span>`).join('')}
+            </div>
+          ` : ''}
+          ${oneLine ? `
+            <div class="reply-type-badge">📍 한줄 요약 소개글 (150자 이내)</div>
+            <div style="font-size:13.5px; font-weight:700; color:#0f172a; background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:10px 12px; margin-bottom:14px;">${escapeHtml(oneLine)}</div>
+          ` : ''}
+          <div class="reply-type-badge">✍️ 플레이스 상세설명 본문 (첫 3줄 키워드 후킹 + 구조화 원고)</div>
+          <div class="reply-text">${escapeHtml(fullText)}</div>
+          <div class="reply-card-footer" style="flex-wrap:wrap; gap:8px;">
+            <span class="char-count" style="font-weight:800; color:#059669;">총 ${fullText.length.toLocaleString()}자 (플레이스 상세설명 최적 분량)</span>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+              <button type="button" class="btn-copy" onclick="copyCardText(this, \`${escapeJsString(fullText)}\`)">
+                <i class="fa-regular fa-copy"></i> 소개글 전체 복사하기
+              </button>
+              <a href="/adcheck?prof=restaurant&store=${encodeURIComponent(storeVal)}&kw=${encodeURIComponent(kwVal)}" class="btn-copy" style="background:#f5f3ff; color:#6d28d9; border-color:#ddd6fe; text-decoration:none;">
+                <i class="fa-solid fa-scale-balanced"></i> 금칙어 스캐너로 검수하기
+              </a>
+            </div>
+          </div>
+        `;
+        container.appendChild(card);
+      } else if (mode === 'news') {
+        titleEl.textContent = '스마트플레이스 [새소식] 등록용 초안이 완성되었습니다!';
+        const card = document.createElement('div');
+        card.className = 'reply-card';
+        card.innerHTML = `
+          <div class="reply-type-badge">📢 추천 새소식 제목</div>
+          <div style="font-size:15px; font-weight:800; color:#0f172a; margin-bottom:12px;">${escapeHtml(data.title || '')}</div>
+          <div class="reply-type-badge">📝 새소식 본문</div>
+          <div class="reply-text">${escapeHtml(data.content || '')}</div>
+          ${data.hashtags && data.hashtags.length ? `
+            <div style="font-size:12px; color:#2563eb; margin-bottom:12px; font-weight:700;">
+              ${data.hashtags.map(t => '#' + escapeHtml(t)).join(' ')}
+            </div>
+          ` : ''}
+          <div class="reply-card-footer">
+            <span class="char-count">본문 ${data.content ? data.content.length : 0}자</span>
+            <button type="button" class="btn-copy" onclick="copyCardText(this, \`${escapeJsString((data.title ? data.title + '\n\n' : '') + (data.content || ''))}\`)">
+              <i class="fa-regular fa-copy"></i> 전체 복사하기
+            </button>
+          </div>
+        `;
+        container.appendChild(card);
+      } else {
+        titleEl.textContent = '3가지 스타일의 맞춤 답글이 완성되었습니다!';
+        const replies = Array.isArray(data) ? data : [];
+        replies.forEach((r, idx) => {
+          const card = document.createElement('div');
+          card.className = 'reply-card';
+          card.innerHTML = `
+            <div class="reply-type-badge">${escapeHtml(r.type || `스타일 ${idx+1}`)}</div>
+            <div class="reply-text">${escapeHtml(r.text || '')}</div>
+            <div class="reply-card-footer">
+              <span class="char-count">${r.text ? r.text.length : 0}자</span>
+              <button type="button" class="btn-copy" onclick="copyCardText(this, \`${escapeJsString(r.text || '')}\`)">
+                <i class="fa-regular fa-copy"></i> 이 답글 복사하기
+              </button>
+            </div>
+          `;
+          container.appendChild(card);
+        });
+      }
+
+      section.style.display = 'block';
+      section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function copyCardText(btn, text) {
+      navigator.clipboard.writeText(text).then(() => {
+        btn.classList.add('copied');
+        btn.innerHTML = '<i class="fa-solid fa-check"></i> 복사 완료!';
+        showToast('클립보드에 복사되었습니다! 네이버 플레이스 관리자에 붙여넣으세요.');
+        setTimeout(() => {
+          btn.classList.remove('copied');
+          btn.innerHTML = '<i class="fa-regular fa-copy"></i> 복사하기';
+        }, 2000);
+      }).catch(() => {
+        showToast('복사 권한이 차단되었습니다.');
+      });
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function escapeJsString(str) {
+      return String(str)
+        .replace(/\\/g, '\\\\')
+        .replace(/`/g, '\\`')
+        .replace(/\${/g, '\\${');
+    }
+  </script>
+</body>
+</html>

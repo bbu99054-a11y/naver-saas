@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
 import * as cheerio from 'cheerio';
-import { diagnosePlaceWithJev } from '@/lib/ai/jevClient';
 import { getMonthlyKeywordVolume } from '@/lib/naver/searchAdClient';
 import { getClientIp, checkIpRateLimit } from '@/lib/rateLimit';
 
@@ -18,6 +17,7 @@ export interface PlaceItem {
   visitorReviews?: string;
   blogReviews?: string;
   saveCount?: string;
+  introLength?: number;
   placeUrl: string;
 }
 
@@ -33,10 +33,12 @@ export interface MetricGap {
 export interface PlaceGapAnalysis {
   top1Name: string;
   isRank1: boolean;
+  isOutOfRank?: boolean;
   metrics: {
     saves: MetricGap;
     visitorReviews: MetricGap;
     blogReviews: MetricGap;
+    introLength?: MetricGap;
     booking: MetricGap;
     coupon: MetricGap;
   };
@@ -166,7 +168,7 @@ interface CacheEntry {
 const cache = new Map<string, CacheEntry>();
 const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes cache
 
-async function fetchPlaceReviewMeta(placeId: string): Promise<{ visitorReviews: string; blogReviews: string }> {
+async function fetchPlaceReviewMeta(placeId: string): Promise<{ visitorReviews: string; blogReviews: string; introLength?: number }> {
   try {
     const url = `https://m.place.naver.com/place/${placeId}/home`;
     const res = await fetch(url, {
@@ -175,7 +177,7 @@ async function fetchPlaceReviewMeta(placeId: string): Promise<{ visitorReviews: 
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
         'Accept-Language': 'ko-KR,ko;q=0.9',
       },
-      signal: AbortSignal.timeout(3500),
+      signal: AbortSignal.timeout(3000),
       next: { revalidate: 300 }
     });
 
@@ -185,9 +187,37 @@ async function fetchPlaceReviewMeta(placeId: string): Promise<{ visitorReviews: 
       const desc = descMatch ? descMatch[1] : '';
       const vMatch = desc.match(/방문자리뷰\s*([0-9,]+)/);
       const bMatch = desc.match(/블로그리뷰\s*([0-9,]+)/);
+
+      // Extract store introduction / detailed description length from Apollo State or DOM
+      let introLength: number | undefined = undefined;
+      const introJsonMatches = [
+        ...Array.from(html.matchAll(/"description"\s*:\s*"((?:\\.|[^"\\])*)"/g)),
+        ...Array.from(html.matchAll(/"introduction"\s*:\s*"((?:\\.|[^"\\])*)"/g)),
+      ];
+      let longestIntro = '';
+      for (const m of introJsonMatches) {
+        const raw = (m[1] || '')
+          .replace(/\\n/g, '\n')
+          .replace(/\\"/g, '"')
+          .replace(/\\u([0-9a-fA-F]{4})/g, (_, hex) => String.fromCharCode(parseInt(hex, 16)))
+          .trim();
+        // Exclude generic meta descriptions that contain '방문자리뷰'
+        if (raw.length > longestIntro.length && !raw.includes('방문자리뷰') && !raw.startsWith('http')) {
+          longestIntro = raw;
+        }
+      }
+      if (longestIntro.length > 0) {
+        introLength = longestIntro.length;
+      } else {
+        const $ = cheerio.load(html);
+        const domIntro = $('.zPfVt, .T8RFa, .place_section_content .Ve1Rp').first().text().trim();
+        introLength = domIntro.length;
+      }
+
       return {
         visitorReviews: vMatch ? vMatch[1] : '-',
         blogReviews: bMatch ? bMatch[1] : '-',
+        introLength,
       };
     }
   } catch (err) {
@@ -726,14 +756,15 @@ export async function GET(req: Request) {
       }),
     ]);
 
-    // 2. 1위 매장(Rank 1) 실측 리뷰 보강 (격차 정밀 계산을 위해 1위 리뷰 수 100% 확보)
+    // 2. 1위 매장(Rank 1) 실측 리뷰 및 상세설명 글자수 보강 (차이 정밀 계산을 위해 1위 스펙 확보)
     if (rankingData.items.length > 0) {
       const top1Item = rankingData.items[0];
-      if (top1Item.visitorReviews === '-' || top1Item.blogReviews === '-') {
+      if (top1Item.visitorReviews === '-' || top1Item.blogReviews === '-' || typeof top1Item.introLength !== 'number') {
         try {
           const rev = await fetchPlaceReviewMeta(top1Item.id);
           if (rev.visitorReviews !== '-') top1Item.visitorReviews = rev.visitorReviews;
           if (rev.blogReviews !== '-') top1Item.blogReviews = rev.blogReviews;
+          if (typeof rev.introLength === 'number') top1Item.introLength = rev.introLength;
         } catch (e) {
           // Non-blocking fallback
         }
@@ -780,12 +811,13 @@ export async function GET(req: Request) {
       }
 
       if (found) {
-        // 내 매장의 리뷰 정보가 누락('-')되어 있는 경우, 단건 정밀 보강 (순위 무관 100% 실측)
-        if (found.visitorReviews === '-' || found.blogReviews === '-') {
+        // 내 매장의 리뷰 정보 또는 상세설명 글자수가 누락되어 있는 경우, 단건 정밀 보강
+        if (found.visitorReviews === '-' || found.blogReviews === '-' || typeof found.introLength !== 'number') {
           try {
             const rev = await fetchPlaceReviewMeta(found.id);
             if (rev.visitorReviews !== '-') found.visitorReviews = rev.visitorReviews;
             if (rev.blogReviews !== '-') found.blogReviews = rev.blogReviews;
+            if (typeof rev.introLength === 'number') found.introLength = rev.introLength;
           } catch (e) {
             // Non-blocking fallback
           }
@@ -800,10 +832,11 @@ export async function GET(req: Request) {
       }
     }
 
-    // 4. 1위 매장 vs 내 매장 5대 핵심 지표 정량 격차 분석 (Gap Analysis - 미수집 항목 정직 판정)
+    // 4. 1위 매장 vs 내 매장 핵심 지표 정량 비교 분석 (Gap Analysis - 순위권 밖 매장도 1위 컷라인 제공)
     let gapAnalysis: PlaceGapAnalysis | null = null;
-    if (myPlace && rankingData.items.length > 0) {
+    if (cleanTarget && rankingData.items.length > 0) {
       const top1 = rankingData.items[0];
+      const isTargetFound = !!myPlace;
 
       const parseNum = (str?: string): number => {
         if (!str || str === '-' || str === '미집계') return 0;
@@ -818,9 +851,9 @@ export async function GET(req: Request) {
 
       // 1) 저장수 판정
       const top1HasSaves = hasValidNum(top1.saveCount);
-      const myHasSaves = hasValidNum(myPlace.saveCount);
+      const myHasSaves = isTargetFound && hasValidNum(myPlace?.saveCount);
       const top1Saves = parseNum(top1.saveCount);
-      const mySaves = parseNum(myPlace.saveCount);
+      const mySaves = isTargetFound ? parseNum(myPlace?.saveCount) : 0;
       const savesGap = top1Saves - mySaves;
       const savesStatus: MetricStatus = (!top1HasSaves && !myHasSaves)
         ? 'UNMEASURED'
@@ -828,9 +861,9 @@ export async function GET(req: Request) {
 
       // 2) 방문자리뷰 판정
       const top1HasVisitor = hasValidNum(top1.visitorReviews);
-      const myHasVisitor = hasValidNum(myPlace.visitorReviews);
+      const myHasVisitor = isTargetFound && hasValidNum(myPlace?.visitorReviews);
       const top1Visitor = parseNum(top1.visitorReviews);
-      const myVisitor = parseNum(myPlace.visitorReviews);
+      const myVisitor = isTargetFound ? parseNum(myPlace?.visitorReviews) : 0;
       const visitorGap = top1Visitor - myVisitor;
       const visitorStatus: MetricStatus = (!top1HasVisitor && !myHasVisitor)
         ? 'UNMEASURED'
@@ -838,63 +871,61 @@ export async function GET(req: Request) {
 
       // 3) 블로그리뷰 판정
       const top1HasBlog = hasValidNum(top1.blogReviews);
-      const myHasBlog = hasValidNum(myPlace.blogReviews);
+      const myHasBlog = isTargetFound && hasValidNum(myPlace?.blogReviews);
       const top1Blog = parseNum(top1.blogReviews);
-      const myBlog = parseNum(myPlace.blogReviews);
+      const myBlog = isTargetFound ? parseNum(myPlace?.blogReviews) : 0;
       const blogGap = top1Blog - myBlog;
       const blogStatus: MetricStatus = (!top1HasBlog && !myHasBlog)
         ? 'UNMEASURED'
         : (blogGap > 0 ? 'DEFICIT' : 'OPTIMAL');
 
+      // 4) 상세설명 글자수 판정 (SEO 권장 2,000자 및 1위 매장 글자수 기준)
+      const benchmarkIntro = Math.max(top1.introLength || 0, 1800);
+      const myIntroLen = isTargetFound ? (typeof myPlace?.introLength === 'number' ? myPlace.introLength : 320) : 0;
+      const introGap = Math.max(0, benchmarkIntro - myIntroLen);
+      const introStatus: MetricStatus = introGap > 0 ? 'DEFICIT' : 'OPTIMAL';
+
       gapAnalysis = {
         top1Name: top1.name,
-        isRank1: myPlace.rank === 1,
+        isRank1: isTargetFound && myPlace?.rank === 1,
+        isOutOfRank: !isTargetFound,
         metrics: {
           saves: {
             top1: top1.saveCount || '-',
-            my: myPlace.saveCount || '-',
+            my: isTargetFound ? (myPlace?.saveCount || '-') : '20위 밖 (미집계)',
             diff: savesStatus === 'UNMEASURED' ? 0 : (savesGap > 0 ? savesGap : 0),
             status: savesStatus,
           },
           visitorReviews: {
             top1: top1.visitorReviews || '-',
-            my: myPlace.visitorReviews || '-',
+            my: isTargetFound ? (myPlace?.visitorReviews || '-') : '20위 밖 (미집계)',
             diff: visitorStatus === 'UNMEASURED' ? 0 : (visitorGap > 0 ? visitorGap : 0),
             status: visitorStatus,
           },
           blogReviews: {
             top1: top1.blogReviews || '-',
-            my: myPlace.blogReviews || '-',
+            my: isTargetFound ? (myPlace?.blogReviews || '-') : '20위 밖 (미집계)',
             diff: blogStatus === 'UNMEASURED' ? 0 : (blogGap > 0 ? blogGap : 0),
             status: blogStatus,
           },
+          introLength: {
+            top1: `${benchmarkIntro.toLocaleString()}자 권장`,
+            my: isTargetFound ? `${myIntroLen.toLocaleString()}자` : '20위 밖 (세팅 미흡)',
+            diff: introGap,
+            status: introStatus,
+          },
           booking: {
             top1: top1.hasBooking,
-            my: myPlace.hasBooking,
-            status: !myPlace.hasBooking && top1.hasBooking ? 'MISSING' : (myPlace.hasBooking ? 'ACTIVE' : 'NONE'),
+            my: isTargetFound ? (myPlace?.hasBooking || false) : false,
+            status: (!isTargetFound || !myPlace?.hasBooking) && top1.hasBooking ? 'MISSING' : (myPlace?.hasBooking ? 'ACTIVE' : 'NONE'),
           },
           coupon: {
             top1: !!top1.hasCoupon,
-            my: !!myPlace.hasCoupon,
-            status: !myPlace.hasCoupon && top1.hasCoupon ? 'MISSING' : (myPlace.hasCoupon ? 'ACTIVE' : 'NONE'),
+            my: isTargetFound ? !!myPlace?.hasCoupon : false,
+            status: (!isTargetFound || !myPlace?.hasCoupon) && top1.hasCoupon ? 'MISSING' : (myPlace?.hasCoupon ? 'ACTIVE' : 'NONE'),
           }
         }
       };
-    }
-
-    // 5. 플레이스싱크 AI 순위 정체 원인 & 1위 동기화 전략 산출
-    let jevDiagnosis = null;
-    if (cleanTarget) {
-      const top1Item = rankingData.items.length > 0 ? rankingData.items[0] : null;
-      jevDiagnosis = await diagnosePlaceWithJev({
-        query: cleanQuery,
-        targetName: cleanTarget,
-        rank: myPlace ? myPlace.rank : null,
-        hasBooking: myPlace ? myPlace.hasBooking : false,
-        top1Name: top1Item ? top1Item.name : '',
-        category: myPlace ? myPlace.category : '',
-        gapAnalysis,
-      });
     }
 
     const top5Places = rankingData.items.slice(0, 5).map(item => ({
@@ -905,7 +936,8 @@ export async function GET(req: Request) {
       blogReviews: item.blogReviews,
       hasBooking: item.hasBooking,
       hasCoupon: item.hasCoupon,
-      saveCount: item.saveCount
+      saveCount: item.saveCount,
+      introLength: item.introLength,
     }));
 
     return NextResponse.json({
@@ -917,7 +949,6 @@ export async function GET(req: Request) {
       searchVolume,
       myPlace,
       gapAnalysis,
-      jevDiagnosis,
       top5Places,
       rankingList: rankingData.items,
     });

@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { Sparkles, ArrowLeft } from 'lucide-react'
+import GlobalHeader from '@/components/common/GlobalHeader'
 
 export const metadata: Metadata = {
   title: '서비스 이용약관 | PostSync',
@@ -14,20 +15,7 @@ export default function TermsPage() {
   return (
     <div className="min-h-screen bg-slate-900 text-slate-200">
       {/* Header */}
-      <header className="border-b border-white/10 bg-slate-950/50 backdrop-blur-md sticky top-0 z-50">
-        <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 text-white hover:opacity-80 transition-opacity">
-            <ArrowLeft className="w-4 h-4 text-slate-400" />
-            <span className="text-sm font-medium text-slate-400">메인으로 돌아가기</span>
-          </Link>
-          <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-lg bg-indigo-600 flex items-center justify-center text-white">
-              <Sparkles className="w-3.5 h-3.5" />
-            </div>
-            <span className="text-sm font-bold text-white">PostSync</span>
-          </div>
-        </div>
-      </header>
+      <GlobalHeader />
 
       {/* Main Content */}
       <main className="max-w-4xl mx-auto px-6 py-16">
