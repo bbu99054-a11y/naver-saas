@@ -5,6 +5,28 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       {
+        source: "/:path*",
+        has: [
+          {
+            type: "host",
+            value: "crop.postsyncapp.com",
+          },
+        ],
+        destination: "https://www.postsyncapp.com/crop",
+        permanent: true,
+      },
+      {
+        source: "/:path*",
+        has: [
+          {
+            type: "host",
+            value: "tools.postsyncapp.com",
+          },
+        ],
+        destination: "https://www.postsyncapp.com/tools",
+        permanent: true,
+      },
+      {
         source: "/tools/adcheck",
         destination: "/adcheck",
         permanent: true,
@@ -49,16 +71,6 @@ const nextConfig: NextConfig = {
   async rewrites() {
     return {
       beforeFiles: [
-        {
-          source: "/",
-          has: [
-            {
-              type: "host",
-              value: "crop.postsyncapp.com",
-            },
-          ],
-          destination: "/crop.html",
-        },
         { source: "/adcheck", destination: "/adcheck.html" },
         { source: "/place", destination: "/place.html" },
         { source: "/reply", destination: "/reply.html" },
