@@ -54,13 +54,13 @@ export const metadata: Metadata = {
 const CORE_PLACE_TOOLS = [
   {
     id: 'place',
-    name: '스마트플레이스 실시간 순위 & 1위 비교 진단기',
+    name: '네이버 플레이스 순위 조회 & 1위 매장 비교 진단기',
     href: '/place',
-    badge: '실시간 1위~20위 · 검색량 측정',
+    badge: '실시간 1위~20위 · 무료 순위 체크',
     target: '자영업 매장 · 병의원 · 미용실 · 학원 · 전문직',
-    desc: '검색 키워드와 상호명을 입력하면 네이버 플레이스 실시간 노출 등수, 공식 월간 검색량, 1위 경쟁 매장과의 방문자리뷰·블로그리뷰·예약·쿠폰 차이를 즉시 실측합니다.',
+    desc: '검색 키워드와 상호명을 입력하면 네이버 플레이스 실시간 노출 순위 확인, 공식 월간 검색량, 1위 경쟁 매장과의 방문자리뷰·블로그리뷰·예약·쿠폰 차이를 즉시 실측합니다.',
     icon: MapPin,
-    btnLabel: '순위 확인하기',
+    btnLabel: '플레이스 순위 조회하기',
     accent: 'text-emerald-700 bg-emerald-50 border-emerald-200',
     btnClass: 'bg-emerald-600 hover:bg-emerald-700 text-white',
   },
@@ -157,7 +157,20 @@ export default function HomePage() {
     blogPosts.find((p) => p.slug === 'naver-place-rank-checker-free') || placePosts[1] || complianceAndSeoPosts[0],
   ].filter(Boolean)
 
-  const curatedPlacePosts = placePosts.slice(0, 6)
+  const prioritySlugs = [
+    'naver-place-rank-checker-free',
+    'naver-place-rank-check-how-to-guide',
+    'naver-receipt-review-qr-code-generator-free',
+    'naver-place-rank-check-program-vs-web',
+    'smart-place-top-setting-checklist',
+    'place-rank-drop-causes-and-fix',
+  ]
+  const curatedPlacePosts = [
+    ...prioritySlugs
+      .map((s) => placePosts.find((p) => p.slug === s))
+      .filter((p): p is NonNullable<typeof p> => Boolean(p)),
+    ...placePosts.filter((p) => !prioritySlugs.includes(p.slug)),
+  ].slice(0, 6)
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -166,21 +179,34 @@ export default function HomePage() {
         '@type': 'WebSite',
         '@id': 'https://www.postsyncapp.com/#website',
         url: 'https://www.postsyncapp.com',
-        name: 'PostSync 스마트플레이스 & 로컬 마케팅 분석 포털',
+        name: 'PostSync 플레이스 연구소 · 스마트플레이스 종합 진단 포털',
         description:
           '2026 네이버 스마트플레이스 실시간 순위 조회, 1위 매장 비교 진단, 검색 최적화(SEO/GEO) 실전 칼럼 및 무료 비즈니스 웹 유틸리티 포털',
         inLanguage: 'ko-KR',
         publisher: {
           '@id': 'https://www.postsyncapp.com/#organization',
         },
+        hasPart: {
+          '@type': 'SoftwareApplication',
+          '@id': 'https://www.postsyncapp.com/place#software',
+          name: 'PostSync 네이버 플레이스 순위 조회 · 무료 순위 확인 도구',
+          url: 'https://www.postsyncapp.com/place',
+          applicationCategory: 'BusinessApplication',
+          operatingSystem: 'All',
+        },
       },
       {
         '@type': 'Organization',
         '@id': 'https://www.postsyncapp.com/#organization',
         name: '와이엠랩스 (YM Labs)',
-        alternateName: 'PostSync',
+        alternateName: 'PostSync 플레이스 연구소',
         url: 'https://www.postsyncapp.com',
         email: 'support@postsyncapp.com',
+        founder: {
+          '@type': 'Person',
+          name: '유영무',
+          jobTitle: '대표 연구원',
+        },
         address: {
           '@type': 'PostalAddress',
           streetAddress: '송파대로 345, 103동 204호',
@@ -188,17 +214,6 @@ export default function HomePage() {
           addressRegion: '서울특별시',
           addressCountry: 'KR',
         },
-      },
-      {
-        '@type': 'FAQPage',
-        mainEntity: EDITORIAL_FAQS.map((item) => ({
-          '@type': 'Question',
-          name: item.q,
-          acceptedAnswer: {
-            '@type': 'Answer',
-            text: item.a,
-          },
-        })),
       },
     ],
   }

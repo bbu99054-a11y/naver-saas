@@ -4,106 +4,107 @@ import { blogPosts } from '@/lib/blogData'
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://www.postsyncapp.com'
 
-  const staticLastModified = new Date('2026-11-03T00:00:00.000Z')
+  const coreLastModified = new Date('2026-11-06T00:00:00.000Z')
+  const toolLastModified = new Date('2026-11-03T00:00:00.000Z')
 
   const staticRoutes: MetadataRoute.Sitemap = [
     {
       url: `${baseUrl}/place`,
-      lastModified: staticLastModified,
+      lastModified: coreLastModified,
       changeFrequency: 'daily',
       priority: 1.0,
     },
     {
       url: baseUrl,
-      lastModified: staticLastModified,
-      changeFrequency: 'daily',
-      priority: 0.95,
-    },
-    {
-      url: `${baseUrl}/utm`,
-      lastModified: staticLastModified,
-      changeFrequency: 'daily',
-      priority: 0.95,
-    },
-    {
-      url: `${baseUrl}/adcheck`,
-      lastModified: staticLastModified,
-      changeFrequency: 'daily',
-      priority: 0.95,
-    },
-    {
-      url: `${baseUrl}/reply`,
-      lastModified: staticLastModified,
-      changeFrequency: 'daily',
-      priority: 0.95,
-    },
-    {
-      url: `${baseUrl}/blog`,
-      lastModified: staticLastModified,
-      changeFrequency: 'daily',
+      lastModified: coreLastModified,
+      changeFrequency: 'weekly',
       priority: 0.9,
     },
     {
-      url: `${baseUrl}/tools`,
-      lastModified: staticLastModified,
+      url: `${baseUrl}/utm`,
+      lastModified: toolLastModified,
       changeFrequency: 'weekly',
       priority: 0.85,
+    },
+    {
+      url: `${baseUrl}/adcheck`,
+      lastModified: toolLastModified,
+      changeFrequency: 'weekly',
+      priority: 0.85,
+    },
+    {
+      url: `${baseUrl}/reply`,
+      lastModified: toolLastModified,
+      changeFrequency: 'weekly',
+      priority: 0.85,
+    },
+    {
+      url: `${baseUrl}/blog`,
+      lastModified: coreLastModified,
+      changeFrequency: 'weekly',
+      priority: 0.85,
+    },
+    {
+      url: `${baseUrl}/tools`,
+      lastModified: toolLastModified,
+      changeFrequency: 'monthly',
+      priority: 0.75,
     },
     {
       url: `${baseUrl}/guide/ad-law-2026`,
-      lastModified: staticLastModified,
-      changeFrequency: 'weekly',
-      priority: 0.85,
+      lastModified: toolLastModified,
+      changeFrequency: 'monthly',
+      priority: 0.75,
     },
     {
       url: `${baseUrl}/convert`,
-      lastModified: staticLastModified,
-      changeFrequency: 'weekly',
-      priority: 0.7,
+      lastModified: toolLastModified,
+      changeFrequency: 'monthly',
+      priority: 0.6,
     },
     {
       url: `${baseUrl}/crop`,
-      lastModified: staticLastModified,
+      lastModified: toolLastModified,
       changeFrequency: 'monthly',
       priority: 0.3,
     },
     {
       url: `${baseUrl}/byte`,
-      lastModified: staticLastModified,
+      lastModified: toolLastModified,
       changeFrequency: 'monthly',
       priority: 0.3,
     },
     {
       url: `${baseUrl}/hwpx`,
-      lastModified: staticLastModified,
+      lastModified: toolLastModified,
       changeFrequency: 'monthly',
       priority: 0.3,
     },
     {
       url: `${baseUrl}/terms`,
       lastModified: new Date('2026-08-01T00:00:00.000Z'),
-      changeFrequency: 'monthly',
+      changeFrequency: 'yearly',
       priority: 0.3,
     },
     {
       url: `${baseUrl}/privacy`,
       lastModified: new Date('2026-08-01T00:00:00.000Z'),
-      changeFrequency: 'monthly',
+      changeFrequency: 'yearly',
       priority: 0.3,
     },
     {
       url: `${baseUrl}/contact`,
       lastModified: new Date('2026-09-01T00:00:00.000Z'),
-      changeFrequency: 'monthly',
-      priority: 0.5,
+      changeFrequency: 'yearly',
+      priority: 0.4,
     },
   ]
 
   const blogRoutes: MetadataRoute.Sitemap = blogPosts.map((post) => ({
     url: `${baseUrl}/blog/${post.slug}`,
     lastModified: new Date(post.date),
-    changeFrequency: 'daily',
-    priority: 0.85,
+    changeFrequency: 'monthly',
+    priority: 0.8,
   }))
 
   return [...staticRoutes, ...blogRoutes]

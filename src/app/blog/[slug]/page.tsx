@@ -71,18 +71,21 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     description: post.excerpt,
     image: post.imageUrl,
     datePublished: post.date,
+    dateModified: post.date,
     mainEntityOfPage: {
       '@type': 'WebPage',
       '@id': `https://www.postsyncapp.com/blog/${post.slug}`,
     },
     author: {
-      '@type': 'Organization',
-      name: 'PostSync 스마트플레이스 연구소',
+      '@type': 'Person',
+      name: post.author || '유영무',
+      jobTitle: 'PostSync 스마트플레이스 수석 연구원',
       url: 'https://www.postsyncapp.com',
     },
     publisher: {
       '@type': 'Organization',
-      name: 'PostSync',
+      name: 'PostSync 플레이스 연구소 (와이엠랩스)',
+      url: 'https://www.postsyncapp.com',
       logo: {
         '@type': 'ImageObject',
         url: 'https://www.postsyncapp.com/favicon.ico',
@@ -276,15 +279,20 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             <p className="text-sm text-slate-300 leading-relaxed text-pretty">
               회원가입이나 프로그램 설치 없이 브라우저에서 즉시 작동합니다. 네이버 스마트플레이스 1위 매장과의 4대 지표 비교 분석과 소개글 금칙어 검사를 무료로 이용해 보세요.
             </p>
-            <div className="flex flex-col sm:flex-row gap-3 pt-2">
+            <div className="flex flex-col sm:flex-row flex-wrap gap-3 pt-2">
               <Link href="/place">
-                <Button className="w-full sm:w-auto bg-blue-600 hover:bg-blue-500 text-white font-extrabold rounded-full px-7 h-12 cursor-pointer shadow-sm">
-                  플레이스 실시간 순위 조회 &rarr;
+                <Button className="w-full sm:w-auto bg-blue-600 hover:bg-blue-500 text-white font-extrabold rounded-full px-7 min-h-12 py-2.5 cursor-pointer shadow-sm">
+                  네이버 플레이스 순위 조회 무료 진단 &rarr;
+                </Button>
+              </Link>
+              <Link href="/utm">
+                <Button variant="outline" className="w-full sm:w-auto bg-white/10 hover:bg-white/20 text-white border-white/20 font-bold rounded-full px-6 min-h-12 py-2.5 cursor-pointer">
+                  영수증 리뷰 QR 안내판 만들기
                 </Button>
               </Link>
               <Link href="/adcheck">
-                <Button variant="outline" className="w-full sm:w-auto bg-white/10 hover:bg-white/20 text-white border-white/20 font-bold rounded-full px-6 h-12 cursor-pointer">
-                  소개글·블로그 금칙어 스캐너
+                <Button variant="outline" className="w-full sm:w-auto bg-white/10 hover:bg-white/20 text-white border-white/20 font-bold rounded-full px-6 min-h-12 py-2.5 cursor-pointer">
+                  소개글·블로그 금칙어 검사
                 </Button>
               </Link>
             </div>
