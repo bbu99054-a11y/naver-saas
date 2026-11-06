@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>[무료] 스마트플레이스 소개글 글자수 · 키워드 · 금칙어 검사기 (2026 심의 기준) | PostSync</title>
   <meta name="description" content="플레이스 상세설명 왜 반려될까? 2,000자 체류시간 게이지, 모바일 첫 3줄 키워드 배치, 과장광고 및 의료·전문직 금칙어를 1초 만에 진단하고 안전 문구로 자동 변환하세요.">
-  <meta name="keywords" content="변호사 광고 규정, 의료법 위반 단어 검사, 세무사 광고 금칙어, 전문직 블로그 금지어, 변호사법 제23조, 의료법 제56조, 광고 컴플라이언스 검사기">
+  <meta name="keywords" content="스마트플레이스 소개글 금칙어, 플레이스 상세설명 2000자, 네이버 플레이스 소개글 작성법, 변호사 광고 규정, 의료법 위반 단어 검사, 세무사 광고 금칙어, 전문직 블로그 금지어, PostSync">
   
   <!-- Canonical Consolidation -->
   <link rel="canonical" href="https://www.postsyncapp.com/adcheck">
@@ -669,14 +669,16 @@
     }
   </style>
 
-  <!-- JSON-LD Schema (SoftwareApplication + FAQPage) -->
+  <!-- JSON-LD Schema (SoftwareApplication + Person + Organization + BreadcrumbList) -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@graph": [
       {
         "@type": "SoftwareApplication",
+        "@id": "https://www.postsyncapp.com/adcheck#software",
         "name": "PostSync 스마트플레이스 소개글 글자수 · 키워드 · 금칙어 스캐너",
+        "url": "https://www.postsyncapp.com/adcheck",
         "operatingSystem": "All",
         "applicationCategory": "BusinessApplication",
         "offers": {
@@ -684,26 +686,44 @@
           "price": "0",
           "priceCurrency": "KRW"
         },
-        "description": "스마트플레이스 상세설명 2,000자 SEO 완결도 검사, 모바일 첫 3줄 핵심 키워드 판별, 과장광고 및 의료법·변호사법·표시광고법 위반 금칙어 1초 검출 & 안전 대체어 추천"
+        "description": "스마트플레이스 상세설명 2,000자 SEO 완결도 검사, 모바일 첫 3줄 핵심 키워드 판별, 과장광고 및 의료법·변호사법·표시광고법 위반 금칙어 1초 검출 & 안전 대체어 추천",
+        "author": {
+          "@type": "Person",
+          "name": "유영무",
+          "jobTitle": "대표 연구원",
+          "worksFor": {
+            "@id": "https://www.postsyncapp.com/#organization"
+          }
+        },
+        "publisher": {
+          "@id": "https://www.postsyncapp.com/#organization"
+        },
+        "datePublished": "2026-01-01",
+        "dateModified": "2026-11-06"
       },
       {
-        "@type": "FAQPage",
-        "mainEntity": [
+        "@type": "Organization",
+        "@id": "https://www.postsyncapp.com/#organization",
+        "name": "PostSync 플레이스 연구소 (와이엠랩스)",
+        "alternateName": "PostSync",
+        "url": "https://www.postsyncapp.com",
+        "email": "support@postsyncapp.com"
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://www.postsyncapp.com/adcheck#breadcrumb",
+        "itemListElement": [
           {
-            "@type": "Question",
-            "name": "작성한 글이나 기밀 원고가 서버로 전송되나요?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "아닙니다. PostSync 광고 규정 스캐너는 100% 사용자의 브라우저 로컬 자바스크립트 엔진에서 정규식으로 동작하므로, 어떠한 텍스트도 외부 서버로 전송되거나 저장되지 않아 의뢰인 기밀이 100% 안전하게 보호됩니다."
-            }
+            "@type": "ListItem",
+            "position": 1,
+            "name": "홈",
+            "item": "https://www.postsyncapp.com"
           },
           {
-            "@type": "Question",
-            "name": "변호사 블로그에서 '100% 승소' 대신 어떤 단어를 써야 하나요?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "변호사 광고 규정상 결과를 장담하거나 소비자를 오도하는 표현은 전면 금지됩니다. '100% 승소' 대신 '철저한 법리 검토 및 객관적 판례 중심 대응' 등의 객관적 표현을 사용하는 것이 안전합니다."
-            }
+            "@type": "ListItem",
+            "position": 2,
+            "name": "플레이스 소개글 금칙어 스캐너",
+            "item": "https://www.postsyncapp.com/adcheck"
           }
         ]
       }

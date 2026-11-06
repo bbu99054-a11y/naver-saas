@@ -9,7 +9,7 @@
     gtag('js', new Date());
     gtag('config', 'G-7WTMC1GBC8', {
       page_path: window.location.pathname,
-      page_title: '마케팅 유입 추적 링크(UTM) & 고화질 QR코드 생성기'
+      page_title: '네이버 플레이스 영수증 리뷰 · 쿠폰 QR코드 안내판 생성기 | PostSync'
     });
   </script>
 
@@ -17,12 +17,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>[무료] 네이버 플레이스 영수증 리뷰 · 쿠폰 QR코드 안내판 생성기 (바로 인쇄) | PostSync</title>
   <meta name="description" content="매장 테이블과 카운터에 비치할 스마트플레이스 영수증 리뷰·저장하기·쿠폰 직행 QR코드와 인쇄용 A6 안내판(POP)을 10초 만에 무료로 제작하세요.">
-  <meta name="keywords" content="유입추적링크, 추적링크만들기, utm빌더, utm생성기, ga4추적링크, 인스타그램링크추적, 네이버블로그추적, qr코드생성기, 마케팅추적링크">
+  <meta name="keywords" content="네이버 영수증 리뷰 QR, 네이버 플레이스 리뷰 QR코드 만들기, 매장 QR 안내판 인쇄, 스마트플레이스 저장하기 QR, 영수증 리뷰 큐알 코드, QR코드 생성기 무료, UTM 빌더, PostSync">
   <link rel="canonical" href="https://www.postsyncapp.com/utm">
 
   <!-- OpenGraph / SNS -->
   <meta property="og:type" content="website">
-  <meta property="og:site_name" content="PostSync Tools">
+  <meta property="og:site_name" content="PostSync 플레이스 연구소">
   <meta property="og:title" content="[무료] 네이버 플레이스 영수증 리뷰 · 쿠폰 QR코드 안내판 생성기 (바로 인쇄)">
   <meta property="og:description" content="매장 테이블과 카운터에 비치할 스마트플레이스 영수증 리뷰·저장하기·쿠폰 직행 QR코드와 인쇄용 A6 안내판(POP)을 10초 만에 무료로 제작하세요.">
   <meta property="og:url" content="https://www.postsyncapp.com/utm">
@@ -771,14 +771,16 @@
     }
   </style>
 
-  <!-- Structured Data: JSON-LD for Programmatic SEO -->
+  <!-- Structured Data: JSON-LD (SoftwareApplication + Person + Organization + BreadcrumbList) -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@graph": [
       {
         "@type": "SoftwareApplication",
+        "@id": "https://www.postsyncapp.com/utm#software",
         "name": "PostSync 네이버 스마트플레이스 영수증 리뷰 · 쿠폰 QR코드 안내판 생성기",
+        "url": "https://www.postsyncapp.com/utm",
         "operatingSystem": "All",
         "applicationCategory": "BusinessApplication",
         "offers": {
@@ -786,47 +788,44 @@
           "price": "0",
           "priceCurrency": "KRW"
         },
-        "description": "오프라인 매장 테이블과 카운터에 비치하여 영수증 포토 리뷰, 저장하기, 네이버 예약 참여율을 극대화하는 인쇄용 고화질 QR 안내판(POP) 무료 생성."
-      },
-      {
-        "@type": "HowTo",
-        "name": "매장 테이블용 네이버 플레이스 영수증 리뷰 QR코드 안내판 제작하는 법",
-        "step": [
-          {
-            "@type": "HowToStep",
-            "name": "웹사이트 URL 입력",
-            "text": "랜딩시키고자 하는 자사몰이나 블로그의 원본 주소를 입력합니다."
-          },
-          {
-            "@type": "HowToStep",
-            "name": "인스타그램 프리셋 선택",
-            "text": "[인스타 프로필] 버튼을 클릭하면 Source(instagram), Medium(social), Campaign(profile_bio)가 1초 만에 자동 주입됩니다."
-          },
-          {
-            "@type": "HowToStep",
-            "name": "링크 복사 및 QR코드 다운로드",
-            "text": "생성된 UTM URL을 인스타그램 프로필 링크에 등록하거나, 오프라인 인쇄용 고화질 QR코드를 다운로드합니다."
+        "description": "오프라인 매장 테이블과 카운터에 비치하여 영수증 포토 리뷰, 저장하기, 네이버 예약 참여율을 극대화하는 인쇄용 고화질 QR 안내판(POP) 무료 생성 도구",
+        "author": {
+          "@type": "Person",
+          "name": "유영무",
+          "jobTitle": "대표 연구원",
+          "worksFor": {
+            "@id": "https://www.postsyncapp.com/#organization"
           }
-        ]
+        },
+        "publisher": {
+          "@id": "https://www.postsyncapp.com/#organization"
+        },
+        "datePublished": "2026-01-01",
+        "dateModified": "2026-11-06"
       },
       {
-        "@type": "FAQPage",
-        "mainEntity": [
+        "@type": "Organization",
+        "@id": "https://www.postsyncapp.com/#organization",
+        "name": "PostSync 플레이스 연구소 (와이엠랩스)",
+        "alternateName": "PostSync",
+        "url": "https://www.postsyncapp.com",
+        "email": "support@postsyncapp.com"
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://www.postsyncapp.com/utm#breadcrumb",
+        "itemListElement": [
           {
-            "@type": "Question",
-            "name": "UTM 파라미터에서 공백이나 대소문자가 왜 중요한가요?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "구글 애널리틱스(GA4)는 대소문자를 엄격히 구분하므로 'Instagram'과 'instagram'을 서로 다른 채널로 쪼개어 분석합니다. 또한 공백이 들어가면 브라우저에 따라 '%20'으로 깨지기 때문에 하이픈(-)으로 통일하는 것이 필수입니다."
-            }
+            "@type": "ListItem",
+            "position": 1,
+            "name": "홈",
+            "item": "https://www.postsyncapp.com"
           },
           {
-            "@type": "Question",
-            "name": "여기서 생성한 QR코드를 오프라인 인쇄물(포스터, 명함)에 써도 되나요?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "네, 완벽하게 가능합니다. 본 도구의 QR코드는 256x256 해상도 무손실 PNG로 렌더링되므로 매장 X배너, 테이블 텐트, 전단지, 명함에 인쇄하여 오프라인 고객의 온라인 방문 데이터를 GA4로 정밀하게 추적할 수 있습니다."
-            }
+            "@type": "ListItem",
+            "position": 2,
+            "name": "네이버 영수증 리뷰 QR 생성기",
+            "item": "https://www.postsyncapp.com/utm"
           }
         ]
       }

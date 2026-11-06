@@ -27,16 +27,61 @@
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    "name": "PostSync 플레이스 AI 리뷰 답글 & 새소식 생성기",
-    "applicationCategory": "BusinessApplication",
-    "operatingSystem": "All",
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "KRW"
-    },
-    "description": "네이버 스마트플레이스 영수증 방문자 리뷰에 대해 24시간 내 키워드를 자연스럽게 포함하는 사장님 맞춤 답글 3종 및 주간 새소식을 10초 만에 생성하는 무료 AI 도구"
+    "@graph": [
+      {
+        "@type": "SoftwareApplication",
+        "@id": "https://www.postsyncapp.com/reply#software",
+        "name": "PostSync 플레이스 AI 소개글 2,000자 · 리뷰 답글 · 새소식 생성기",
+        "url": "https://www.postsyncapp.com/reply",
+        "applicationCategory": "BusinessApplication",
+        "operatingSystem": "All",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "KRW"
+        },
+        "description": "네이버 스마트플레이스 상세설명 2,000자 소개글과 영수증 방문자 리뷰 맞춤 답글 3종 및 주간 새소식을 10초 만에 생성하는 무료 AI 도구",
+        "author": {
+          "@type": "Person",
+          "name": "유영무",
+          "jobTitle": "대표 연구원",
+          "worksFor": {
+            "@id": "https://www.postsyncapp.com/#organization"
+          }
+        },
+        "publisher": {
+          "@id": "https://www.postsyncapp.com/#organization"
+        },
+        "datePublished": "2026-01-01",
+        "dateModified": "2026-11-06"
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://www.postsyncapp.com/#organization",
+        "name": "PostSync 플레이스 연구소 (와이엠랩스)",
+        "alternateName": "PostSync",
+        "url": "https://www.postsyncapp.com",
+        "email": "support@postsyncapp.com"
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://www.postsyncapp.com/reply#breadcrumb",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "홈",
+            "item": "https://www.postsyncapp.com"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "AI 소개글·리뷰 답글 생성기",
+            "item": "https://www.postsyncapp.com/reply"
+          }
+        ]
+      }
+    ]
   }
   </script>
 
