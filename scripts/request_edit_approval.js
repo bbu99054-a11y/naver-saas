@@ -1,0 +1,242 @@
+/**
+ * PostSync SEO 수정 작업 착수 전 텔레그램 1단계 결재 요청 및 승인 수신 스크립트
+ *
+ * 사용법:
+ *   node scripts/request_edit_approval.js --summary "수정 요약" --wait-mins 60
+ *   node scripts/request_edit_approval.js --send-only
+ */
+
+const path = require("path");
+const fs = require("fs");
+const net = require("net");
+
+// Windows IPv6 Happy Eyeballs 타임아웃(ETIMEDOUT) 방지
+net.setDefaultAutoSelectFamily(false);
+
+// .env.local 로드
+const envPath = path.resolve(__dirname, "../.env.local");
+if (fs.existsSync(envPath)) {
+  const envContent = fs.readFileSync(envPath, "utf8");
+  envContent.split("\n").forEach((line) => {
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith("#")) return;
+    const eqIdx = trimmed.indexOf("=");
+    if (eqIdx !== -1) {
+      const key = trimmed.slice(0, eqIdx).trim();
+      let val = trimmed.slice(eqIdx + 1).trim();
+      if ((val.startsWith('"') && val.endsWith('"')) || (val.startsWith("'") && val.endsWith("'"))) {
+        val = val.slice(1, -1);
+      }
+      process.env[key] = val;
+    }
+  });
+}
+
+const ROOT_DIR = path.resolve(__dirname, "..");
+const PENDING_ACTION_PATH = path.resolve(ROOT_DIR, "src/data/pending-seo-action.json");
+
+function getArg(flag, defaultVal = "") {
+  const idx = process.argv.indexOf(flag);
+  if (idx !== -1 && process.argv[idx + 1]) {
+    return process.argv[idx + 1];
+  }
+  return defaultVal;
+}
+
+function escapeHtml(str) {
+  return String(str || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+}
+
+async function sendEditApprovalMessage(text, actionId) {
+  const token = process.env.TELEGRAM_BOT_TOKEN?.trim();
+  const chatId = process.env.TELEGRAM_CHAT_ID?.trim();
+  if (!token || !chatId) {
+    throw new Error("TELEGRAM_BOT_TOKEN 또는 TELEGRAM_CHAT_ID가 설정되지 않았습니다.");
+  }
+
+  const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      chat_id: chatId,
+      text,
+      parse_mode: "HTML",
+      disable_web_page_preview: true,
+      reply_markup: {
+        inline_keyboard: [
+          [
+            { text: "✅ 수정 진행 승인", callback_data: `edit_approve:${actionId}` },
+            { text: "⏸️ 오늘 보류", callback_data: `edit_reject:${actionId}` },
+          ],
+        ],
+      },
+    }),
+  });
+
+  const data = await res.json();
+  if (!res.ok || !data.ok) {
+    throw new Error(`텔레그램 발송 실패: ${data.description || res.statusText}`);
+  }
+  return data.result?.message_id;
+}
+
+async function sendTelegramNotice(text) {
+  const token = process.env.TELEGRAM_BOT_TOKEN?.trim();
+  const chatId = process.env.TELEGRAM_CHAT_ID?.trim();
+  if (!token || !chatId) return;
+
+  await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      chat_id: chatId,
+      text,
+      parse_mode: "HTML",
+      disable_web_page_preview: true,
+    }),
+  });
+}
+
+async function waitForEditDecision(actionId, waitMins) {
+  const token = process.env.TELEGRAM_BOT_TOKEN?.trim();
+  const targetChatId = process.env.TELEGRAM_CHAT_ID?.trim();
+  const timeoutMs = waitMins * 60 * 1000;
+
+  let offset = 0;
+  try {
+    const initRes = await fetch(`https://api.telegram.org/bot${token}/getUpdates?limit=5&timeout=0`);
+    const initData = await initRes.json();
+    if (initData.ok && Array.isArray(initData.result) && initData.result.length > 0) {
+      offset = initData.result[initData.result.length - 1].update_id + 1;
+    }
+  } catch {
+    // ignore
+  }
+
+  const deadline = Date.now() + timeoutMs;
+  console.log(`⏳ 텔레그램 수정 착수 승인 대기 중... (최대 ${waitMins}분, actionId: ${actionId})`);
+
+  while (Date.now() < deadline) {
+    try {
+      const res = await fetch(`https://api.telegram.org/bot${token}/getUpdates?offset=${offset}&timeout=10`);
+      const data = await res.json();
+
+      if (data.ok && Array.isArray(data.result)) {
+        for (const update of data.result) {
+          offset = update.update_id + 1;
+
+          if (update.callback_query) {
+            const cb = update.callback_query;
+            const cbChatId = String(cb.message?.chat?.id || "");
+            const cbData = String(cb.data || "");
+
+            if (cbChatId === targetChatId) {
+              if (cbData === `edit_approve:${actionId}`) {
+                await fetch(`https://api.telegram.org/bot${token}/answerCallbackQuery`, {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({
+                    callback_query_id: cb.id,
+                    text: "수정 진행 승인 확인 완료!",
+                  }),
+                });
+                return "approved";
+              }
+              if (cbData === `edit_reject:${actionId}`) {
+                await fetch(`https://api.telegram.org/bot${token}/answerCallbackQuery`, {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({
+                    callback_query_id: cb.id,
+                    text: "오늘 수정 보류 처리되었습니다.",
+                  }),
+                });
+                return "rejected";
+              }
+            }
+          }
+
+          if (update.message && String(update.message.chat?.id || "") === targetChatId) {
+            const msgText = String(update.message.text || "").trim().toLowerCase();
+            if (["승인", "진행", "수정", "수정해줘", "/approve", "approve", "ok", "ㅇㅇ"].includes(msgText)) {
+              return "approved";
+            }
+            if (["보류", "취소", "/reject", "reject", "hold"].includes(msgText)) {
+              return "rejected";
+            }
+          }
+        }
+      }
+    } catch {
+      // 일시적 오류 시 재시도
+    }
+
+    await new Promise((r) => setTimeout(r, 3000));
+  }
+
+  return "timeout";
+}
+
+async function main() {
+  if (!fs.existsSync(PENDING_ACTION_PATH)) {
+    throw new Error("pending-seo-action.json 파일이 없습니다. 먼저 collect_and_decide_seo.js를 실행하세요.");
+  }
+
+  const pending = JSON.parse(fs.readFileSync(PENDING_ACTION_PATH, "utf8"));
+  const action = pending.selectedAction || {};
+  const customSummary = getArg("--summary", "");
+  const waitMins = parseInt(getArg("--wait-mins", "60"), 10);
+
+  const summaryBlock = customSummary
+    ? `\n📝 <b>수정 제안 요약:</b>\n${escapeHtml(customSummary)}`
+    : "";
+
+  const text = `🛠️ <b>[PostSync SEO 수정 착수 1차 결재 요청]</b>
+
+📅 <b>분석 일자:</b> ${escapeHtml(pending.date)}
+🎯 <b>1순위 처방:</b> <code>[${escapeHtml(action.caseCode)}] ${escapeHtml(action.actionType)}</code>
+📍 <b>대상 경로:</b> <code>${escapeHtml(action.targetSlug || action.targetPath || "-")}</code>
+🔑 <b>트리거 키워드:</b> <b>${escapeHtml(action.triggerQuery || action.targetTitle || "-")}</b>
+
+📊 <b>감지 사유:</b>
+${escapeHtml(action.reason)}${summaryBlock}
+
+아래 <b>[✅ 수정 진행 승인]</b> 버튼을 누르거나 채팅창에 <code>승인</code>이라고 답장하시면 로컬 수정 작업을 진행하도록 상태를 승인 처리합니다.`;
+
+  const messageId = await sendEditApprovalMessage(text, pending.actionId);
+  console.log(`✅ 텔레그램 수정 착수 결재 버튼 발송 완료 (Message ID: ${messageId})`);
+
+  if (process.argv.includes("--send-only")) {
+    return;
+  }
+
+  const decision = await waitForEditDecision(pending.actionId, waitMins);
+  if (decision === "approved") {
+    pending.status = "APPROVED_TO_EDIT";
+    pending.editApprovedAt = new Date().toISOString();
+    fs.writeFileSync(PENDING_ACTION_PATH, JSON.stringify(pending, null, 2), "utf8");
+    console.log("✅ 수정 착수 승인 수신 완료! pending-seo-action.json 상태를 APPROVED_TO_EDIT로 갱신했습니다.");
+    await sendTelegramNotice(
+      `✅ <b>[수정 착수 승인 확인]</b>\n<code>${escapeHtml(pending.actionId)}</code> 건의 수정 진행 승인이 기록되었습니다.`
+    );
+  } else if (decision === "rejected") {
+    pending.status = "REJECTED_HOLD";
+    pending.editRejectedAt = new Date().toISOString();
+    fs.writeFileSync(PENDING_ACTION_PATH, JSON.stringify(pending, null, 2), "utf8");
+    console.log("⏸️ 오늘 수정 보류 선택됨.");
+    await sendTelegramNotice(`⏸️ <b>[오늘 수정 보류 완료]</b>\n수정을 보류했습니다.`);
+  } else {
+    console.log(`⌛ 승인 대기 시간(${waitMins}분) 경과.`);
+    await sendTelegramNotice(
+      `⌛ <b>[수정 착수 승인 대기 시간(${waitMins}분) 경과]</b>\n응답이 없어 대기 종료했습니다.`
+    );
+  }
+}
+
+main().catch((err) => {
+  console.error("[Request Edit Approval Error]:", err.message);
+  process.exit(1);
+});

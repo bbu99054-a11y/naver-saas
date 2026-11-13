@@ -1,0 +1,39 @@
+name: Daily Metrics Telegram Briefing
+
+on:
+  schedule:
+    # 매일 UTC 00:00 = 한국 시간(KST) 매일 오전 09:00
+    - cron: '0 0 * * *'
+  workflow_dispatch: # GitHub 웹 콘솔에서 수동 즉시 실행 가능
+
+jobs:
+  send-report:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Write Google Service Account Key
+        env:
+          GCP_SA_KEY: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY_JSON }}
+        run: |
+          if [ -n "$GCP_SA_KEY" ]; then
+            echo "$GCP_SA_KEY" > postsync-api-9be9a8c8fa03.json
+          fi
+
+      - name: Run daily briefing script
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          GA4_PROPERTY_ID: ${{ secrets.GA4_PROPERTY_ID }}
+          GOOGLE_SEARCH_CONSOLE_SITE_URL: "https://www.postsyncapp.com/"
+        run: node scripts/send_daily_metrics.js

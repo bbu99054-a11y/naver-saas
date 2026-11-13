@@ -48,3 +48,13 @@ local-helper/node_modules/
 local-helper/package-lock.json
 blogauto-naver-main/
 blog_images/
+
+# Google Service Account keys & secrets
+*.credentials.json
+*gserviceaccount*.json
+postsync-api-*.json
+service-account*.json
+
+# Daily SEO raw snapshots & transient approval state
+src/data/seo-snapshots/
+src/data/pending-seo-action.json

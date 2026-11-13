@@ -22,6 +22,8 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 * **엄격한 환각 방지 (Read Before Write):**
   - 가상의 외부 라이브러리 함수나 파라미터를 임의로 지어내지 않습니다.
   - 코드를 수정하기 전에 반드시 대상 파일과 프로젝트 스키마(DB/Prisma/Drizzle/Supabase 등)의 실제 구조를 직접 읽고 일치시킵니다.
+* **자가진화 기억 및 오답노트 숙지 (Living Memory):**
+  - 작업을 시작하기 전 반드시 [.agent/EXPERIENCE.md](file:///c:/workspace/postsync/.agent/EXPERIENCE.md)를 확인하여 과거에 겪었던 GCP 권한, API 규격, Next.js 번들 경고 등의 실전 버그를 숙지하고 동일한 실수를 영구히 방지합니다.
 
 ---
 
