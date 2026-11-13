@@ -45,8 +45,75 @@ const ROOT_DIR = path.resolve(__dirname, "..");
 const TRACKER_PATH = path.resolve(ROOT_DIR, "src/data/seo-tracker.json");
 const COMPETITOR_PATH = path.resolve(ROOT_DIR, "src/data/competitor-snapshots.json");
 const SNAPSHOT_DIR = path.resolve(ROOT_DIR, "src/data/seo-snapshots");
+const NAVER_REPO_PATH = path.resolve(ROOT_DIR, "src/data/naver-latest.json");
 const NAVER_SNAPSHOT_PATH = path.resolve(SNAPSHOT_DIR, "naver-latest.json");
 const PENDING_ACTION_PATH = path.resolve(ROOT_DIR, "src/data/pending-seo-action.json");
+
+// 301 리다이렉트 및 비SEO 법무·인증 페이지 제외 목록
+const IGNORED_PATHS = new Set([
+  "/seo-check",
+  "/tools/adcheck",
+  "/thumbscan",
+  "/login",
+  "/pricing",
+  "/consult",
+  "/onboarding",
+  "/terms",
+  "/privacy",
+  "/contact",
+  "/dashboard",
+]);
+
+function isIgnoredPath(pagePath) {
+  if (!pagePath) return false;
+  return IGNORED_PATHS.has(pagePath) || pagePath.startsWith("/dashboard/");
+}
+
+function isPlaceRelated(targetPath, query, trackerEntry) {
+  if (trackerEntry?.isPlaceCore === true || trackerEntry?.type === "pseo") return true;
+  if (["/place", "/utm", "/reply", "/adcheck"].includes(targetPath)) return true;
+  if (targetPath && targetPath.toLowerCase().includes("place")) return true;
+  if (query && /플레이스|스마트플레이스|place|리뷰|영수증|저장수|예약|상권|방문자/i.test(query)) return true;
+  return false;
+}
+
+function hasDedicatedPostForQuery(query, entries) {
+  const normalizedQ = query.replace(/\s+/g, "").toLowerCase();
+  const qTokens = query
+    .toLowerCase()
+    .split(/\s+/)
+    .map((t) => t.trim())
+    .filter((t) => t.length >= 2);
+
+  // 플레이스 순위 조회·체크 계열 의도 클러스터 중복 생성 방지 (/place 및 p01과 카니발리제이션 방지)
+  const isPlaceRankIntent =
+    normalizedQ.includes("플레이스") &&
+    normalizedQ.includes("순위") &&
+    /(체크|조회|확인|추적|검색|측정|분석|프로그램|어플|사이트)/.test(normalizedQ);
+
+  for (const entry of entries || []) {
+    if (isPlaceRankIntent && (entry.slug === "/place" || (entry.primaryKeyword || "").includes("플레이스 순위"))) {
+      return true;
+    }
+
+    const keywords = [entry.primaryKeyword, ...(entry.secondaryKeywords || [])].filter(Boolean);
+    for (const kw of keywords) {
+      const normalizedKw = kw.replace(/\s+/g, "").toLowerCase();
+      if (normalizedKw === normalizedQ || (normalizedKw.includes(normalizedQ) && normalizedQ.length >= 8)) {
+        return true;
+      }
+    }
+
+    if (qTokens.length >= 2) {
+      const entryText = `${entry.title || ""} ${keywords.join(" ")}`.toLowerCase();
+      const matched = qTokens.filter((tok) => entryText.includes(tok));
+      if (matched.length / qTokens.length >= 0.75) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
 
 const COMPETITORS = [
   {
@@ -98,7 +165,7 @@ function normalizePathFromUrl(urlStr) {
     const u = new URL(urlStr);
     return u.pathname.replace(/\/+$/, "") || "/";
   } catch {
-    return urlStr;
+    return (urlStr || "").replace(/\/+$/, "") || "/";
   }
 }
 
@@ -430,11 +497,16 @@ async function main() {
     });
   }
 
-  console.log("[3/5] 네이버 서치어드바이저 로컬 스냅샷 확인 중...");
+  console.log("[3/5] 네이버 서치어드바이저 스냅샷 확인 중...");
   let naverSnapshot = null;
-  if (fs.existsSync(NAVER_SNAPSHOT_PATH)) {
+  const naverFileToRead = fs.existsSync(NAVER_REPO_PATH)
+    ? NAVER_REPO_PATH
+    : fs.existsSync(NAVER_SNAPSHOT_PATH)
+      ? NAVER_SNAPSHOT_PATH
+      : null;
+  if (naverFileToRead) {
     try {
-      naverSnapshot = JSON.parse(fs.readFileSync(NAVER_SNAPSHOT_PATH, "utf8"));
+      naverSnapshot = JSON.parse(fs.readFileSync(naverFileToRead, "utf8"));
     } catch {
       naverSnapshot = null;
     }
@@ -443,7 +515,7 @@ async function main() {
   console.log("[4/5] 경쟁사 3곳(마케팅마법사, 순위닥터, SNS서포터) 사이트맵 및 주간 발행량 분석 중...");
   const competitorReport = await checkCompetitorSitemaps();
 
-  console.log("[5/5] A-to-Z SEO 의사결정 엔진(CASE_0 ~ CASE_6) 실행 중...");
+  console.log("[5/5] A-to-Z SEO 의사결정 엔진(CASE_0 ~ CASE_8, 플레이스 우선 가중치) 실행 중...");
   const tracker = JSON.parse(fs.readFileSync(TRACKER_PATH, "utf8"));
   const cooldownDays = tracker.policy?.cooldownDays ?? 14;
   const minImp = tracker.policy?.minImpressionsForLowCtr ?? 15;
@@ -474,19 +546,20 @@ async function main() {
   const candidateActions = [];
 
   // -------------------------------------------------------------------------
-  // CASE_2: CTR_REWRITE (노출 >= 15회인데 클릭률이 기대치 대비 현저히 낮은 키워드/페이지)
+  // CASE_2: CTR_REWRITE (1~2페이지(20위 이내)에서 기대 CTR 미달 또는 노출 35회+ 클릭 0건)
   // -------------------------------------------------------------------------
   for (const qRow of queryRows) {
     if (qRow.impressions < minImp) continue;
     const mapped = topPageByQuery.get(qRow.query);
     const targetPath = mapped?.pagePath || "/place";
+    if (isIgnoredPath(targetPath)) continue;
     const trackerEntry = entryByPath.get(targetPath);
 
     const roundedPos = Math.max(1, Math.min(10, Math.round(qRow.position)));
     const benchmarkCtr = qRow.position <= 10 ? CTR_BENCHMARK_BY_POS[roundedPos] || 1.5 : 3.0;
 
-    // 1~15위 이내에서 기대 CTR 미달이거나, 노출이 35회 이상인데 클릭이 0건인 핵심 키워드
-    const isSevereZeroClick = qRow.impressions >= 35 && qRow.clicks === 0;
+    // 20위 이내(1~2페이지)에서만 타이틀/메타 CTR 리라이트 대상으로 판정
+    const isSevereZeroClick = qRow.position <= 20 && qRow.impressions >= 35 && qRow.clicks === 0;
     const isLowCtrOnPageOne = qRow.position <= 12 && qRow.ctr < benchmarkCtr * 0.6;
 
     if (isSevereZeroClick || isLowCtrOnPageOne) {
@@ -514,10 +587,41 @@ async function main() {
   }
 
   // -------------------------------------------------------------------------
+  // CASE_7: RANK_BOOST (노출 >= 35회인데 20위 밖(3페이지 이후)에 머물러 1페이지 도약이 필요한 키워드)
+  // -------------------------------------------------------------------------
+  for (const qRow of queryRows) {
+    if (qRow.impressions < 35 || qRow.position <= 20) continue;
+    const mapped = topPageByQuery.get(qRow.query);
+    const targetPath = mapped?.pagePath || "/place";
+    if (isIgnoredPath(targetPath)) continue;
+    const trackerEntry = entryByPath.get(targetPath);
+    if (trackerEntry && trackerEntry.isCooldownLocked) continue;
+
+    const impactScore = qRow.impressions * 0.8;
+    candidateActions.push({
+      caseCode: "CASE_7",
+      actionType: "RANK_BOOST",
+      priorityScore: Math.round(impactScore * 10) / 10,
+      targetPath,
+      targetSlug: trackerEntry?.slug || targetPath,
+      targetTitle: trackerEntry?.title || "",
+      triggerQuery: qRow.query,
+      metrics: {
+        impressions: qRow.impressions,
+        clicks: qRow.clicks,
+        ctr: qRow.ctr,
+        position: qRow.position,
+      },
+      reason: `'${qRow.query}' 키워드가 ${qRow.impressions}회 노출되고 있으나 평균 ${qRow.position}위(3페이지 밖)로 순위 약세가 뚜렷함. 단순 타이틀 수정이 아닌 '${qRow.query}' 맞춤 H2 비교 섹션 보강 및 내부링크 집중이 필요함.`,
+    });
+  }
+
+  // -------------------------------------------------------------------------
   // CASE_3: STRIKING_DISTANCE (순위 8위~25위, 1페이지 진입 목전 키워드 보강)
   // -------------------------------------------------------------------------
   for (const qp of queryPageRows) {
     if (qp.impressions < 10) continue;
+    if (isIgnoredPath(qp.pagePath)) continue;
     if (qp.position >= 8 && qp.position <= 25) {
       const trackerEntry = entryByPath.get(qp.pagePath);
       if (trackerEntry && trackerEntry.isCooldownLocked) continue;
@@ -551,7 +655,7 @@ async function main() {
   // -------------------------------------------------------------------------
   const pagesByQuery = new Map();
   for (const qp of queryPageRows) {
-    if (qp.impressions < 10) continue;
+    if (qp.impressions < 10 || isIgnoredPath(qp.pagePath)) continue;
     const arr = pagesByQuery.get(qp.query) || [];
     arr.push(qp);
     pagesByQuery.set(qp.query, arr);
@@ -603,6 +707,7 @@ async function main() {
   );
 
   for (const [pagePath, prevRow] of prev14Map.entries()) {
+    if (isIgnoredPath(pagePath)) continue;
     const prevImp = prevRow.impressions || 0;
     if (prevImp < 25) continue;
     const currRow = recent14Map.get(pagePath);
@@ -631,22 +736,11 @@ async function main() {
   }
 
   // -------------------------------------------------------------------------
-  // CASE_1: NEW_PSEO (GSC 유입 쿼리 중 전용 칼럼이 없는 키워드 발굴)
+  // CASE_1: NEW_PSEO (GSC 유입 쿼리 중 전용 칼럼이 없는 키워드 발굴 — 토큰/의도 클러스터 중복 제외)
   // -------------------------------------------------------------------------
-  const allTrackedKeywords = new Set();
-  for (const entry of tracker.entries || []) {
-    if (entry.primaryKeyword) allTrackedKeywords.add(entry.primaryKeyword.replace(/\s+/g, ""));
-    for (const sk of entry.secondaryKeywords || []) {
-      allTrackedKeywords.add(sk.replace(/\s+/g, ""));
-    }
-  }
-
   for (const qRow of queryRows) {
     if (qRow.impressions < minImp) continue;
-    const normalizedQ = qRow.query.replace(/\s+/g, "");
-    const hasDedicatedPost = Array.from(allTrackedKeywords).some(
-      (kw) => kw === normalizedQ || (kw.includes(normalizedQ) && normalizedQ.length >= 8)
-    );
+    const hasDedicatedPost = hasDedicatedPostForQuery(qRow.query, tracker.entries || []);
 
     if (!hasDedicatedPost) {
       candidateActions.push({
@@ -673,10 +767,18 @@ async function main() {
   const zeroImpressionEntries = [];
   for (const [pagePath, entry] of entryByPath.entries()) {
     if (entry.type === "tool") continue;
+    if (isIgnoredPath(pagePath)) continue;
     if (entry.daysSinceMod >= 14 && !activeGscPaths.has(pagePath)) {
       zeroImpressionEntries.push(entry);
     }
   }
+
+  // 플레이스 핵심 칼럼을 우선 구출 대상으로 정렬
+  zeroImpressionEntries.sort((a, b) => {
+    const aPlace = isPlaceRelated(a.pagePath, a.primaryKeyword, a) ? 1 : 0;
+    const bPlace = isPlaceRelated(b.pagePath, b.primaryKeyword, b) ? 1 : 0;
+    return bPlace - aPlace;
+  });
 
   if (zeroImpressionEntries.length > 0) {
     const rescueTarget = zeroImpressionEntries[0];
@@ -697,6 +799,48 @@ async function main() {
     });
   }
 
+  // -------------------------------------------------------------------------
+  // CASE_8: NAVER_LOW_CTR (네이버 서치어드바이저 노출 >= 100회 & CTR < 1.0% 저클릭 보강)
+  // -------------------------------------------------------------------------
+  const naverTopUrls = naverSnapshot?.topUrls || [];
+  for (const nUrl of naverTopUrls) {
+    const imp = Number(nUrl.impressions || 0);
+    const ctr = Number(nUrl.ctr || 0);
+    const clicks = Number(nUrl.clicks || 0);
+    if (imp < 100 || ctr >= 1.0) continue;
+
+    const pagePath = normalizePathFromUrl(nUrl.url || "");
+    if (isIgnoredPath(pagePath)) continue;
+    const trackerEntry = entryByPath.get(pagePath);
+    if (trackerEntry && trackerEntry.isCooldownLocked) continue;
+
+    candidateActions.push({
+      caseCode: "CASE_8",
+      actionType: "NAVER_LOW_CTR",
+      priorityScore: Math.round(imp * 0.08 * 10) / 10,
+      targetPath: pagePath,
+      targetSlug: trackerEntry?.slug || pagePath,
+      targetTitle: trackerEntry?.title || "",
+      triggerQuery: `네이버:${pagePath}`,
+      metrics: {
+        naverImpressions: imp,
+        naverClicks: clicks,
+        naverCtr: ctr,
+        naverPeriod: naverSnapshot?.period || null,
+      },
+      reason: `네이버 서치어드바이저에서 ${pagePath} 경로가 ${imp}회 노출되었으나 클릭 ${clicks}회(CTR ${ctr}%)에 그침. 네이버 스니펫용 타이틀 앞부분 핵심 키워드 전진 배치 및 메타 설명 클릭 훅 보강 필요.`,
+    });
+  }
+
+  // 플레이스 핵심 우선순위 가중치 적용 (플레이스 관련 x2.0, 비플레이스 x0.4)
+  for (const act of candidateActions) {
+    const trackerEntry = entryByPath.get(act.targetPath);
+    const placePriority = isPlaceRelated(act.targetPath, act.triggerQuery, trackerEntry);
+    act.isPlacePriority = placePriority;
+    act.basePriorityScore = act.priorityScore;
+    act.priorityScore = Math.round(act.priorityScore * (placePriority ? 2.0 : 0.4) * 10) / 10;
+  }
+
   // 우선순위 점수순 정렬
   candidateActions.sort((a, b) => b.priorityScore - a.priorityScore);
 
@@ -710,6 +854,9 @@ async function main() {
           reason:
             "모든 핵심 타겟 페이지가 정상 범위 내에 있거나 14일 수정 잠금(Cooldown) 보호 기간 중이므로 오늘은 원고 수정/발행을 쉬어갑니다.",
         };
+
+  const naverDiagnosisWarnings = naverSnapshot?.diagnosis?.seoWarningDetails || [];
+  const naverSummary = naverSnapshot?.summary || null;
 
   const dailySnapshot = {
     date: todayStr,
@@ -746,6 +893,8 @@ async function main() {
     selectedAction: primaryAction,
     alternativeCandidates: candidateActions.slice(1, 6),
     competitors: competitorReport,
+    naverSummary,
+    naverDiagnosisWarnings,
     gscTopQueries: queryRows.slice(0, 10),
   };
 
@@ -754,21 +903,29 @@ async function main() {
   console.log("\n========================================================");
   console.log(`📊 [${todayStr}] PostSync A-to-Z SEO 판단 엔진 분석 완료`);
   console.log("========================================================");
-  console.log(`▶ 오늘의 1순위 처방: [${primaryAction.caseCode}] ${primaryAction.actionType} (점수: ${primaryAction.priorityScore})`);
+  console.log(`▶ 오늘의 1순위 처방: [${primaryAction.caseCode}] ${primaryAction.actionType} (점수: ${primaryAction.priorityScore}${primaryAction.isPlacePriority ? " / 플레이스 핵심" : ""})`);
   console.log(`▶ 판정 사유: ${primaryAction.reason}`);
   if (primaryAction.targetPath) {
     console.log(`▶ 대상 경로: ${primaryAction.targetPath} (트리거 키워드: ${primaryAction.triggerQuery || "-"})`);
   }
+  if (naverDiagnosisWarnings.length > 0) {
+    console.log(
+      `▶ 네이버 웹마스터 진단 경고 (${naverDiagnosisWarnings.length}건): ${naverDiagnosisWarnings
+        .map((w) => `${w.issue || w.type}:${w.count}`)
+        .join(", ")}`
+    );
+  }
   console.log("\n[차순위 후보 처방 Top 4]");
   for (const alt of candidateActions.slice(1, 5)) {
     console.log(
-      `  - [${alt.caseCode}] ${alt.actionType} (${alt.priorityScore}점): ${alt.triggerQuery || alt.targetPath} -> ${alt.reason.slice(0, 70)}...`
+      `  - [${alt.caseCode}] ${alt.actionType} (${alt.priorityScore}점${alt.isPlacePriority ? ", 플레이스" : ""}): ${alt.triggerQuery || alt.targetPath} -> ${alt.reason.slice(0, 70)}...`
     );
   }
   console.log("\n[경쟁사 사이트맵 및 주간 발행 현황]");
   for (const c of Object.values(competitorReport)) {
+    const relCount = Array.isArray(c.relevantNewUrls) ? c.relevantNewUrls.length : 0;
     console.log(
-      `  - ${c.name} (${c.domain}): 총 ${c.totalUrls}개 URL | 최근 7일 갱신 ${c.weeklyActiveCount}개 | 전일 대비 신규 +${c.newlyAddedSinceLastCheck}개`
+      `  - ${c.name} (${c.domain}): 총 ${c.totalUrls}개 URL | 최근 7일 갱신 ${c.weeklyActiveCount}개 | 전일 대비 신규 +${c.newlyAddedSinceLastCheck}개 (관련 신규 ${relCount}건)`
     );
   }
   console.log("========================================================\n");
@@ -778,15 +935,23 @@ async function main() {
       .map((c) => `• ${c.name}: 총 <b>${c.totalUrls}개</b> (최근 7일 ${c.weeklyActiveCount}건 / 오늘 +${c.newlyAddedSinceLastCheck}건)`)
       .join("\n");
 
+    const escHtml = (s) => String(s || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    const naverWarnBlock =
+      naverDiagnosisWarnings.length > 0
+        ? `\n\n⚠️ <b>네이버 웹마스터 진단 경고:</b>\n${naverDiagnosisWarnings
+            .map((w) => `• ${escHtml(w.issue || w.type)}: <b>${w.count}건</b>`)
+            .join("\n")}`
+        : "";
+
     const noopMsg = `🟢 <b>[PostSync SEO 판단 엔진] ${todayStr} 관망(No-Op) 판정</b>
 
-오늘 오전 서치콘솔·GA4·경쟁사 사이트맵 정밀 점검 결과, 인위적인 원고 수정이나 추가 발행 없이 현 상태를 유지하는 것이 유리하다고 판단되었습니다.
+오늘 오전 서치콘솔·GA4·네이버·경쟁사 사이트맵 정밀 점검 결과, 인위적인 원고 수정이나 추가 발행 없이 현 상태를 유지하는 것이 유리하다고 판단되었습니다.
 
 📌 <b>판정 사유:</b>
 ${primaryAction.reason}
 
 🔭 <b>경쟁사 사이트맵 감시 현황:</b>
-${compLines}`;
+${compLines}${naverWarnBlock}`;
 
     await sendTelegramPlain(noopMsg);
   }

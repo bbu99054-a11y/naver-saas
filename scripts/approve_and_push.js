@@ -182,11 +182,11 @@ async function waitForApproval(actionId, waitMins) {
 }
 
 function updateTrackerRecord(slug, title, caseCode, summary) {
-  if (!fs.existsSync(TRACKER_PATH)) return;
+  if (!fs.existsSync(TRACKER_PATH)) return null;
   const tracker = JSON.parse(fs.readFileSync(TRACKER_PATH, "utf8"));
   const todayStr = new Date().toISOString().split("T")[0];
 
-  let found = false;
+  let targetEntry = null;
   for (const entry of tracker.entries || []) {
     if (entry.slug === slug || `/blog/${entry.slug}` === slug) {
       entry.lastModifiedAt = todayStr;
@@ -197,30 +197,90 @@ function updateTrackerRecord(slug, title, caseCode, summary) {
         caseCode,
         summary,
       });
-      found = true;
+      targetEntry = entry;
       break;
     }
   }
 
-  if (!found && slug) {
+  if (!targetEntry && slug) {
     const cleanSlug = slug.replace(/^\/blog\//, "");
-    tracker.entries.push({
+    const targetUrl = slug.startsWith("/")
+      ? `https://www.postsyncapp.com${slug}`
+      : `https://www.postsyncapp.com/blog/${cleanSlug}`;
+    const guessedSourceFile = slug.startsWith("/")
+      ? `public/${slug.replace(/^\/+/, "")}.html`
+      : "src/lib/pSeoPlacePosts.ts";
+
+    targetEntry = {
       id: `auto-${Date.now()}`,
-      slug: cleanSlug,
-      url: `https://www.postsyncapp.com/blog/${cleanSlug}`,
+      slug: slug.startsWith("/") ? slug : cleanSlug,
+      url: targetUrl,
       title: title || cleanSlug,
-      sourceFile: "src/lib/pSeoPlacePosts.ts",
-      type: "pseo",
+      sourceFile: guessedSourceFile,
+      type: slug.startsWith("/") ? "tool" : "pseo",
+      isPlaceCore: /place|utm|reply|adcheck/.test(slug),
       primaryKeyword: title || cleanSlug,
       secondaryKeywords: [],
       publishedAt: todayStr,
       lastModifiedAt: todayStr,
       history: [{ date: todayStr, caseCode, summary }],
-    });
+    };
+    tracker.entries.push(targetEntry);
   }
 
   tracker.updatedAt = new Date().toISOString();
   fs.writeFileSync(TRACKER_PATH, JSON.stringify(tracker, null, 2), "utf8");
+  return targetEntry;
+}
+
+async function pingNaverSyndicationIfConfigured({ url, title, summary, publishedAt }) {
+  const token = process.env.NAVER_SYNDICATION_TOKEN;
+  if (!token || !url) {
+    return {
+      attempted: false,
+      message: "NAVER_SYNDICATION_TOKEN 미설정으로 네이버 신디케이션 핑 생략",
+    };
+  }
+
+  const nowIso = new Date().toISOString();
+  const safeUrl = url.replace(/&/g, "&amp;");
+  const safeTitle = String(title || "PostSync").replace(/]]>/g, "]]&gt;");
+  const safeSummary = String(summary || "").replace(/]]>/g, "]]&gt;");
+
+  const xmlPayload = `<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>PostSync</title>
+  <updated>${nowIso}</updated>
+  <entry>
+    <id>${safeUrl}</id>
+    <title><![CDATA[${safeTitle}]]></title>
+    <author>
+      <name>PostSync</name>
+    </author>
+    <updated>${nowIso}</updated>
+    ${publishedAt ? `<published>${new Date(publishedAt).toISOString()}</published>` : ""}
+    <link rel="alternate" type="text/html" href="${safeUrl}" />
+    ${safeSummary ? `<summary type="text"><![CDATA[${safeSummary}]]></summary>` : ""}
+  </entry>
+</feed>`;
+
+  try {
+    const res = await fetch("https://apis.naver.com/crawl/nsyndi/v2", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/xml",
+      },
+      body: xmlPayload,
+    });
+    if (!res.ok) {
+      const errText = await res.text();
+      return { attempted: true, ok: false, message: `신디케이션 실패(${res.status}): ${errText.slice(0, 120)}` };
+    }
+    return { attempted: true, ok: true, message: "네이버 신디케이션 v2 수집 봇 호출 완료" };
+  } catch (err) {
+    return { attempted: true, ok: false, message: `신디케이션 오류: ${err.message}` };
+  }
 }
 
 async function main() {
@@ -271,23 +331,46 @@ ${compLines}
   const decision = await waitForApproval(pending.actionId, waitMins);
   if (decision === "approved") {
     console.log("🚀 대표님 승인 확인! 트래커 업데이트 및 Git Commit/Push를 진행합니다.");
-    updateTrackerRecord(slug, title, action.caseCode, summary);
+    const updatedEntry = updateTrackerRecord(slug, title, action.caseCode, summary);
 
-    execSync(
-      "git add src/lib/pSeoPlacePosts.ts src/lib/blogData.ts src/data/seo-tracker.json src/data/competitor-snapshots.json",
-      { cwd: ROOT_DIR, stdio: "inherit" }
+    const candidateFiles = [
+      updatedEntry?.sourceFile,
+      "src/lib/pSeoPlacePosts.ts",
+      "src/lib/blogData.ts",
+      "src/data/seo-tracker.json",
+      "src/data/competitor-snapshots.json",
+      "src/data/naver-latest.json",
+    ].filter(Boolean);
+
+    const existingFiles = Array.from(new Set(candidateFiles)).filter((relPath) =>
+      fs.existsSync(path.resolve(ROOT_DIR, relPath))
     );
+    const gitAddArgs = existingFiles.map((f) => `"${f}"`).join(" ");
+
+    execSync(`git add ${gitAddArgs}`, { cwd: ROOT_DIR, stdio: "inherit" });
 
     const commitMsg = `chore(seo): [${action.caseCode}] ${slug} 자동 최적화 반영`;
     execSync(`git commit -m "${commitMsg.replace(/"/g, '\\"')}"`, { cwd: ROOT_DIR, stdio: "inherit" });
     execSync("git push origin main", { cwd: ROOT_DIR, stdio: "inherit" });
 
+    const syndicationResult = await pingNaverSyndicationIfConfigured({
+      url: updatedEntry?.url || "",
+      title: updatedEntry?.title || title,
+      summary,
+      publishedAt: updatedEntry?.publishedAt,
+    });
+    console.log(`[Naver Syndication] ${syndicationResult.message}`);
+
     pending.status = "APPROVED_AND_PUSHED";
     pending.pushedAt = new Date().toISOString();
     fs.writeFileSync(PENDING_ACTION_PATH, JSON.stringify(pending, null, 2), "utf8");
 
+    const syndiLine = syndicationResult.attempted
+      ? `\n• <b>네이버 신디케이션:</b> ${escapeHtml(syndicationResult.message)}`
+      : "";
+
     await sendTelegramNotice(
-      `🚀 <b>[PostSync SEO 배포 완료]</b>\n\n• <b>대상:</b> <code>${escapeHtml(slug)}</code>\n• <b>판정:</b> <code>${escapeHtml(action.caseCode)}</code>\n• <b>상태:</b> GitHub <code>main</code> 브랜치 푸시 완료 (14일 쿨다운 보호 시작)`
+      `🚀 <b>[PostSync SEO 배포 완료]</b>\n\n• <b>대상:</b> <code>${escapeHtml(slug)}</code>\n• <b>판정:</b> <code>${escapeHtml(action.caseCode)}</code>\n• <b>상태:</b> GitHub <code>main</code> 브랜치 푸시 완료 (14일 쿨다운 보호 시작)${syndiLine}`
     );
   } else if (decision === "rejected") {
     console.log("⏸️ 대표님께서 보류를 선택하셨습니다. Git 푸시를 실행하지 않습니다.");
