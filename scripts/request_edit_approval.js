@@ -86,9 +86,11 @@ async function sendEditApprovalMessage(text, actionId) {
 async function sendTelegramNotice(text) {
   const token = process.env.TELEGRAM_BOT_TOKEN?.trim();
   const chatId = process.env.TELEGRAM_CHAT_ID?.trim();
-  if (!token || !chatId) return;
+  if (!token || !chatId) {
+    throw new Error("TELEGRAM_BOT_TOKEN 또는 TELEGRAM_CHAT_ID가 설정되지 않았습니다.");
+  }
 
-  await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+  const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -98,6 +100,12 @@ async function sendTelegramNotice(text) {
       disable_web_page_preview: true,
     }),
   });
+
+  const data = await res.json();
+  if (!res.ok || !data.ok) {
+    throw new Error(`텔레그램 알림 발송 실패: ${data.description || res.statusText}`);
+  }
+  return data.result?.message_id;
 }
 
 async function waitForEditDecision(actionId, waitMins) {
@@ -187,12 +195,53 @@ async function main() {
 
   const pending = JSON.parse(fs.readFileSync(PENDING_ACTION_PATH, "utf8"));
   const action = pending.selectedAction || {};
+  const sendOnly = process.argv.includes("--send-only");
+
+  if (action.caseCode === "CASE_0" || pending.status === "NO_OP") {
+    console.log("ℹ️ 오늘 판정은 CASE_0 (NO_OP)이므로 수정 결재 알림 발송을 건너뜁니다.");
+    return;
+  }
+
   const customSummary = getArg("--summary", "");
   const waitMins = parseInt(getArg("--wait-mins", "60"), 10);
 
   const summaryBlock = customSummary
     ? `\n📝 <b>수정 제안 요약:</b>\n${escapeHtml(customSummary)}`
     : "";
+
+  const altLines = (pending.alternativeCandidates || [])
+    .slice(0, 3)
+    .map(
+      (c) =>
+        `• <code>[${escapeHtml(c.caseCode)}]</code> ${escapeHtml(c.triggerQuery || c.targetPath)} (${c.priorityScore}점)`
+    )
+    .join("\n");
+
+  const compLines = Object.values(pending.competitors || {})
+    .map(
+      (c) =>
+        `• ${escapeHtml(c.name)}: 총 <b>${c.totalUrls}개</b> (최근 7일 ${c.weeklyActiveCount || 0}건 / 신규 +${c.newlyAddedSinceLastCheck || 0}건)`
+    )
+    .join("\n");
+
+  if (sendOnly) {
+    const noticeText = `🤖 <b>[PostSync SEO 판단 엔진] ${escapeHtml(pending.date)} 수정 권고 알림</b>
+
+🎯 <b>오늘의 1순위 처방:</b> <code>[${escapeHtml(action.caseCode)}] ${escapeHtml(action.actionType)}</code> (${action.priorityScore ?? 0}점)
+📍 <b>대상 경로:</b> <code>${escapeHtml(action.targetSlug || action.targetPath || "-")}</code>
+🔑 <b>트리거 키워드:</b> <b>${escapeHtml(action.triggerQuery || action.targetTitle || "-")}</b>
+
+📊 <b>감지 사유:</b>
+${escapeHtml(action.reason)}${summaryBlock}
+${altLines ? `\n📋 <b>차순위 후보 TOP 3</b>\n${altLines}` : ""}
+${compLines ? `\n🔭 <b>경쟁사 사이트맵 현황</b>\n${compLines}` : ""}
+
+👉 수정 진행을 원하시면 <b>Antigravity에 접속해</b> <code>오늘 SEO 수정 진행해</code>라고 말씀해 주세요.`;
+
+    const messageId = await sendTelegramNotice(noticeText);
+    console.log(`✅ 텔레그램 SEO 수정 권고 알림 발송 완료 (Message ID: ${messageId})`);
+    return;
+  }
 
   const text = `🛠️ <b>[PostSync SEO 수정 착수 1차 결재 요청]</b>
 
@@ -208,10 +257,6 @@ ${escapeHtml(action.reason)}${summaryBlock}
 
   const messageId = await sendEditApprovalMessage(text, pending.actionId);
   console.log(`✅ 텔레그램 수정 착수 결재 버튼 발송 완료 (Message ID: ${messageId})`);
-
-  if (process.argv.includes("--send-only")) {
-    return;
-  }
 
   const decision = await waitForEditDecision(pending.actionId, waitMins);
   if (decision === "approved") {

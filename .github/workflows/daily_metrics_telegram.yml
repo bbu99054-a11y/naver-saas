@@ -37,3 +37,17 @@ jobs:
           GA4_PROPERTY_ID: ${{ secrets.GA4_PROPERTY_ID }}
           GOOGLE_SEARCH_CONSOLE_SITE_URL: "https://www.postsyncapp.com/"
         run: node scripts/send_daily_metrics.js
+
+      - name: Run SEO decision engine
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          GA4_PROPERTY_ID: ${{ secrets.GA4_PROPERTY_ID }}
+          GOOGLE_SEARCH_CONSOLE_SITE_URL: "https://www.postsyncapp.com/"
+        run: node scripts/collect_and_decide_seo.js --notify-noop
+
+      - name: Send SEO action notification
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: node scripts/request_edit_approval.js --send-only
