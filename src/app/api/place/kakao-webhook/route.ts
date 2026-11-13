@@ -1,6 +1,15 @@
 import { NextResponse } from 'next/server';
-import { fetchLiveNaverPlaceRanking, PlaceItem } from '../rank/route';
-import { getClientIp, checkIpRateLimit } from '@/lib/rateLimit';
+import {
+  extractCommercialCoords,
+  fetchLiveNaverPlaceRanking,
+  PlaceItem,
+} from '../rank/route';
+import {
+  getClientIp,
+  checkPersistentIpRateLimit,
+  verifyTimingSafeSecret,
+} from '@/lib/rateLimit';
+import { getCachedOrFetchPlaceData } from '@/lib/naver/placeRankCache';
 
 // 카카오 오픈빌더 스킬 응답 헬퍼 함수들
 function createSimpleTextResponse(text: string) {
@@ -99,9 +108,25 @@ function parseUtterance(raw: string): { query: string; target: string; isHelp: b
 
 export async function POST(req: Request) {
   try {
-    // 🛡️ IP 기반 Rate Limiting (1분 최대 15회 제한 - 카카오 챗봇 무단 스크래핑 남용 방어)
+    // 🔒 선택적 웹훅 시크릿 검증 (KAKAO_WEBHOOK_SECRET 설정 시 비인가 호출 차단)
+    const expectedSecret = (process.env.KAKAO_WEBHOOK_SECRET || '').trim();
+    if (expectedSecret) {
+      const authHeader = req.headers.get('authorization') || '';
+      const bearerToken = authHeader.toLowerCase().startsWith('bearer ') ? authHeader.slice(7).trim() : '';
+      const headerSecret = req.headers.get('x-kakao-secret') || bearerToken;
+      const reqUrl = new URL(req.url, 'https://www.postsyncapp.com');
+      const querySecret = reqUrl.searchParams.get('secret') || reqUrl.searchParams.get('token');
+      if (
+        !verifyTimingSafeSecret(expectedSecret, headerSecret) &&
+        !verifyTimingSafeSecret(expectedSecret, querySecret)
+      ) {
+        return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+      }
+    }
+
+    // 🛡️ 공용 분산 Rate Limiting (1분 최대 15회 제한 - 카카오 챗봇 무단 스크래핑 남용 방어)
     const clientIp = getClientIp(req);
-    const ipCheck = checkIpRateLimit(clientIp, 15, 60000);
+    const ipCheck = await checkPersistentIpRateLimit('kakao_webhook', clientIp, 15, 60000);
     if (!ipCheck.allowed) {
       return NextResponse.json(
         createSimpleTextResponse(`조회 요청이 너무 빈번합니다. ${ipCheck.remainingSec}초 후 다시 시도해 주세요.`)
@@ -168,12 +193,22 @@ export async function POST(req: Request) {
       );
     }
 
-    // 3. 네이버 실시간 순위 수집 (카카오 4.2초 안전 타임아웃 레이스)
+    const cleanQuery = query.replace(/[.,!?~#*]+$/, '').replace(/<[^>]*>/g, '').trim() || query.trim();
+    const hubCoords = extractCommercialCoords(cleanQuery);
+    const coordX = hubCoords ? hubCoords.x : '';
+    const coordY = hubCoords ? hubCoords.y : '';
+    const cacheKey = `${cleanQuery.toLowerCase()}_${coordX}_${coordY}`;
+
+    // 3. 네이버 실시간 순위 수집 (웹 /place와 L1·L2 10분 캐시 공유 + 카카오 4.2초 안전 타임아웃 레이스)
     const timeoutPromise = new Promise<{ isTimeout: true }>(resolve =>
       setTimeout(() => resolve({ isTimeout: true }), 4200)
     );
 
-    const rankingPromise = fetchLiveNaverPlaceRanking(query).then(data => ({ isTimeout: false as const, data }));
+    const rankingPromise = getCachedOrFetchPlaceData(
+      cacheKey,
+      () => fetchLiveNaverPlaceRanking(cleanQuery, { x: coordX, y: coordY }),
+      10 * 60 * 1000
+    ).then(data => ({ isTimeout: false as const, data }));
 
     const result = await Promise.race([rankingPromise, timeoutPromise]);
 

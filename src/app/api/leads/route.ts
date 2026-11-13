@@ -1,8 +1,14 @@
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
 import prisma from '@/lib/prisma'
-import { getClientIp, checkIpRateLimit, escapeHtml } from '@/lib/rateLimit'
+import {
+  getClientIp,
+  checkPersistentIpRateLimit,
+  isCrossSiteBrowserRequest,
+  escapeHtml,
+} from '@/lib/rateLimit'
 import { safeEncrypt } from '@/lib/crypto'
+import { isDisposableEmail } from '@/lib/disposableEmailBlocker'
 
 const LeadRequestSchema = z.object({
   toolSource: z.string().optional(),
@@ -20,9 +26,16 @@ const LeadRequestSchema = z.object({
 
 export async function POST(req: Request) {
   try {
-    // 🛡️ IP 기반 Rate Limiting (1분당 최대 5회 신청 제한 · 매크로 및 서버 자원 남용 방어)
+    if (isCrossSiteBrowserRequest(req)) {
+      return NextResponse.json(
+        { error: '허용되지 않은 요청 출처입니다.' },
+        { status: 403 }
+      )
+    }
+
+    // 🛡️ 분산 IP Rate Limiting (1분당 최대 5회 신청 제한 · 매크로 및 서버 자원 남용 방어)
     const clientIp = getClientIp(req)
-    const ipCheck = checkIpRateLimit(clientIp, 5, 60000)
+    const ipCheck = await checkPersistentIpRateLimit('leads', clientIp, 5, 60000)
     if (!ipCheck.allowed) {
       return NextResponse.json(
         { error: `신청 요청이 너무 빈번합니다. ${ipCheck.remainingSec}초 후 다시 시도해 주세요.` },
@@ -30,7 +43,7 @@ export async function POST(req: Request) {
       )
     }
 
-    const rawBody: unknown = await req.json()
+    const rawBody: unknown = await req.json().catch(() => null)
     const parsed = LeadRequestSchema.safeParse(rawBody)
     if (!parsed.success) {
       return NextResponse.json(
@@ -71,6 +84,16 @@ export async function POST(req: Request) {
       )
     }
 
+    if (hasValidEmail) {
+      const disposableCheck = isDisposableEmail(cleanEmail)
+      if (disposableCheck.isDisposable) {
+        return NextResponse.json(
+          { error: disposableCheck.reason || '일회용 이메일 주소는 사용할 수 없습니다.' },
+          { status: 400 }
+        )
+      }
+    }
+
     const cleanName = String(name || businessName || '').trim().slice(0, 50) || '매장 대표님'
     const cleanBusinessName = String(businessName || name || '').trim().slice(0, 100) || null
     const cleanMessage = typeof metadata.message === 'string' ? metadata.message.trim().slice(0, 2000) : ''
@@ -80,7 +103,7 @@ export async function POST(req: Request) {
     const budgetRangeStr = typeof metadata.budgetRange === 'string' ? metadata.budgetRange : ''
     const storeStatusStr = typeof metadata.storeStatus === 'string' ? metadata.storeStatus : ''
     const callbackTimeStr = typeof metadata.callbackTime === 'string' ? metadata.callbackTime : ''
-    const isKakaoSub = leadType === 'kakao_daily_alert_9900'
+    const isKakaoSub = leadType === 'kakao_daily_alert_waitlist' || leadType === 'kakao_daily_alert_9900'
     const nowTime = new Date().toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' })
 
     // 1. PostgreSQL leads 테이블에 암호화 보존
@@ -118,22 +141,22 @@ export async function POST(req: Request) {
     const tgToken = process.env.TELEGRAM_BOT_TOKEN
     const tgChatId = process.env.TELEGRAM_CHAT_ID
     const resendKey = process.env.RESEND_API_KEY
-    const adminEmail = process.env.ADMIN_EMAIL || 'contact@postsyncapp.com'
+    const adminEmail = process.env.ADMIN_EMAIL || 'support@postsyncapp.com'
 
     const notificationTasks: Promise<unknown>[] = []
 
     // 2-1. Telegram 관리자 실시간 알림
     if (tgToken && tgChatId) {
       const headerLabel = isKakaoSub
-        ? `💬 [카톡 월 9,900원 일간 순위·경쟁사 알림봇 구독 신청]`
-        : `📩 [플레이스 B2B 비교견적/체험단 유효DB 접수 · ${toolSource.toUpperCase()}]`
+        ? `💬 [플레이스 일일 순위·경쟁사 알림 출시 사전 대기 신청]`
+        : `📩 [플레이스 사전·문의 접수 · ${toolSource.toUpperCase()}]`
       const msg = `${headerLabel}\n\n` +
         `🏪 상호/성함: ${cleanBusinessName || cleanName}\n` +
         `📱 휴대폰: ${cleanPhone || '미기재'}\n` +
         (budgetRangeStr ? `💰 월 가용 예산: ${budgetRangeStr}\n` : '') +
         (storeStatusStr ? `📊 매장 상태: ${storeStatusStr}\n` : '') +
         (callbackTimeStr ? `⏰ 희망 연락시간: ${callbackTimeStr}\n` : '') +
-        `📌 신청 유형: ${inquiryTypeStr || leadType || '처방 및 비교견적 신청'}\n` +
+        `📌 신청 유형: ${inquiryTypeStr || leadType || '출시 사전 알림 신청'}\n` +
         `📝 상세 진단/요청 내역:\n${cleanMessage || '상세 내용 없음'}\n\n` +
         `⏱ 접수일시: ${nowTime}\n` +
         `✅ DB 암호화 저장 완료 (ID: ${savedLeadId || 'local'})`
@@ -162,18 +185,18 @@ export async function POST(req: Request) {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            from: 'PostSync 알림 <contact@postsyncapp.com>',
+            from: 'PostSync 알림 <support@postsyncapp.com>',
             to: [adminEmail],
-            subject: `📩 [플레이스 처방/견적 리드] ${cleanBusinessName || cleanName} · ${inquiryTypeStr || '온라인 접수'}`,
+            subject: `📩 [${isKakaoSub ? '사전 알림 대기' : '문의 접수'}] ${cleanBusinessName || cleanName} · ${inquiryTypeStr || leadType}`,
             html: `
               <div style="font-family: sans-serif; font-size: 15px; line-height: 1.7; color: #334155; padding: 20px;">
-                <h2 style="color: #1e3a8a;">🔔 플레이스 처방 리포트 &amp; 비교견적 리드 접수</h2>
+                <h2 style="color: #1e3a8a;">🔔 PostSync ${isKakaoSub ? '출시 사전 알림 대기 신청' : '문의 접수'}</h2>
                 <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; margin: 16px 0;">
                   <p><strong>유입 출처:</strong> ${escapeHtml(toolSource)}</p>
                   <p><strong>상호명/성함:</strong> ${escapeHtml(cleanBusinessName || cleanName)}</p>
                   <p><strong>휴대폰 번호:</strong> ${escapeHtml(cleanPhone || '미기재')}</p>
                   <p><strong>이메일:</strong> ${escapeHtml(cleanEmail || '미기재')}</p>
-                  ${inquiryTypeStr ? `<p><strong>선택 처방 항목:</strong> ${escapeHtml(inquiryTypeStr)}</p>` : ''}
+                  ${inquiryTypeStr ? `<p><strong>신청 유형:</strong> ${escapeHtml(inquiryTypeStr)}</p>` : ''}
                   ${cleanMessage ? `<div style="margin-top:12px; padding:12px; background:#ffffff; border:1px solid #cbd5e1; border-radius:6px; font-size:14px; white-space:pre-wrap;"><strong>진단 데이터 및 요청 내용:</strong><br/>${escapeHtml(cleanMessage)}</div>` : ''}
                   <p><strong>접수 일시:</strong> ${escapeHtml(nowTime)}</p>
                 </div>
@@ -192,7 +215,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({
       success: true,
-      message: '처방 리포트 및 비교견적 신청이 접수되었습니다.',
+      message: isKakaoSub ? '출시 사전 알림 신청이 접수되었습니다.' : '문의가 정상 접수되었습니다.',
       email: cleanEmail || null,
       phone: cleanPhone || null,
       leadType,
@@ -200,9 +223,8 @@ export async function POST(req: Request) {
     })
   } catch (err: unknown) {
     console.error('[Leads API Exception]:', err)
-    const errMsg = err instanceof Error ? err.message : '서버 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.'
     return NextResponse.json(
-      { error: errMsg },
+      { error: '요청 처리 중 서버 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.' },
       { status: 500 }
     )
   }

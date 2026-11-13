@@ -148,6 +148,7 @@ export default function ContactPage() {
               <span>대한민국 전자상거래법 및 개인정보보호법 준수 사업자</span>
             </div>
             <div className="flex items-center gap-4">
+              <Link href="/about" className="hover:text-white transition-colors underline">서비스 소개</Link>
               <Link href="/terms" className="hover:text-white transition-colors underline">이용약관</Link>
               <Link href="/privacy" className="hover:text-white transition-colors underline">개인정보 처리방침</Link>
             </div>

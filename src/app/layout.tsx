@@ -13,6 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 import ChannelTalk from "@/components/ChannelTalk";
+import { ADSENSE_CLIENT_ID } from "@/lib/monetizationConfig";
 
 export const viewport: Viewport = {
   themeColor: "#0f172a",
@@ -28,6 +29,9 @@ export const metadata: Metadata = {
   keywords: ["네이버 플레이스 순위 조회", "스마트플레이스 순위", "플레이스 상위노출", "영수증 리뷰 QR코드", "스마트플레이스 소개글", "플레이스 금칙어", "PostSync"],
   alternates: {
     canonical: "https://www.postsyncapp.com",
+    types: {
+      "application/rss+xml": "https://www.postsyncapp.com/rss.xml",
+    },
   },
   appleWebApp: {
     capable: true,
@@ -92,6 +96,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               gtag('config', 'G-7WTMC1GBC8');
             `,
           }}
+        />
+        {/* Google AdSense Verification & Auto Ads */}
+        <meta name="google-adsense-account" content={ADSENSE_CLIENT_ID} />
+        <script
+          async
+          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT_ID}`}
+          crossOrigin="anonymous"
         />
       </head>
       <body className="min-h-full flex flex-col">

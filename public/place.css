@@ -1328,6 +1328,14 @@
       background: #dcfce7;
       color: #16a34a;
     }
+    .gap-item.unmeasured {
+      background: #f8fafc;
+      border-color: #cbd5e1;
+    }
+    .gap-item-diff.diff-unmeasured {
+      background: #f1f5f9;
+      color: #64748b;
+    }
 
     /* 📌 순위표 저장수 태그 */
     .save-tag {

@@ -1,13 +1,18 @@
 import { NextResponse } from 'next/server';
-import { getClientIp, checkIpRateLimit } from '@/lib/rateLimit';
+import { z } from 'zod';
+import {
+  getClientIp,
+  checkPersistentIpRateLimit,
+  isCrossSiteBrowserRequest,
+} from '@/lib/rateLimit';
 
-interface ReplyRequest {
-  storeName?: string;
-  customerReview?: string;
-  keyword?: string;
-  tone?: 'friendly' | 'polite' | 'witty' | 'complaint';
-  mode?: 'review' | 'news' | 'intro';
-}
+const ReplyRequestSchema = z.object({
+  storeName: z.string().optional().default(''),
+  customerReview: z.string().optional().default(''),
+  keyword: z.string().optional().default(''),
+  tone: z.enum(['friendly', 'polite', 'witty', 'complaint']).optional().default('friendly'),
+  mode: z.enum(['review', 'news', 'intro']).optional().default('review'),
+});
 
 function generateFallbackReplies(store: string, review: string, kw: string, tone: string) {
   const storeLabel = store || '저희 매장';
@@ -166,21 +171,45 @@ function generateFallbackIntro(store: string, strengths: string, kw: string) {
 
 export async function POST(req: Request) {
   try {
-    const clientIp = getClientIp(req);
-    const ipCheck = checkIpRateLimit(clientIp, 12, 60000);
-    if (!ipCheck.allowed) {
+    if (isCrossSiteBrowserRequest(req)) {
       return NextResponse.json(
-        { error: `요청이 너무 빈번합니다. ${ipCheck.remainingSec}초 후 다시 시도해 주세요.` },
+        { error: '허용되지 않은 요청 출처입니다.' },
+        { status: 403 }
+      );
+    }
+
+    const clientIp = getClientIp(req);
+    const minCheck = await checkPersistentIpRateLimit('reply_min', clientIp, 8, 60000);
+    if (!minCheck.allowed) {
+      return NextResponse.json(
+        { error: `요청이 너무 빈번합니다. ${minCheck.remainingSec}초 후 다시 시도해 주세요.` },
         { status: 429 }
       );
     }
 
-    const body: ReplyRequest = await req.json().catch(() => ({}));
-    const store = String(body.storeName || '').trim().slice(0, 50);
-    const review = String(body.customerReview || '').trim().slice(0, 500);
-    const kw = String(body.keyword || '').trim().slice(0, 40);
-    const tone = body.tone || 'friendly';
-    const mode = body.mode || 'review';
+    const dayCheck = await checkPersistentIpRateLimit('reply_day', clientIp, 40, 24 * 60 * 60 * 1000);
+    if (!dayCheck.allowed) {
+      return NextResponse.json(
+        { error: '일일 AI 답글·소개글 생성 한도(40회)를 초과했습니다. 내일 다시 이용해 주세요.' },
+        { status: 429 }
+      );
+    }
+
+    const rawBody: unknown = await req.json().catch(() => null);
+    const parsedBody = ReplyRequestSchema.safeParse(rawBody);
+    if (!parsedBody.success) {
+      return NextResponse.json(
+        { error: '입력 형식이 올바르지 않습니다. 선택 옵션과 텍스트 길이를 확인해 주세요.' },
+        { status: 400 }
+      );
+    }
+
+    const body = parsedBody.data;
+    const store = body.storeName.trim().slice(0, 50);
+    const review = body.customerReview.trim().slice(0, 500);
+    const kw = body.keyword.trim().slice(0, 40);
+    const tone = body.tone;
+    const mode = body.mode;
 
     const apiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY;
 
@@ -291,10 +320,10 @@ export async function POST(req: Request) {
     }
     const replies = generateFallbackReplies(store, review, kw, tone);
     return NextResponse.json({ success: true, mode: 'review', data: replies });
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error('[Reply API Exception]:', err);
     return NextResponse.json(
-      { error: err.message || '답글 생성 중 오류가 발생했습니다.' },
+      { error: '답글 생성 중 일시적인 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.' },
       { status: 500 }
     );
   }

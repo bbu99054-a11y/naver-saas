@@ -1,11 +1,12 @@
 import { MetadataRoute } from 'next'
 import { blogPosts } from '@/lib/blogData'
+import { INDUSTRY_PLACE_LIST } from '@/lib/industryPlaceData'
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://www.postsyncapp.com'
 
-  const coreLastModified = new Date('2026-11-06T00:00:00.000Z')
-  const toolLastModified = new Date('2026-11-03T00:00:00.000Z')
+  const coreLastModified = new Date('2026-11-13T00:00:00.000Z')
+  const toolLastModified = new Date('2026-11-13T00:00:00.000Z')
 
   const staticRoutes: MetadataRoute.Sitemap = [
     {
@@ -81,14 +82,20 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.3,
     },
     {
+      url: `${baseUrl}/about`,
+      lastModified: coreLastModified,
+      changeFrequency: 'monthly',
+      priority: 0.6,
+    },
+    {
       url: `${baseUrl}/terms`,
-      lastModified: new Date('2026-08-01T00:00:00.000Z'),
+      lastModified: new Date('2026-11-13T00:00:00.000Z'),
       changeFrequency: 'yearly',
       priority: 0.3,
     },
     {
       url: `${baseUrl}/privacy`,
-      lastModified: new Date('2026-08-01T00:00:00.000Z'),
+      lastModified: new Date('2026-11-13T00:00:00.000Z'),
       changeFrequency: 'yearly',
       priority: 0.3,
     },
@@ -107,5 +114,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   }))
 
-  return [...staticRoutes, ...blogRoutes]
+  const industryRoutes: MetadataRoute.Sitemap = INDUSTRY_PLACE_LIST.map((ind) => ({
+    url: `${baseUrl}/place/${ind.slug}`,
+    lastModified: coreLastModified,
+    changeFrequency: 'weekly',
+    priority: 0.85,
+  }))
+
+  return [...staticRoutes, ...industryRoutes, ...blogRoutes]
 }

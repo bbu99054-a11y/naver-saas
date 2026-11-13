@@ -1,10 +1,9 @@
 name: Daily Metrics Telegram Briefing
 
 on:
-  # Antigravity 자체 스케줄 우선 운영 중 — GitHub Actions 자동 실행 전환 시 아래 주석 해제
-  # schedule:
-  #   # 매일 UTC 00:00 = 한국 시간(KST) 매일 오전 09:00
-  #   - cron: '0 0 * * *'
+  # 매일 UTC 00:00 = 한국 시간(KST) 매일 오전 09:00 자동 지표 수집 및 텔레그램 브리핑 (자동 git push 없음)
+  schedule:
+    - cron: '0 0 * * *'
   workflow_dispatch: # GitHub 웹 콘솔에서 수동 즉시 실행 가능
 
 jobs:

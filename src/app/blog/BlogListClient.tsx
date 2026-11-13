@@ -16,6 +16,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { blogPosts } from '@/lib/blogData'
+import { INDUSTRY_PLACE_LIST } from '@/lib/industryPlaceData'
 import GlobalHeader from '@/components/common/GlobalHeader'
 
 const CURATED_CATEGORIES = [
@@ -204,6 +205,31 @@ export default function BlogListClient() {
         )}
       </section>
 
+      {/* 업종별 플레이스 순위 진단 허브 */}
+      <section className="pt-4 pb-2 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
+        <div className="rounded-2xl bg-slate-50 border border-slate-200 p-4 sm:p-5">
+          <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+            <h2 className="text-sm font-bold text-slate-900 break-keep">
+              업종별 스마트플레이스 순위·광고 심의 진단 바로가기
+            </h2>
+            <Link href="/place" className="text-xs font-semibold text-[#2563eb] hover:underline">
+              전체 순위 조회 →
+            </Link>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {INDUSTRY_PLACE_LIST.map((ind) => (
+              <Link
+                key={ind.slug}
+                href={`/place/${ind.slug}`}
+                className="inline-flex items-center px-3 py-1.5 min-h-[36px] rounded-full bg-white border border-slate-200 hover:border-[#2563eb] text-xs font-semibold text-slate-700 hover:text-[#2563eb] transition-colors break-keep"
+              >
+                {ind.name} 플레이스 기준
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* 5. 플레이스 실시간 순위 조회 브릿지 배너 */}
       <section className="py-10 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
         <div className="rounded-3xl p-7 sm:p-10 bg-slate-900 text-white border border-slate-800 shadow-xl text-center space-y-4">
@@ -242,6 +268,7 @@ export default function BlogListClient() {
             <Link href="/utm" className="hover:text-slate-900 transition-colors">매장 리뷰·QR 빌더</Link>
             <Link href="/adcheck" className="hover:text-slate-900 transition-colors">금칙어 스캐너</Link>
             <Link href="/guide/ad-law-2026" className="hover:text-slate-900 transition-colors">2026 광고법 백서</Link>
+            <Link href="/about" className="hover:text-slate-900 transition-colors">서비스 소개</Link>
             <Link href="/terms" className="hover:text-slate-900 transition-colors">이용약관</Link>
             <Link href="/privacy" className="hover:text-slate-900 transition-colors font-bold text-slate-700">개인정보처리방침</Link>
             <Link href="/contact" className="hover:text-slate-900 transition-colors">고객지원</Link>

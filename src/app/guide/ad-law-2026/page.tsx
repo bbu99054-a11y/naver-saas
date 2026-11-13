@@ -2,7 +2,6 @@
 
 import React, { useState, useMemo } from 'react'
 import Link from 'next/link'
-import PlaceAuditLeadSection from '@/components/PlaceAuditLeadSection'
 import {
   BookOpen,
   Copy,
@@ -32,6 +31,9 @@ import {
   Share2,
   ChevronDown
 } from 'lucide-react'
+import AdSlot from '@/components/monetization/AdSlot'
+import AffiliateBox from '@/components/monetization/AffiliateBox'
+import { ADSENSE_SLOTS } from '@/lib/monetizationConfig'
 
 interface ForbiddenWord {
   id: number
@@ -547,9 +549,6 @@ export default function AdLaw2026Page() {
             </div>
           </div>
         </section>
-
-        {/* 반경 2km 플레이스 경쟁사 분석 무마찰 신청 섹션 */}
-        <PlaceAuditLeadSection />
 
         {/* 챕터 1. 2026년 네이버 검색 알고리즘의 다층적 구조와 AI SEO 대응 */}
         <section
@@ -1493,9 +1492,6 @@ export default function AdLaw2026Page() {
             ))}
           </div>
 
-          {/* 하단 2차 무마찰 신청 섹션 */}
-          <div className="pt-4"><PlaceAuditLeadSection /></div>
-
           {/* 거부감 없는 소프트 CTA 배너 (요금표 없음!) */}
           <div
             style={{ backgroundColor: '#0f172a', color: '#ffffff', borderColor: '#4f46e5' }}
@@ -1528,6 +1524,10 @@ export default function AdLaw2026Page() {
           </div>
         </section>
 
+        {/* 애드센스 승인 후 하단 슬롯 & 설정 기반 제휴 추천 (미설정 시 미노출) */}
+        <AdSlot slot={ADSENSE_SLOTS.guideBottom} />
+        <AffiliateBox placement="guide_bottom" />
+
         {/* 저작권 및 법적 고지 */}
         <footer style={{ borderColor: '#e2e8f0' }} className="pt-8 border-t text-center text-xs space-y-2 print:pt-4">
           <p style={{ color: '#0f172a' }} className="font-extrabold">PostSync 비즈니스 마케팅 데이터 연구소 (와이엠랩스 · YM Labs)</p>
@@ -1540,6 +1540,8 @@ export default function AdLaw2026Page() {
             <Link href="/blog" className="hover:text-slate-900 transition">인사이트 칼럼</Link>
             <span>•</span>
             <Link href="/tools" className="hover:text-slate-900 transition">무료 웹툴 7종</Link>
+            <span>•</span>
+            <Link href="/about" className="hover:text-slate-900 transition">서비스 소개</Link>
             <span>•</span>
             <Link href="/terms" className="hover:text-slate-900 transition">이용약관</Link>
             <span>•</span>

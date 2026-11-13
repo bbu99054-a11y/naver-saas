@@ -9,6 +9,7 @@ const path = require("path");
 const fs = require("fs");
 const net = require("net");
 const { execSync } = require("child_process");
+const { pingIndexNow } = require("./ping_indexnow");
 
 // Windows IPv6 Happy Eyeballs 타임아웃(ETIMEDOUT) 방지
 net.setDefaultAutoSelectFamily(false);
@@ -361,6 +362,9 @@ ${compLines}
     });
     console.log(`[Naver Syndication] ${syndicationResult.message}`);
 
+    const indexNowResult = await pingIndexNow([updatedEntry?.url].filter(Boolean));
+    console.log(`[IndexNow] ${indexNowResult.message}`);
+
     pending.status = "APPROVED_AND_PUSHED";
     pending.pushedAt = new Date().toISOString();
     fs.writeFileSync(PENDING_ACTION_PATH, JSON.stringify(pending, null, 2), "utf8");
@@ -368,9 +372,12 @@ ${compLines}
     const syndiLine = syndicationResult.attempted
       ? `\n• <b>네이버 신디케이션:</b> ${escapeHtml(syndicationResult.message)}`
       : "";
+    const indexNowLine = indexNowResult.attempted
+      ? `\n• <b>IndexNow 색인 핑:</b> ${escapeHtml(indexNowResult.message)}`
+      : "";
 
     await sendTelegramNotice(
-      `🚀 <b>[PostSync SEO 배포 완료]</b>\n\n• <b>대상:</b> <code>${escapeHtml(slug)}</code>\n• <b>판정:</b> <code>${escapeHtml(action.caseCode)}</code>\n• <b>상태:</b> GitHub <code>main</code> 브랜치 푸시 완료 (14일 쿨다운 보호 시작)${syndiLine}`
+      `🚀 <b>[PostSync SEO 배포 완료]</b>\n\n• <b>대상:</b> <code>${escapeHtml(slug)}</code>\n• <b>판정:</b> <code>${escapeHtml(action.caseCode)}</code>\n• <b>상태:</b> GitHub <code>main</code> 브랜치 푸시 완료 (14일 쿨다운 보호 시작)${syndiLine}${indexNowLine}`
     );
   } else if (decision === "rejected") {
     console.log("⏸️ 대표님께서 보류를 선택하셨습니다. Git 푸시를 실행하지 않습니다.");

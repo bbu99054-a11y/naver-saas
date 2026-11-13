@@ -16,6 +16,7 @@ import {
   FileText,
 } from 'lucide-react';
 import GlobalHeader from '@/components/common/GlobalHeader';
+import HeroPlaceSearch from '@/components/home/HeroPlaceSearch';
 
 export const metadata: Metadata = {
   title: '스마트플레이스 & 마케팅 무료 초소형 웹 유틸리티 허브 | PostSync Tools',
@@ -215,6 +216,15 @@ export default function ToolsHubPage() {
             <span className="px-3 py-1.5 rounded-xl bg-white border border-slate-200 shadow-xs flex items-center gap-1.5 text-indigo-700 font-semibold">
               <Zap className="w-4 h-4 text-indigo-600" /> 1초 즉시 연산
             </span>
+          </div>
+
+          <div className="max-w-2xl mx-auto pt-4">
+            <div className="rounded-2xl bg-white border border-slate-200/90 shadow-sm p-4 sm:p-5 text-left">
+              <p className="text-xs font-semibold text-slate-600 mb-2.5 break-keep">
+                지금 바로 키워드와 매장명을 입력해 실시간 순위와 1위 대비 부족분을 조회해 보세요
+              </p>
+              <HeroPlaceSearch variant="hero" />
+            </div>
           </div>
         </div>
 
@@ -416,6 +426,8 @@ export default function ToolsHubPage() {
             <Link href="/adcheck" className="hover:text-slate-900 transition">금칙어 검사</Link>
             <span>•</span>
             <Link href="/blog" className="hover:text-slate-900 transition">인사이트 칼럼</Link>
+            <span>•</span>
+            <Link href="/about" className="hover:text-slate-900 transition">서비스 소개</Link>
             <span>•</span>
             <Link href="/privacy" className="hover:text-slate-900 transition font-bold text-slate-700">개인정보처리방침</Link>
             <span>•</span>

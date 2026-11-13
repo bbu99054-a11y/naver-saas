@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="google-adsense-account" content="ca-pub-3734423172731921">
   <title>플레이스 순위 체크 무료 · 네이버 플레이스 순위 확인 &amp; 1위 비교 | PostSync</title>
   <meta name="description" content="플레이스 순위 체크 무료 사이트 PostSync. 회원가입·설치 없이 3초 만에 네이버 플레이스 실시간 1위~20위 순위 조회 및 1위 매장과 리뷰·예약·소개글 차이를 정량 비교 분석해 드립니다.">
   <meta name="keywords" content="플레이스 순위 체크 무료, 네이버 플레이스 순위 조회, 플레이스 순위 확인, 플레이스 순위 체크 사이트, 네이버 플레이스 순위 확인 사이트, 스마트플레이스 순위, 영수증 리뷰 QR, PostSync">
@@ -124,6 +125,7 @@
   <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
   <link rel="stylesheet" href="/place.css">
   <link rel="stylesheet" href="/assets/monetization.css">
+  <script src="/assets/partner-config.js"></script>
 </head>
 <body>
 
@@ -343,6 +345,9 @@
             <span>동업자나 직원에게 이 순위·비교 진단 결과를 공유해보세요</span>
           </div>
           <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <button type="button" onclick="downloadDiagnosisScorecardPng()" class="btn-gap-share" style="display:inline-flex; align-items:center; gap:6px; background:#2563eb; color:#ffffff; border:1px solid #1d4ed8; padding:8px 14px; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer; transition:all 0.2s;">
+              <i class="fa-solid fa-image"></i> <span>📊 요약 카드 이미지 저장</span>
+            </button>
             <button type="button" onclick="shareCurrentDiagnosisLink()" class="btn-gap-share" style="display:inline-flex; align-items:center; gap:6px; background:#eff6ff; color:#1d4ed8; border:1px solid #bfdbfe; padding:8px 14px; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer; transition:all 0.2s;">
               <i class="fa-solid fa-link"></i> <span>진단 결과 링크 복사</span>
             </button>
@@ -512,15 +517,15 @@
     <div class="seo-guide-section" style="margin-top: 24px;">
       <h2>📍 2026 네이버 스마트플레이스 상위노출 알고리즘 5대 핵심 요소</h2>
       <p>
-        네이버 스마트플레이스는 단순한 거리순 노출이 아니라, AI 기반 검색 적합도와 이용자 반응 지표를 복합적으로 결합한 <b>C-Rank &amp; 플레이스 랭킹 알고리즘</b>에 의해 결정됩니다.
+        네이버 스마트플레이스는 단순 거리순 노출이 아니라, 검색어와의 적합도, 방문자·블로그 활동성, 예약·편의 기능 연동, 최신성 등 복합적인 품질 신호를 종합해 노출 순위가 결정됩니다. (네이버는 각 신호의 정확한 비율 수치를 공개하지 않으며, 블로그 출처 신뢰도 알고리즘인 C-Rank와는 별개 체계로 동작합니다.)
       </p>
 
       <div style="overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 18px 0 28px 0;">
         <table class="seo-guide-table" style="margin: 0;">
           <thead>
             <tr>
-              <th>순위 결정 요소</th>
-              <th>반영 비중</th>
+              <th>순위 영향 영역</th>
+              <th>공식 반영 비중</th>
               <th>핵심 평가 기준</th>
               <th>상위노출 최적화 전략</th>
             </tr>
@@ -528,33 +533,33 @@
           <tbody>
             <tr>
               <td><b>검색어 적합도 (Relevance)</b></td>
-              <td><b>30%</b></td>
-              <td>상호명, 소개글, 대표 키워드 5개와 검색어의 일치율</td>
-              <td>대표 키워드에 지역명+세부 업종(예: 강남역 변호사) 정확히 등록</td>
+              <td><b>비공개 (핵심)</b></td>
+              <td>업종, 상세설명, 대표 키워드 5개와 검색어의 관련성</td>
+              <td>대표 키워드에 지역명+세부 업종(예: 강남역 피부과)을 정확히 등록</td>
             </tr>
             <tr>
-              <td><b>네이버 예약 연동 (Booking)</b></td>
-              <td><b>20%</b></td>
-              <td>네이버 예약, 네이버페이, 톡톡 활성화 여부</td>
-              <td>스마트콜 및 네이버 실시간 예약 기능을 무조건 'ON'으로 연동</td>
+              <td><b>네이버 예약·주문 연동 (Booking)</b></td>
+              <td><b>비공개 (높음)</b></td>
+              <td>네이버 예약, 네이버페이, 톡톡, 쿠폰 등 편의 기능 활용</td>
+              <td>사용 가능한 매장이라면 네이버 예약·톡톡·첫방문 쿠폰을 우선 연동</td>
             </tr>
             <tr>
               <td><b>방문자 영수증 리뷰 (Reviews)</b></td>
-              <td><b>25%</b></td>
-              <td>최근 30일 이내 영수증 리뷰 생성 빈도 및 키워드 언급</td>
-              <td>결제 고객 대상 네이버 영수증 리뷰 유도 및 사진 첨부 권장</td>
+              <td><b>비공개 (핵심)</b></td>
+              <td>실방문 영수증 리뷰 누적 수, 사진 포함 여부, 최신성 및 답글 응대</td>
+              <td>결제 고객 대상 영수증 리뷰 안내와 24시간 내 정성 답글 유지</td>
             </tr>
             <tr>
-              <td><b>저장하기 &amp; 길찾기 (Interactions)</b></td>
-              <td><b>15%</b></td>
-              <td>사용자의 '저장하기(북마크)' 및 '길찾기' 클릭 수</td>
-              <td>SNS, 블로그, 지도 링크를 통한 잠재 고객 유입 활성화</td>
+              <td><b>저장하기 · 길찾기 · 체류 (Interactions)</b></td>
+              <td><b>비공개 (높음)</b></td>
+              <td>사용자의 저장하기, 길찾기, 전화 클릭 등 실제 매장 관심 행동</td>
+              <td>매장 안내판 QR 및 지도 링크를 통해 저장·리뷰 행동 자연 유도</td>
             </tr>
             <tr>
-              <td><b>C-Rank 블로그 리뷰 (Blog Score)</b></td>
-              <td><b>10%</b></td>
-              <td>전문성 높은 최신 네이버 블로그 포스팅에서의 장소 첨부</td>
-              <td>최신 전문 블로그 원고 지속 발행으로 지도 점수 지속 누적</td>
+              <td><b>외부·블로그 장소 언급 (Popularity)</b></td>
+              <td><b>비공개 (보조)</b></td>
+              <td>장소 태그가 포함된 최신 네이버 블로그 후기 및 외부 탐색량</td>
+              <td>실제 방문 기반 후기 축적 및 매장 정보·새소식 정기 업데이트</td>
             </tr>
           </tbody>
         </table>
@@ -874,6 +879,7 @@
           <a href="/reply">AI 소개글·답글</a>
           <a href="/blog">플레이스 상위노출 칼럼</a>
           <a href="/tools">전체 도구</a>
+          <a href="/about">서비스 소개</a>
           <a href="/terms">이용약관</a>
           <a href="/privacy">개인정보처리방침</a>
           <a href="/contact">고객지원</a>
@@ -1056,44 +1062,85 @@
           return isNaN(n) ? 0 : n;
         }
 
+        const isValidMetricStr = (val) => {
+          if (val === null || val === undefined) return false;
+          const s = String(val).trim();
+          return s !== '' && s !== '-' && s !== '미집계';
+        };
+
         const top1Item = (data.rankingList && data.rankingList.length > 0) ? data.rankingList[0] : null;
         const top1Name = top1Item ? top1Item.name : '1위 매장';
-        const top1Visitor = top1Item ? parseMetricNum(top1Item.visitorReviews) : 0;
-        const top1Blog = top1Item ? parseMetricNum(top1Item.blogReviews) : 0;
-        const top1IntroLen = Math.max((top1Item && typeof top1Item.introLength === 'number') ? top1Item.introLength : 1850, 1800);
+        const top1HasVisitor = Boolean(top1Item && isValidMetricStr(top1Item.visitorReviews));
+        const top1HasBlog = Boolean(top1Item && isValidMetricStr(top1Item.blogReviews));
+        const top1HasSaves = Boolean(top1Item && isValidMetricStr(top1Item.saveCount));
+        const top1Visitor = top1HasVisitor ? parseMetricNum(top1Item.visitorReviews) : 0;
+        const top1Blog = top1HasBlog ? parseMetricNum(top1Item.blogReviews) : 0;
+        const top1Saves = top1HasSaves ? parseMetricNum(top1Item.saveCount) : 0;
+        const top1HasIntro = Boolean(top1Item && typeof top1Item.introLength === 'number');
+        const top1IntroLen = top1HasIntro ? Math.max(top1Item.introLength, 1800) : null;
         const recommendedIntroLen = 2000;
 
         const rank5Item = (data.rankingList && data.rankingList.length > 0)
           ? data.rankingList[Math.min(4, data.rankingList.length - 1)]
           : null;
         const rank5Name = rank5Item ? rank5Item.name : '5위 매장';
-        const rank5Visitor = rank5Item ? parseMetricNum(rank5Item.visitorReviews) : 0;
-        const rank5Blog = rank5Item ? parseMetricNum(rank5Item.blogReviews) : 0;
+        const rank5Visitor = (rank5Item && isValidMetricStr(rank5Item.visitorReviews)) ? parseMetricNum(rank5Item.visitorReviews) : 0;
+        const rank5Blog = (rank5Item && isValidMetricStr(rank5Item.blogReviews)) ? parseMetricNum(rank5Item.blogReviews) : 0;
 
-        const myVisitorCnt = data.myPlace ? parseMetricNum(data.myPlace.visitorReviews) : 0;
-        const myBlogCnt = data.myPlace ? parseMetricNum(data.myPlace.blogReviews) : 0;
-        const myIntroLen = data.myPlace
-          ? (typeof data.myPlace.introLength === 'number' ? data.myPlace.introLength : (data.myPlace.rank <= 5 ? 1420 : 340))
-          : 0;
+        const myHasVisitor = Boolean(data.myPlace && isValidMetricStr(data.myPlace.visitorReviews));
+        const myHasBlog = Boolean(data.myPlace && isValidMetricStr(data.myPlace.blogReviews));
+        const myHasSaves = Boolean(data.myPlace && isValidMetricStr(data.myPlace.saveCount));
+        const myVisitorCnt = myHasVisitor ? parseMetricNum(data.myPlace.visitorReviews) : 0;
+        const myBlogCnt = myHasBlog ? parseMetricNum(data.myPlace.blogReviews) : 0;
+        const mySavesCnt = myHasSaves ? parseMetricNum(data.myPlace.saveCount) : 0;
+        const myHasIntro = Boolean(data.myPlace && typeof data.myPlace.introLength === 'number');
+        const myIntroLen = myHasIntro ? data.myPlace.introLength : null;
 
-        const top1VisitorGap = Math.max(0, top1Visitor - myVisitorCnt);
-        const top1BlogGap = Math.max(0, top1Blog - myBlogCnt);
+        const gapMetrics = (data.gapAnalysis && data.gapAnalysis.metrics) ? data.gapAnalysis.metrics : {};
+        const visitorUnmeasured = gapMetrics.visitorReviews
+          ? gapMetrics.visitorReviews.status === 'UNMEASURED'
+          : (!top1HasVisitor && !myHasVisitor);
+        const blogUnmeasured = gapMetrics.blogReviews
+          ? gapMetrics.blogReviews.status === 'UNMEASURED'
+          : (!top1HasBlog && !myHasBlog);
+        const savesUnmeasured = gapMetrics.saves
+          ? gapMetrics.saves.status === 'UNMEASURED'
+          : (!top1HasSaves && !myHasSaves);
+        const introUnmeasured = gapMetrics.introLength
+          ? gapMetrics.introLength.status === 'UNMEASURED'
+          : !myHasIntro;
+
+        const top1VisitorGap = !visitorUnmeasured ? Math.max(0, top1Visitor - myVisitorCnt) : 0;
+        const top1BlogGap = !blogUnmeasured ? Math.max(0, top1Blog - myBlogCnt) : 0;
+        const top1SavesGap = !savesUnmeasured ? Math.max(0, top1Saves - mySavesCnt) : 0;
         const cutlineVisitorGap = Math.max(0, rank5Visitor - myVisitorCnt);
         const cutlineBlogGap = Math.max(0, rank5Blog - myBlogCnt);
-        const introCharGap = Math.max(0, recommendedIntroLen - myIntroLen);
+        const introCharGap = myHasIntro ? Math.max(0, recommendedIntroLen - myIntroLen) : null;
 
-        let diagScore = 34;
+        let diagScore = null;
         if (data.myPlace) {
           const r = data.myPlace.rank || 20;
           const rScore = r === 1 ? 45 : r <= 3 ? 40 : r <= 5 ? 35 : r <= 10 ? 25 : r <= 15 ? 18 : 12;
-          const vScore = top1Visitor > 0 ? Math.min(20, Math.round((myVisitorCnt / top1Visitor) * 20)) : 16;
-          const bScore = top1Blog > 0 ? Math.min(15, Math.round((myBlogCnt / top1Blog) * 15)) : 12;
-          const bookScore = data.myPlace.hasBooking ? 12 : 0;
-          const coupScore = data.myPlace.hasCoupon ? 8 : 0;
-          diagScore = Math.min(100, Math.max(20, rScore + vScore + bScore + bookScore + coupScore));
+          let earned = rScore;
+          let maxPossible = 45;
+          if (!visitorUnmeasured && top1Visitor > 0) {
+            earned += Math.min(20, Math.round((myVisitorCnt / top1Visitor) * 20));
+            maxPossible += 20;
+          }
+          if (!blogUnmeasured && top1Blog > 0) {
+            earned += Math.min(15, Math.round((myBlogCnt / top1Blog) * 15));
+            maxPossible += 15;
+          }
+          earned += data.myPlace.hasBooking ? 12 : 0;
+          maxPossible += 12;
+          earned += data.myPlace.hasCoupon ? 8 : 0;
+          maxPossible += 8;
+          diagScore = Math.min(100, Math.round((earned / maxPossible) * 100));
         }
 
-        const diagGradeInfo = diagScore >= 85
+        const diagGradeInfo = diagScore === null
+          ? { grade: '20위권 밖 (미산정)', color: '#475569', bg: '#f1f5f9', border: '#cbd5e1' }
+          : diagScore >= 85
           ? { grade: 'S등급 (최상위권)', color: '#059669', bg: '#ecfdf5', border: '#a7f3d0' }
           : diagScore >= 70
           ? { grade: 'A등급 (1페이지 안정권)', color: '#2563eb', bg: '#eff6ff', border: '#bfdbfe' }
@@ -1108,10 +1155,15 @@
           rank5Name,
           top1VisitorGap,
           top1BlogGap,
+          top1SavesGap,
           cutlineVisitorGap,
           cutlineBlogGap,
           myIntroLen,
-          introCharGap
+          introCharGap,
+          visitorUnmeasured,
+          blogUnmeasured,
+          savesUnmeasured,
+          introUnmeasured
         };
 
         // 2. Render Diagnosis Card (Always show: either target store diagnosis OR Top 1~5 benchmark diagnosis)
@@ -1124,20 +1176,39 @@
             
             if (p.rank <= 5) {
               diagRankText.className = 'diag-rank-badge gold';
-              diagRankText.innerHTML = `<i class="fa-solid fa-crown"></i> <span>현재 전체 ${p.rank}위 · 종합 ${diagScore}점</span>`;
+              diagRankText.innerHTML = `<i class="fa-solid fa-crown"></i> <span>현재 전체 ${p.rank}위 · 실측 지표 ${diagScore}점</span>`;
               diagStatusPill.className = 'diag-status-pill pill-optimal';
               diagStatusPill.textContent = '🏆 1페이지 상위권 노출 중';
             } else if (p.rank <= 15) {
               diagRankText.className = 'diag-rank-badge';
-              diagRankText.innerHTML = `<i class="fa-solid fa-bolt"></i> <span>현재 전체 ${p.rank}위 · 종합 ${diagScore}점</span>`;
+              diagRankText.innerHTML = `<i class="fa-solid fa-bolt"></i> <span>현재 전체 ${p.rank}위 · 실측 지표 ${diagScore}점</span>`;
               diagStatusPill.className = 'diag-status-pill pill-warn';
               diagStatusPill.textContent = '⚡ 1페이지 진입 가시권';
             } else {
               diagRankText.className = 'diag-rank-badge';
-              diagRankText.innerHTML = `<i class="fa-solid fa-circle-exclamation" style="color:#d97706;"></i> <span>현재 전체 ${p.rank}위 · 종합 ${diagScore}점</span>`;
+              diagRankText.innerHTML = `<i class="fa-solid fa-circle-exclamation" style="color:#d97706;"></i> <span>현재 전체 ${p.rank}위 · 실측 지표 ${diagScore}점</span>`;
               diagStatusPill.className = 'diag-status-pill pill-warn';
               diagStatusPill.textContent = '2페이지 이하 (순위 개선 권장)';
             }
+
+            if (typeof updateAndRenderRankDelta === 'function') {
+              const deltaHtml = updateAndRenderRankDelta(data.query || inputKeyword.value, data.target || p.name, p.rank);
+              if (deltaHtml) diagRankText.insertAdjacentHTML('beforeend', deltaHtml);
+            }
+
+            const diagVisitorSummary = visitorUnmeasured
+              ? '<span style="color:#64748b;">미측정 (직접 확인)</span>'
+              : `${top1VisitorGap > 0 ? `-${top1VisitorGap.toLocaleString()}개 차이` : '🟢 1위 동급'} <small style="color:#64748b; font-weight:500;">(내 매장 ${myHasVisitor ? myVisitorCnt.toLocaleString() : '미측정'} / 1위 ${top1HasVisitor ? top1Visitor.toLocaleString() : '미측정'})</small>`;
+
+            const diagBlogSummary = blogUnmeasured
+              ? '<span style="color:#64748b;">미측정 (직접 확인)</span>'
+              : `${top1BlogGap > 0 ? `-${top1BlogGap.toLocaleString()}개 차이` : '🟢 1위 동급'} <small style="color:#64748b; font-weight:500;">(내 매장 ${myHasBlog ? myBlogCnt.toLocaleString() : '미측정'} / 1위 ${top1HasBlog ? top1Blog.toLocaleString() : '미측정'})</small>`;
+
+            const diagIntroSummary = introUnmeasured
+              ? '<span style="color:#64748b;">소개글 길이 미측정 (네이버 상세페이지 직접 확인 · 권장 2,000자)</span>'
+              : (introCharGap > 0
+                  ? `-${introCharGap.toLocaleString()}자 부족 (현재 ${myIntroLen.toLocaleString()}자 / 권장 2,000자)`
+                  : '🟢 2,000자 최적화 충족');
 
             diagGrid.innerHTML = `
               <div class="diag-item">
@@ -1145,21 +1216,21 @@
                 <span>${escapeHtml(p.name)} <small style="color:var(--slate-500);">(${escapeHtml(p.category || '플레이스')})</small></span>
               </div>
               <div class="diag-item">
-                <strong>플레이스 종합 세팅 점수</strong>
+                <strong>실측 가능 지표 기준 점수</strong>
                 <span style="display:inline-flex; align-items:center; gap:6px; font-weight:700; color:${diagGradeInfo.color}; background:${diagGradeInfo.bg}; border:1px solid ${diagGradeInfo.border}; padding:2px 10px; border-radius:999px; font-size:12.5px;">${diagScore}점 / 100점 · ${diagGradeInfo.grade}</span>
               </div>
               <div class="diag-item" style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:12px 14px;">
                 <strong style="color:#334155;">방문자 리뷰 (1위 대비)</strong>
-                <span style="font-weight:700; color:${top1VisitorGap > 0 ? '#0f172a' : '#059669'};">${top1VisitorGap > 0 ? `-${top1VisitorGap.toLocaleString()}개 차이` : '🟢 1위 동급'} <small style="color:#64748b; font-weight:500;">(내 매장 ${escapeHtml(p.visitorReviews || '0')} / 1위 ${top1Visitor.toLocaleString()})</small></span>
+                <span style="font-weight:700; color:${visitorUnmeasured ? '#64748b' : (top1VisitorGap > 0 ? '#0f172a' : '#059669')};">${diagVisitorSummary}</span>
               </div>
               <div class="diag-item" style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:12px 14px;">
                 <strong style="color:#334155;">블로그 리뷰 (1위 대비)</strong>
-                <span style="font-weight:700; color:${top1BlogGap > 0 ? '#0f172a' : '#059669'};">${top1BlogGap > 0 ? `-${top1BlogGap.toLocaleString()}개 차이` : '🟢 1위 동급'} <small style="color:#64748b; font-weight:500;">(내 매장 ${escapeHtml(p.blogReviews || '0')} / 1위 ${top1Blog.toLocaleString()})</small></span>
+                <span style="font-weight:700; color:${blogUnmeasured ? '#64748b' : (top1BlogGap > 0 ? '#0f172a' : '#059669')};">${diagBlogSummary}</span>
               </div>
               <div class="diag-item" style="grid-column: 1 / -1; background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:12px 14px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;">
                 <div>
                   <strong style="color:#334155; display:block;">상세설명(소개글) 글자수 (권장 2,000자 기준)</strong>
-                  <span style="font-weight:700; color:${introCharGap > 0 ? '#0f172a' : '#059669'};">${introCharGap > 0 ? `-${introCharGap.toLocaleString()}자 부족 (현재 약 ${myIntroLen.toLocaleString()}자 / 권장 2,000자)` : '🟢 2,000자 최적화 충족'}</span>
+                  <span style="font-weight:700; color:${introUnmeasured ? '#64748b' : (introCharGap > 0 ? '#0f172a' : '#059669')};">${diagIntroSummary}</span>
                 </div>
                 <a href="/reply?mode=intro&kw=${encodeURIComponent(data.query || '')}&store=${encodeURIComponent(p.name)}" style="display:inline-flex; align-items:center; gap:6px; background:#2563eb; color:#ffffff !important; font-size:12.5px; font-weight:700; padding:9px 16px; border-radius:8px; text-decoration:none; box-shadow:0 2px 8px rgba(37,99,235,0.25); transition:all 0.2s;" onmouseover="this.style.background='#1d4ed8';" onmouseout="this.style.background='#2563eb';">
                   <i class="fa-solid fa-wand-magic-sparkles" style="color:#ffffff;"></i> <span style="color:#ffffff !important; font-weight:700;">AI 소개글 2,000자 생성</span>
@@ -1170,26 +1241,30 @@
             // Target not found within top 20
             diagnosisCard.className = 'diagnosis-card';
             diagRankText.className = 'diag-rank-badge';
-            diagRankText.innerHTML = `<i class="fa-solid fa-circle-info" style="color:#64748b;"></i> <span>20위권 밖 (미노출) · 종합 ${diagScore}점</span>`;
+            diagRankText.innerHTML = `<i class="fa-solid fa-circle-info" style="color:#64748b;"></i> <span>상위 20위권 밖 (미집계)</span>`;
+            if (typeof updateAndRenderRankDelta === 'function') {
+              const deltaHtml = updateAndRenderRankDelta(data.query || inputKeyword.value, data.target, null);
+              if (deltaHtml) diagRankText.insertAdjacentHTML('beforeend', deltaHtml);
+            }
             diagStatusPill.className = 'diag-status-pill pill-warn';
-            diagStatusPill.textContent = '20위권 밖 (순위 개선 권장)';
+            diagStatusPill.textContent = '20위권 밖 (순위 미노출)';
 
             diagGrid.innerHTML = `
               <div class="diag-item" style="grid-column: 1 / -1;">
-                <strong>진단 결과 (${diagScore}점 / 100점 · ${diagGradeInfo.grade}):</strong>
-                <span>입력하신 <b>"${escapeHtml(data.target)}"</b> 매장이 상위 20위 이내에 노출되지 않고 있습니다.</span>
+                <strong>진단 결과 (상위 20위 내 미노출 · 종합 점수 미산정):</strong>
+                <span>입력하신 <b>"${escapeHtml(data.target)}"</b> 매장이 현재 조회 범위(상위 20위) 내에 노출되지 않았습니다. 아래 1위 매장 지표를 참고하세요.</span>
                 <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:8px; margin-top:10px;">
                   <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:12px 14px;">
-                    <div style="font-size:11.5px; font-weight:700; color:#475569;">방문자 리뷰 (1위 매장 기준)</div>
-                    <div style="font-size:15px; font-weight:700; color:#0f172a; margin-top:2px;">1위 기준 -${top1Visitor.toLocaleString()}개 필요</div>
+                    <div style="font-size:11.5px; font-weight:700; color:#475569;">1위 매장 방문자 리뷰</div>
+                    <div style="font-size:15px; font-weight:700; color:#0f172a; margin-top:2px;">${top1HasVisitor ? `${top1Visitor.toLocaleString()}개` : '미측정 (직접 확인)'}</div>
                   </div>
                   <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:12px 14px;">
-                    <div style="font-size:11.5px; font-weight:700; color:#475569;">블로그 리뷰 (1위 매장 기준)</div>
-                    <div style="font-size:15px; font-weight:700; color:#0f172a; margin-top:2px;">1위 기준 -${top1Blog.toLocaleString()}개 필요</div>
+                    <div style="font-size:11.5px; font-weight:700; color:#475569;">1위 매장 블로그 리뷰</div>
+                    <div style="font-size:15px; font-weight:700; color:#0f172a; margin-top:2px;">${top1HasBlog ? `${top1Blog.toLocaleString()}개` : '미측정 (직접 확인)'}</div>
                   </div>
                   <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:12px 14px;">
                     <div style="font-size:11.5px; font-weight:700; color:#475569;">상세설명 글자수</div>
-                    <div style="font-size:15px; font-weight:700; color:#0f172a; margin-top:2px;">권장 2,000자 보강 권장</div>
+                    <div style="font-size:15px; font-weight:700; color:#0f172a; margin-top:2px;">권장 2,000자 기준 점검</div>
                   </div>
                 </div>
               </div>
@@ -1206,7 +1281,7 @@
           diagGrid.innerHTML = `
             <div class="diag-item" style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:12px 14px;">
               <strong style="color:#334155;">🥇 1위 매장 (${escapeHtml(top1Name)}) 기준</strong>
-              <span style="font-weight:700; color:#0f172a;">방문자 리뷰 ${top1Visitor.toLocaleString()}개 · 블로그 리뷰 ${top1Blog.toLocaleString()}개</span>
+              <span style="font-weight:700; color:#0f172a;">방문자 리뷰 ${top1HasVisitor ? `${top1Visitor.toLocaleString()}개` : '미측정'} · 블로그 리뷰 ${top1HasBlog ? `${top1Blog.toLocaleString()}개` : '미측정'}</span>
             </div>
             <div class="diag-item" style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:12px 14px;">
               <strong style="color:#334155;">📝 플레이스 상세설명 권장 기준</strong>
@@ -1214,7 +1289,7 @@
             </div>
             <div class="diag-item" style="grid-column: 1 / -1; background:#f8fafc; border:1px dashed #cbd5e1; border-radius:10px; padding:10px 14px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;">
               <span style="font-size:12.5px; color:#334155; font-weight:600;">💡 위 순위표에서 <b>[내 매장으로 진단]</b>을 누르거나 상호명을 입력하면 1위 매장과의 정밀 비교 분석을 확인하실 수 있습니다.</span>
-              <a href="#placePrescriptionLeadBox" style="font-size:12px; font-weight:700; color:#ffffff; background:#0f172a; padding:6px 14px; border-radius:8px; text-decoration:none;">맞춤 솔루션 보기 ↓</a>
+              <a href="#gapActionPrescriptionBox" style="font-size:12px; font-weight:700; color:#ffffff; background:#0f172a; padding:6px 14px; border-radius:8px; text-decoration:none;">무료 실무 도구 · 사전 알림 ↓</a>
             </div>
           `;
         }
@@ -1249,50 +1324,115 @@
               : `[${data.query}] 1위 매장 [${top1Name}] 지표 현황`;
           }
 
-          const myVisitorLabel = isTargetFound ? `${parseMetricNum(data.myPlace.visitorReviews).toLocaleString()}개` : (hasTarget ? '20위 밖' : '상호 미선택');
-          const myBlogLabel = isTargetFound ? `${parseMetricNum(data.myPlace.blogReviews).toLocaleString()}개` : (hasTarget ? '20위 밖' : '상호 미선택');
+          const myVisitorLabel = visitorUnmeasured
+            ? '미측정'
+            : (isTargetFound ? (myHasVisitor ? `${myVisitorCnt.toLocaleString()}개` : '미측정') : (hasTarget ? '20위 밖' : '상호 미선택'));
+          const myBlogLabel = blogUnmeasured
+            ? '미측정'
+            : (isTargetFound ? (myHasBlog ? `${myBlogCnt.toLocaleString()}개` : '미측정') : (hasTarget ? '20위 밖' : '상호 미선택'));
+          const mySavesLabel = savesUnmeasured
+            ? '미측정'
+            : (isTargetFound ? (myHasSaves ? `${mySavesCnt.toLocaleString()}개` : '미측정') : (hasTarget ? '20위 밖' : '상호 미선택'));
           const myBookingBool = isTargetFound ? Boolean(data.myPlace.hasBooking) : false;
-          const top1BookingBool = top1Item ? Boolean(top1Item.hasBooking) : true;
+          const top1BookingBool = top1Item ? Boolean(top1Item.hasBooking) : false;
 
-          gapGrid.innerHTML = `
-            <div class="gap-item ${top1VisitorGap > 0 ? 'deficit' : 'optimal'}" style="background:#ffffff; border:1px solid #e2e8f0;">
-              <div class="gap-item-lbl" style="color:#334155; font-weight:700;">방문자 리뷰 현황</div>
-              <div class="gap-item-vals">1위 매장(${escapeHtml(top1Name)}): <b>${top1Visitor.toLocaleString()}개</b><br>내 매장: <b>${escapeHtml(myVisitorLabel)}</b></div>
-              <span class="gap-item-diff ${top1VisitorGap > 0 ? 'diff-deficit' : 'diff-optimal'}">
-                ${top1VisitorGap > 0 ? `1위 대비 -${top1VisitorGap.toLocaleString()}개` : '🟢 1위 수준 충족'}
-              </span>
-            </div>
-            <div class="gap-item ${top1BlogGap > 0 ? 'deficit' : 'optimal'}" style="background:#ffffff; border:1px solid #e2e8f0;">
-              <div class="gap-item-lbl" style="color:#334155; font-weight:700;">블로그 리뷰 현황</div>
-              <div class="gap-item-vals">1위 매장(${escapeHtml(top1Name)}): <b>${top1Blog.toLocaleString()}개</b><br>내 매장: <b>${escapeHtml(myBlogLabel)}</b></div>
-              <span class="gap-item-diff ${top1BlogGap > 0 ? 'diff-deficit' : 'diff-optimal'}">
-                ${top1BlogGap > 0 ? `1위 대비 -${top1BlogGap.toLocaleString()}개` : '🟢 1위 수준 충족'}
-              </span>
-            </div>
-            <div class="gap-item ${introCharGap > 0 ? 'deficit' : 'optimal'}" style="background:#ffffff; border:1px solid #e2e8f0;">
-              <div class="gap-item-lbl" style="color:#334155; font-weight:700;">상세설명 글자수 현황</div>
-              <div class="gap-item-vals">SEO 권장 기준: <b>2,000자</b><br>내 매장 상세설명: <b>${isTargetFound ? `약 ${myIntroLen.toLocaleString()}자` : '글자수 보강 권장'}</b></div>
-              <span class="gap-item-diff ${introCharGap > 0 ? 'diff-deficit' : 'diff-optimal'}">
-                ${introCharGap > 0 ? `-${introCharGap.toLocaleString()}자 권장` : '🟢 2,000자 충족'}
-              </span>
-            </div>
-            <div class="gap-item ${(!myBookingBool && top1BookingBool) ? 'deficit' : 'optimal'}" style="background:#ffffff; border:1px solid #e2e8f0;">
-              <div class="gap-item-lbl" style="color:#334155; font-weight:700;">네이버 예약 · 쿠폰</div>
-              <div class="gap-item-vals">1위 매장: <b>${top1BookingBool ? '예약 연동' : '미연동'}</b><br>내 매장: <b>${myBookingBool ? '예약 연동' : '미연동 (연동 권장)'}</b></div>
-              <span class="gap-item-diff ${(!myBookingBool && top1BookingBool) ? 'diff-deficit' : 'diff-optimal'}">
-                ${(!myBookingBool && top1BookingBool) ? '예약·쿠폰 세팅 권장' : '🟢 정상 연동'}
-              </span>
-            </div>
-          `;
+          const visitorGapCard = (!isTargetFound || visitorUnmeasured || !myHasVisitor || !top1HasVisitor)
+            ? `
+              <div class="gap-item unmeasured" style="background:#f8fafc; border:1px solid #cbd5e1;">
+                <div class="gap-item-lbl" style="color:#334155; font-weight:700;">방문자 리뷰 현황</div>
+                <div class="gap-item-vals">1위 매장(${escapeHtml(top1Name)}): <b>${top1HasVisitor ? `${top1Visitor.toLocaleString()}개` : '미측정'}</b><br>내 매장: <b>${escapeHtml(myVisitorLabel)}</b></div>
+                <span class="gap-item-diff diff-unmeasured">${!isTargetFound && hasTarget ? '20위 밖 (미집계)' : '미측정 (직접 확인)'}</span>
+              </div>
+            `
+            : `
+              <div class="gap-item ${top1VisitorGap > 0 ? 'deficit' : 'optimal'}" style="background:#ffffff; border:1px solid #e2e8f0;">
+                <div class="gap-item-lbl" style="color:#334155; font-weight:700;">방문자 리뷰 현황</div>
+                <div class="gap-item-vals">1위 매장(${escapeHtml(top1Name)}): <b>${top1Visitor.toLocaleString()}개</b><br>내 매장: <b>${escapeHtml(myVisitorLabel)}</b></div>
+                <span class="gap-item-diff ${top1VisitorGap > 0 ? 'diff-deficit' : 'diff-optimal'}">
+                  ${top1VisitorGap > 0 ? `1위 대비 -${top1VisitorGap.toLocaleString()}개` : '🟢 1위 수준 충족'}
+                </span>
+              </div>
+            `;
+
+          const blogGapCard = (!isTargetFound || blogUnmeasured || !myHasBlog || !top1HasBlog)
+            ? `
+              <div class="gap-item unmeasured" style="background:#f8fafc; border:1px solid #cbd5e1;">
+                <div class="gap-item-lbl" style="color:#334155; font-weight:700;">블로그 리뷰 현황</div>
+                <div class="gap-item-vals">1위 매장(${escapeHtml(top1Name)}): <b>${top1HasBlog ? `${top1Blog.toLocaleString()}개` : '미측정'}</b><br>내 매장: <b>${escapeHtml(myBlogLabel)}</b></div>
+                <span class="gap-item-diff diff-unmeasured">${!isTargetFound && hasTarget ? '20위 밖 (미집계)' : '미측정 (직접 확인)'}</span>
+              </div>
+            `
+            : `
+              <div class="gap-item ${top1BlogGap > 0 ? 'deficit' : 'optimal'}" style="background:#ffffff; border:1px solid #e2e8f0;">
+                <div class="gap-item-lbl" style="color:#334155; font-weight:700;">블로그 리뷰 현황</div>
+                <div class="gap-item-vals">1위 매장(${escapeHtml(top1Name)}): <b>${top1Blog.toLocaleString()}개</b><br>내 매장: <b>${escapeHtml(myBlogLabel)}</b></div>
+                <span class="gap-item-diff ${top1BlogGap > 0 ? 'diff-deficit' : 'diff-optimal'}">
+                  ${top1BlogGap > 0 ? `1위 대비 -${top1BlogGap.toLocaleString()}개` : '🟢 1위 수준 충족'}
+                </span>
+              </div>
+            `;
+
+          const savesGapCard = (!isTargetFound || savesUnmeasured || !myHasSaves || !top1HasSaves)
+            ? `
+              <div class="gap-item unmeasured" style="background:#f8fafc; border:1px solid #cbd5e1;">
+                <div class="gap-item-lbl" style="color:#334155; font-weight:700;">저장하기(Save) 현황</div>
+                <div class="gap-item-vals">1위 매장(${escapeHtml(top1Name)}): <b>${top1HasSaves ? `${top1Saves.toLocaleString()}개` : '미측정'}</b><br>내 매장: <b>${escapeHtml(mySavesLabel)}</b></div>
+                <span class="gap-item-diff diff-unmeasured">${!isTargetFound && hasTarget ? '20위 밖 (미집계)' : '미측정 (직접 확인)'}</span>
+              </div>
+            `
+            : `
+              <div class="gap-item ${top1SavesGap > 0 ? 'deficit' : 'optimal'}" style="background:#ffffff; border:1px solid #e2e8f0;">
+                <div class="gap-item-lbl" style="color:#334155; font-weight:700;">저장하기(Save) 현황</div>
+                <div class="gap-item-vals">1위 매장(${escapeHtml(top1Name)}): <b>${top1Saves.toLocaleString()}개</b><br>내 매장: <b>${escapeHtml(mySavesLabel)}</b></div>
+                <span class="gap-item-diff ${top1SavesGap > 0 ? 'diff-deficit' : 'diff-optimal'}">
+                  ${top1SavesGap > 0 ? `1위 대비 -${top1SavesGap.toLocaleString()}개` : '🟢 1위 수준 충족'}
+                </span>
+              </div>
+            `;
+
+          const introGapCard = (!isTargetFound || introUnmeasured || myIntroLen === null)
+            ? `
+              <div class="gap-item unmeasured" style="background:#f8fafc; border:1px solid #cbd5e1;">
+                <div class="gap-item-lbl" style="color:#334155; font-weight:700;">상세설명 글자수 현황</div>
+                <div class="gap-item-vals">권장 기준: <b>2,000자</b><br>내 매장 상세설명: <b>${!isTargetFound && hasTarget ? '20위 밖 (미집계)' : '미측정'}</b></div>
+                <span class="gap-item-diff diff-unmeasured">${!isTargetFound && hasTarget ? '20위 밖 (직접 점검)' : '미측정 (직접 확인)'}</span>
+              </div>
+            `
+            : `
+              <div class="gap-item ${introCharGap > 0 ? 'deficit' : 'optimal'}" style="background:#ffffff; border:1px solid #e2e8f0;">
+                <div class="gap-item-lbl" style="color:#334155; font-weight:700;">상세설명 글자수 현황</div>
+                <div class="gap-item-vals">SEO 권장 기준: <b>2,000자</b><br>내 매장 상세설명: <b>${myIntroLen.toLocaleString()}자</b></div>
+                <span class="gap-item-diff ${introCharGap > 0 ? 'diff-deficit' : 'diff-optimal'}">
+                  ${introCharGap > 0 ? `-${introCharGap.toLocaleString()}자 보강 권장` : '🟢 2,000자 충족'}
+                </span>
+              </div>
+            `;
+
+          const bookingGapCard = !isTargetFound
+            ? `
+              <div class="gap-item unmeasured" style="background:#f8fafc; border:1px solid #cbd5e1;">
+                <div class="gap-item-lbl" style="color:#334155; font-weight:700;">네이버 예약 · 쿠폰</div>
+                <div class="gap-item-vals">1위 매장: <b>${top1BookingBool ? '예약 연동' : '미연동'}</b><br>내 매장: <b>${hasTarget ? '20위 밖 (미집계)' : '상호 미선택'}</b></div>
+                <span class="gap-item-diff diff-unmeasured">${hasTarget ? '20위 밖 (직접 점검)' : '매장 선택 필요'}</span>
+              </div>
+            `
+            : `
+              <div class="gap-item ${(!myBookingBool && top1BookingBool) ? 'deficit' : 'optimal'}" style="background:#ffffff; border:1px solid #e2e8f0;">
+                <div class="gap-item-lbl" style="color:#334155; font-weight:700;">네이버 예약 · 쿠폰</div>
+                <div class="gap-item-vals">1위 매장: <b>${top1BookingBool ? '예약 연동' : '미연동'}</b><br>내 매장: <b>${myBookingBool ? '예약 연동' : '미연동 (연동 권장)'}</b></div>
+                <span class="gap-item-diff ${(!myBookingBool && top1BookingBool) ? 'diff-deficit' : 'diff-optimal'}">
+                  ${(!myBookingBool && top1BookingBool) ? '예약·쿠폰 세팅 권장' : '🟢 정상 연동'}
+                </span>
+              </div>
+            `;
+
+          gapGrid.innerHTML = visitorGapCard + blogGapCard + savesGapCard + introGapCard + bookingGapCard;
 
           const targetStore = (data.myPlace && data.myPlace.name) ? data.myPlace.name : (data.target || '');
           const targetKw = data.query || '';
           const placeUrl = data.myPlace ? `https://m.place.naver.com/place/${data.myPlace.id || ''}` : '';
           const currentRankLabel = data.myPlace ? `현재 ${data.myPlace.rank}위` : (data.target ? '현재 20위권 밖' : '1페이지 진입 진단');
 
-          // Determine Case A vs Case B primary emphasis
-          const isCaseBPrimary = !data.myPlace || diagScore < 50;
-          const blogDeficitDisplay = top1BlogGap > 0 ? top1BlogGap : Math.max(30, rank5Blog);
           const comp1 = data.rankingList[0] ? data.rankingList[0].name : '1위 경쟁매장';
           const comp2 = data.rankingList[1] ? data.rankingList[1].name : '2위 경쟁매장';
           const comp3 = data.rankingList[2] ? data.rankingList[2].name : '3위 경쟁매장';
@@ -1316,7 +1456,9 @@
                 <span style="font-size:11px; font-weight:600; color:#059669; background:#ecfdf5; padding:3px 10px; border-radius:999px;">회원가입 없이 100% 무료</span>
               </div>
               <p style="font-size:12.5px; color:#64748b; margin-bottom:14px; line-height:1.6;">
-                상세설명 글자수 부족분(<b>-${introCharGap.toLocaleString()}자</b>)과 테이블 영수증 리뷰 QR 안내판, 리뷰 답글을 즉시 해결하세요.
+                ${introCharGap !== null && introCharGap > 0
+                  ? `상세설명 글자수 부족분(<b>-${introCharGap.toLocaleString()}자</b>)과 테이블 영수증 리뷰 QR 안내판, 리뷰 답글을 즉시 해결하세요.`
+                  : '플레이스 상세설명 최적화, 테이블 영수증 리뷰 QR 안내판, 리뷰 답글 및 금칙어 검수를 무료로 진행하세요.'}
               </p>
               <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(210px, 1fr)); gap:10px;">
                 <a href="/reply?mode=intro&kw=${encodeURIComponent(targetKw)}&store=${encodeURIComponent(targetStore)}" style="min-height:44px; display:inline-flex; align-items:center; justify-content:center; gap:8px; background:#2563eb; color:#ffffff !important; padding:10px 14px; border-radius:10px; font-size:12.5px; font-weight:700; text-decoration:none; box-shadow:0 2px 8px rgba(37,99,235,0.25); transition:all 0.2s;" onmouseover="this.style.background='#1d4ed8';" onmouseout="this.style.background='#2563eb';">
@@ -1332,200 +1474,26 @@
                   <i class="fa-solid fa-scale-balanced" style="color:#2563eb;"></i> <span>소개글 광고법 금칙어 점검</span>
                 </a>
               </div>
-            </div>
-
-            <!-- ② 2단계: 결핍 맞춤형 처방 매칭 -->
-            <div style="margin-top:18px; display:grid; grid-template-columns:repeat(auto-fit, minmax(290px, 1fr)); gap:14px;">
-              <!-- 케이스 A: 블로그 리뷰 결핍 처방 -->
-              <div id="prescriptionCardCaseA" style="background:#ffffff; border:${!isCaseBPrimary ? '1.5px solid #2563eb' : '1px solid #e2e8f0'}; border-radius:14px; padding:18px; box-shadow:0 2px 8px rgba(0,0,0,0.03); display:flex; flex-direction:column; justify-content:space-between; word-break:keep-all;">
-                <div>
-                  <div style="display:flex; align-items:center; justify-content:space-between; gap:6px; margin-bottom:8px;">
-                    <span style="background:#eff6ff; color:#1d4ed8; font-size:11.5px; font-weight:700; padding:3px 10px; border-radius:999px;">
-                      블로그 리뷰 -${blogDeficitDisplay.toLocaleString()}개 부족분 솔루션
-                    </span>
-                    ${!isCaseBPrimary ? '<span style="font-size:11px; font-weight:700; color:#2563eb;">추천 솔루션</span>' : ''}
-                  </div>
-                  <div style="font-size:15px; font-weight:700; color:#0f172a; line-height:1.45; margin-bottom:8px;">
-                    "1위 안착을 위한 실방문 블로그 리뷰 확충이 필요합니다."
-                  </div>
-                  <p style="font-size:12.5px; color:#64748b; line-height:1.55; margin:0 0 14px 0;">
-                    1위 매장(${escapeHtml(top1Name)})과의 C-Rank 블로그 지표 차이를 좁히기 위해 내 지역·업종에서 검증된 실방문 체험단 플랫폼 3곳의 견적과 무료 체험권을 비교해 드립니다.
-                  </p>
-                </div>
-                <button type="button" onclick="window.selectPrescriptionCase('CASE_A')" style="width:100%; min-height:44px; padding:10px 14px; border-radius:10px; border:none; background:#0f172a; color:#ffffff; font-size:12.5px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:6px; box-shadow:0 2px 6px rgba(15,23,42,0.15);">
-                  <i class="fa-solid fa-chart-line"></i>
-                  <span>지역·업종 체험단 플랫폼 3곳 패키지 비교 신청</span>
-                </button>
-              </div>
-
-              <!-- 케이스 B: 신규 오픈 / 50점 미만 / 20위 밖 정석 세팅 대행 처방 -->
-              <div id="prescriptionCardCaseB" style="background:#ffffff; border:${isCaseBPrimary ? '1.5px solid #2563eb' : '1px solid #e2e8f0'}; border-radius:14px; padding:18px; box-shadow:0 2px 8px rgba(0,0,0,0.03); display:flex; flex-direction:column; justify-content:space-between; word-break:keep-all;">
-                <div>
-                  <div style="display:flex; align-items:center; justify-content:space-between; gap:6px; margin-bottom:8px;">
-                    <span style="background:#eff6ff; color:#1d4ed8; font-size:11.5px; font-weight:700; padding:3px 10px; border-radius:999px;">
-                      ${diagScore < 50 ? `세팅 점수 ${diagScore}점 솔루션` : '플레이스 초기 안착 솔루션'}
-                    </span>
-                    ${isCaseBPrimary ? '<span style="font-size:11px; font-weight:700; color:#2563eb;">추천 솔루션</span>' : ''}
-                  </div>
-                  <div style="font-size:15px; font-weight:700; color:#0f172a; line-height:1.45; margin-bottom:8px;">
-                    "불법 슬롯 없이 안전하게 플레이스 세팅과 예약을 관리할 정석 대행사가 필요합니다."
-                  </div>
-                  <p style="font-size:12.5px; color:#64748b; line-height:1.55; margin:0 0 14px 0;">
-                    계정 정지 위험이 있는 불법 슬롯 업체를 배제하고, 대표키워드·예약·쿠폰·소개글을 정석으로 관리하는 클린 서약 대행사 3곳의 무료 비교견적을 받아보세요.
-                  </p>
-                </div>
-                <button type="button" onclick="window.selectPrescriptionCase('CASE_B')" style="width:100%; min-height:44px; padding:10px 14px; border-radius:10px; border:none; background:#1d4ed8; color:#ffffff; font-size:12.5px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:6px; box-shadow:0 2px 6px rgba(29,78,216,0.15);">
-                  <i class="fa-solid fa-shield-halved"></i>
-                  <span>클린플레이스 인증 대행사 3곳 비교견적 요청</span>
+              <div style="margin-top:10px;">
+                <button type="button" id="btnPrintPlacePdf" style="width:100%; min-height:44px; display:inline-flex; align-items:center; justify-content:center; gap:8px; background:#0f172a; color:#ffffff; border:1px solid #0f172a; padding:10px 16px; border-radius:10px; font-size:13px; font-weight:700; cursor:pointer; font-family:inherit; box-shadow:0 2px 6px rgba(15,23,42,0.12); transition:background 0.2s;" onmouseover="this.style.background='#1e293b';" onmouseout="this.style.background='#0f172a';">
+                  <i class="fa-solid fa-file-pdf"></i> <span>내 매장 1장 진단 요약서 인쇄 · PDF 저장</span>
                 </button>
               </div>
             </div>
 
-            <!-- STEP 2 상세 접수 폼: 대행사·실행사가 가장 필요로 하는 3대 진성 리드 자격 정보 수집 -->
-            <div id="placePrescriptionLeadBox" style="margin-top:14px; padding:22px 20px; background:#ffffff; border-radius:16px; border:1px solid #e2e8f0; box-shadow:0 4px 16px rgba(0,0,0,0.03); word-break:keep-all; overflow-wrap:break-word;">
-              <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:10px;">
-                <span id="selectedCaseBadge" style="display:inline-flex; align-items:center; gap:6px; background:#eff6ff; color:#1d4ed8; border:1px solid #bfdbfe; font-size:11.5px; font-weight:700; padding:4px 12px; border-radius:999px;">
-                  <i class="fa-solid fa-check-double"></i> ${isCaseBPrimary ? '클린플레이스 인증 대행사 3곳 무료 비교견적 신청' : '내 지역·업종 체험단 플랫폼 3곳 최저가 패키지 · 무료 체험권 신청'}
-                </span>
-                <span style="font-size:11.5px; font-weight:600; color:#475569;">
-                  <i class="fa-solid fa-shield-check" style="color:#059669;"></i> 불법 슬롯·가짜 영수증 업체 100% 배제 보증
-                </span>
-              </div>
-
-              <h3 id="selectedCaseTitle" style="font-size:16px; font-weight:700; color:#0f172a; margin:0 0 6px 0; line-height:1.4;">
-                [${escapeHtml(targetKw)}] 내 매장 조건에 맞는 상위 3곳 비교견적서 &amp; 무료 체험 혜택
-              </h3>
-              <p style="font-size:12.5px; color:#475569; margin:0 0 16px 0; line-height:1.6;">
-                영업에 방해되는 무작위 전화 없이, 사장님이 선택하신 <b>매장 상태·가용 예산·희망 시간대</b>에 맞춰 사전 검증된 상위 3곳의 견적표만 정확히 매칭해 드립니다.
-              </p>
-
-              <div id="placeLeadFormInner">
-                <input type="hidden" id="placeLeadCaseType" value="${isCaseBPrimary ? 'CASE_B_CLEAN_AGENCY' : 'CASE_A_BLOG_EXPERIENCE'}" />
-                <input type="hidden" id="placeLeadStoreStatus" value="${!data.myPlace ? '신규 오픈·초기 세팅' : (data.myPlace.rank <= 5 ? '1페이지 상위권 굳히기' : '기존 매장 순위 하락·정체')}" />
-                <input type="hidden" id="placeLeadBudgetRange" value="월 30~50만 원 (체험단+기본세팅)" />
-                <input type="hidden" id="placeLeadCallbackTime" value="오후 브레이크타임 (15~17시) 또는 카톡 견적서 우선" />
-
-                <!-- 1. 필요한 처방 항목 (복수 선택) -->
-                <div style="font-size:12px; font-weight:700; color:#1e293b; margin-bottom:6px;">
-                  1. 희망하는 처방 솔루션 선택 (복수 선택 가능)
-                </div>
-                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(230px, 1fr)); gap:8px; margin-bottom:14px;">
-                  <label style="display:flex; align-items:center; gap:8px; background:#ffffff; border:1px solid #cbd5e1; padding:9px 12px; border-radius:10px; font-size:12.5px; font-weight:600; color:#0f172a; cursor:pointer;">
-                    <input type="checkbox" name="placeLeadPrescription" value="체험단 플랫폼 3곳 최저가 비교·무료체험권" ${!isCaseBPrimary ? 'checked' : ''} style="width:16px; height:16px; accent-color:#2563eb; cursor:pointer;" />
-                    <span>📝 지역·업종 체험단 3곳 최저가·무료체험권</span>
-                  </label>
-                  <label style="display:flex; align-items:center; gap:8px; background:#ffffff; border:1px solid #cbd5e1; padding:9px 12px; border-radius:10px; font-size:12.5px; font-weight:600; color:#0f172a; cursor:pointer;">
-                    <input type="checkbox" name="placeLeadPrescription" value="클린플레이스 인증 대행사 3곳 무료 비교견적" ${isCaseBPrimary ? 'checked' : ''} style="width:16px; height:16px; accent-color:#2563eb; cursor:pointer;" />
-                    <span>🛡️ 클린 서약 대행사 3곳 초기세팅·예약 비교견적</span>
-                  </label>
-                  <label style="display:flex; align-items:center; gap:8px; background:#ffffff; border:1px solid #cbd5e1; padding:9px 12px; border-radius:10px; font-size:12.5px; font-weight:600; color:#0f172a; cursor:pointer;">
-                    <input type="checkbox" name="placeLeadPrescription" value="플레이스 상세설명·대표키워드·쿠폰 최적화" style="width:16px; height:16px; accent-color:#2563eb; cursor:pointer;" />
-                    <span>⚙️ 대표키워드·상세설명·쿠폰 정밀 세팅</span>
-                  </label>
-                </div>
-
-                <!-- 2. 매장 운영 상태 & 월 마케팅 가용 예산 (대행사·실행사 필수 리드 스코어링 항목) -->
-                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:12px; margin-bottom:14px;">
-                  <div>
-                    <div style="font-size:12px; font-weight:800; color:#1e293b; margin-bottom:6px;">
-                      2. 현재 매장 운영 상황 (1클릭 선택)
-                    </div>
-                    <div style="display:flex; flex-wrap:wrap; gap:6px;" id="chipGroupStoreStatus">
-                      <button type="button" onclick="window.selectLeadChip('placeLeadStoreStatus', '신규 오픈 (3개월 미만)', this)" class="lead-q-chip ${!data.myPlace ? 'active' : ''}" style="padding:7px 11px; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer; border:1.5px solid ${!data.myPlace ? '#2563eb' : '#cbd5e1'}; background:${!data.myPlace ? '#eff6ff' : '#ffffff'}; color:${!data.myPlace ? '#1d4ed8' : '#475569'};">🐣 신규 오픈(3개월 미만)</button>
-                      <button type="button" onclick="window.selectLeadChip('placeLeadStoreStatus', '기존 매장 순위 하락·정체', this)" class="lead-q-chip ${(data.myPlace && data.myPlace.rank > 5) ? 'active' : ''}" style="padding:7px 11px; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer; border:1.5px solid ${(data.myPlace && data.myPlace.rank > 5) ? '#2563eb' : '#cbd5e1'}; background:${(data.myPlace && data.myPlace.rank > 5) ? '#eff6ff' : '#ffffff'}; color:${(data.myPlace && data.myPlace.rank > 5) ? '#1d4ed8' : '#475569'};">📉 기존 매장 순위 하락·정체</button>
-                      <button type="button" onclick="window.selectLeadChip('placeLeadStoreStatus', '1페이지 상위권 굳히기', this)" class="lead-q-chip ${(data.myPlace && data.myPlace.rank <= 5) ? 'active' : ''}" style="padding:7px 11px; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer; border:1.5px solid ${(data.myPlace && data.myPlace.rank <= 5) ? '#2563eb' : '#cbd5e1'}; background:${(data.myPlace && data.myPlace.rank <= 5) ? '#eff6ff' : '#ffffff'}; color:${(data.myPlace && data.myPlace.rank <= 5) ? '#1d4ed8' : '#475569'};">👑 1페이지 상위권 굳히기</button>
-                    </div>
-                  </div>
-
-                  <div>
-                    <div style="font-size:12px; font-weight:800; color:#1e293b; margin-bottom:6px;">
-                      3. 희망 월 마케팅 예산 구간 (맞춤 패키지 매칭용)
-                    </div>
-                    <div style="display:flex; flex-wrap:wrap; gap:6px;" id="chipGroupBudget">
-                      <button type="button" onclick="window.selectLeadChip('placeLeadBudgetRange', '월 10~30만 원 (실속 체험단)', this)" class="lead-q-chip" style="padding:7px 11px; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer; border:1.5px solid #cbd5e1; background:#ffffff; color:#475569;">월 10~30만 원 (실속 체험단)</button>
-                      <button type="button" onclick="window.selectLeadChip('placeLeadBudgetRange', '월 30~50만 원 (체험단+기본세팅)', this)" class="lead-q-chip active" style="padding:7px 11px; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer; border:1.5px solid #2563eb; background:#eff6ff; color:#1d4ed8;">월 30~50만 원 (표준 추천)</button>
-                      <button type="button" onclick="window.selectLeadChip('placeLeadBudgetRange', '월 50~100만 원+ (정석 종합대행)', this)" class="lead-q-chip" style="padding:7px 11px; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer; border:1.5px solid #cbd5e1; background:#ffffff; color:#475569;">월 50~100만 원+ (종합대행)</button>
-                      <button type="button" onclick="window.selectLeadChip('placeLeadBudgetRange', '예산 미정 (비교견적 확인 후 결정)', this)" class="lead-q-chip" style="padding:7px 11px; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer; border:1.5px solid #cbd5e1; background:#ffffff; color:#475569;">비교견적 확인 후 결정</button>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- 4. 선호 연락 방식 및 시간대 (사장님 피크타임 회피) -->
-                <div style="margin-bottom:14px;">
-                  <div style="font-size:12px; font-weight:800; color:#1e293b; margin-bottom:6px;">
-                    4. 견적서 수령 및 선호 연락 시간대 (피크타임 방해 금지)
-                  </div>
-                  <div style="display:flex; flex-wrap:wrap; gap:6px;" id="chipGroupCallback">
-                    <button type="button" onclick="window.selectLeadChip('placeLeadCallbackTime', '오후 브레이크타임 (15~17시) 또는 카톡 견적서 우선', this)" class="lead-q-chip active" style="padding:7px 11px; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer; border:1.5px solid #2563eb; background:#eff6ff; color:#1d4ed8;">☕ 오후 브레이크타임(15~17시) · 카톡 견적 우선</button>
-                    <button type="button" onclick="window.selectLeadChip('placeLeadCallbackTime', '문자·카톡으로 비교견적서만 먼저 수령 희망', this)" class="lead-q-chip" style="padding:7px 11px; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer; border:1.5px solid #cbd5e1; background:#ffffff; color:#475569;">💬 문자·카톡으로 견적서만 먼저 수령</button>
-                    <button type="button" onclick="window.selectLeadChip('placeLeadCallbackTime', '오전 영업 준비 시간 (10~12시)', this)" class="lead-q-chip" style="padding:7px 11px; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer; border:1.5px solid #cbd5e1; background:#ffffff; color:#475569;">☀️ 오전 (10~12시)</button>
-                    <button type="button" onclick="window.selectLeadChip('placeLeadCallbackTime', '오후 17시 이후', this)" class="lead-q-chip" style="padding:7px 11px; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer; border:1.5px solid #cbd5e1; background:#ffffff; color:#475569;">🌙 오후 (17시 이후)</button>
-                  </div>
-                </div>
-
-                <!-- 5. 매장명 및 연락처 입력 -->
-                <div style="font-size:12px; font-weight:800; color:#1e293b; margin-bottom:8px;">
-                  5. 내 매장 상호명 및 비교견적 수신 휴대폰 번호
-                </div>
-                <div style="display:flex; flex-wrap:wrap; gap:10px; align-items:stretch;">
-                  <input
-                    type="text"
-                    id="placeLeadStoreInput"
-                    value="${escapeHtml(targetStore)}"
-                    placeholder="내 매장 상호명 입력 (예: 성수동 OO카페)"
-                    style="flex:1 1 200px; min-height:46px; padding:10px 14px; border-radius:10px; border:1.5px solid #cbd5e1; background:#ffffff; font-size:13.5px; font-weight:700; color:#0f172a; outline:none;"
-                  />
-                  <input
-                    type="tel"
-                    id="placeLeadPhoneInput"
-                    placeholder="사장님 휴대폰 번호 (010-0000-0000)"
-                    maxlength="13"
-                    oninput="window.formatPlaceLeadPhone(this)"
-                    style="flex:1 1 220px; min-height:46px; padding:10px 14px; border-radius:10px; border:1.5px solid #cbd5e1; background:#ffffff; font-size:13.5px; font-weight:700; color:#0f172a; outline:none;"
-                  />
-                  <button
-                    type="button"
-                    id="btnSubmitPlaceLead"
-                    onclick="window.submitPlacePrescriptionLead()"
-                    style="flex:1 1 260px; min-height:46px; padding:10px 20px; border-radius:10px; border:none; background:#2563eb; color:#ffffff; font-size:14px; font-weight:800; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 4px 12px rgba(37,99,235,0.28); transition:all 0.2s;"
-                  >
-                    <i class="fa-solid fa-paper-plane"></i>
-                    <span id="btnSubmitPlaceLeadLabel">맞춤 3곳 비교견적 &amp; 무료 체험권 신청</span>
-                  </button>
-                </div>
-
-                <div style="margin-top:14px; padding:12px 14px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; display:flex; flex-direction:column; gap:8px;">
-                  <label style="display:inline-flex; align-items:flex-start; gap:8px; font-size:12.5px; color:#1e293b; font-weight:700; cursor:pointer;">
-                    <input type="checkbox" id="placeLeadPrivacyAgree" style="width:16px; height:16px; accent-color:#2563eb; cursor:pointer; margin-top:2px;" />
-                    <span>[필수] 맞춤 처방 리포트 안내를 위한 개인정보 수집·이용 동의 (<a href="/privacy" target="_blank" style="color:#2563eb; text-decoration:underline;">전문 보기</a>)</span>
-                  </label>
-                  <label style="display:inline-flex; align-items:flex-start; gap:8px; font-size:12.5px; color:#1e293b; font-weight:700; cursor:pointer;">
-                    <input type="checkbox" id="placeLeadThirdPartyAgree" style="width:16px; height:16px; accent-color:#2563eb; cursor:pointer; margin-top:2px;" />
-                    <span>[필수] 맞춤 3곳 비교견적 및 무료 체험 혜택 제공을 위한 개인정보 제3자 제공 동의</span>
-                  </label>
-                  <div style="margin-top:2px; padding:8px 10px; background:#ffffff; border:1px solid #cbd5e1; border-radius:6px; font-size:11px; color:#475569; line-height:1.55;">
-                    <div>• <b>제공받는 자:</b> PostSync 제휴 공식 인증 마케팅 대행사 및 체험단 플랫폼 파트너사</div>
-                    <div>• <b>제공 항목:</b> 상호명, 연락처, 매장 진단 현황, 선택 처방 및 희망 견적 조건</div>
-                    <div>• <b>제공 목적:</b> 매장 조건별 맞춤 비교견적서 발송, 무료 체험권 안내 및 상담</div>
-                    <div>• <b>보유 기간:</b> 견적 안내 및 상담 완료 시까지 (최대 1년 보관 후 즉시 파기)</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- ③ 3단계 (핵심 수익화 2): 카카오톡 일간 순위 & 경쟁사 3곳 감시 알림봇 (월 9,900원 구독) -->
+            <!-- ② 출시 사전 알림 신청(무료): 일일 순위·경쟁사 변동 알림 베타 대기 -->
             <div id="kakaoDailyAlertCard" style="margin-top:18px; padding:18px 14px; background:#0f172a; border-radius:14px; border:1px solid #334155; color:#ffffff; box-shadow:0 4px 16px rgba(0,0,0,0.06); word-break:keep-all; overflow-wrap:break-word; box-sizing:border-box; width:100%; max-width:100%; overflow:hidden;">
               <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap:16px; align-items:start; width:100%; box-sizing:border-box;">
-                <!-- 좌측 설명 및 1클릭 구독 신청 -->
+                <!-- 좌측 설명 및 무료 사전 알림 신청 -->
                 <div style="width:100%; max-width:100%; box-sizing:border-box;">
                   <div style="display:inline-flex; align-items:center; gap:6px; background:rgba(254,240,138,0.12); color:#fde047; border:1px solid rgba(254,240,138,0.25); font-size:11.5px; font-weight:700; padding:4px 12px; border-radius:999px; margin-bottom:10px; max-width:100%; box-sizing:border-box;">
-                    <i class="fa-solid fa-comment"></i> <span>매일 자동 모니터링 · 월 9,900원 구독 (첫 7일 무료)</span>
+                    <i class="fa-solid fa-bell"></i> <span>정식 오픈 알림 신청 (무료 · 우선 안내)</span>
                   </div>
                   <h3 style="font-size:15.5px; font-weight:700; color:#ffffff; margin:0 0 8px 0; line-height:1.45; word-break:keep-all;">
-                    매일 아침 9시 카카오톡으로 내 매장 순위 변동과 경쟁사 3곳의 리뷰 증가량 자동 브리핑
+                    매일 아침 내 매장 순위 변동 &amp; 경쟁사 3곳 리뷰 브리핑 오픈 알림
                   </h3>
                   <p style="font-size:12px; color:#94a3b8; margin:0 0 14px 0; line-height:1.6; word-break:keep-all;">
-                    매번 검색창에 쳐볼 필요 없이, 매일 아침 9시 정각 카톡 알림톡으로 <b>[${escapeHtml(targetKw)}]</b> 키워드 내 매장 순위 등락과 상위 경쟁사 3곳(<b>${escapeHtml(comp1)} · ${escapeHtml(comp2)} · ${escapeHtml(comp3)}</b>)의 영수증·블로그 리뷰 증가량을 자동 보고해 드립니다.
+                    <b>[${escapeHtml(targetKw)}]</b> 일일 자동 순위 추적 및 경쟁사(<b>${escapeHtml(comp1)} · ${escapeHtml(comp2)} · ${escapeHtml(comp3)}</b>) 모니터링 정식 서비스 오픈 시 가장 먼저 소식을 전해드립니다.
                   </p>
                   <div id="kakaoAlertFormInner" style="width:100%; box-sizing:border-box;">
                     <div style="display:flex; flex-direction:column; gap:8px; width:100%; box-sizing:border-box;">
@@ -1533,18 +1501,22 @@
                         type="text"
                         id="kakaoAlertStoreInput"
                         value="${escapeHtml(targetStore)}"
-                        placeholder="감시할 내 매장 상호명"
+                        placeholder="알림을 받을 내 매장 상호명"
                         style="width:100%; max-width:100%; box-sizing:border-box; min-height:44px; padding:10px 12px; border-radius:8px; border:1px solid #475569; background:#1e293b; color:#ffffff; font-size:13px; font-weight:600; outline:none;"
                       />
                       <input
                         type="tel"
                         id="kakaoAlertPhoneInput"
-                        placeholder="알림톡 받을 카톡 번호 (010-0000-0000)"
+                        placeholder="출시 안내를 받으실 휴대폰 번호 (010-0000-0000)"
                         maxlength="13"
                         oninput="window.formatPlaceLeadPhone(this)"
                         style="width:100%; max-width:100%; box-sizing:border-box; min-height:44px; padding:10px 12px; border-radius:8px; border:1px solid #475569; background:#1e293b; color:#ffffff; font-size:13px; font-weight:600; outline:none;"
                       />
                     </div>
+                    <label style="display:flex; align-items:flex-start; gap:8px; margin-top:10px; font-size:11.5px; color:#cbd5e1; line-height:1.45; cursor:pointer;">
+                      <input type="checkbox" id="kakaoAlertPrivacyAgree" style="width:15px; height:15px; margin-top:2px; accent-color:#facc15; cursor:pointer; flex-shrink:0;" />
+                      <span>[필수] 출시 사전 알림 안내를 위한 개인정보(상호명·휴대폰 번호) 수집 및 이용 동의 (<a href="/privacy" target="_blank" rel="noopener" style="color:#fde047; text-decoration:underline;">전문 보기</a>)</span>
+                    </label>
                     <button
                       type="button"
                       id="btnSubmitKakaoAlert"
@@ -1552,43 +1524,72 @@
                       style="margin-top:10px; width:100%; max-width:100%; box-sizing:border-box; min-height:46px; padding:12px 14px; border-radius:8px; border:none; background:#fee500; color:#191919; font-size:13px; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px; line-height:1.45; text-align:center; white-space:normal; word-break:keep-all; transition:all 0.2s;"
                     >
                       <i class="fa-solid fa-bell" style="flex-shrink:0;"></i>
-                      <span>💬 첫 7일 무료 체험 · 매일 아침 9시 카톡 자동 보고 신청 (월 9,900원)</span>
+                      <span>정식 출시 사전 알림 신청하기 (무료)</span>
                     </button>
-                    <div style="margin-top:8px; font-size:11px; color:#64748b; line-height:1.4;">
-                      ✓ 7일 무료 체험 기간 중 언제든 1클릭 해지 가능 · 카드 선결제 없음
+                    <div style="margin-top:8px; font-size:11px; color:#94a3b8; line-height:1.45;">
+                      ✓ 자동 결제·유료 청구 없음 · 정식 기능 오픈 시 순차 안내됩니다
                     </div>
                   </div>
                 </div>
 
-                <!-- 우측 카카오톡 아침 9시 알림톡 실물 미리보기 -->
+                <!-- 우측 출시 예정 브리핑 화면 예시 -->
                 <div style="background:#1e293b; border:1px solid #334155; border-radius:12px; padding:12px; color:#ffffff; width:100%; max-width:100%; box-sizing:border-box; overflow:hidden;">
                   <div style="font-size:11px; font-weight:700; color:#94a3b8; margin-bottom:8px; display:flex; align-items:center; justify-content:space-between; gap:6px;">
-                    <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">💬 매일 오전 09:00 도착 알림톡 예시</span>
-                    <span style="background:#fee500; color:#191919; padding:2px 8px; border-radius:999px; font-size:10px; font-weight:700; flex-shrink:0;">알림톡</span>
+                    <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">💬 정식 오픈 일일 브리핑 예시 화면</span>
+                    <span style="background:#334155; color:#fde047; padding:2px 8px; border-radius:999px; font-size:10px; font-weight:700; flex-shrink:0;">알림 접수중</span>
                   </div>
                   <div style="background:#ffffff; border-radius:10px; overflow:hidden; box-shadow:0 4px 12px rgba(0,0,0,0.12); width:100%; box-sizing:border-box;">
                     <div style="background:#fee500; padding:8px 12px; font-size:12px; font-weight:700; color:#191919; word-break:break-all;">
-                      [PostSync] 아침 9시 순위 &amp; 경쟁사 감시 보고
+                      [PostSync] 일일 순위 &amp; 경쟁사 브리핑 (예시)
                     </div>
                     <div style="padding:12px; font-size:11.5px; line-height:1.6; color:#1e293b; word-break:break-all;">
-                      <div>📍 <b>감시 키워드:</b> ${escapeHtml(targetKw)}</div>
-                      <div>🏪 <b>내 매장(${escapeHtml(targetStore || '우리 매장')}):</b> <b style="color:#0f172a;">${escapeHtml(currentRankLabel)}</b> (전일 대비 ▲1위)</div>
+                      <div>📍 <b>대상 키워드:</b> ${escapeHtml(targetKw)}</div>
+                      <div>🏪 <b>내 매장(${escapeHtml(targetStore || '우리 매장')}):</b> <b style="color:#0f172a;">${escapeHtml(currentRankLabel)}</b> (변동 추적 예시)</div>
                       <div style="margin-top:8px; padding-top:8px; border-top:1px dashed #cbd5e1; font-weight:700; color:#0f172a;">
-                        👀 상위 경쟁사 3곳 밤사이 리뷰 증가량:
+                        👀 상위 경쟁사 3곳 리뷰 변동 요약 예시:
                       </div>
                       <div style="font-size:11px; color:#475569; margin-top:4px; line-height:1.6;">
-                        • 1위 <b>${escapeHtml(comp1)}</b>: 영수증 <b style="color:#0f172a;">+5건</b> · 블로그 <b style="color:#2563eb;">+2건</b><br/>
-                        • 2위 <b>${escapeHtml(comp2)}</b>: 영수증 <b style="color:#0f172a;">+3건</b> · 블로그 <b style="color:#2563eb;">+1건</b><br/>
-                        • 3위 <b>${escapeHtml(comp3)}</b>: 영수증 <b style="color:#0f172a;">+2건</b> · 블로그 0건
+                        • 1위 <b>${escapeHtml(comp1)}</b>: 영수증·블로그 리뷰 변동 확인<br/>
+                        • 2위 <b>${escapeHtml(comp2)}</b>: 영수증·블로그 리뷰 변동 확인<br/>
+                        • 3위 <b>${escapeHtml(comp3)}</b>: 영수증·블로그 리뷰 변동 확인
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
+
+            <div style="margin-top:14px; background:#fefce8; border:1px solid #fde047; border-radius:14px; padding:16px 18px; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; word-break:keep-all; overflow-wrap:break-word;">
+              <div style="min-width:200px; flex:1;">
+                <div style="display:inline-flex; align-items:center; gap:6px; font-size:11px; font-weight:800; color:#854d0e; background:#fef08a; padding:2px 8px; border-radius:999px; margin-bottom:6px;">
+                  <i class="fa-solid fa-comment-dots"></i> 카카오톡 무료 순위 조회 · 채널 소식
+                </div>
+                <div style="font-size:14px; font-weight:800; color:#0f172a; line-height:1.4;">카톡에서 바로 순위 묻고 업데이트 받기</div>
+                <div style="font-size:12px; color:#475569; margin-top:3px; line-height:1.5;">매번 웹에 들어오지 않아도 포스트싱크 카카오 채널에서 키워드와 매장명을 입력해 실시간 순위를 바로 확인할 수 있습니다.</div>
+              </div>
+              <a id="btnPlaceKakaoChannel" href="https://pf.kakao.com/_xonxiaX/chat" target="_blank" rel="noopener noreferrer" style="min-height:42px; display:inline-flex; align-items:center; justify-content:center; gap:7px; background:#fee500; color:#191919; padding:10px 16px; border-radius:10px; font-size:13px; font-weight:800; text-decoration:none; white-space:nowrap; box-shadow:0 2px 6px rgba(0,0,0,0.06);">
+                <i class="fa-solid fa-comment"></i> 카카오 채널 열기
+              </a>
+            </div>
+            <div id="placeAffiliateContainer" style="margin-top:14px; display:none;"></div>
           `;
 
           gapBox.style.display = 'block';
+
+          const btnPrintPdf = document.getElementById('btnPrintPlacePdf');
+          if (btnPrintPdf && typeof window.printPlacePrescriptionSummary === 'function') {
+            btnPrintPdf.addEventListener('click', () => {
+              window.trackPostSyncEvent?.('print_place_pdf', { keyword: targetKw });
+              window.printPlacePrescriptionSummary();
+            });
+          }
+          const btnKakaoCh = document.getElementById('btnPlaceKakaoChannel');
+          if (btnKakaoCh) {
+            btnKakaoCh.addEventListener('click', () => {
+              window.trackPostSyncEvent?.('click_kakao_channel', { source: 'place_result' });
+            });
+          }
+          window.renderPostSyncAffiliateCard?.('placeAffiliateContainer', 'placeTool', 'place');
         } else if (gapBox) {
           gapBox.style.display = 'none';
         }
@@ -1649,7 +1650,7 @@
                 <span class="firm-category">${escapeHtml(item.category || '플레이스')}</span>
                 ${isMatch
                   ? '<span style="font-size:11px; background:#2563eb; color:#ffffff; padding:2px 7px; border-radius:4px; margin-left:6px; font-weight:700;">내 매장</span>'
-                  : `<button type="button" onclick="quickFill('${escapeHtml(data.query)}', '${escapeHtml(item.name)}')" style="font-size:11px; background:#f1f5f9; color:#475569; border:1px solid #cbd5e1; padding:2px 7px; border-radius:6px; margin-left:6px; font-weight:700; cursor:pointer;">내 매장으로 진단</button>`}
+                  : `<button type="button" data-kw="${escapeHtml(data.query)}" data-target="${escapeHtml(item.name)}" onclick="quickFill(this.dataset.kw, this.dataset.target)" style="font-size:11px; background:#f1f5f9; color:#475569; border:1px solid #cbd5e1; padding:2px 7px; border-radius:6px; margin-left:6px; font-weight:700; cursor:pointer;">내 매장으로 진단</button>`}
               </td>
               <td class="metric-val">${escapeHtml(item.visitorReviews || '-')}</td>
               <td class="metric-val" style="color:var(--slate-600);">${escapeHtml(item.blogReviews || '-')}</td>
@@ -1682,7 +1683,7 @@
                     <span class="rm-category">${escapeHtml(item.category || '플레이스')}</span>
                     ${isMatch
                       ? '<span class="rm-my-tag">내 매장</span>'
-                      : `<button type="button" onclick="quickFill('${escapeHtml(data.query)}', '${escapeHtml(item.name)}')" style="font-size:11px; background:#eff6ff; color:#1d4ed8; border:1px solid #bfdbfe; padding:2px 7px; border-radius:6px; font-weight:700; cursor:pointer;">내 매장으로 진단</button>`}
+                      : `<button type="button" data-kw="${escapeHtml(data.query)}" data-target="${escapeHtml(item.name)}" onclick="quickFill(this.dataset.kw, this.dataset.target)" style="font-size:11px; background:#eff6ff; color:#1d4ed8; border:1px solid #bfdbfe; padding:2px 7px; border-radius:6px; font-weight:700; cursor:pointer;">내 매장으로 진단</button>`}
                   </div>
                 </div>
                 <div class="rm-card-metrics">
@@ -1747,7 +1748,15 @@
           toast.className = 'toast-box';
           document.body.appendChild(toast);
         }
-        toast.innerHTML = `<i class="fa-solid fa-circle-info" style="color:#60a5fa;"></i> <span>${msg}</span>`;
+        toast.textContent = '';
+        const icon = document.createElement('i');
+        icon.className = 'fa-solid fa-circle-info';
+        icon.style.color = '#60a5fa';
+        const textSpan = document.createElement('span');
+        textSpan.textContent = msg;
+        toast.appendChild(icon);
+        toast.appendChild(document.createTextNode(' '));
+        toast.appendChild(textSpan);
         toast.classList.add('show');
         setTimeout(() => toast.classList.remove('show'), 2500);
       }
@@ -1844,7 +1853,280 @@
         console.warn('URL auto-search init failed', e);
       }
 
+      // ===== Rank Delta Tracker (localStorage revisit loop) =====
+      const RANK_DELTA_STORAGE_KEY = 'placesync_rank_delta_v1';
+
+      function formatMonthDay(isoStr) {
+        if (!isoStr) return '';
+        const d = new Date(isoStr);
+        if (Number.isNaN(d.getTime())) return '';
+        return `${String(d.getMonth() + 1).padStart(2, '0')}/${String(d.getDate()).padStart(2, '0')}`;
+      }
+
+      function updateAndRenderRankDelta(query, targetName, currentRank) {
+        const kw = String(query || '').trim();
+        const store = String(targetName || '').trim();
+        if (!kw || !store) {
+          window.currentPlaceRankDelta = null;
+          return '';
+        }
+
+        const key = `${kw.toLowerCase()}|${store.toLowerCase()}`;
+        let deltaInfo = {
+          key,
+          previousRank: null,
+          currentRank: typeof currentRank === 'number' ? currentRank : null,
+          delta: null,
+          label: '첫 조회 기록 · 재조회 시 변동 추적',
+          bg: '#f1f5f9',
+          color: '#475569',
+          border: '#cbd5e1'
+        };
+
+        try {
+          const raw = localStorage.getItem(RANK_DELTA_STORAGE_KEY);
+          const map = raw ? JSON.parse(raw) : {};
+          const prev = map[key];
+
+          if (prev) {
+            const mmdd = formatMonthDay(prev.checkedAt) || '이전';
+            if (typeof prev.rank === 'number' && typeof currentRank === 'number') {
+              const diff = prev.rank - currentRank;
+              deltaInfo.previousRank = prev.rank;
+              deltaInfo.delta = diff;
+              if (diff > 0) {
+                deltaInfo.label = `${mmdd}(${prev.rank}위) 대비 ▲ ${diff}단계 상승`;
+                deltaInfo.bg = '#ecfdf5';
+                deltaInfo.color = '#047857';
+                deltaInfo.border = '#6ee7b7';
+              } else if (diff < 0) {
+                deltaInfo.label = `${mmdd}(${prev.rank}위) 대비 ▼ ${Math.abs(diff)}단계 하락`;
+                deltaInfo.bg = '#fef2f2';
+                deltaInfo.color = '#b91c1c';
+                deltaInfo.border = '#fca5a5';
+              } else {
+                deltaInfo.label = `${mmdd}(${prev.rank}위) 대비 변동 없음`;
+                deltaInfo.bg = '#eff6ff';
+                deltaInfo.color = '#1d4ed8';
+                deltaInfo.border = '#bfdbfe';
+              }
+            } else if (typeof prev.rank === 'number' && currentRank === null) {
+              deltaInfo.previousRank = prev.rank;
+              deltaInfo.label = `${mmdd}(${prev.rank}위) 대비 20위권 이탈`;
+              deltaInfo.bg = '#fef2f2';
+              deltaInfo.color = '#b91c1c';
+              deltaInfo.border = '#fca5a5';
+            } else if (prev.rank === null && typeof currentRank === 'number') {
+              deltaInfo.label = `${mmdd}(권외) 대비 ${currentRank}위 신규 진입`;
+              deltaInfo.bg = '#ecfdf5';
+              deltaInfo.color = '#047857';
+              deltaInfo.border = '#6ee7b7';
+            } else {
+              deltaInfo.label = `${mmdd} 조회 대비 20위권 밖 유지`;
+            }
+          }
+
+          map[key] = {
+            rank: typeof currentRank === 'number' ? currentRank : null,
+            checkedAt: new Date().toISOString()
+          };
+          const entries = Object.entries(map)
+            .sort((a, b) => String((b[1] && b[1].checkedAt) || '').localeCompare(String((a[1] && a[1].checkedAt) || '')))
+            .slice(0, 50);
+          localStorage.setItem(RANK_DELTA_STORAGE_KEY, JSON.stringify(Object.fromEntries(entries)));
+        } catch (err) {
+          console.warn('Rank delta storage unavailable', err);
+        }
+
+        window.currentPlaceRankDelta = deltaInfo;
+        return `<span style="display:inline-flex; align-items:center; margin-left:8px; padding:2px 10px; border-radius:999px; font-size:11.5px; font-weight:700; background:${deltaInfo.bg}; color:${deltaInfo.color}; border:1px solid ${deltaInfo.border}; word-break:keep-all;">${escapeHtml(deltaInfo.label)}</span>`;
+      }
+
       // ===== Viral Share Helpers =====
+      function drawRoundedRect(ctx, x, y, w, h, r) {
+        ctx.beginPath();
+        ctx.moveTo(x + r, y);
+        ctx.arcTo(x + w, y, x + w, y + h, r);
+        ctx.arcTo(x + w, y + h, x, y + h, r);
+        ctx.arcTo(x, y + h, x, y, r);
+        ctx.arcTo(x, y, x + w, y, r);
+        ctx.closePath();
+      }
+
+      function truncateCanvasText(ctx, text, maxWidth) {
+        const str = String(text || '');
+        if (ctx.measureText(str).width <= maxWidth) return str;
+        let out = str;
+        while (out.length > 1 && ctx.measureText(out + '...').width > maxWidth) {
+          out = out.slice(0, -1);
+        }
+        return out + '...';
+      }
+
+      window.downloadDiagnosisScorecardPng = function() {
+        const d = window.currentPlaceData;
+        if (!d) {
+          showToast('먼저 키워드와 매장명을 조회한 뒤 요약 카드를 저장해 주세요.');
+          return;
+        }
+        const s = window.currentPlaceDiagSummary || {};
+        const kw = d.query || (inputKeyword && inputKeyword.value.trim()) || '플레이스 키워드';
+        const store = (d.myPlace && d.myPlace.name) || d.target || (inputTarget && inputTarget.value.trim()) || '조회 매장';
+        const rankText = d.myPlace ? `현재 전체 ${d.myPlace.rank}위` : '상위 20위권 밖';
+        const scoreText = typeof s.diagScore === 'number' ? `${s.diagScore}점 · ${s.grade || ''}` : 'Top 1~5 벤치마크 요약';
+        const deltaText = (window.currentPlaceRankDelta && window.currentPlaceRankDelta.label) || '';
+        const top1Name = s.top1Name || (d.gapAnalysis && d.gapAnalysis.top1Name) || '1위 매장';
+
+        const myV = d.myPlace && typeof d.myPlace.visitorReviews === 'number' ? d.myPlace.visitorReviews.toLocaleString() : '미측정';
+        const myB = d.myPlace && typeof d.myPlace.blogReviews === 'number' ? d.myPlace.blogReviews.toLocaleString() : '미측정';
+        const top1P = Array.isArray(d.places) && d.places[0] ? d.places[0] : null;
+        const top1V = top1P && typeof top1P.visitorReviews === 'number' ? top1P.visitorReviews.toLocaleString() : '미측정';
+        const top1B = top1P && typeof top1P.blogReviews === 'number' ? top1P.blogReviews.toLocaleString() : '미측정';
+
+        const canvas = document.createElement('canvas');
+        canvas.width = 960;
+        canvas.height = 540;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
+
+        // Background
+        ctx.fillStyle = '#f8fafc';
+        ctx.fillRect(0, 0, 960, 540);
+
+        // Top Dark Banner
+        ctx.fillStyle = '#0f172a';
+        ctx.fillRect(0, 0, 960, 118);
+
+        ctx.fillStyle = '#60a5fa';
+        ctx.font = 'bold 16px Pretendard, sans-serif';
+        ctx.fillText('PostSync · 스마트플레이스 실시간 순위 진단 리포트', 44, 46);
+
+        const now = new Date();
+        const dateStr = `${now.getFullYear()}.${String(now.getMonth() + 1).padStart(2, '0')}.${String(now.getDate()).padStart(2, '0')}`;
+        ctx.fillStyle = '#94a3b8';
+        ctx.font = '600 15px Pretendard, sans-serif';
+        ctx.textAlign = 'right';
+        ctx.fillText(`측정일 ${dateStr}`, 916, 46);
+        ctx.textAlign = 'left';
+
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 28px Pretendard, sans-serif';
+        ctx.fillText(truncateCanvasText(ctx, `${store} · "${kw}"`, 870), 44, 90);
+
+        // Main Summary Card
+        drawRoundedRect(ctx, 40, 144, 880, 126, 16);
+        ctx.fillStyle = '#ffffff';
+        ctx.fill();
+        ctx.lineWidth = 1.5;
+        ctx.strokeStyle = '#cbd5e1';
+        ctx.stroke();
+
+        ctx.fillStyle = '#2563eb';
+        ctx.font = 'bold 34px Pretendard, sans-serif';
+        ctx.fillText(rankText, 70, 202);
+
+        ctx.fillStyle = '#334155';
+        ctx.font = '600 18px Pretendard, sans-serif';
+        ctx.fillText(truncateCanvasText(ctx, scoreText, 460), 70, 238);
+
+        if (deltaText) {
+          ctx.fillStyle = '#0f172a';
+          ctx.font = 'bold 16px Pretendard, sans-serif';
+          ctx.textAlign = 'right';
+          ctx.fillText(truncateCanvasText(ctx, deltaText, 380), 890, 200);
+          ctx.textAlign = 'left';
+        }
+        ctx.fillStyle = '#64748b';
+        ctx.font = '500 15px Pretendard, sans-serif';
+        ctx.textAlign = 'right';
+        ctx.fillText(truncateCanvasText(ctx, `1위 기준 매장: ${top1Name}`, 400), 890, 238);
+        ctx.textAlign = 'left';
+
+        // 3 Metric Boxes
+        const cards = [
+          {
+            title: '방문자(영수증) 리뷰',
+            mine: `내 매장: ${myV}`,
+            top: `1위 매장: ${top1V}`,
+            gap: typeof s.top1VisitorGap === 'number' && s.top1VisitorGap > 0 ? `차이 -${s.top1VisitorGap.toLocaleString()}개` : '1위 동급 또는 우위'
+          },
+          {
+            title: '블로그 리뷰 수',
+            mine: `내 매장: ${myB}`,
+            top: `1위 매장: ${top1B}`,
+            gap: typeof s.top1BlogGap === 'number' && s.top1BlogGap > 0 ? `차이 -${s.top1BlogGap.toLocaleString()}개` : '1위 동급 또는 우위'
+          },
+          {
+            title: '예약 · 쿠폰 · 소개글',
+            mine: d.myPlace ? `예약 ${d.myPlace.hasBooking ? '사용' : '미연동'} / 쿠폰 ${d.myPlace.hasCoupon ? '사용' : '미발행'}` : '1~5위 기준 데이터 확인',
+            top: `1위: ${top1P ? `예약 ${top1P.hasBooking ? 'ON' : 'OFF'} · 쿠폰 ${top1P.hasCoupon ? 'ON' : 'OFF'}` : '상위 기준 적용'}`,
+            gap: typeof s.introCharGap === 'number' && s.introCharGap > 0 ? `소개글 ${s.introCharGap.toLocaleString()}자 보강 권장` : '소개글 2,000자 점검 권장'
+          }
+        ];
+
+        cards.forEach((c, idx) => {
+          const x = 40 + idx * 300;
+          const y = 294;
+          drawRoundedRect(ctx, x, y, 280, 168, 14);
+          ctx.fillStyle = '#ffffff';
+          ctx.fill();
+          ctx.strokeStyle = '#e2e8f0';
+          ctx.lineWidth = 1.5;
+          ctx.stroke();
+
+          ctx.fillStyle = '#0f172a';
+          ctx.font = 'bold 17px Pretendard, sans-serif';
+          ctx.fillText(c.title, x + 20, y + 36);
+
+          ctx.fillStyle = '#334155';
+          ctx.font = '600 15px Pretendard, sans-serif';
+          ctx.fillText(truncateCanvasText(ctx, c.mine, 240), x + 20, y + 74);
+
+          ctx.fillStyle = '#64748b';
+          ctx.font = '500 14px Pretendard, sans-serif';
+          ctx.fillText(truncateCanvasText(ctx, c.top, 240), x + 20, y + 102);
+
+          ctx.fillStyle = '#2563eb';
+          ctx.font = 'bold 15px Pretendard, sans-serif';
+          ctx.fillText(truncateCanvasText(ctx, c.gap, 240), x + 20, y + 140);
+        });
+
+        // Footer
+        ctx.fillStyle = '#475569';
+        ctx.font = '600 15px Pretendard, sans-serif';
+        ctx.fillText('로그인 없는 스마트플레이스 순위 · 비교 진단 무료 툴', 44, 505);
+        ctx.fillStyle = '#2563eb';
+        ctx.font = 'bold 15px Pretendard, sans-serif';
+        ctx.textAlign = 'right';
+        ctx.fillText('https://www.postsyncapp.com/place', 916, 505);
+        ctx.textAlign = 'left';
+
+        const fileSlug = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}`;
+        const triggerDownload = (url) => {
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `postsync-place-diagnosis-${fileSlug}.png`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          showToast('🖼️ 요약 진단 카드 PNG 이미지가 저장되었습니다!');
+        };
+
+        if (canvas.toBlob) {
+          canvas.toBlob((blob) => {
+            if (!blob) {
+              triggerDownload(canvas.toDataURL('image/png'));
+              return;
+            }
+            const blobUrl = URL.createObjectURL(blob);
+            triggerDownload(blobUrl);
+            setTimeout(() => URL.revokeObjectURL(blobUrl), 2000);
+          }, 'image/png');
+        } else {
+          triggerDownload(canvas.toDataURL('image/png'));
+        }
+      };
+
       window.shareCurrentDiagnosisLink = function() {
         const currentUrl = window.location.href;
         if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -1901,249 +2183,17 @@
         }
       };
 
-      // 1-Click Qualification Chip Selector (매장 상태 / 가용 예산 / 선호 연락 시간대)
-      window.selectLeadChip = function(hiddenInputId, value, btnEl) {
-        const hiddenEl = document.getElementById(hiddenInputId);
-        if (hiddenEl) hiddenEl.value = value;
-        if (btnEl && btnEl.parentElement) {
-          const siblings = btnEl.parentElement.querySelectorAll('.lead-q-chip');
-          siblings.forEach(s => {
-            s.classList.remove('active');
-            s.style.borderColor = '#cbd5e1';
-            s.style.background = '#ffffff';
-            s.style.color = '#475569';
-          });
-          btnEl.classList.add('active');
-          btnEl.style.borderColor = '#2563eb';
-          btnEl.style.background = '#eff6ff';
-          btnEl.style.color = '#1d4ed8';
-        }
-      };
-
-      // Case A (체험단 3곳 최저가 패키지 비교/무료체험권) vs Case B (클린플레이스 인증 대행사 3곳 무료 비교견적) 선택 핸들러
-      window.selectPrescriptionCase = function(caseType) {
-        const caseInput = document.getElementById('placeLeadCaseType');
-        const badgeEl = document.getElementById('selectedCaseBadge');
-        const btnLabelEl = document.getElementById('btnSubmitPlaceLeadLabel');
-        const cardA = document.getElementById('prescriptionCardCaseA');
-        const cardB = document.getElementById('prescriptionCardCaseB');
-        const checkboxes = document.querySelectorAll('input[name="placeLeadPrescription"]');
-
-        if (caseType === 'CASE_A') {
-          if (caseInput) caseInput.value = 'CASE_A_BLOG_EXPERIENCE';
-          if (badgeEl) {
-            badgeEl.style.background = '#eff6ff';
-            badgeEl.style.color = '#1d4ed8';
-            badgeEl.style.border = '1px solid #bfdbfe';
-            badgeEl.innerHTML = '<i class="fa-solid fa-check"></i> 선택된 솔루션: 체험단 플랫폼 3곳 최저가 패키지 · 무료 체험권 신청';
-          }
-          if (btnLabelEl) btnLabelEl.textContent = '체험단 플랫폼 3곳 최저가 패키지 · 무료 체험권 신청';
-          if (cardA) cardA.style.border = '1.5px solid #2563eb';
-          if (cardB) cardB.style.border = '1px solid #e2e8f0';
-          checkboxes.forEach((cb, idx) => { cb.checked = (idx === 0); });
-        } else {
-          if (caseInput) caseInput.value = 'CASE_B_CLEAN_AGENCY';
-          if (badgeEl) {
-            badgeEl.style.background = '#eff6ff';
-            badgeEl.style.color = '#1d4ed8';
-            badgeEl.style.border = '1px solid #bfdbfe';
-            badgeEl.innerHTML = '<i class="fa-solid fa-shield-halved"></i> 선택된 솔루션: 클린플레이스 서약 인증 대행사 3곳 무료 비교견적 요청';
-          }
-          if (btnLabelEl) btnLabelEl.textContent = '클린플레이스 인증 대행사 3곳 무료 비교견적 요청하기';
-          if (cardB) cardB.style.border = '1.5px solid #2563eb';
-          if (cardA) cardA.style.border = '1px solid #e2e8f0';
-          checkboxes.forEach((cb, idx) => { cb.checked = (idx === 1 || idx === 2); });
-        }
-
-        const leadBox = document.getElementById('placePrescriptionLeadBox');
-        if (leadBox) {
-          leadBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          const phoneInput = document.getElementById('placeLeadPhoneInput');
-          const storeInput = document.getElementById('placeLeadStoreInput');
-          setTimeout(() => {
-            if (storeInput && !storeInput.value.trim()) storeInput.focus();
-            else if (phoneInput) phoneInput.focus();
-          }, 350);
-        }
-      };
-
-      window.submitPlacePrescriptionLead = async function() {
-        const storeEl = document.getElementById('placeLeadStoreInput');
-        const phoneEl = document.getElementById('placeLeadPhoneInput');
-        const agreeEl = document.getElementById('placeLeadPrivacyAgree');
-        const thirdPartyAgreeEl = document.getElementById('placeLeadThirdPartyAgree');
-        const btnEl = document.getElementById('btnSubmitPlaceLead');
-        const formInner = document.getElementById('placeLeadFormInner');
-
-        const caseTypeVal = document.getElementById('placeLeadCaseType')?.value || 'CASE_A_BLOG_EXPERIENCE';
-        const storeStatusVal = document.getElementById('placeLeadStoreStatus')?.value || '기존 매장 순위 하락·정체';
-        const budgetRangeVal = document.getElementById('placeLeadBudgetRange')?.value || '월 30~50만 원 (체험단+기본세팅)';
-        const callbackTimeVal = document.getElementById('placeLeadCallbackTime')?.value || '오후 브레이크타임 (15~17시) 또는 카톡 견적서 우선';
-
-        const checkedEls = document.querySelectorAll('input[name="placeLeadPrescription"]:checked');
-        const selectedPrescriptions = Array.from(checkedEls).map(cb => cb.value);
-
-        if (selectedPrescriptions.length === 0) {
-          showToast('필요한 처방 항목을 1개 이상 선택해 주세요.');
-          return;
-        }
-
-        const storeName = storeEl ? storeEl.value.trim() : '';
-        if (!storeName) {
-          showToast('비교견적 및 처방 리포트를 받으실 매장 상호명을 입력해 주세요.');
-          if (storeEl) storeEl.focus();
-          return;
-        }
-
-        const phoneVal = phoneEl ? phoneEl.value.trim() : '';
-        const phoneDigits = phoneVal.replace(/[^0-9]/g, '');
-        if (phoneDigits.length < 10 || phoneDigits.length > 11) {
-          showToast('안내를 수신하실 휴대폰 번호 10~11자리를 정확히 입력해 주세요.');
-          if (phoneEl) phoneEl.focus();
-          return;
-        }
-
-        if (agreeEl && !agreeEl.checked) {
-          showToast('맞춤 처방 및 비교견적 안내를 위해 개인정보 수집·이용에 동의해 주세요.');
-          if (agreeEl) agreeEl.focus();
-          return;
-        }
-
-        if (thirdPartyAgreeEl && !thirdPartyAgreeEl.checked) {
-          showToast('상위 3곳 비교견적 안내를 위해 개인정보 제3자 제공에 동의해 주세요.');
-          if (thirdPartyAgreeEl) thirdPartyAgreeEl.focus();
-          return;
-        }
-
-        const d = window.currentPlaceData || {};
-        const diag = window.currentPlaceDiagSummary || {};
-        const kw = d.query || inputKeyword.value.trim();
-        const myRank = d.myPlace ? `현재 ${d.myPlace.rank}위` : '20위권 밖 (미노출)';
-        const placeUrl = d.myPlace ? `https://m.place.naver.com/place/${d.myPlace.id || ''}` : '미확인(신규·20위밖)';
-        const searchVolTotal = (d.searchVolume && d.searchVolume.totalQcCnt) ? d.searchVolume.totalQcCnt : 0;
-        const top1Name = diag.top1Name || (d.gapAnalysis && d.gapAnalysis.top1Name) || '1위 매장';
-        const visitorDiff = diag.top1VisitorGap || 0;
-        const blogDiff = diag.top1BlogGap || 0;
-        const introCharGap = diag.introCharGap || 0;
-        const top3Competitors = (d.rankingList || []).slice(0, 3).map(it => `${it.rank}위:${it.name}(방문자${it.visitorReviews}/블로그${it.blogReviews})`).join(', ');
-
-        const detailMsg = [
-          `[처방 트랙] ${caseTypeVal === 'CASE_B_CLEAN_AGENCY' ? '케이스B (클린 인증 대행사 3곳 비교견적)' : '케이스A (체험단 3곳 최저가·무료체험권)'}`,
-          `[조회 키워드] ${kw} (월간 검색량: ${searchVolTotal.toLocaleString()}회)`,
-          `[매장명] ${storeName} (${placeUrl})`,
-          `[현재 순위/점수] ${myRank} (종합 ${diag.diagScore || '-'}점 · ${diag.grade || '-'})`,
-          `[매장 운영 상태] ${storeStatusVal}`,
-          `[월 마케팅 가용 예산] ${budgetRangeVal}`,
-          `[희망 연락 시간대] ${callbackTimeVal}`,
-          `[1위(${top1Name}) 대비 부족분] 방문자 -${visitorDiff}개 · 블로그 -${blogDiff}개 · 상세설명 -${introCharGap}자`,
-          `[상위 1~3위 경쟁사] ${top3Competitors}`,
-          `[선택 처방 항목] ${selectedPrescriptions.join(', ')}`
-        ].join('\n');
-
-        if (btnEl) {
-          btnEl.disabled = true;
-          btnEl.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> <span>맞춤 비교견적 접수 중...</span>';
-        }
-
-        try {
-          const res = await fetch('/api/leads', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              toolSource: 'place',
-              leadType: 'place_prescription',
-              businessName: storeName,
-              name: storeName,
-              phone: phoneVal,
-              metadata: {
-                leadCaseType: caseTypeVal,
-                inquiryType: selectedPrescriptions.join(' / '),
-                storeStatus: storeStatusVal,
-                budgetRange: budgetRangeVal,
-                callbackTime: callbackTimeVal,
-                thirdPartyConsent: Boolean(thirdPartyAgreeEl && thirdPartyAgreeEl.checked),
-                consentTimestamp: new Date().toISOString(),
-                placeUrl,
-                location: kw,
-                keyword: kw,
-                monthlySearchVolume: searchVolTotal,
-                currentRank: myRank,
-                diagnosisScore: diag.diagScore || 0,
-                top1VisitorGap: visitorDiff,
-                top1BlogGap: blogDiff,
-                cutlineVisitorGap: diag.cutlineVisitorGap || 0,
-                cutlineBlogGap: diag.cutlineBlogGap || 0,
-                introCharGap,
-                top3Competitors,
-                prescriptions: selectedPrescriptions,
-                message: detailMsg
-              }
-            })
-          });
-
-          const result = await res.json();
-          if (!res.ok || !result.success) {
-            showToast(result.error || '신청 접수 중 오류가 발생했습니다. 다시 시도해 주세요.');
-            if (btnEl) {
-              btnEl.disabled = false;
-              btnEl.innerHTML = '<i class="fa-solid fa-paper-plane"></i> <span id="btnSubmitPlaceLeadLabel">맞춤 3곳 비교견적 &amp; 무료 체험권 신청</span>';
-            }
-            return;
-          }
-
-          if (typeof gtag === 'function') {
-            gtag('event', 'generate_lead', {
-              event_category: 'place_prescription',
-              keyword: kw,
-              store_name: storeName,
-              budget_range: budgetRangeVal,
-              prescriptions: selectedPrescriptions.join(',')
-            });
-          }
-
-          if (formInner) {
-            formInner.innerHTML = `
-              <div style="background:#ffffff; border:1.5px solid #86efac; border-radius:12px; padding:20px 20px; text-align:center;">
-                <div style="font-size:15px; font-weight:900; color:#15803d; margin-bottom:6px;">
-                  <i class="fa-solid fa-circle-check"></i> [${escapeHtml(storeName)}] 맞춤 처방 및 3곳 비교견적 요청이 접수되었습니다
-                </div>
-                <p style="font-size:13px; color:#334155; margin:0 0 16px 0; line-height:1.6;">
-                  요청하신 희망 시간대(<b>${escapeHtml(callbackTimeVal)}</b>) 및 가용 예산(<b>${escapeHtml(budgetRangeVal)}</b>) 기준에 맞춰 <b>${escapeHtml(phoneVal)}</b> 번호로 상권 분석 리포트와 비교견적 안내를 발송해 드립니다.
-                </p>
-                <div style="display:flex; justify-content:center; gap:10px; flex-wrap:wrap;">
-                  <button
-                    type="button"
-                    onclick="window.printPlacePrescriptionSummary()"
-                    style="display:inline-flex; align-items:center; justify-content:center; gap:8px; background:#0f172a; color:#ffffff; font-size:13px; font-weight:800; padding:10px 20px; border-radius:10px; border:none; cursor:pointer; box-shadow:0 4px 12px rgba(15,23,42,0.18); transition:all 0.2s;"
-                  >
-                    <i class="fa-solid fa-print"></i>
-                    <span>📄 내 매장 1장 진단 요약서 인쇄 / PDF 저장</span>
-                  </button>
-                </div>
-              </div>
-            `;
-          }
-          showToast('맞춤 처방 및 3곳 비교견적 신청이 완료되었습니다.');
-        } catch (err) {
-          console.error(err);
-          showToast('네트워크 통신 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.');
-          if (btnEl) {
-            btnEl.disabled = false;
-            btnEl.innerHTML = '<i class="fa-solid fa-paper-plane"></i> <span id="btnSubmitPlaceLeadLabel">맞춤 3곳 비교견적 &amp; 무료 체험권 신청</span>';
-          }
-        }
-      };
-
-      // Stage 3: 카카오톡 일간 순위 & 경쟁사 3곳 감시 알림봇 (월 9,900원 구독 · 첫 7일 무료) 신청 핸들러
+      // Stage 3: 일간 순위 & 경쟁사 3곳 브리핑 출시 사전 알림 신청 (무료) 핸들러
       window.submitKakaoAlertSubscription = async function() {
         const storeEl = document.getElementById('kakaoAlertStoreInput');
         const phoneEl = document.getElementById('kakaoAlertPhoneInput');
+        const agreeEl = document.getElementById('kakaoAlertPrivacyAgree');
         const btnEl = document.getElementById('btnSubmitKakaoAlert');
         const formInner = document.getElementById('kakaoAlertFormInner');
 
         const storeName = storeEl ? storeEl.value.trim() : '';
         if (!storeName) {
-          showToast('매일 아침 순위를 감시할 내 매장 상호명을 입력해 주세요.');
+          showToast('사전 알림을 받으실 내 매장 상호명을 입력해 주세요.');
           if (storeEl) storeEl.focus();
           return;
         }
@@ -2151,8 +2201,14 @@
         const phoneVal = phoneEl ? phoneEl.value.trim() : '';
         const phoneDigits = phoneVal.replace(/[^0-9]/g, '');
         if (phoneDigits.length < 10 || phoneDigits.length > 11) {
-          showToast('아침 9시 알림톡을 받으실 카카오톡 휴대폰 번호를 정확히 입력해 주세요.');
+          showToast('출시 알림을 받으실 휴대폰 번호 10~11자리를 정확히 입력해 주세요.');
           if (phoneEl) phoneEl.focus();
+          return;
+        }
+
+        if (!agreeEl || !agreeEl.checked) {
+          showToast('출시 사전 알림 안내를 위해 개인정보 수집 및 이용에 동의해 주세요.');
+          if (agreeEl) agreeEl.focus();
           return;
         }
 
@@ -2164,7 +2220,7 @@
 
         if (btnEl) {
           btnEl.disabled = true;
-          btnEl.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> <span>카카오톡 아침 9시 알림봇 세팅 중...</span>';
+          btnEl.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> <span>사전 알림 신청 접수 중...</span>';
         }
 
         try {
@@ -2173,52 +2229,55 @@
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               toolSource: 'place',
-              leadType: 'kakao_daily_alert_9900',
+              leadType: 'kakao_daily_alert_waitlist',
               businessName: storeName,
               name: storeName,
               phone: phoneVal,
               metadata: {
-                inquiryType: '카카오톡 일간 순위 & 경쟁사 3곳 감시 알림봇 (월 9,900원 구독 / 첫 7일 무료)',
-                subscriptionPlan: 'monthly_9900_krw_7day_trial',
+                inquiryType: '일간 순위 & 경쟁사 3곳 브리핑 출시 사전 알림 신청 (무료)',
+                subscriptionPlan: 'free_waitlist_beta',
+                privacyConsent: true,
+                consentTimestamp: new Date().toISOString(),
                 keyword: kw,
                 location: kw,
                 currentRank: myRank,
-                diagnosisScore: diag.diagScore || 0,
+                diagnosisScore: diag.diagScore ?? null,
                 monitoredCompetitors: top3Competitors,
-                message: `[카톡 월 9,900원 일간 알림봇 구독 신청]\n• 감시 키워드: ${kw}\n• 내 매장: ${storeName} (${myRank})\n• 감시 경쟁사 3곳: ${top3Competitors}\n• 수신 카톡 번호: ${phoneVal}`
+                message: `[출시 사전 알림 신청(무료)]\n• 관심 키워드: ${kw}\n• 내 매장: ${storeName} (${myRank})\n• 참고 상위 매장 3곳: ${top3Competitors}\n• 알림 수신 번호: ${phoneVal}`
               }
             })
           });
 
           const result = await res.json();
           if (!res.ok || !result.success) {
-            showToast(result.error || '알림봇 신청 중 오류가 발생했습니다.');
+            showToast(result.error || '사전 알림 신청 중 오류가 발생했습니다.');
             if (btnEl) {
               btnEl.disabled = false;
-              btnEl.innerHTML = '<i class="fa-solid fa-bell"></i> <span>💬 첫 7일 무료 체험 · 매일 아침 9시 카톡 자동 보고 신청 (월 9,900원)</span>';
+              btnEl.innerHTML = '<i class="fa-solid fa-bell" style="flex-shrink:0;"></i> <span>정식 출시 사전 알림 신청하기 (무료)</span>';
             }
             return;
           }
 
           if (formInner) {
             formInner.innerHTML = `
-              <div style="background:#0f172a; border:1.5px solid #facc15; border-radius:12px; padding:16px; color:#ffffff;">
-                <div style="font-size:14.5px; font-weight:900; color:#facc15; margin-bottom:6px;">
-                  <i class="fa-solid fa-circle-check"></i> [${escapeHtml(storeName)}] 아침 9시 카톡 감시 알림봇(첫 7일 무료) 신청 완료!
+              <div style="background:#0f172a; border:1.5px solid #facc15; border-radius:12px; padding:16px; color:#ffffff; word-break:keep-all; overflow-wrap:break-word;">
+                <div style="font-size:14.5px; font-weight:800; color:#facc15; margin-bottom:6px;">
+                  <i class="fa-solid fa-circle-check"></i> [${escapeHtml(storeName)}] 출시 사전 알림 신청 완료
                 </div>
-                <p style="font-size:12.5px; color:#e2e8f0; margin:0; line-height:1.55;">
-                  내일 아침 9시부터 입력하신 <b>${escapeHtml(phoneVal)}</b> 카카오톡으로 <b>[${escapeHtml(kw)}]</b> 순위 변동과 상위 경쟁사 3곳(<b>${escapeHtml(top3Competitors)}</b>)의 리뷰 증가량 리포트가 발송됩니다.
+                <p style="font-size:12.5px; color:#e2e8f0; margin:0; line-height:1.6;">
+                  입력하신 <b>${escapeHtml(phoneVal)}</b> 번호로 <b>[${escapeHtml(kw)}]</b> 순위·경쟁사 브리핑 기능 정식 오픈 시 우선 안내해 드립니다. (자동 결제·유료 청구 없음)
                 </p>
               </div>
             `;
           }
-          showToast('카카오톡 아침 9시 순위·경쟁사 감시 알림봇(7일 무료 체험) 신청이 완료되었습니다.');
+          window.trackPostSyncEvent?.('submit_waitlist', { keyword: kw, source: 'place_kakao_alert' });
+          showToast('출시 사전 알림 신청이 완료되었습니다.');
         } catch (err) {
           console.error(err);
           showToast('네트워크 통신 오류가 발생했습니다.');
           if (btnEl) {
             btnEl.disabled = false;
-            btnEl.innerHTML = '<i class="fa-solid fa-bell"></i> <span>💬 첫 7일 무료 체험 · 매일 아침 9시 카톡 자동 보고 신청 (월 9,900원)</span>';
+            btnEl.innerHTML = '<i class="fa-solid fa-bell" style="flex-shrink:0;"></i> <span>정식 출시 사전 알림 신청하기 (무료)</span>';
           }
         }
       };
@@ -2238,6 +2297,57 @@
         const volTotal = d.searchVolume ? d.searchVolume.totalQcCnt.toLocaleString() : '-';
         const volPc = d.searchVolume ? d.searchVolume.monthlyPcQcCnt.toLocaleString() : '-';
         const volMo = d.searchVolume ? d.searchVolume.monthlyMobileQcCnt.toLocaleString() : '-';
+
+        const isOutOfRank = Boolean((d.gapAnalysis && d.gapAnalysis.isOutOfRank) || !d.myPlace);
+        const hasDiagScore = diag.diagScore !== null && diag.diagScore !== undefined;
+        const scoreLabel = hasDiagScore
+          ? `${diag.diagScore}점 · ${diag.grade || '진단'}`
+          : `점수 미산정 · ${diag.grade || '20위권 밖'}`;
+
+        function formatMetricSummaryCell(metric, suffix) {
+          if (isOutOfRank) {
+            return { color: '#b45309', text: '20위 밖 (미집계)' };
+          }
+          if (!metric || metric.status === 'UNMEASURED' || metric.my === '-' || metric.top1 === '-') {
+            return { color: '#64748b', text: '미측정 (직접 확인)' };
+          }
+          if (typeof metric.diff === 'number' && metric.diff > 0) {
+            return { color: '#b91c1c', text: `-${metric.diff.toLocaleString()}${suffix} 차이` };
+          }
+          return { color: '#15803d', text: '상위 수준 충족' };
+        }
+
+        const visitorDiag = formatMetricSummaryCell(m.visitorReviews, '개');
+        const blogDiag = formatMetricSummaryCell(m.blogReviews, '개');
+        const savesDiag = formatMetricSummaryCell(m.saves, '개');
+
+        const bookingMyText = isOutOfRank ? '미집계' : (m.booking?.my ? '연동 중' : '미연동');
+        const bookingDiagColor = isOutOfRank ? '#b45309' : (m.booking?.status === 'MISSING' ? '#b91c1c' : '#15803d');
+        const bookingDiagText = isOutOfRank ? '20위 밖 (직접 확인)' : (m.booking?.status === 'MISSING' ? '연동 검토 권장' : '정상');
+
+        const couponMyText = isOutOfRank ? '미집계' : (m.coupon?.my ? '발행 중' : '미발행');
+        const couponDiagColor = isOutOfRank ? '#b45309' : (m.coupon?.status === 'MISSING' ? '#b91c1c' : '#15803d');
+        const couponDiagText = isOutOfRank ? '20위 밖 (직접 확인)' : (m.coupon?.status === 'MISSING' ? '쿠폰 발행 검토 권장' : '정상');
+
+        const visitorAdvice = isOutOfRank
+          ? '현재 20위권 밖으로 노출되어 내 매장 리뷰 수치가 집계되지 않았습니다. 상위권 기준을 참고해 실방문 영수증 리뷰를 확보하세요.'
+          : diag.visitorUnmeasured
+          ? '일부 매장 데이터가 미측정 상태입니다. 네이버 플레이스에서 1위 매장의 영수증 리뷰 수를 직접 확인해 비교해 보세요.'
+          : (diag.top1VisitorGap || 0) > 0
+          ? `1위 매장 대비 약 <b>-${diag.top1VisitorGap.toLocaleString()}개</b> 차이가 있어 지속적인 실방문 영수증 리뷰 확보를 권장합니다.`
+          : '1위 매장 수준 이상의 방문자 리뷰를 확보하고 있습니다.';
+
+        const blogAdvice = isOutOfRank
+          ? '상위 1~5위 매장의 블로그 리뷰 수를 참고하여 정보성 체험 후기 및 상권 콘텐츠 발행을 권장합니다.'
+          : diag.blogUnmeasured
+          ? '일부 블로그 리뷰 수치가 미측정 상태입니다. 네이버 플레이스에서 경쟁 매장의 블로그 리뷰 추이를 직접 확인해 주세요.'
+          : (diag.top1BlogGap || 0) > 0
+          ? `1위 매장 대비 약 <b>-${diag.top1BlogGap.toLocaleString()}건</b> 차이가 있어 지역 키워드 맞춤 블로그 리뷰 보강을 권장합니다.`
+          : '1위 매장 수준 이상의 블로그 리뷰를 보유하고 있습니다.';
+
+        const introAdvice = (!isOutOfRank && !diag.introUnmeasured && (diag.introCharGap || 0) > 0)
+          ? `현재 소개글(${diag.myIntroLen || 0}자)이 1위 매장보다 약 <b>${diag.introCharGap.toLocaleString()}자</b> 짧습니다. 핵심 메뉴·주차·이용 안내 정보를 구체적으로 보강해 보세요.`
+          : '매장 핵심 메뉴·지역 키워드·주차 및 찾아오는 길 안내를 구체적으로 담아 고객 체류 시간과 전환율을 높여 보세요.';
 
         const printWin = window.open('', '_blank', 'width=850,height=900');
         if (!printWin) {
@@ -2260,7 +2370,7 @@
     .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
     .card { border: 1px solid #cbd5e1; border-radius: 8px; padding: 12px 14px; background: #f8fafc; }
     .card-title { font-size: 11.5px; font-weight: 800; color: #475569; margin-bottom: 4px; }
-    .card-value { font-size: 17px; font-weight: 900; color: #0f172a; display: flex; align-items: center; gap: 8px; }
+    .card-value { font-size: 17px; font-weight: 900; color: #0f172a; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
     .score-badge { display: inline-block; background: #2563eb; color: #fff; font-size: 12px; font-weight: 800; padding: 2px 8px; border-radius: 999px; }
     table { width: 100%; border-collapse: collapse; margin-top: 8px; margin-bottom: 16px; font-size: 12px; }
     th { background: #f1f5f9; border: 1px solid #cbd5e1; padding: 8px; font-weight: 800; text-align: center; }
@@ -2293,10 +2403,10 @@
       <div style="font-size: 11.5px; color: #64748b; margin-top: 4px;">공식 월간 검색수: 총 <b>${volTotal}</b>건 (PC: ${volPc} / 모바일: ${volMo})</div>
     </div>
     <div class="card">
-      <div class="card-title">현재 순위 및 종합 진단 등급</div>
+      <div class="card-title">현재 순위 및 실측 진단 상태</div>
       <div class="card-value">
-        <span>${escapeHtml(myRank)}</span> 
-        <span class="score-badge">${diag.diagScore || 0}점 · ${diag.grade || '진단'}</span>
+        <span>${escapeHtml(myRank)}</span>
+        <span class="score-badge">${escapeHtml(scoreLabel)}</span>
       </div>
       <div style="font-size: 11.5px; color: #64748b; margin-top: 4px;">경쟁 1위 매장: ${escapeHtml(top1Name)}</div>
     </div>
@@ -2315,43 +2425,43 @@
     <tbody>
       <tr>
         <td><b>방문자 리뷰</b></td>
-        <td>${escapeHtml(String(m.visitorReviews?.top1 || '-'))}</td>
-        <td>${escapeHtml(String(m.visitorReviews?.my || '-'))}</td>
-        <td style="color:${m.visitorReviews?.diff ? '#b91c1c' : '#15803d'}; font-weight:700;">${m.visitorReviews?.diff ? `-${m.visitorReviews.diff.toLocaleString()}개 차이` : '우수'}</td>
+        <td>${escapeHtml(String(m.visitorReviews?.top1 ?? '-'))}</td>
+        <td>${escapeHtml(String(m.visitorReviews?.my ?? '-'))}</td>
+        <td style="color:${visitorDiag.color}; font-weight:700;">${escapeHtml(visitorDiag.text)}</td>
       </tr>
       <tr>
         <td><b>블로그 리뷰</b></td>
-        <td>${escapeHtml(String(m.blogReviews?.top1 || '-'))}</td>
-        <td>${escapeHtml(String(m.blogReviews?.my || '-'))}</td>
-        <td style="color:${m.blogReviews?.diff ? '#b91c1c' : '#15803d'}; font-weight:700;">${m.blogReviews?.diff ? `-${m.blogReviews.diff.toLocaleString()}개 차이` : '우수'}</td>
+        <td>${escapeHtml(String(m.blogReviews?.top1 ?? '-'))}</td>
+        <td>${escapeHtml(String(m.blogReviews?.my ?? '-'))}</td>
+        <td style="color:${blogDiag.color}; font-weight:700;">${escapeHtml(blogDiag.text)}</td>
       </tr>
       <tr>
         <td><b>저장하기(Save)</b></td>
-        <td>${escapeHtml(String(m.saves?.top1 || '-'))}</td>
-        <td>${escapeHtml(String(m.saves?.my || '-'))}</td>
-        <td>${m.saves?.diff ? `약 -${m.saves.diff.toLocaleString()}개` : '양호'}</td>
+        <td>${escapeHtml(String(m.saves?.top1 ?? '-'))}</td>
+        <td>${escapeHtml(String(m.saves?.my ?? '-'))}</td>
+        <td style="color:${savesDiag.color}; font-weight:700;">${escapeHtml(savesDiag.text)}</td>
       </tr>
       <tr>
         <td><b>네이버 예약 연동</b></td>
         <td>${m.booking?.top1 ? '연동 중' : '미연동'}</td>
-        <td>${m.booking?.my ? '연동 중' : '미연동'}</td>
-        <td style="font-weight:700; color:${m.booking?.status === 'MISSING' ? '#b91c1c' : '#15803d'}">${m.booking?.status === 'MISSING' ? '즉시 연동 시급' : '정상'}</td>
+        <td>${escapeHtml(bookingMyText)}</td>
+        <td style="font-weight:700; color:${bookingDiagColor}">${escapeHtml(bookingDiagText)}</td>
       </tr>
       <tr>
         <td><b>플레이스 쿠폰 발행</b></td>
         <td>${m.coupon?.top1 ? '발행 중' : '미발행'}</td>
-        <td>${m.coupon?.my ? '발행 중' : '미발행'}</td>
-        <td style="font-weight:700; color:${m.coupon?.status === 'MISSING' ? '#b91c1c' : '#15803d'}">${m.coupon?.status === 'MISSING' ? '첫 방문 쿠폰 세팅 권장' : '정상'}</td>
+        <td>${escapeHtml(couponMyText)}</td>
+        <td style="font-weight:700; color:${couponDiagColor}">${escapeHtml(couponDiagText)}</td>
       </tr>
     </tbody>
   </table>
 
   <div class="presc-card">
-    <div style="color: #1e3a8a; font-weight: 900; font-size: 13px; margin-bottom: 6px;">🎯 플레이스 순위 상승을 위한 핵심 처방 가이드</div>
+    <div style="color: #1e3a8a; font-weight: 900; font-size: 13px; margin-bottom: 6px;">🎯 플레이스 순위 상승을 위한 핵심 진단 가이드</div>
     <div style="font-size: 12px; color: #334155; line-height: 1.6;">
-      • <b>방문자 리뷰 보강:</b> 1위 매장 기준 최소 <b>+${(diag.top1VisitorGap || 0).toLocaleString()}개</b> 이상의 실방문 영수증 리뷰 확보를 권장합니다.<br/>
-      • <b>블로그 발행량 확대:</b> 키워드 검색 노출 지수를 위해 최소 <b>+${(diag.top1BlogGap || 0).toLocaleString()}건</b>의 실체험단 원고 발행을 권장합니다.<br/>
-      • <b>상세설명 2,000자 최적화:</b> 지역명과 세부 서비스 키워드가 조화롭게 배치된 2,000자 플레이스 소개글 최적화가 필수적입니다.
+      • <b>방문자 리뷰 보강:</b> ${visitorAdvice}<br/>
+      • <b>블로그 발행량 확대:</b> ${blogAdvice}<br/>
+      • <b>상세설명 최적화:</b> ${introAdvice}
     </div>
   </div>
 
@@ -2370,6 +2480,5 @@
 
     })();
   </script>
-  <script src="/assets/monetization.js"></script>
 </body>
 </html>

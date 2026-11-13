@@ -16,6 +16,9 @@ import remarkGfm from 'remark-gfm'
 import PlaceQuickSearchWidget from '@/components/blog/PlaceQuickSearchWidget'
 import HeroPlaceSearch from '@/components/home/HeroPlaceSearch'
 import GlobalHeader from '@/components/common/GlobalHeader'
+import AdSlot from '@/components/monetization/AdSlot'
+import AffiliateBox from '@/components/monetization/AffiliateBox'
+import { ADSENSE_SLOTS, KAKAO_CHANNEL_CHAT_URL } from '@/lib/monetizationConfig'
 
 export async function generateStaticParams() {
   return blogPosts.map((post) => ({
@@ -80,7 +83,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
       '@type': 'Person',
       name: post.author || '유영무',
       jobTitle: 'PostSync 스마트플레이스 수석 연구원',
-      url: 'https://www.postsyncapp.com',
+      url: 'https://www.postsyncapp.com/about',
     },
     publisher: {
       '@type': 'Organization',
@@ -152,6 +155,9 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
           {/* 본문 상단 플레이스 즉시 검색 위젯 */}
           <PlaceQuickSearchWidget />
+
+          {/* 애드센스 승인 후 상단 광고 슬롯 */}
+          <AdSlot slot={ADSENSE_SLOTS.blogTop} />
 
           {/* 마크다운 커스텀 컴포넌트 렌더링 영역 (제8조 조판 규칙 적용) */}
           <div className="blog-content">
@@ -297,6 +303,28 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
               </Link>
             </div>
           </div>
+
+          {/* 작성자 및 데이터 검증 기준 안내 (E-E-A-T) */}
+          <div className="mt-10 p-5 sm:p-6 rounded-2xl bg-slate-50 border border-slate-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="space-y-1">
+              <div className="text-xs font-extrabold text-slate-900">
+                작성 · 검수: {post.author || 'PostSync 플레이스 전략연구소'} (와이엠랩스 · 대표 유영무)
+              </div>
+              <p className="text-xs text-slate-600 leading-relaxed">
+                본 칼럼은 네이버 공개 검색 데이터, 공식 검색광고 API, 2026 광고 심의 규정을 바탕으로 작성되었습니다. 법률·세무·의료 집행 전에는 소속 협회 및 전문가 자문을 권장합니다.
+              </p>
+            </div>
+            <Link
+              href="/about"
+              className="shrink-0 inline-flex items-center justify-center rounded-xl bg-white border border-slate-300 px-4 py-2 text-xs font-bold text-slate-800 hover:bg-slate-100 transition"
+            >
+              데이터 검증 기준 보기
+            </Link>
+          </div>
+
+          {/* 애드센스 승인 후 하단 슬롯 & 설정 기반 제휴 추천 (미설정 시 미노출) */}
+          <AdSlot slot={ADSENSE_SLOTS.blogBottom} />
+          <AffiliateBox placement="blog_bottom" />
         </article>
 
         {/* 3. 데스크톱 우측 고정(Sticky) 사이드바 */}
@@ -327,6 +355,25 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
               </div>
             </div>
 
+            {/* 설정 기반 사이드바 제휴 추천 (실 URL 미설정 시 미노출) */}
+            <AffiliateBox placement="blog_sidebar" compact />
+
+            {/* 비대면 카카오톡 채널 안내 */}
+            <div className="bg-slate-900 text-white p-5 rounded-3xl border border-slate-800 space-y-2.5">
+              <div className="text-xs font-bold text-amber-300">PostSync 공식 카카오톡 채널</div>
+              <p className="text-xs text-slate-300 leading-relaxed">
+                기능 오류 제보·업데이트 소식·파트너 문의는 비대면 카카오톡 채널로 빠르게 확인하실 수 있습니다.
+              </p>
+              <a
+                href={KAKAO_CHANNEL_CHAT_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex w-full items-center justify-center rounded-xl bg-[#fee500] px-4 py-2.5 text-xs font-extrabold text-[#191919] hover:opacity-95 transition"
+              >
+                카카오톡 채널 바로가기 &rarr;
+              </a>
+            </div>
+
           </div>
         </aside>
       </div>
@@ -342,6 +389,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             <Link href="/utm" className="hover:text-slate-900 transition-colors">매장 리뷰·QR 빌더</Link>
             <Link href="/adcheck" className="hover:text-slate-900 transition-colors">금칙어 스캐너</Link>
             <Link href="/guide/ad-law-2026" className="hover:text-slate-900 transition-colors">2026 광고법 백서</Link>
+            <Link href="/about" className="hover:text-slate-900 transition-colors">서비스 소개</Link>
             <Link href="/terms" className="hover:text-slate-900 transition-colors">이용약관</Link>
             <Link href="/privacy" className="hover:text-slate-900 transition-colors font-bold text-slate-700">개인정보처리방침</Link>
             <Link href="/contact" className="hover:text-slate-900 transition-colors">고객지원</Link>

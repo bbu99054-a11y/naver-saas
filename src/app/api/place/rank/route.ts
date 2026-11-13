@@ -1,7 +1,12 @@
 import { NextResponse } from 'next/server';
 import * as cheerio from 'cheerio';
 import { getMonthlyKeywordVolume } from '@/lib/naver/searchAdClient';
-import { getClientIp, checkIpRateLimit } from '@/lib/rateLimit';
+import {
+  getClientIp,
+  checkPersistentIpRateLimit,
+  isCrossSiteBrowserRequest,
+} from '@/lib/rateLimit';
+import { getCachedOrFetchPlaceData } from '@/lib/naver/placeRankCache';
 
 export const maxDuration = 30;
 
@@ -157,17 +162,6 @@ export function extractCommercialCoords(query: string): CommercialCoords | null 
   return null;
 }
 
-interface CacheEntry {
-  timestamp: number;
-  data: {
-    totalCount: number;
-    items: PlaceItem[];
-  };
-}
-
-const cache = new Map<string, CacheEntry>();
-const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes cache
-
 async function fetchPlaceReviewMeta(placeId: string): Promise<{ visitorReviews: string; blogReviews: string; introLength?: number }> {
   try {
     const url = `https://m.place.naver.com/place/${placeId}/home`;
@@ -270,8 +264,10 @@ async function fetchPcmapPlaces(q: string, posX?: string, posY?: string): Promis
     const candidateRefs = bestPl?.businesses?.items || [];
 
     for (const ref of candidateRefs) {
-      const v = apolloState[ref.__ref];
+      const refKey = String(ref?.__ref || '');
+      const v = apolloState[refKey];
       if (!v) continue;
+      if (refKey.startsWith('Ad:') || v?.__typename?.includes('Ad') || v?.isAd) continue;
       const id = String(v.id || '');
       const name = String(v.name || '').trim();
       if (!id || !name || seenIds.has(id)) continue;
@@ -678,6 +674,13 @@ export async function fetchLiveNaverPlaceRanking(
 
 export async function GET(req: Request) {
   try {
+    if (isCrossSiteBrowserRequest(req)) {
+      return NextResponse.json({
+        success: false,
+        error: '허용되지 않은 요청 출처입니다.',
+      }, { status: 403 });
+    }
+
     const { searchParams } = new URL(req.url);
     const query = searchParams.get('query') || '';
     const target = searchParams.get('target') || '';
@@ -708,9 +711,9 @@ export async function GET(req: Request) {
       }, { status: 400 });
     }
 
-    // 🛡️ IP 기반 Rate Limiting (1분당 최대 12회 조회 제한 - 네이버 IP 차단 및 서버 남용 방어)
+    // 🛡️ 서버리스 공용 IP Rate Limiting (1분당 최대 12회 조회 제한 - 네이버 차단 및 서버 남용 방어)
     const clientIp = getClientIp(req);
-    const ipCheck = checkIpRateLimit(clientIp, 12, 60000);
+    const ipCheck = await checkPersistentIpRateLimit('place_rank', clientIp, 12, 60000);
     if (!ipCheck.allowed) {
       return NextResponse.json({
         success: false,
@@ -731,25 +734,14 @@ export async function GET(req: Request) {
     }
 
     const cacheKey = `${cleanQuery.toLowerCase()}_${coordX}_${coordY}`;
-    const cached = cache.get(cacheKey);
-    const now = Date.now();
 
-    // 인메모리 캐시 최대 크기 제한 (500개 초과 시 가장 오래된 항목 퇴출)
-    if (cache.size > 500) {
-      const oldestKey = cache.keys().next().value;
-      if (oldestKey) cache.delete(oldestKey);
-    }
-
-    // 1. 네이버 플레이스 실시간 순위 및 네이버 검색광고 공식 월간 검색량 병렬 조회
+    // 1. 네이버 플레이스 실시간 순위 (L1 인메모리 + L2 DB 10분 공용 캐시) 및 공식 월간 검색량 병렬 조회
     const [rankingData, searchVolume] = await Promise.all([
-      (async () => {
-        if (cached && (now - cached.timestamp < CACHE_TTL_MS)) {
-          return cached.data;
-        }
-        const fresh = await fetchLiveNaverPlaceRanking(cleanQuery, { x: coordX, y: coordY });
-        cache.set(cacheKey, { timestamp: now, data: fresh });
-        return fresh;
-      })(),
+      getCachedOrFetchPlaceData(
+        cacheKey,
+        () => fetchLiveNaverPlaceRanking(cleanQuery, { x: coordX, y: coordY }),
+        10 * 60 * 1000
+      ),
       getMonthlyKeywordVolume(cleanQuery).catch(err => {
         console.warn('[SearchAd Volume Non-blocking Error]:', err);
         return null;
@@ -879,11 +871,15 @@ export async function GET(req: Request) {
         ? 'UNMEASURED'
         : (blogGap > 0 ? 'DEFICIT' : 'OPTIMAL');
 
-      // 4) 상세설명 글자수 판정 (SEO 권장 2,000자 및 1위 매장 글자수 기준)
-      const benchmarkIntro = Math.max(top1.introLength || 0, 1800);
-      const myIntroLen = isTargetFound ? (typeof myPlace?.introLength === 'number' ? myPlace.introLength : 320) : 0;
-      const introGap = Math.max(0, benchmarkIntro - myIntroLen);
-      const introStatus: MetricStatus = introGap > 0 ? 'DEFICIT' : 'OPTIMAL';
+      // 4) 상세설명 글자수 판정 (실측값이 있는 경우에만 2,000자 권장 기준 대비 계산)
+      const top1HasIntro = typeof top1.introLength === 'number';
+      const myHasIntro = isTargetFound && typeof myPlace?.introLength === 'number';
+      const benchmarkIntro = top1HasIntro ? Math.max(top1.introLength!, 1800) : 2000;
+      const myIntroLen = myHasIntro ? myPlace!.introLength! : 0;
+      const introGap = myHasIntro ? Math.max(0, benchmarkIntro - myIntroLen) : 0;
+      const introStatus: MetricStatus = !myHasIntro
+        ? 'UNMEASURED'
+        : (introGap > 0 ? 'DEFICIT' : 'OPTIMAL');
 
       gapAnalysis = {
         top1Name: top1.name,
@@ -909,8 +905,10 @@ export async function GET(req: Request) {
             status: blogStatus,
           },
           introLength: {
-            top1: `${benchmarkIntro.toLocaleString()}자 권장`,
-            my: isTargetFound ? `${myIntroLen.toLocaleString()}자` : '20위 밖 (세팅 미흡)',
+            top1: top1HasIntro ? `${benchmarkIntro.toLocaleString()}자` : '2,000자 권장',
+            my: !isTargetFound
+              ? '20위 밖 (미집계)'
+              : (myHasIntro ? `${myIntroLen.toLocaleString()}자` : '미측정'),
             diff: introGap,
             status: introStatus,
           },
@@ -952,11 +950,11 @@ export async function GET(req: Request) {
       top5Places,
       rankingList: rankingData.items,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('[Place Rank API Error]:', error);
     return NextResponse.json({
       success: false,
-      error: error?.message || '네이버 플레이스 순위 조회 중 오류가 발생했습니다.',
+      error: '네이버 플레이스 실시간 순위 조회가 일시적으로 지연되었습니다. 잠시 후 다시 시도해 주세요.',
     }, { status: 500 });
   }
 }

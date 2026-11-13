@@ -18,6 +18,7 @@ import {
   CheckCircle2,
 } from 'lucide-react'
 import { blogPosts } from '@/lib/blogData'
+import { INDUSTRY_PLACE_LIST } from '@/lib/industryPlaceData'
 import HeroPlaceSearch from '@/components/home/HeroPlaceSearch'
 import GlobalHeader from '@/components/common/GlobalHeader'
 
@@ -613,6 +614,42 @@ export default function HomePage() {
             ))}
           </div>
         </section>
+
+        {/* 업종별 스마트플레이스 실시간 순위·리뷰 기준 허브 */}
+        <section className="max-w-5xl mx-auto px-4 sm:px-6 pb-14 pt-2">
+          <div className="rounded-2xl bg-[#f6f8fa] border border-[#d0d7de] p-5 sm:p-7">
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-5">
+              <div>
+                <p className="text-xs font-bold text-[#2563eb] mb-1">업종별 맞춤 진단 허브</p>
+                <h2 className="text-lg sm:text-xl font-bold text-[#1f2328] text-balance break-keep">
+                  내 업종의 1페이지 평균 리뷰 수·광고 심의 기준 확인하기
+                </h2>
+              </div>
+              <Link
+                href="/place"
+                className="text-xs sm:text-sm font-semibold text-[#2563eb] hover:underline shrink-0"
+              >
+                통합 순위 조회기 바로가기 →
+              </Link>
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2.5">
+              {INDUSTRY_PLACE_LIST.map((ind) => (
+                <Link
+                  key={ind.slug}
+                  href={`/place/${ind.slug}`}
+                  className="group rounded-xl bg-white border border-[#d0d7de] hover:border-[#2563eb] px-3.5 py-2.5 min-h-[44px] flex flex-col justify-center transition-colors"
+                >
+                  <span className="text-sm font-bold text-[#1f2328] group-hover:text-[#2563eb] break-keep">
+                    {ind.name}
+                  </span>
+                  <span className="text-[11px] text-[#57606a] mt-0.5 truncate">
+                    {ind.defaultKeyword}
+                  </span>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
       </main>
 
       {/* 7. 글로벌 푸터 (법정 상용 웹 표준 & 유틸리티 안전 격리) */}
@@ -688,6 +725,7 @@ export default function HomePage() {
             <div className="md:col-span-2 space-y-2.5">
               <div className="font-semibold text-[#1F2328] text-xs">약관 및 지원</div>
               <ul className="space-y-1.5 text-xs">
+                <li><Link href="/about" className="hover:text-[#1F2328] transition">서비스 소개 · 검증 기준</Link></li>
                 <li><Link href="/terms" className="hover:text-[#1F2328] transition">서비스 이용약관</Link></li>
                 <li><Link href="/privacy" className="hover:text-[#1F2328] transition font-semibold text-slate-700">개인정보처리방침</Link></li>
                 <li><Link href="/contact" className="hover:text-[#1F2328] transition">고객지원 및 문의</Link></li>

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getSearchConsolePerformance } from "@/lib/google/searchConsole";
 import { getGA4Overview, getGA4RealtimeUsers } from "@/lib/google/analytics";
+import { verifyTimingSafeSecret } from "@/lib/rateLimit";
 
 const querySchema = z.object({
   days: z.coerce.number().min(1).max(90).default(7),
@@ -9,6 +10,26 @@ const querySchema = z.object({
 
 export async function GET(request: Request) {
   try {
+    const expectedToken = process.env.ADMIN_METRICS_TOKEN;
+    if (!expectedToken || !expectedToken.trim()) {
+      return NextResponse.json(
+        { error: "관리자 API 보안 토큰이 설정되지 않아 접근이 차단되었습니다." },
+        { status: 503 }
+      );
+    }
+
+    const authHeader = request.headers.get("authorization") || "";
+    const bearerToken = authHeader.startsWith("Bearer ") ? authHeader.slice(7).trim() : "";
+    const customToken = request.headers.get("x-admin-token") || "";
+    const providedToken = bearerToken || customToken;
+
+    if (!verifyTimingSafeSecret(expectedToken, providedToken)) {
+      return NextResponse.json(
+        { error: "관리자 인증이 필요합니다." },
+        { status: 401 }
+      );
+    }
+
     const { searchParams } = new URL(request.url);
     const parsed = querySchema.safeParse({
       days: searchParams.get("days") || 7,
@@ -52,7 +73,7 @@ export async function GET(request: Request) {
     return NextResponse.json(
       {
         success: false,
-        error: error instanceof Error ? error.message : "지표 조회 중 오류가 발생했습니다.",
+        error: "지표 조회 중 오류가 발생했습니다.",
       },
       { status: 500 }
     );

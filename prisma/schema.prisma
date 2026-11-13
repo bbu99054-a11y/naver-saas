@@ -182,5 +182,25 @@ model Lead {
   @@map("leads")
 }
 
+model ApiRateLimit {
+  key       String   @id
+  count     Int      @default(1)
+  resetAt   DateTime @map("reset_at") @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  @@index([resetAt], map: "idx_api_rate_limits_reset_at")
+  @@map("api_rate_limits")
+}
+
+model PlaceRankCache {
+  cacheKey  String   @id @map("cache_key")
+  payload   Json
+  expiresAt DateTime @map("expires_at") @db.Timestamptz(6)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  @@index([expiresAt], map: "idx_place_rank_caches_expires_at")
+  @@map("place_rank_caches")
+}
+
 
 

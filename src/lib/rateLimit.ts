@@ -1,4 +1,6 @@
-// In-memory Concurrent Lock and Rate Limiting for API safety
+// Distributed PostgreSQL + In-memory Fail-Open Rate Limiting for API safety
+import crypto from 'crypto';
+import prisma from '@/lib/prisma';
 
 interface LockEntry {
   lockedAt: number;
@@ -54,24 +56,67 @@ export function checkRateLimit(userId: string, minIntervalMs: number = 10000): {
   return { allowed: true };
 }
 
-// 🌐 클라이언트 IP 추출 유틸리티 (Vercel, Cloudflare, 프록시 지원)
+// 🌐 클라이언트 IP 추출 유틸리티 (Vercel, Cloudflare 등 신뢰 프록시 헤더 우선)
 export function getClientIp(req: Request): string {
-  const forwardedFor = req.headers.get('x-forwarded-for');
-  if (forwardedFor) {
-    return forwardedFor.split(',')[0].trim();
-  }
-  const realIp = req.headers.get('x-real-ip');
-  if (realIp) {
-    return realIp.trim();
-  }
-  const cfConnectingIp = req.headers.get('cf-connecting-ip');
-  if (cfConnectingIp) {
-    return cfConnectingIp.trim();
+  const candidates = [
+    req.headers.get('x-vercel-forwarded-for')?.split(',')[0],
+    req.headers.get('cf-connecting-ip'),
+    req.headers.get('x-real-ip'),
+    (() => {
+      const xff = req.headers.get('x-forwarded-for');
+      if (!xff) return undefined;
+      const parts = xff.split(',').map((p) => p.trim()).filter(Boolean);
+      return parts.length > 0 ? parts[parts.length - 1] : undefined;
+    })(),
+  ];
+
+  for (const raw of candidates) {
+    if (!raw) continue;
+    const normalized = raw.trim().replace(/^::ffff:/i, '').slice(0, 64);
+    if (normalized) return normalized;
   }
   return '127.0.0.1';
 }
 
-// 🛡️ IP 기반 슬라이딩 윈도우 속도 제한 (Rate Limiting)
+// 🔒 크로스 사이트 브라우저 요청(CSRF / 타 도메인 무단 임베드 API 호출) 차단
+export function isCrossSiteBrowserRequest(req: Request): boolean {
+  const secFetchSite = (req.headers.get('sec-fetch-site') || '').trim().toLowerCase();
+  if (secFetchSite === 'cross-site') {
+    return true;
+  }
+
+  const origin = req.headers.get('origin');
+  if (!origin) {
+    return false;
+  }
+
+  try {
+    const hostname = new URL(origin).hostname.toLowerCase();
+    const allowedExact = new Set(['postsyncapp.com', 'www.postsyncapp.com', 'localhost', '127.0.0.1']);
+    if (allowedExact.has(hostname) || hostname.endsWith('.postsyncapp.com') || hostname.endsWith('.vercel.app')) {
+      return false;
+    }
+    return true;
+  } catch {
+    return true;
+  }
+}
+
+// 🔐 상수 시간(Timing-safe) 비밀 토큰 검증
+export function verifyTimingSafeSecret(
+  expected: string | undefined,
+  provided: string | null | undefined
+): boolean {
+  const exp = (expected || '').trim();
+  const prov = (provided || '').trim();
+  if (!exp || !prov) return false;
+
+  const expHash = crypto.createHash('sha256').update(exp).digest();
+  const provHash = crypto.createHash('sha256').update(prov).digest();
+  return crypto.timingSafeEqual(expHash, provHash);
+}
+
+// 🛡️ IP 기반 슬라이딩 윈도우 속도 제한 (인메모리 폴백용)
 interface IpRateLimitEntry {
   timestamps: number[];
 }
@@ -110,6 +155,64 @@ export function checkIpRateLimit(
   }
 
   return { allowed: true, remainingSec: 0 };
+}
+
+// 🛡️ 서버리스 공용 PostgreSQL 분산 Rate Limit (장애 시 인메모리 Fail-Open)
+export async function checkPersistentIpRateLimit(
+  bucket: string,
+  ip: string,
+  limit: number = 12,
+  windowMs: number = 60000
+): Promise<{ allowed: boolean; remainingSec: number; source: 'db' | 'memory' }> {
+  const safeLimit = Math.max(1, Math.floor(limit));
+  const safeWindowMs = Math.max(1000, Math.floor(windowMs));
+  const compositeKey = `${bucket}:${ip}`.slice(0, 120);
+
+  try {
+    const rows = await prisma.$queryRaw<Array<{ count: number; reset_at: Date }>>`
+      INSERT INTO "api_rate_limits" ("key", "count", "reset_at", "updated_at")
+      VALUES (
+        ${compositeKey},
+        1,
+        NOW() + (${safeWindowMs}::double precision * INTERVAL '1 millisecond'),
+        NOW()
+      )
+      ON CONFLICT ("key") DO UPDATE
+      SET
+        "count" = CASE
+          WHEN "api_rate_limits"."reset_at" <= NOW() THEN 1
+          ELSE "api_rate_limits"."count" + 1
+        END,
+        "reset_at" = CASE
+          WHEN "api_rate_limits"."reset_at" <= NOW()
+            THEN NOW() + (${safeWindowMs}::double precision * INTERVAL '1 millisecond')
+          ELSE "api_rate_limits"."reset_at"
+        END,
+        "updated_at" = NOW()
+      RETURNING "count", "reset_at"
+    `;
+
+    // 확률적 만료 행 정리 (요청 경로 블로킹 없음)
+    if (Math.random() < 0.02) {
+      prisma.$executeRaw`
+        DELETE FROM "api_rate_limits"
+        WHERE "reset_at" < NOW() - INTERVAL '1 hour'
+      `.catch(() => {});
+    }
+
+    const row = rows[0];
+    if (row && Number(row.count) > safeLimit) {
+      const resetMs = new Date(row.reset_at).getTime();
+      const remainingSec = Math.max(1, Math.ceil((resetMs - Date.now()) / 1000));
+      return { allowed: false, remainingSec, source: 'db' };
+    }
+
+    return { allowed: true, remainingSec: 0, source: 'db' };
+  } catch (err) {
+    console.warn('[RateLimit DB fallback to memory]:', err instanceof Error ? err.message : err);
+    const memRes = checkIpRateLimit(compositeKey, safeLimit, safeWindowMs);
+    return { ...memRes, source: 'memory' };
+  }
 }
 
 // 📧 이메일 발송 쿨다운 (동일 이메일 메일 폭탄 및 Resend 한도 소진 방어)

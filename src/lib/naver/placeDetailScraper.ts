@@ -208,21 +208,28 @@ function buildRealDetailsAnalysis(
     }
   }
 
-  // 3. 사진 수 분석 (권장 최소 20장 기준)
-  const actualPhotos = photos > 0 ? photos : 15
-  const quotaNeeded = Math.max(0, 20 - actualPhotos)
-  const photoPassed = actualPhotos >= 20
+  // 3. 사진 수 분석 (권장 최소 20장 기준 · 미수집 시 0/미측정 유지)
+  const hasPhotoCount = photos > 0
+  const actualPhotos = hasPhotoCount ? photos : 0
+  const quotaNeeded = hasPhotoCount ? Math.max(0, 20 - actualPhotos) : 0
+  const photoPassed = hasPhotoCount && actualPhotos >= 20
 
   const photoStatus: 'GOOD' | 'FAIL' = photoPassed ? 'GOOD' : 'FAIL'
-  const photoStatusBadge = photoPassed
-    ? `기준 충족 (${actualPhotos}장 완료)`
-    : `현재 ${actualPhotos}장 / 권장 20장 (${quotaNeeded}장 부족)`
-  const photoDiagnosis = photoPassed
-    ? `네이버 검색 로봇의 2026 권장 규격(최소 20장)을 충족(총 ${actualPhotos}장)하여 탐색 체류시간 30초 이상 유지에 기여하고 있습니다.`
-    : `현재 등록된 사진(${actualPhotos}장)이 네이버 검색 로봇 권장 규격(최소 20장)에 ${quotaNeeded}장 미달하여 검색 체류시간 점수 손실이 발생하고 있습니다.`
-  const photoActionGuide = photoPassed
-    ? '현재 사진 수량을 유지하시고, 분기별 신메뉴 또는 매장 분위기 변화 시에만 대표 사진을 교체하세요.'
-    : `고화질 매장 내외부 인테리어 및 시그니처 메뉴 컷을 추가 업로드하여 최소 20장 기준을 즉시 채우세요.`
+  const photoStatusBadge = !hasPhotoCount
+    ? '사진 수 미측정 (직접 확인)'
+    : photoPassed
+      ? `기준 충족 (${actualPhotos}장 완료)`
+      : `현재 ${actualPhotos}장 / 권장 20장 (${quotaNeeded}장 부족)`
+  const photoDiagnosis = !hasPhotoCount
+    ? '네이버 검색 HTML에서 매장 등록 사진 수를 자동으로 추출하지 못했습니다. 스마트플레이스 관리자에서 등록 사진 수량을 직접 확인해 주세요.'
+    : photoPassed
+      ? `네이버 검색 로봇의 권장 규격(최소 20장)을 충족(총 ${actualPhotos}장)하고 있습니다.`
+      : `현재 등록된 사진(${actualPhotos}장)이 권장 기준(최소 20장)보다 ${quotaNeeded}장 부족합니다.`
+  const photoActionGuide = !hasPhotoCount
+    ? '스마트플레이스 관리자 > 업체사진 메뉴에서 매장 내외부 및 대표 사진이 20장 이상 등록되어 있는지 확인하세요.'
+    : photoPassed
+      ? '현재 사진 수량을 유지하시고, 분기별 신메뉴 또는 매장 분위기 변화 시에만 대표 사진을 교체하세요.'
+      : '고화질 매장 내외부 인테리어 및 시그니처 메뉴 컷을 추가 업로드하여 최소 20장 기준을 채우세요.'
 
   return {
     storeName: store,
@@ -258,24 +265,24 @@ function buildFallbackDetails(store: string, kw: string): PlaceRealDetails {
     storeName: store,
     targetKeyword: kw,
     introText: '',
-    introKeywordCount: 2,
-    introStatus: 'GOOD',
-    introStatusBadge: '적정 배치 (추정)',
-    introDiagnosis: `타깃 키워드 '${kw}'가 매장 소개글에 자연스럽게 배치되어 검색 로봇 색인 가중치를 온전히 획득 중인 것으로 추정 분석되었습니다.`,
-    introActionGuide: '현재 키워드 빈도를 유지하시고, 시그니처 메뉴나 주요 혜택 변경 시에만 문맥에 맞게 업데이트하세요.',
+    introKeywordCount: 0,
+    introStatus: 'WARN',
+    introStatusBadge: '소개글 미측정',
+    introDiagnosis: '네이버 검색 결과에서 매장 상세소개글 데이터를 추출하지 못했습니다. 스마트플레이스 관리자에서 직접 확인해 주세요.',
+    introActionGuide: `상세설명(소개글) 상단에 타깃 키워드 '${kw}'와 매장 강점을 자연스럽게 2~3회 포함해 1,000~2,000자 분량으로 작성하는 것을 권장합니다.`,
 
     directionsText: '',
     directionsStatus: 'WARN',
-    directionsStatusBadge: '보완 요망 (랜드마크 누락)',
-    directionsDiagnosis: '지하철역 출구 번호, 주변 주요 랜드마크 건물, 도보 소요 시간 동선이 구체적으로 기재되지 않아 모바일 지도 탐색자의 체류시간 감점이 발생하고 있습니다.',
-    directionsActionGuide: "'스마트플레이스 관리자 > 찾아오는 길' 메뉴에서 출구 번호와 인근 랜드마크를 활용한 3줄 도보 동선을 즉시 보강하세요.",
+    directionsStatusBadge: '찾아오는 길 미측정',
+    directionsDiagnosis: '네이버 검색 결과에서 찾아오는 길 텍스트를 추출하지 못했습니다.',
+    directionsActionGuide: "'스마트플레이스 관리자 > 찾아오는 길' 메뉴에서 출구 번호와 인근 랜드마크를 활용한 도보 동선을 등록했는지 확인하세요.",
 
-    photoCount: 14,
-    photoQuotaNeeded: 6,
+    photoCount: 0,
+    photoQuotaNeeded: 0,
     photoStatus: 'FAIL',
-    photoStatusBadge: '현재 14장 / 권장 20장 (6장 부족)',
-    photoDiagnosis: '현재 등록된 사진(14장)이 네이버 검색 로봇 권장 규격(최소 20장)에 6장 미달하여 검색 체류시간 점수 손실이 발생하고 있습니다.',
-    photoActionGuide: '고화질 매장 내외부 인테리어 및 시그니처 컷을 추가 업로드하여 최소 20장을 즉시 채우세요.',
+    photoStatusBadge: '사진 수 미측정',
+    photoDiagnosis: '네이버 검색 결과에서 매장 사진 수를 자동으로 확인하지 못했습니다.',
+    photoActionGuide: '스마트플레이스 관리자에서 매장 내외부 사진 및 대표 이미지가 20장 이상 등록되어 있는지 직접 확인하세요.',
 
     keywordList: [],
     conveniences: [],
