@@ -143,13 +143,42 @@
     text-wrap: balance;
     line-height: 1.35;
     letter-spacing: -0.02em;
+    scroll-margin-top: 5rem;
   }
   p {
     text-wrap: pretty;
     letter-spacing: -0.005em;
   }
+  a,
+  button,
+  input,
+  select,
+  textarea,
+  [role="button"] {
+    touch-action: manipulation;
+  }
   html {
     scrollbar-gutter: stable;
     @apply font-sans;
+  }
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

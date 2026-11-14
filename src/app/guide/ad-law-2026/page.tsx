@@ -410,31 +410,32 @@ export default function AdLaw2026Page() {
           <div className="flex items-center gap-2">
             <button
               onClick={handleCopyLink}
+              aria-live="polite"
               style={{ backgroundColor: '#ffffff', color: '#334155', borderColor: '#cbd5e1' }}
-              className="px-3 py-1.5 rounded-lg border text-xs font-bold shadow-sm flex items-center gap-1.5 transition hover:bg-slate-50 cursor-pointer"
+              className="px-3 py-1.5 rounded-lg border text-xs font-bold shadow-sm flex items-center gap-1.5 transition-colors hover:bg-slate-50 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
               title="가이드북 링크 복사"
             >
-              {copied ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5 text-slate-500" />}
+              {copied ? <Check className="w-3.5 h-3.5 text-emerald-600" aria-hidden="true" /> : <Copy className="w-3.5 h-3.5 text-slate-500" aria-hidden="true" />}
               <span>{copied ? '복사 완료!' : '공유 링크'}</span>
             </button>
 
             <button
               onClick={handlePrint}
               style={{ backgroundColor: '#0f172a', color: '#ffffff' }}
-              className="px-3 py-1.5 rounded-lg text-xs font-bold shadow-sm flex items-center gap-1.5 transition hover:bg-slate-800 cursor-pointer"
+              className="px-3 py-1.5 rounded-lg text-xs font-bold shadow-sm flex items-center gap-1.5 transition-colors hover:bg-slate-800 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
               title="A4 규격 실전 가이드 인쇄 또는 PDF 저장"
             >
-              <Download className="w-3.5 h-3.5 text-blue-400" />
-              <span>📄 소장용 PDF / 인쇄</span>
+              <Download className="w-3.5 h-3.5 text-blue-400" aria-hidden="true" />
+              <span><span aria-hidden="true">📄 </span>소장용 PDF / 인쇄</span>
             </button>
 
             <Link
               href="/adcheck"
               style={{ backgroundColor: '#4f46e5', color: '#ffffff' }}
-              className="px-3.5 py-1.5 rounded-lg text-xs font-extrabold shadow-md flex items-center gap-1 transition hover:bg-indigo-600 cursor-pointer"
+              className="px-3.5 py-1.5 rounded-lg text-xs font-extrabold shadow-md flex items-center gap-1 transition-colors hover:bg-indigo-600 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
             >
               <span>광고법 금칙어 스캐너</span>
-              <ChevronRight className="w-3.5 h-3.5" />
+              <ChevronRight className="w-3.5 h-3.5" aria-hidden="true" />
             </Link>
           </div>
         </div>
@@ -443,51 +444,51 @@ export default function AdLaw2026Page() {
       {/* 목차 퀵점프 탭 (인쇄 시 숨김) */}
       <div
         style={{ backgroundColor: '#f1f5f9', borderColor: '#e2e8f0' }}
-        className="border-b py-2 px-4 sticky top-[57px] z-40 overflow-x-auto scrollbar-none print:hidden"
+        className="border-b py-2 px-4 sticky top-[57px] z-40 overflow-x-auto no-scrollbar print:hidden"
       >
         <div className="max-w-5xl mx-auto flex items-center gap-2 text-xs font-bold whitespace-nowrap" style={{ color: '#475569' }}>
           <span style={{ color: '#64748b' }} className="text-[11px] mr-1">목차:</span>
-          <a href="#ch1" className="px-2.5 py-1 rounded hover:bg-white hover:text-indigo-600 transition">
+          <a href="#ch1" className="px-2.5 py-1 rounded hover:bg-white hover:text-indigo-600 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500">
             1. 2026 AI검색 혁명
           </a>
           <span style={{ color: '#cbd5e1' }}>•</span>
-          <a href="#ch2" className="px-2.5 py-1 rounded hover:bg-white hover:text-indigo-600 transition">
+          <a href="#ch2" className="px-2.5 py-1 rounded hover:bg-white hover:text-indigo-600 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500">
             2. 직역별 법적 규제
           </a>
           <span style={{ color: '#cbd5e1' }}>•</span>
-          <a href="#ch3" className="px-2.5 py-1 rounded hover:bg-white hover:text-indigo-600 transition">
+          <a href="#ch3" className="px-2.5 py-1 rounded hover:bg-white hover:text-indigo-600 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500">
             3. 20대 핵심 금지어 사전
           </a>
           <span style={{ color: '#cbd5e1' }}>•</span>
           <a
             href="#ch4"
             style={{ backgroundColor: '#fef3c7', color: '#92400e', borderColor: '#fcd34d' }}
-            className="px-2.5 py-1 rounded border hover:bg-amber-200 transition flex items-center gap-1 font-extrabold"
+            className="px-2.5 py-1 rounded border hover:bg-amber-200 transition-colors flex items-center gap-1 font-extrabold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
           >
-            <Sparkles className="w-3 h-3 text-amber-600" />
+            <Sparkles className="w-3 h-3 text-amber-600" aria-hidden="true" />
             <span>4. 1초 위반 진단기</span>
           </a>
           <span style={{ color: '#cbd5e1' }}>•</span>
-          <a href="#ch5" className="px-2.5 py-1 rounded hover:bg-white hover:text-indigo-600 transition">
+          <a href="#ch5" className="px-2.5 py-1 rounded hover:bg-white hover:text-indigo-600 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500">
             5. CVR 5단계 칼럼 공식
           </a>
           <span style={{ color: '#cbd5e1' }}>•</span>
-          <a href="#ch5-demo" className="px-2.5 py-1 rounded hover:bg-white hover:text-indigo-600 transition text-indigo-600 font-extrabold">
+          <a href="#ch5-demo" className="px-2.5 py-1 rounded hover:bg-white hover:text-indigo-600 transition-colors text-indigo-600 font-extrabold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500">
             ★ 스마트에디터 실시간 프리뷰
           </a>
           <span style={{ color: '#cbd5e1' }}>•</span>
-          <a href="#ch6" className="px-2.5 py-1 rounded hover:bg-white hover:text-indigo-600 transition">
+          <a href="#ch6" className="px-2.5 py-1 rounded hover:bg-white hover:text-indigo-600 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500">
             6. 위기관리 매뉴얼
           </a>
           <span style={{ color: '#cbd5e1' }}>•</span>
-          <a href="#ch7" className="px-2.5 py-1 rounded hover:bg-white hover:text-indigo-600 transition text-emerald-700 font-extrabold">
+          <a href="#ch7" className="px-2.5 py-1 rounded hover:bg-white hover:text-indigo-600 transition-colors text-emerald-700 font-extrabold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500">
             7. 자가진단 체크리스트
           </a>
         </div>
       </div>
 
       {/* 2. 본문 백서 컨테이너 */}
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 py-10 space-y-12 print:max-w-none print:p-0 print:space-y-6">
+      <main id="main-content" className="max-w-4xl mx-auto px-4 sm:px-6 py-10 space-y-12 print:max-w-none print:p-0 print:space-y-6">
         
         {/* 표지 및 메타데이터 헤더 */}
         <section
@@ -554,7 +555,7 @@ export default function AdLaw2026Page() {
         <section
           id="ch1"
           style={{ backgroundColor: '#ffffff', borderColor: '#e2e8f0' }}
-          className="border rounded-2xl p-6 sm:p-8 shadow-sm space-y-6"
+          className="border rounded-2xl p-6 sm:p-8 shadow-sm space-y-6 scroll-mt-32"
         >
           <div style={{ borderColor: '#e2e8f0' }} className="border-b pb-3 flex items-center justify-between">
             <h2 style={{ color: '#0f172a' }} className="text-xl sm:text-2xl font-extrabold flex items-center gap-2.5">
@@ -668,7 +669,7 @@ export default function AdLaw2026Page() {
         <section
           id="ch2"
           style={{ backgroundColor: '#ffffff', borderColor: '#e2e8f0' }}
-          className="border rounded-2xl p-6 sm:p-8 shadow-sm space-y-6"
+          className="border rounded-2xl p-6 sm:p-8 shadow-sm space-y-6 scroll-mt-32"
         >
           <div style={{ borderColor: '#e2e8f0' }} className="border-b pb-3 flex items-center justify-between">
             <h2 style={{ color: '#0f172a' }} className="text-xl sm:text-2xl font-extrabold flex items-center gap-2.5">
@@ -756,7 +757,7 @@ export default function AdLaw2026Page() {
         <section
           id="ch3"
           style={{ backgroundColor: '#ffffff', borderColor: '#e2e8f0' }}
-          className="border rounded-2xl p-6 sm:p-8 shadow-sm space-y-6"
+          className="border rounded-2xl p-6 sm:p-8 shadow-sm space-y-6 scroll-mt-32"
         >
           <div style={{ borderColor: '#e2e8f0' }} className="border-b pb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <div>
@@ -892,7 +893,7 @@ export default function AdLaw2026Page() {
         </section>
 
         {/* 챕터 4. [실시간 체험] 내 블로그 문장 1초 광고법 위반 진단기 */}
-        <section id="ch4" className="space-y-6 print:hidden">
+        <section id="ch4" className="space-y-6 print:hidden scroll-mt-32">
           <div
             style={{ backgroundColor: '#0f172a', color: '#ffffff', borderColor: '#4f46e5' }}
             className="p-6 sm:p-8 rounded-2xl border-2 shadow-2xl space-y-5"
@@ -903,12 +904,12 @@ export default function AdLaw2026Page() {
                   style={{ backgroundColor: '#4f46e5', color: '#ffffff' }}
                   className="w-9 h-9 rounded-xl flex items-center justify-center font-bold shadow-lg"
                 >
-                  <Sparkles className="w-5 h-5" />
+                  <Sparkles className="w-5 h-5" aria-hidden="true" />
                 </span>
                 <div>
-                  <h3 style={{ color: '#ffffff' }} className="text-lg sm:text-xl font-extrabold">
+                  <h2 style={{ color: '#ffffff' }} className="text-lg sm:text-xl font-extrabold">
                     [실시간 체험] 내 블로그 문장 1초 광고법 위반 진단기
-                  </h3>
+                  </h2>
                   <p style={{ color: '#94a3b8' }} className="text-xs">
                     현재 블로그 글 또는 홍보 문구를 입력해 보세요. 2026 최신 규제 위반 단어를 0.05초 만에 스캔합니다.
                   </p>
@@ -928,21 +929,21 @@ export default function AdLaw2026Page() {
               <button
                 onClick={() => loadExample('law')}
                 style={{ backgroundColor: '#1e293b', color: '#e2e8f0', borderColor: '#334155' }}
-                className="px-3 py-1.5 rounded-lg border font-bold transition hover:bg-slate-700 cursor-pointer"
+                className="px-3 py-1.5 rounded-lg border font-bold transition-colors hover:bg-slate-700 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
               >
                 ⚖️ 변호사 예시 (100% 승소, 기각시 환불)
               </button>
               <button
                 onClick={() => loadExample('medical')}
                 style={{ backgroundColor: '#1e293b', color: '#e2e8f0', borderColor: '#334155' }}
-                className="px-3 py-1.5 rounded-lg border font-bold transition hover:bg-slate-700 cursor-pointer"
+                className="px-3 py-1.5 rounded-lg border font-bold transition-colors hover:bg-slate-700 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
               >
                 🏥 병의원 예시 (완치, 부작용 없는)
               </button>
               <button
                 onClick={() => loadExample('tax')}
                 style={{ backgroundColor: '#1e293b', color: '#e2e8f0', borderColor: '#334155' }}
-                className="px-3 py-1.5 rounded-lg border font-bold transition hover:bg-slate-700 cursor-pointer"
+                className="px-3 py-1.5 rounded-lg border font-bold transition-colors hover:bg-slate-700 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
               >
                 📊 세무사 예시 (최저가, 평균 환급액)
               </button>
@@ -951,29 +952,34 @@ export default function AdLaw2026Page() {
             {/* 텍스트 입력창 */}
             <div className="space-y-2">
               <textarea
+                name="adText"
+                aria-label="광고법 위반 여부 검사할 문장 입력"
+                autoComplete="off"
+                spellCheck={false}
                 value={diagInput}
                 onChange={(e) => {
                   setDiagInput(e.target.value)
                   runDiagnosis(e.target.value)
                 }}
                 style={{ backgroundColor: '#020617', color: '#ffffff', borderColor: '#334155' }}
-                placeholder="검사할 블로그 제목이나 본문 문장을 입력하세요. (예: 저희는 100% 승소를 보장하는 전국 1위 로펌입니다.)"
-                className="w-full h-24 p-3.5 rounded-xl text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition resize-none"
+                placeholder="검사할 블로그 제목이나 본문 문장을 입력하세요 (예: 저희는 100% 승소를 보장하는 전국 1위 로펌입니다)…"
+                className="w-full h-24 p-3.5 rounded-xl text-sm placeholder-slate-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 transition-colors resize-none"
               />
               <div className="flex justify-between items-center text-xs" style={{ color: '#94a3b8' }}>
-                <span className="font-medium">{diagInput.length}자 입력됨</span>
+                <span className="font-medium tabular-nums">{diagInput.length}자 입력됨</span>
                 <button
                   onClick={() => runDiagnosis()}
                   style={{ backgroundColor: '#4f46e5', color: '#ffffff' }}
-                  className="px-4 py-2 rounded-lg font-extrabold transition flex items-center gap-1.5 shadow-lg hover:bg-indigo-600 cursor-pointer"
+                  className="px-4 py-2 rounded-lg font-extrabold transition-colors flex items-center gap-1.5 shadow-lg hover:bg-indigo-600 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
                 >
-                  <Search className="w-3.5 h-3.5" />
+                  <Search className="w-3.5 h-3.5" aria-hidden="true" />
                   <span>위반 여부 정밀 진단</span>
                 </button>
               </div>
             </div>
 
             {/* 진단 결과 카드 */}
+            <div aria-live="polite">
             {diagResults.analyzed && (
               <div style={{ borderColor: '#334155' }} className="pt-3 border-t space-y-3">
                 {diagResults.foundWords.length > 0 ? (
@@ -983,7 +989,7 @@ export default function AdLaw2026Page() {
                   >
                     <div className="flex items-center justify-between">
                       <div style={{ color: '#f87171' }} className="flex items-center gap-2 font-extrabold text-sm">
-                        <AlertTriangle className="w-4 h-4" />
+                        <AlertTriangle className="w-4 h-4" aria-hidden="true" />
                         <span>위반 위험 소지 표현 {diagResults.foundWords.length}건 발견!</span>
                       </div>
                       <span
@@ -1012,7 +1018,7 @@ export default function AdLaw2026Page() {
                           </div>
                           <p style={{ color: '#cbd5e1' }} className="text-[11px] font-medium">• 사유: {fw.reason}</p>
                           <div style={{ color: '#34d399' }} className="pt-1 flex items-center gap-1.5 font-bold">
-                            <CheckCircle2 className="w-3.5 h-3.5" />
+                            <CheckCircle2 className="w-3.5 h-3.5" aria-hidden="true" />
                             <span>추천 합법 대체 표현: &ldquo;{fw.safeWord}&rdquo;</span>
                           </div>
                         </div>
@@ -1025,7 +1031,7 @@ export default function AdLaw2026Page() {
                     className="p-4 rounded-xl border text-center space-y-1"
                   >
                     <div style={{ color: '#34d399' }} className="flex items-center justify-center gap-2 font-extrabold text-sm">
-                      <CheckCircle2 className="w-4 h-4" />
+                      <CheckCircle2 className="w-4 h-4" aria-hidden="true" />
                       <span>20대 핵심 금지어 위반 단어가 발견되지 않았습니다.</span>
                     </div>
                     <p style={{ color: '#cbd5e1' }} className="text-xs">
@@ -1035,6 +1041,7 @@ export default function AdLaw2026Page() {
                 )}
               </div>
             )}
+            </div>
           </div>
         </section>
 
@@ -1042,7 +1049,7 @@ export default function AdLaw2026Page() {
         <section
           id="ch5"
           style={{ backgroundColor: '#ffffff', borderColor: '#e2e8f0' }}
-          className="border rounded-2xl p-6 sm:p-8 shadow-sm space-y-6"
+          className="border rounded-2xl p-6 sm:p-8 shadow-sm space-y-6 scroll-mt-32"
         >
           <div style={{ borderColor: '#e2e8f0' }} className="border-b pb-3 flex items-center justify-between">
             <h2 style={{ color: '#0f172a' }} className="text-xl sm:text-2xl font-extrabold flex items-center gap-2.5">
@@ -1143,7 +1150,7 @@ export default function AdLaw2026Page() {
         <section
           id="ch5-demo"
           style={{ backgroundColor: '#0A0D14', borderColor: '#4f46e5' }}
-          className="border-2 rounded-3xl p-5 sm:p-8 shadow-2xl space-y-6 text-white print:hidden"
+          className="border-2 rounded-3xl p-5 sm:p-8 shadow-2xl space-y-6 text-white print:hidden scroll-mt-32"
         >
           {/* 상단 탭 및 타이틀 */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-4">
@@ -1377,7 +1384,7 @@ export default function AdLaw2026Page() {
         <section
           id="ch6"
           style={{ backgroundColor: '#ffffff', borderColor: '#e2e8f0' }}
-          className="border rounded-2xl p-6 sm:p-8 shadow-sm space-y-6"
+          className="border rounded-2xl p-6 sm:p-8 shadow-sm space-y-6 scroll-mt-32"
         >
           <div style={{ borderColor: '#e2e8f0' }} className="border-b pb-3 flex items-center justify-between">
             <h2 style={{ color: '#0f172a' }} className="text-xl sm:text-2xl font-extrabold flex items-center gap-2.5">
@@ -1439,7 +1446,7 @@ export default function AdLaw2026Page() {
         <section
           id="ch7"
           style={{ backgroundColor: '#ffffff', borderColor: '#e2e8f0' }}
-          className="border-2 rounded-2xl p-6 sm:p-10 shadow-lg space-y-6 print:border-black"
+          className="border-2 rounded-2xl p-6 sm:p-10 shadow-lg space-y-6 print:border-black scroll-mt-32"
         >
           <div className="border-b border-slate-200 pb-4 flex items-center justify-between">
             <h2 style={{ color: '#0f172a' }} className="text-xl sm:text-2xl font-extrabold flex items-center gap-2.5">

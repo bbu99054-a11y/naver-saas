@@ -36,11 +36,11 @@ export default function AdSlot({ slot, format = 'auto', className = '' }: AdSlot
   }
 
   return (
-    <div className={`my-8 w-full overflow-hidden text-center ${className}`}>
-      <div className="text-[10px] font-medium text-slate-400 mb-1.5 tracking-wide">ADVERTISEMENT</div>
+    <div className={`my-8 w-full min-h-[120px] overflow-hidden text-center ${className}`}>
+      <div translate="no" className="text-[10px] font-medium text-slate-400 mb-1.5 tracking-wide">ADVERTISEMENT</div>
       <ins
         className="adsbygoogle"
-        style={{ display: 'block' }}
+        style={{ display: 'block', minHeight: '90px' }}
         data-ad-client={ADSENSE_CLIENT_ID}
         data-ad-slot={slot.trim()}
         data-ad-format={format}

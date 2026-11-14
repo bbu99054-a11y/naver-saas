@@ -346,7 +346,7 @@ header.header-integrated {
   top: 0 !important;
   z-index: 1000 !important;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02) !important;
-  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif !important;
+  font-family: 'Pretendard Variable', 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif !important;
   box-sizing: border-box !important;
   width: 100% !important;
 }
@@ -543,7 +543,7 @@ footer.footer-integrated {
   border-top: 1px solid #e2e8f0 !important;
   background: #ffffff !important;
   margin-top: 60px !important;
-  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif !important;
+  font-family: 'Pretendard Variable', 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif !important;
   box-sizing: border-box !important;
   width: 100% !important;
 }

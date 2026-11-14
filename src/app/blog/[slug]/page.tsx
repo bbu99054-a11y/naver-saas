@@ -107,13 +107,13 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
       <GlobalHeader />
 
       {/* 2. 본문 + 우측 고정 사이드바 컨테이너 */}
-      <div className="py-10 pb-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto flex flex-col lg:flex-row gap-10">
+      <main id="main-content" className="py-10 pb-28 lg:pb-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto flex flex-col lg:flex-row gap-10">
         {/* 메인 칼럼 컨테이너 */}
         <article className="flex-1 max-w-3xl bg-white p-6 sm:p-10 md:p-12 rounded-3xl border border-slate-200/90 shadow-2xs">
           {/* 상단 카테고리 & 뒤로가기 */}
           <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-100">
-            <Link href="/blog" className="inline-flex items-center text-xs sm:text-sm font-bold text-slate-600 hover:text-slate-900 transition-colors">
-              <ChevronLeft className="w-4 h-4 mr-1" /> 전체 칼럼 목록
+            <Link href="/blog" className="inline-flex items-center text-xs sm:text-sm font-bold text-slate-600 hover:text-slate-900 transition-colors rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600">
+              <ChevronLeft className="w-4 h-4 mr-1" aria-hidden="true" /> 전체 칼럼 목록
             </Link>
             <div className="flex items-center gap-2">
               <span className="px-3 py-1 rounded-full text-xs font-bold bg-slate-100 text-slate-800 border border-slate-200">
@@ -133,13 +133,13 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           </h1>
 
           {/* 메타 정보 */}
-          <div className="flex flex-wrap items-center gap-3 text-xs sm:text-sm font-medium text-slate-400 mb-8 pb-6 border-b border-slate-200/80">
+          <div className="flex flex-wrap items-center gap-3 text-xs sm:text-sm font-medium text-slate-400 mb-8 pb-6 border-b border-slate-200/80 tabular-nums">
             <span className="flex items-center gap-1.5">
-              <Calendar className="w-4 h-4 text-slate-400" /> {post.date}
+              <Calendar className="w-4 h-4 text-slate-400" aria-hidden="true" /> {post.date}
             </span>
             <span>·</span>
             <span className="flex items-center gap-1.5">
-              <Clock className="w-4 h-4 text-slate-400" /> {post.readTime}
+              <Clock className="w-4 h-4 text-slate-400" aria-hidden="true" /> {post.readTime}
             </span>
             <span>·</span>
             <span className="text-slate-700 font-bold bg-slate-100 px-2.5 py-0.5 rounded-full border border-slate-200">
@@ -148,10 +148,16 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           </div>
 
           {/* 대표 이미지 */}
-          <div
-            className="w-full h-[260px] sm:h-[360px] bg-slate-200 bg-cover bg-center rounded-2xl mb-8 shadow-xs border border-slate-200 overflow-hidden"
-            style={{ backgroundImage: `url(${post.imageUrl})` }}
-          />
+          <div className="w-full h-[260px] sm:h-[360px] bg-slate-200 rounded-2xl mb-8 shadow-xs border border-slate-200 overflow-hidden">
+            <img
+              src={post.imageUrl}
+              alt={post.title}
+              width={800}
+              height={450}
+              fetchPriority="high"
+              className="w-full h-full object-cover"
+            />
+          </div>
 
           {/* 본문 상단 플레이스 즉시 검색 위젯 */}
           <PlaceQuickSearchWidget />
@@ -165,25 +171,25 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
               remarkPlugins={[remarkGfm]}
               components={{
                 h1: ({ children }) => (
-                  <h2 className="text-xl sm:text-2xl font-black text-slate-900 mt-12 mb-5 pb-3 border-b-2 border-slate-100 flex items-center gap-3 text-balance">
+                  <h2 className="text-xl sm:text-2xl font-black text-slate-900 mt-12 mb-5 pb-3 border-b-2 border-slate-100 flex items-center gap-3 text-balance scroll-mt-24">
                     <span className="w-2.5 h-6 bg-slate-900 rounded-full inline-block shrink-0" />
                     <span>{children}</span>
                   </h2>
                 ),
                 h2: ({ children }) => (
-                  <h2 className="text-xl sm:text-2xl font-black text-slate-900 mt-12 mb-5 pb-3 border-b-2 border-slate-100 flex items-center gap-3 text-balance">
+                  <h2 className="text-xl sm:text-2xl font-black text-slate-900 mt-12 mb-5 pb-3 border-b-2 border-slate-100 flex items-center gap-3 text-balance scroll-mt-24">
                     <span className="w-2.5 h-6 bg-slate-900 rounded-full inline-block shrink-0" />
                     <span>{children}</span>
                   </h2>
                 ),
                 h3: ({ children }) => (
-                  <h3 className="text-lg sm:text-xl font-bold text-slate-900 mt-8 mb-3 flex items-center gap-2 text-balance">
+                  <h3 className="text-lg sm:text-xl font-bold text-slate-900 mt-8 mb-3 flex items-center gap-2 text-balance scroll-mt-24">
                     <span className="text-slate-900 font-extrabold text-sm">▶</span>
                     <span>{children}</span>
                   </h3>
                 ),
                 h4: ({ children }) => (
-                  <h4 className="text-base sm:text-lg font-bold text-slate-900 mt-6 mb-2 text-balance">
+                  <h4 className="text-base sm:text-lg font-bold text-slate-900 mt-6 mb-2 text-balance scroll-mt-24">
                     {children}
                   </h4>
                 ),
@@ -277,7 +283,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           {/* 칼럼 하단 CTA 배너 */}
           <div className="mt-14 p-8 sm:p-10 rounded-3xl bg-slate-900 text-white shadow-xl border border-slate-800 space-y-4">
             <div className="flex items-center gap-2 text-xs font-bold text-emerald-400">
-              <Zap className="w-4 h-4 text-emerald-400" /> PostSync 스마트플레이스 실시간 분석
+              <Zap className="w-4 h-4 text-emerald-400" aria-hidden="true" /> PostSync 스마트플레이스 실시간 분석
             </div>
             <h3 className="text-xl sm:text-2xl font-black text-balance">
               지금 내 매장 플레이스 순위와 1위 매장과의 차이를 1초 만에 비교 진단하세요
@@ -316,7 +322,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             </div>
             <Link
               href="/about"
-              className="shrink-0 inline-flex items-center justify-center rounded-xl bg-white border border-slate-300 px-4 py-2 text-xs font-bold text-slate-800 hover:bg-slate-100 transition"
+              className="shrink-0 inline-flex items-center justify-center rounded-xl bg-white border border-slate-300 px-4 py-2 text-xs font-bold text-slate-800 hover:bg-slate-100 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600"
             >
               데이터 검증 기준 보기
             </Link>
@@ -335,19 +341,19 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
             {/* 스마트플레이스 필독 칼럼 박스 */}
             <div className="bg-white p-5 rounded-3xl border border-slate-200/90 shadow-2xs">
-              <h4 className="text-sm font-extrabold text-slate-900 mb-3 flex items-center justify-between">
-                <span>📍 플레이스 필독 칼럼</span>
-                <Link href="/blog" className="text-xs text-slate-500 hover:text-slate-900 font-bold transition-colors">
+              <h2 className="text-sm font-extrabold text-slate-900 mb-3 flex items-center justify-between">
+                <span><span aria-hidden="true">📍</span> 플레이스 필독 칼럼</span>
+                <Link href="/blog" className="text-xs text-slate-500 hover:text-slate-900 font-bold transition-colors rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600">
                   전체보기
                 </Link>
-              </h4>
+              </h2>
               <div className="space-y-3">
                 {recommendedPlacePosts.map((p) => (
-                  <Link key={p.id} href={`/blog/${p.slug}`} className="block group pb-2.5 border-b border-slate-100 last:border-0 last:pb-0">
+                  <Link key={p.id} href={`/blog/${p.slug}`} className="block group pb-2.5 border-b border-slate-100 last:border-0 last:pb-0 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600">
                     <p className="text-xs font-bold text-slate-800 group-hover:text-emerald-700 transition-colors line-clamp-2 leading-snug text-balance">
                       {p.title}
                     </p>
-                    <span className="text-[10px] text-slate-400 mt-1 inline-block">
+                    <span className="text-[10px] text-slate-400 mt-1 inline-block tabular-nums">
                       {p.date} · {p.categoryLabel}
                     </span>
                   </Link>
@@ -368,7 +374,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                 href={KAKAO_CHANNEL_CHAT_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex w-full items-center justify-center rounded-xl bg-[#fee500] px-4 py-2.5 text-xs font-extrabold text-[#191919] hover:opacity-95 transition"
+                className="inline-flex w-full items-center justify-center rounded-xl bg-[#fee500] px-4 py-2.5 text-xs font-extrabold text-[#191919] hover:opacity-95 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-300"
               >
                 카카오톡 채널 바로가기 &rarr;
               </a>
@@ -376,7 +382,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
           </div>
         </aside>
-      </div>
+      </main>
 
       {/* 푸터 */}
       <footer className="bg-white border-t border-slate-200/80 py-12 px-6 text-xs text-slate-500">
@@ -402,7 +408,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
       </footer>
 
       {/* 모바일 하단 플로팅 CTA */}
-      <div className="lg:hidden fixed bottom-0 left-0 w-full p-3.5 bg-white/95 backdrop-blur-md border-t border-slate-200 z-50 flex gap-2">
+      <div className="lg:hidden fixed bottom-0 left-0 w-full px-3.5 pt-3.5 pb-[calc(0.875rem+env(safe-area-inset-bottom))] bg-white/95 backdrop-blur-md border-t border-slate-200 z-50 flex gap-2">
         <Link href="/place" className="flex-1">
           <Button className="w-full h-11 bg-blue-600 hover:bg-blue-500 text-white font-extrabold rounded-full shadow-sm text-xs sm:text-sm">
             플레이스 실시간 순위 조회

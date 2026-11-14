@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -16,7 +17,7 @@ import ChannelTalk from "@/components/ChannelTalk";
 import { ADSENSE_CLIENT_ID } from "@/lib/monetizationConfig";
 
 export const viewport: Viewport = {
-  themeColor: "#0f172a",
+  themeColor: "#fbfbf9",
   width: "device-width",
   initialScale: 1,
 };
@@ -76,38 +77,45 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     >
       <head>
         {/* Pretendard Variable Dynamic Subset (WOFF2) */}
+        <link rel="preconnect" href="https://cdn.jsdelivr.net" crossOrigin="anonymous" />
         <link
           rel="stylesheet"
-          as="style"
           crossOrigin="anonymous"
           href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
         />
-        {/* Google Analytics 4 (GA4) */}
-        <script
-          async
-          src="https://www.googletagmanager.com/gtag/js?id=G-7WTMC1GBC8"
-        />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', 'G-7WTMC1GBC8');
-            `,
-          }}
-        />
-        {/* Google AdSense Verification & Auto Ads */}
+        {/* Google AdSense Site Ownership Meta */}
         <meta name="google-adsense-account" content={ADSENSE_CLIENT_ID} />
-        <script
-          async
-          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT_ID}`}
-          crossOrigin="anonymous"
-        />
       </head>
       <body className="min-h-full flex flex-col">
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:rounded-lg focus:bg-slate-900 focus:px-4 focus:py-2 focus:text-xs focus:font-bold focus:text-white focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          본문 바로가기
+        </a>
         {children}
         <ChannelTalk />
+        {/* Google Analytics 4 (GA4) */}
+        <Script
+          id="ga4-gtag"
+          src="https://www.googletagmanager.com/gtag/js?id=G-7WTMC1GBC8"
+          strategy="afterInteractive"
+        />
+        <Script id="ga4-init" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-7WTMC1GBC8');
+          `}
+        </Script>
+        {/* Google AdSense (Approval-Safe Deferred After Hydration) */}
+        <Script
+          id="adsense-init"
+          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT_ID}`}
+          crossOrigin="anonymous"
+          strategy="afterInteractive"
+        />
       </body>
     </html>
   );

@@ -1,5 +1,10 @@
 import { Metadata } from 'next'
-import BlogListClient from './BlogListClient'
+import { blogPosts } from '@/lib/blogData'
+import { INDUSTRY_PLACE_LIST } from '@/lib/industryPlaceData'
+import BlogListClient, {
+  type BlogPostSummary,
+  type IndustryLinkItem,
+} from './BlogListClient'
 
 export const metadata: Metadata = {
   title: '스마트플레이스 상위노출 & 로컬 마케팅 실전 칼럼 | PostSync',
@@ -32,5 +37,40 @@ export const metadata: Metadata = {
 }
 
 export default function BlogIndexPage() {
-  return <BlogListClient />
+  const postSummaries: BlogPostSummary[] = blogPosts.map(
+    ({
+      id,
+      slug,
+      title,
+      excerpt,
+      date,
+      author,
+      imageUrl,
+      readTime,
+      category,
+      categoryLabel,
+      badge,
+    }) => ({
+      id,
+      slug,
+      title,
+      excerpt,
+      date,
+      author,
+      imageUrl,
+      readTime,
+      category,
+      categoryLabel,
+      badge,
+    })
+  )
+
+  const industryLinks: IndustryLinkItem[] = INDUSTRY_PLACE_LIST.map(
+    ({ slug, name }) => ({
+      slug,
+      name,
+    })
+  )
+
+  return <BlogListClient posts={postSummaries} industries={industryLinks} />
 }

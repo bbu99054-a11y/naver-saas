@@ -2,6 +2,20 @@ import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
 export async function updateSession(request: NextRequest) {
+  const pathname = request.nextUrl.pathname
+  const isAuthRoute =
+    pathname.startsWith('/dashboard') || pathname.startsWith('/login')
+  const hasSupabaseAuthCookie = request.cookies
+    .getAll()
+    .some((cookie) => cookie.name.startsWith('sb-'))
+
+  // Skip remote Supabase auth lookups on public unauthenticated traffic.
+  if (!isAuthRoute && !hasSupabaseAuthCookie) {
+    return NextResponse.next({
+      request,
+    })
+  }
+
   let supabaseResponse = NextResponse.next({
     request,
   })

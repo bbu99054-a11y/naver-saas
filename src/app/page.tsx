@@ -230,7 +230,7 @@ export default function HomePage() {
       <GlobalHeader />
 
       {/* 메인 와이드 컨테이너 */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20 space-y-20 md:space-y-24">
+      <main id="main-content" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20 space-y-20 md:space-y-24">
         {/* 2. 히어로 섹션 (정돈된 한글 카피라이팅 & 플로팅 검색 위젯) */}
         <section className="text-center space-y-8 max-w-4xl mx-auto pt-4 md:pt-8">
           <div className="space-y-4">
@@ -376,7 +376,7 @@ export default function HomePage() {
             {/* 표 1: 스마트플레이스 4대 요소 */}
             <div className="space-y-3">
               <h3 className="text-sm sm:text-base font-semibold text-[#1F2328] flex items-center gap-2">
-                <TrendingUp className="w-4 h-4 text-emerald-600" />
+                <TrendingUp className="w-4 h-4 text-emerald-600" aria-hidden="true" />
                 <span>[표 1] 스마트플레이스 4대 평가 지표 및 최적화 액션</span>
               </h3>
               <p className="text-xs text-[#57606a] leading-relaxed">
@@ -386,9 +386,9 @@ export default function HomePage() {
                 <table className="w-full text-left text-xs border-collapse">
                   <thead className="bg-slate-50/80 text-[#1F2328] border-b border-black/[0.06]">
                     <tr>
-                      <th className="py-3 px-3.5 font-semibold">평가 영역</th>
-                      <th className="py-3 px-3.5 font-semibold">세부 반영 시그널</th>
-                      <th className="py-3 px-3.5 font-semibold">실무 최적화 핵심 액션</th>
+                      <th scope="col" className="py-3 px-3.5 font-semibold">평가 영역</th>
+                      <th scope="col" className="py-3 px-3.5 font-semibold">세부 반영 시그널</th>
+                      <th scope="col" className="py-3 px-3.5 font-semibold">실무 최적화 핵심 액션</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100 bg-white text-[#57606a]">
@@ -420,7 +420,7 @@ export default function HomePage() {
             {/* 표 2: 전문직·병의원 온라인 광고 컴플라이언스 요약 */}
             <div className="space-y-3">
               <h3 className="text-sm sm:text-base font-semibold text-[#1F2328] flex items-center gap-2">
-                <ShieldCheck className="w-4 h-4 text-blue-600" />
+                <ShieldCheck className="w-4 h-4 text-blue-600" aria-hidden="true" />
                 <span>[표 2] 병의원·전문직 플레이스 및 블로그 광고 원천 금지 표현</span>
               </h3>
               <p className="text-xs text-[#57606a] leading-relaxed">
@@ -430,10 +430,10 @@ export default function HomePage() {
                 <table className="w-full text-left text-xs border-collapse">
                   <thead className="bg-slate-50/80 text-[#1F2328] border-b border-black/[0.06]">
                     <tr>
-                      <th className="py-3 px-3.5 font-semibold">업종 구분</th>
-                      <th className="py-3 px-3.5 font-semibold">적용 법령</th>
-                      <th className="py-3 px-3.5 font-semibold text-rose-700">대표 금지 문구</th>
-                      <th className="py-3 px-3.5 font-semibold text-emerald-700">권장 대체 방향</th>
+                      <th scope="col" className="py-3 px-3.5 font-semibold">업종 구분</th>
+                      <th scope="col" className="py-3 px-3.5 font-semibold">적용 법령</th>
+                      <th scope="col" className="py-3 px-3.5 font-semibold text-rose-700">대표 금지 문구</th>
+                      <th scope="col" className="py-3 px-3.5 font-semibold text-emerald-700">권장 대체 방향</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100 bg-white text-[#57606a]">
@@ -478,10 +478,10 @@ export default function HomePage() {
             </div>
             <Link
               href="/blog"
-              className="text-xs sm:text-sm font-semibold text-[#1F2328] hover:text-emerald-700 inline-flex items-center gap-1 transition"
+              className="text-xs sm:text-sm font-semibold text-[#1F2328] hover:text-emerald-700 inline-flex items-center gap-1 transition-colors rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600"
             >
-              <span>플레이스 &amp; 마케팅 칼럼 전체보기 ({blogPosts.length}편)</span>
-              <ArrowRight className="w-4 h-4" />
+              <span>플레이스 &amp; 마케팅 칼럼 전체보기 (<span className="tabular-nums">{blogPosts.length}</span>편)</span>
+              <ArrowRight className="w-4 h-4" aria-hidden="true" />
             </Link>
           </div>
 
@@ -490,7 +490,7 @@ export default function HomePage() {
             {featuredPosts.map((post) => (
               <article
                 key={post.slug}
-                className="bg-white rounded-3xl border border-black/[0.06] p-6 sm:p-8 shadow-[0_2px_12px_rgba(0,0,0,0.03)] hover:shadow-md transition-all flex flex-col justify-between"
+                className="bg-white rounded-3xl border border-black/[0.06] p-6 sm:p-8 shadow-[0_2px_12px_rgba(0,0,0,0.03)] hover:shadow-md transition-shadow flex flex-col justify-between"
               >
                 <div className="space-y-4">
                   <div className="flex flex-wrap items-center justify-between gap-2 text-xs">

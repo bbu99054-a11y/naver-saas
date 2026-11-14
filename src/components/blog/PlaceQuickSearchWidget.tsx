@@ -15,6 +15,7 @@ export default function PlaceQuickSearchWidget({
   const [keyword, setKeyword] = useState(defaultKeyword)
   const [target, setTarget] = useState(defaultTarget)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -22,10 +23,11 @@ export default function PlaceQuickSearchWidget({
     const tgt = target.trim()
 
     if (!kw) {
-      alert('확인할 키워드(예: 성수동 카페, 강남역 피부과)를 입력해 주세요.')
+      setErrorMessage('확인할 키워드(예: 성수동 카페, 강남역 피부과)를 입력해 주세요.')
       return
     }
 
+    setErrorMessage('')
     setIsSubmitting(true)
 
     try {
@@ -57,7 +59,7 @@ export default function PlaceQuickSearchWidget({
       <div className="relative z-10">
         <div className="flex items-center gap-2 mb-2">
           <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 uppercase tracking-wider">
-            <Zap className="w-3 h-3 text-emerald-400" /> 실시간 무료 측정
+            <Zap className="w-3 h-3 text-emerald-400" aria-hidden="true" /> 실시간 무료 측정
           </span>
           <span className="text-xs text-slate-300 hidden sm:inline">1위 매장 4대 비교 지표 &amp; 월간 검색량 분석</span>
         </div>
@@ -69,50 +71,68 @@ export default function PlaceQuickSearchWidget({
           회원가입 없이 키워드와 매장명만 입력하면, 지금 즉시 실시간 순위와 1위 매장 대비 리뷰·예약·쿠폰 차이를 비교 분석합니다.
         </p>
 
-        <form onSubmit={handleSubmit} className="space-y-3">
+        <form onSubmit={handleSubmit} noValidate className="space-y-3">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
             <div className="relative">
-              <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+              <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" aria-hidden="true" />
               <input
                 type="text"
+                name="keyword"
+                aria-label="지역 및 업종 키워드"
+                autoComplete="off"
                 value={keyword}
-                onChange={(e) => setKeyword(e.target.value)}
-                placeholder="지역+업종 키워드 (예: 강남역 맛집)"
-                className="w-full pl-10 pr-3 py-2.5 text-sm bg-white text-slate-900 placeholder-slate-400 font-semibold rounded-xl border-2 border-transparent focus:border-emerald-500 focus:outline-none transition-colors"
+                onChange={(e) => {
+                  setKeyword(e.target.value)
+                  if (errorMessage) setErrorMessage('')
+                }}
+                placeholder="지역+업종 키워드 (예: 강남역 맛집)…"
+                className={`w-full pl-10 pr-3 py-2.5 text-sm bg-white text-slate-900 placeholder-slate-400 font-semibold rounded-xl border-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 transition-colors ${
+                  errorMessage ? 'border-red-400 focus:border-red-500' : 'border-transparent focus:border-emerald-500'
+                }`}
                 required
               />
             </div>
             <div className="relative">
-              <MapPin className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+              <MapPin className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" aria-hidden="true" />
               <input
                 type="text"
+                name="target"
+                aria-label="내 매장명 (선택)"
+                autoComplete="off"
                 value={target}
                 onChange={(e) => setTarget(e.target.value)}
-                placeholder="내 매장명 (선택, 예: 스타벅스)"
-                className="w-full pl-10 pr-3.5 py-2.5 text-sm bg-white text-slate-900 placeholder-slate-400 font-semibold rounded-xl border-2 border-transparent focus:border-emerald-500 focus:outline-none transition-colors"
+                placeholder="내 매장명 (선택, 예: 스타벅스)…"
+                className="w-full pl-10 pr-3.5 py-2.5 text-sm bg-white text-slate-900 placeholder-slate-400 font-semibold rounded-xl border-2 border-transparent focus:border-emerald-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 transition-colors"
               />
             </div>
           </div>
 
+          {errorMessage && (
+            <p role="alert" className="text-xs text-rose-300 font-semibold flex items-center gap-1.5">
+              <span aria-hidden="true">⚠️</span>
+              <span>{errorMessage}</span>
+            </p>
+          )}
+
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full py-3 px-5 bg-emerald-600 hover:bg-emerald-500 disabled:opacity-60 text-white font-extrabold text-sm rounded-xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
+            className="w-full py-3 px-5 bg-emerald-600 hover:bg-emerald-500 disabled:opacity-60 text-white font-extrabold text-sm rounded-xl shadow-md transition-colors flex items-center justify-center gap-2 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900"
           >
-            <span>{isSubmitting ? '실시간 순위 측정 페이지로 이동 중...' : '무료로 실시간 순위 & 1위 비교 진단하기'}</span>
-            <ArrowRight className="w-4 h-4" />
+            <span>{isSubmitting ? '실시간 순위 측정 페이지로 이동 중…' : '무료로 실시간 순위 & 1위 비교 진단하기'}</span>
+            <ArrowRight className="w-4 h-4" aria-hidden="true" />
           </button>
         </form>
 
         <div className="mt-4 pt-3 border-t border-white/10 flex flex-wrap items-center justify-between gap-2 text-[11px] text-slate-400">
           <span className="inline-flex items-center gap-1">
-            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> 회원가입·설치 없음
+            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" aria-hidden="true" /> 회원가입·설치 없음
           </span>
           <span className="inline-flex items-center gap-1">
-            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> 네이버 모바일 통합검색 실시간 1~20위 대조
+            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" aria-hidden="true" /> 네이버 모바일 통합검색 실시간 1~20위 대조
           </span>
           <span className="inline-flex items-center gap-1">
-            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> 자가 검색 어뷰징 위험 0%
+            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" aria-hidden="true" /> 자가 검색 어뷰징 위험 0%
           </span>
         </div>
       </div>

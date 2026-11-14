@@ -40,7 +40,8 @@
 
   <!-- Fonts & Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+  <link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
   <!-- Markdown & Sanitization Engines (with local safe fallback) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.1/marked.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.9/purify.min.js"></script>
@@ -72,7 +73,7 @@
       --shadow-lg: 0 10px 25px -3px rgba(15,23,42,0.12);
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard Variable', 'Pretendard', sans-serif; }
     body { background-color: #f8fafc; color: var(--slate-900); line-height: 1.6; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
 
     /* Main Container */
@@ -248,7 +249,7 @@
       border: none;
       padding: 16px 18px;
       font-size: 14px;
-      font-family: 'Consolas', 'Pretendard', monospace;
+      font-family: 'Consolas', 'Pretendard Variable', 'Pretendard', monospace;
       line-height: 1.7;
       color: var(--slate-800);
       resize: none;
@@ -257,7 +258,7 @@
     }
     .editor-textarea::placeholder {
       color: var(--slate-400);
-      font-family: 'Pretendard', sans-serif;
+      font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
     }
     .panel-footer {
       background: var(--slate-50);
@@ -285,7 +286,7 @@
     .naver-editor-mock {
       max-width: 100%;
       margin: 0 auto;
-      font-family: 'Nanum Gothic', 'Pretendard', sans-serif;
+      font-family: 'Nanum Gothic', 'Pretendard Variable', 'Pretendard', sans-serif;
       font-size: 16px;
       line-height: 1.85;
       color: #333333;
@@ -1237,7 +1238,7 @@
 
       // Ensure wrapped in a safe container with 860px max width and clear font declaration
       const clipboardHtml = `
-        <div style="max-width: 860px; margin: 0 auto; font-family: 'Nanum Gothic', 'Pretendard', sans-serif; font-size: 16px; line-height: 1.85; color: #333333;">
+        <div style="max-width: 860px; margin: 0 auto; font-family: 'Nanum Gothic', 'Pretendard Variable', 'Pretendard', sans-serif; font-size: 16px; line-height: 1.85; color: #333333;">
           ${generatedNaverHtml}
         </div>
       `;

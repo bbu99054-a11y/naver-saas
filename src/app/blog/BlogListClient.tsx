@@ -15,9 +15,33 @@ import {
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import { blogPosts } from '@/lib/blogData'
-import { INDUSTRY_PLACE_LIST } from '@/lib/industryPlaceData'
+import type { BlogPost } from '@/lib/blogData'
 import GlobalHeader from '@/components/common/GlobalHeader'
+
+export type BlogPostSummary = Pick<
+  BlogPost,
+  | 'id'
+  | 'slug'
+  | 'title'
+  | 'excerpt'
+  | 'date'
+  | 'author'
+  | 'imageUrl'
+  | 'readTime'
+  | 'category'
+  | 'categoryLabel'
+  | 'badge'
+>
+
+export interface IndustryLinkItem {
+  slug: string
+  name: string
+}
+
+interface BlogListClientProps {
+  posts: BlogPostSummary[]
+  industries: IndustryLinkItem[]
+}
 
 const CURATED_CATEGORIES = [
   { id: 'all', label: '전체 보기' },
@@ -27,12 +51,12 @@ const CURATED_CATEGORIES = [
   { id: 'pro', label: '⚖️ 전문직(법무·세무)' },
 ] as const
 
-export default function BlogListClient() {
+export default function BlogListClient({ posts, industries }: BlogListClientProps) {
   const [selectedCategory, setSelectedCategory] = useState<string>('all')
   const [searchQuery, setSearchQuery] = useState<string>('')
 
   const filteredPosts = useMemo(() => {
-    return blogPosts.filter((post) => {
+    return posts.filter((post) => {
       let matchCategory = false
       if (selectedCategory === 'all') {
         matchCategory = true
@@ -57,7 +81,7 @@ export default function BlogListClient() {
 
       return matchCategory && matchQuery
     })
-  }, [selectedCategory, searchQuery])
+  }, [posts, selectedCategory, searchQuery])
 
   return (
     <div className="min-h-screen bg-[#FAFAFA] text-slate-900 font-sans selection:bg-slate-900 selection:text-white break-keep break-words">
@@ -65,11 +89,12 @@ export default function BlogListClient() {
       <GlobalHeader />
 
       {/* 2. 히어로 섹션 (한국어 조판 표준 적용) */}
+      <main id="main-content">
       <section className="pt-12 pb-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <div className="bg-white rounded-3xl border border-slate-200/90 p-6 sm:p-10 shadow-2xs text-center max-w-5xl mx-auto space-y-4">
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-slate-100 text-slate-800 text-xs font-bold border border-slate-200">
-            <BookOpen className="w-3.5 h-3.5 text-slate-600" />
-            <span>2026 스마트플레이스(NPlaceRank) &amp; 로컬 마케팅 실증 리포트 ({blogPosts.length}편)</span>
+            <BookOpen className="w-3.5 h-3.5 text-slate-600" aria-hidden="true" />
+            <span>2026 스마트플레이스(NPlaceRank) &amp; 로컬 마케팅 실증 리포트 (<span className="tabular-nums">{posts.length}</span>편)</span>
           </div>
           <h1 className="text-2xl sm:text-4xl font-black tracking-tight text-slate-900 leading-[1.2] text-balance">
             데이터로 검증된 <span className="text-slate-900">스마트플레이스 상위노출</span> &amp; 마케팅 실전 칼럼
@@ -91,7 +116,7 @@ export default function BlogListClient() {
                 <button
                   key={cat.id}
                   onClick={() => setSelectedCategory(cat.id)}
-                  className={`px-3.5 py-2 rounded-full text-xs sm:text-sm font-bold transition-all whitespace-nowrap cursor-pointer border ${
+                  className={`px-3.5 py-2 rounded-full text-xs sm:text-sm font-bold transition-colors whitespace-nowrap cursor-pointer border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 ${
                     isActive
                       ? 'bg-slate-900 text-white border-slate-900 shadow-2xs'
                       : 'bg-white text-slate-600 hover:text-slate-900 hover:border-slate-300 border-slate-200/90'
@@ -105,30 +130,33 @@ export default function BlogListClient() {
 
           {/* 검색 인풋 */}
           <div className="relative w-full md:w-80">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" aria-hidden="true" />
             <input
               type="text"
-              placeholder="칼럼 검색 (예: 순위 상승, 영수증 리뷰, 저장수)..."
+              name="q"
+              aria-label="블로그 칼럼 검색"
+              autoComplete="off"
+              placeholder="칼럼 검색 (예: 순위 상승, 영수증 리뷰, 저장수)…"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200/90 rounded-full text-xs sm:text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-slate-800 transition-all shadow-2xs"
+              className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200/90 rounded-full text-xs sm:text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-slate-800 focus-visible:ring-2 focus-visible:ring-blue-600/30 transition-colors shadow-2xs"
             />
           </div>
         </div>
       </section>
 
       {/* 4. 칼럼 카드 그리드 (제8조 한국어 조판 최적화) */}
-      <section className="py-6 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      <section aria-live="polite" className="py-6 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         {filteredPosts.length === 0 ? (
           <div className="py-20 text-center bg-white rounded-3xl border border-slate-200/90 text-slate-500">
-            <Filter className="w-10 h-10 mx-auto mb-3 opacity-30" />
+            <Filter className="w-10 h-10 mx-auto mb-3 opacity-30" aria-hidden="true" />
             <p className="text-base font-bold text-slate-700">검색 조건에 해당하는 칼럼이 없습니다.</p>
             <button
               onClick={() => {
                 setSelectedCategory('all')
                 setSearchQuery('')
               }}
-              className="mt-4 text-xs font-bold text-slate-900 hover:underline cursor-pointer"
+              className="mt-4 text-xs font-bold text-slate-900 hover:underline cursor-pointer rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600"
             >
               전체 칼럼 목록 다시 보기
             </button>
@@ -138,14 +166,19 @@ export default function BlogListClient() {
             {filteredPosts.map((post) => {
               const isPlacePost = post.categoryLabel === '스마트플레이스'
               return (
-                <Link key={post.id} href={`/blog/${post.slug}`} className="group">
-                  <Card className="h-full bg-white border-slate-200/90 hover:border-slate-300 rounded-3xl overflow-hidden transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md flex flex-col justify-between">
+                <Link key={post.id} href={`/blog/${post.slug}`} prefetch={false} className="group rounded-3xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600">
+                  <Card className="h-full bg-white border-slate-200/90 hover:border-slate-300 rounded-3xl overflow-hidden transition-[border-color,box-shadow,transform] duration-200 hover:-translate-y-0.5 hover:shadow-md motion-reduce:transform-none flex flex-col justify-between">
                     <div>
                       {/* 썸네일 이미지 */}
                       <div className="relative h-44 w-full bg-slate-100 overflow-hidden border-b border-slate-100">
-                        <div
-                          className="w-full h-full bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
-                          style={{ backgroundImage: `url(${post.imageUrl})` }}
+                        <img
+                          src={post.imageUrl}
+                          alt={post.title}
+                          width={800}
+                          height={450}
+                          loading="lazy"
+                          decoding="async"
+                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 motion-reduce:transform-none"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 via-transparent to-transparent" />
 
@@ -170,13 +203,13 @@ export default function BlogListClient() {
 
                       {/* 카드 본문 */}
                       <CardContent className="p-5 space-y-2">
-                        <div className="flex items-center gap-3 text-[11px] font-medium text-slate-400">
+                        <div className="flex items-center gap-3 text-[11px] font-medium text-slate-400 tabular-nums">
                           <span className="flex items-center gap-1">
-                            <Calendar className="w-3 h-3 text-slate-400" /> {post.date}
+                            <Calendar className="w-3 h-3 text-slate-400" aria-hidden="true" /> {post.date}
                           </span>
                           <span>·</span>
                           <span className="flex items-center gap-1">
-                            <Clock className="w-3 h-3 text-slate-400" /> {post.readTime}
+                            <Clock className="w-3 h-3 text-slate-400" aria-hidden="true" /> {post.readTime}
                           </span>
                         </div>
 
@@ -193,8 +226,8 @@ export default function BlogListClient() {
                     {/* 카드 푸터 */}
                     <div className="px-5 pb-4 pt-3 border-t border-slate-100 mt-auto flex items-center justify-between text-xs">
                       <span className="text-slate-400 font-medium">{post.author}</span>
-                      <span className="text-slate-900 font-bold flex items-center gap-1 group-hover:text-emerald-700 group-hover:translate-x-0.5 transition-all">
-                        칼럼 읽기 <ChevronRight className="w-3.5 h-3.5" />
+                      <span className="text-slate-900 font-bold flex items-center gap-1 group-hover:text-emerald-700 group-hover:translate-x-0.5 transition-[color,transform] motion-reduce:transform-none">
+                        칼럼 읽기 <ChevronRight className="w-3.5 h-3.5" aria-hidden="true" />
                       </span>
                     </div>
                   </Card>
@@ -217,10 +250,11 @@ export default function BlogListClient() {
             </Link>
           </div>
           <div className="flex flex-wrap gap-2">
-            {INDUSTRY_PLACE_LIST.map((ind) => (
+            {industries.map((ind) => (
               <Link
                 key={ind.slug}
                 href={`/place/${ind.slug}`}
+                prefetch={false}
                 className="inline-flex items-center px-3 py-1.5 min-h-[36px] rounded-full bg-white border border-slate-200 hover:border-[#2563eb] text-xs font-semibold text-slate-700 hover:text-[#2563eb] transition-colors break-keep"
               >
                 {ind.name} 플레이스 기준
@@ -234,7 +268,7 @@ export default function BlogListClient() {
       <section className="py-10 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
         <div className="rounded-3xl p-7 sm:p-10 bg-slate-900 text-white border border-slate-800 shadow-xl text-center space-y-4">
           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-800 text-emerald-400 text-xs font-bold border border-emerald-500/30">
-            <Zap className="w-3.5 h-3.5 text-emerald-400" /> 회원가입 없는 독립 서버 실시간 측정
+            <Zap className="w-3.5 h-3.5 text-emerald-400" aria-hidden="true" /> 회원가입 없는 독립 서버 실시간 측정
           </span>
           <h2 className="text-xl sm:text-3xl font-black text-white leading-tight text-balance">
             칼럼에서 확인한 플레이스 상위노출 공식, 지금 내 매장에 바로 대입해 보세요
@@ -246,7 +280,7 @@ export default function BlogListClient() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
             <Link href="/place">
               <Button size="lg" className="w-full sm:w-auto bg-blue-600 hover:bg-blue-500 text-white font-extrabold rounded-full px-7 h-12 cursor-pointer shadow-sm">
-                플레이스 실시간 순위 조회하기 <ArrowRight className="w-4 h-4 ml-1.5" />
+                플레이스 실시간 순위 조회하기 <ArrowRight className="w-4 h-4 ml-1.5" aria-hidden="true" />
               </Button>
             </Link>
             <Link href="/adcheck">
@@ -257,6 +291,7 @@ export default function BlogListClient() {
           </div>
         </div>
       </section>
+      </main>
 
       {/* 6. 글로벌 푸터 */}
       <footer className="bg-white py-12 px-4 sm:px-6 lg:px-8 border-t border-slate-200/80 text-xs text-slate-500">
