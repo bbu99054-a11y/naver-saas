@@ -656,8 +656,8 @@ export const pSeoPlacePosts: BlogPost[] = [
   {
     id: 'p12',
     slug: 'place-store-name-change-impact',
-    title: '스마트플레이스 상호명 변경 방법 · 심사 기간 · 순위 하락 막는 법 (2026)',
-    excerpt: '네이버 스마트플레이스에서 가게 이름(상호명)을 변경하면 24~72시간 재심사와 순위 변동이 발생할 수 있습니다. 사업자등록증·간판 사진 증빙 절차부터 소개글 과도기 문구 설정까지 한 번에 정리했습니다.',
+    title: '스마트플레이스 상호명 변경, 순위 안 떨어지게 바꾸는 법',
+    excerpt: '상호명 변경 시 24~72시간 재심사와 순위 변동을 막으려면 사업자등록증·간판 사진 1회 증빙과 구(舊) 상호 병기가 핵심입니다. 반려 없는 등록 원칙을 확인하세요.',
     date: '2026-09-17',
     author: 'PostSync 플레이스 전략연구소',
     imageUrl: 'https://images.unsplash.com/photo-1450133064473-71024230f91b?auto=format&fit=crop&q=80&w=800',
