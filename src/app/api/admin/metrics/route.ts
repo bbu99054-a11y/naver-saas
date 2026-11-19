@@ -66,7 +66,7 @@ export async function GET(request: Request) {
       realtimeActiveUsers:
         realtimeUsers.status === "fulfilled" ? realtimeUsers.value : 0,
       naverSearchAdvisorNotice:
-        "네이버 서치어드바이저는 통계 조회 공식 REST API를 제공하지 않으며, 신디케이션(수집 핑) v2 API만 연동 지원됩니다.",
+        "네이버 서치어드바이저는 통계 조회 공식 REST API를 제공하지 않으며, 색인 수집 요청은 IndexNow(searchadvisor.naver.com/indexnow) 프로토콜로 연동 지원됩니다.",
     });
   } catch (error) {
     console.error("Metrics API Error:", error);

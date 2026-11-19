@@ -1,55 +1,15 @@
 const path = require("path");
-const fs = require("fs");
-const net = require("net");
+const {
+  initRuntime,
+  createGoogleAuth,
+  escapeHtml,
+  getKstYmd,
+  getKstYesterdayLabel,
+  sendTelegramMessage,
+} = require("./lib/common");
 
-// Windows IPv6 Happy Eyeballs 타임아웃(ETIMEDOUT) 방지
-net.setDefaultAutoSelectFamily(false);
-
-// .env.local 수동 파싱 및 환경변수 주입
-const envPath = path.resolve(__dirname, "../.env.local");
-if (fs.existsSync(envPath)) {
-  const envContent = fs.readFileSync(envPath, "utf8");
-  envContent.split("\n").forEach((line) => {
-    const trimmed = line.trim();
-    if (!trimmed || trimmed.startsWith("#")) return;
-    const eqIdx = trimmed.indexOf("=");
-    if (eqIdx !== -1) {
-      const key = trimmed.slice(0, eqIdx).trim();
-      let val = trimmed.slice(eqIdx + 1).trim();
-      if ((val.startsWith('"') && val.endsWith('"')) || (val.startsWith("'") && val.endsWith("'"))) {
-        val = val.slice(1, -1);
-      }
-      process.env[key] = val;
-    }
-  });
-}
-
-// 텔레그램 메시지 발송 함수 (바닐라 REST fetch)
-async function sendTelegram(text) {
-  const token = process.env.TELEGRAM_BOT_TOKEN;
-  const chatId = process.env.TELEGRAM_CHAT_ID;
-
-  if (!token || !chatId) {
-    throw new Error("TELEGRAM_BOT_TOKEN 또는 TELEGRAM_CHAT_ID가 설정되지 않았습니다.");
-  }
-
-  const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      chat_id: chatId,
-      text: text,
-      parse_mode: "HTML",
-      disable_web_page_preview: true,
-    }),
-  });
-
-  const data = await res.json();
-  if (!res.ok || !data.ok) {
-    throw new Error(`텔레그램 발송 실패: ${data.description || res.statusText}`);
-  }
-  return data;
-}
+const ROOT_DIR = path.resolve(__dirname, "..");
+initRuntime(ROOT_DIR);
 
 function formatDuration(seconds) {
   const mins = Math.floor(seconds / 60);
@@ -67,18 +27,10 @@ function calculateChange(current, previous) {
 
 async function run() {
   const { google } = require("googleapis");
-  const keyPath = path.resolve(__dirname, "../postsync-api-9be9a8c8fa03.json");
   const propertyId = process.env.GA4_PROPERTY_ID || "546100897";
   const siteUrl = process.env.GOOGLE_SEARCH_CONSOLE_SITE_URL || "https://www.postsyncapp.com/";
 
-  const auth = new google.auth.GoogleAuth({
-    keyFile: keyPath,
-    scopes: [
-      "https://www.googleapis.com/auth/webmasters.readonly",
-      "https://www.googleapis.com/auth/analytics.readonly",
-    ],
-  });
-
+  const auth = createGoogleAuth(google, ROOT_DIR);
   const authClient = await auth.getClient();
   const analyticsdata = google.analyticsdata({ version: "v1beta", auth: authClient });
   const searchconsole = google.searchconsole({ version: "v1", auth: authClient });
@@ -125,7 +77,7 @@ async function run() {
       dimensions: [{ name: "sessionSourceMedium" }],
       metrics: [{ name: "sessions" }],
       orderBys: [{ metric: { metricName: "sessions" }, desc: true }],
-      limit: 4,
+      limit: "4",
     },
   });
 
@@ -142,7 +94,7 @@ async function run() {
       dimensions: [{ name: "pagePath" }],
       metrics: [{ name: "screenPageViews" }, { name: "averageSessionDuration" }],
       orderBys: [{ metric: { metricName: "screenPageViews" }, desc: true }],
-      limit: 3,
+      limit: "3",
     },
   });
 
@@ -155,45 +107,49 @@ async function run() {
   console.log("Fetching Search Console top queries...");
   let searchSummary = "• 최근 집계 대기 중";
   try {
-    const todayObj = new Date();
-    const tenDaysAgoObj = new Date(todayObj.getTime() - 10 * 24 * 60 * 60 * 1000);
-    const startDate = tenDaysAgoObj.toISOString().split("T")[0];
-    const endDate = todayObj.toISOString().split("T")[0];
+    const startDate = getKstYmd(-10);
+    const endDate = getKstYmd(-1);
 
+    // GSC는 클릭 0건 구간을 알파벳순으로 반환하므로 충분히 조회한 뒤 노출 내림차순 정렬
     const scRes = await searchconsole.searchanalytics.query({
       siteUrl,
       requestBody: {
         startDate,
         endDate,
         dimensions: ["query"],
-        rowLimit: 4,
+        dataState: "all",
+        rowLimit: 100,
       },
     });
 
-    const rows = scRes.data.rows || [];
+    const rows = (scRes.data.rows || [])
+      .slice()
+      .sort((a, b) => (b.impressions || 0) - (a.impressions || 0) || (b.clicks || 0) - (a.clicks || 0))
+      .slice(0, 4);
+
     if (rows.length > 0) {
       searchSummary = rows
-        .map((r) => `• <code>${r.keys[0]}</code> (${r.impressions}회 노출, 평균 ${Math.round(r.position)}위)`)
+        .map(
+          (r) =>
+            `• <code>${escapeHtml(r.keys?.[0] || "")}</code> (${r.impressions || 0}회 노출, 평균 ${Math.round(r.position || 0)}위)`
+        )
         .join("\n");
     }
   } catch (err) {
     console.warn("Search Console error:", err.message);
   }
 
-  const now = new Date();
-  const yesterday = new Date(now.getTime() - 24 * 60 * 60 * 1000);
-  const dateStr = `${yesterday.getMonth() + 1}월 ${yesterday.getDate()}일`;
-
+  const dateStr = getKstYesterdayLabel();
   const newUserRate = yUsers > 0 ? Math.round((yNewUsers / yUsers) * 100) : 0;
   const bounceChange = Math.round((yBounce - bBounce) * 10) / 10;
   const bounceChangeStr = bounceChange <= 0 ? `${bounceChange}%p 개선` : `+${bounceChange}%p`;
 
   const trafficLines = trafficSources
-    .map((t) => `• ${t.source}: <b>${t.sessions}회</b>`)
+    .map((t) => `• ${escapeHtml(t.source)}: <b>${t.sessions}회</b>`)
     .join("\n");
 
   const pageLines = topPages
-    .map((p) => `• <b>${p.path}</b>: ${p.views}회 (${formatDuration(p.duration)})`)
+    .map((p) => `• <b>${escapeHtml(p.path)}</b>: ${p.views}회 (${formatDuration(p.duration)})`)
     .join("\n");
 
   const reportText = `📊 <b>[PostSync] ${dateStr} 일일 실적 브리핑</b>
@@ -217,8 +173,8 @@ ${searchSummary}
 🔗 <a href="https://www.postsyncapp.com">PostSync 바로가기</a>`;
 
   console.log("Sending Telegram message...");
-  const result = await sendTelegram(reportText);
-  console.log("Successfully sent! Message ID:", result.result?.message_id);
+  const messageId = await sendTelegramMessage(reportText);
+  console.log("Successfully sent! Message ID:", messageId);
 }
 
 run().catch((err) => {

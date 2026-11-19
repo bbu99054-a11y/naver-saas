@@ -1,9 +1,10 @@
 name: Daily Metrics Telegram Briefing
 
 on:
-  # 매일 UTC 00:00 = 한국 시간(KST) 매일 오전 09:00 자동 지표 수집 및 텔레그램 브리핑 (자동 git push 없음)
-  schedule:
-    - cron: '0 0 * * *'
+  # 로컬 Antigravity Sidecar(daily-seo-engine) 단독 운영 중 · 비상 시 아래 workflow_dispatch로 수동 실행
+  # schedule:
+  #   # 매일 UTC 00:00 = 한국 시간(KST) 매일 오전 09:00
+  #   - cron: '0 0 * * *'
   workflow_dispatch: # GitHub 웹 콘솔에서 수동 즉시 실행 가능
 
 jobs:
@@ -34,6 +35,7 @@ jobs:
       - name: Run daily briefing script
         env:
           NODE_PATH: /tmp/runner-deps/node_modules
+          GOOGLE_APPLICATION_CREDENTIALS: "postsync-api-9be9a8c8fa03.json"
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           GA4_PROPERTY_ID: ${{ secrets.GA4_PROPERTY_ID }}
@@ -43,6 +45,7 @@ jobs:
       - name: Run SEO decision engine
         env:
           NODE_PATH: /tmp/runner-deps/node_modules
+          GOOGLE_APPLICATION_CREDENTIALS: "postsync-api-9be9a8c8fa03.json"
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           GA4_PROPERTY_ID: ${{ secrets.GA4_PROPERTY_ID }}

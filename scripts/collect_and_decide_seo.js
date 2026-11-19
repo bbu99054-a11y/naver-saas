@@ -6,47 +6,33 @@
  *   node scripts/collect_and_decide_seo.js --notify-noop
  *
  * 동작 단계:
- *   1. GSC API (쿼리×페이지 매트릭스, 14일 추세 비교, 일자별 Z-Score 이상치) 수집
+ *   1. GSC API (쿼리×페이지 매트릭스, 대칭 14일 추세 비교, 일자별 Z-Score 이상치) 수집
  *   2. GA4 Data API (페이지별 조회수, 평균 체류시간, 이탈률) 수집
- *   3. 네이버 서치어드바이저 크롬 스냅샷(src/data/seo-snapshots/naver-latest.json) 병합
- *   4. 경쟁사 3곳(마케팅마법사, 순위닥터, SNS서포터) sitemap.xml 크롤링 및 주간 신규 발행/색인 비교
- *   5. 14일 수정 잠금(Cooldown Lock) 필터링 후 7대 판단 공식(CASE_0 ~ CASE_6) 실행
+ *   3. 네이버 서치어드바이저 크롬 스냅샷(src/data/naver-latest.json) 병합 및 신선도 검증
+ *   4. 경쟁사 3곳(마케팅마법사, 순위닥터, SNS서포터) 사이트맵 크롤링 및 경로 기반 신규 발행 비교
+ *   5. 14일 수정 잠금(Cooldown Lock) · 보류 스누즈(7일) 필터링 후 CASE_0 ~ CASE_8 판정 및 중복 제거
  *   6. src/data/seo-snapshots/YYYY-MM-DD.json 및 src/data/pending-seo-action.json 저장
  */
 
 const path = require("path");
 const fs = require("fs");
-const net = require("net");
 const { google } = require("googleapis");
-
-// Windows IPv6 Happy Eyeballs 타임아웃(ETIMEDOUT) 방지
-net.setDefaultAutoSelectFamily(false);
-
-// 1. .env.local 환경변수 로드
-const envPath = path.resolve(__dirname, "../.env.local");
-if (fs.existsSync(envPath)) {
-  const envContent = fs.readFileSync(envPath, "utf8");
-  envContent.split("\n").forEach((line) => {
-    const trimmed = line.trim();
-    if (!trimmed || trimmed.startsWith("#")) return;
-    const eqIdx = trimmed.indexOf("=");
-    if (eqIdx !== -1) {
-      const key = trimmed.slice(0, eqIdx).trim();
-      let val = trimmed.slice(eqIdx + 1).trim();
-      if ((val.startsWith('"') && val.endsWith('"')) || (val.startsWith("'") && val.endsWith("'"))) {
-        val = val.slice(1, -1);
-      }
-      process.env[key] = val;
-    }
-  });
-}
+const {
+  initRuntime,
+  createGoogleAuth,
+  escapeHtml,
+  getKstYmd,
+  daysBetweenYmd,
+  sendTelegramMessage,
+} = require("./lib/common");
 
 const ROOT_DIR = path.resolve(__dirname, "..");
+initRuntime(ROOT_DIR);
+
 const TRACKER_PATH = path.resolve(ROOT_DIR, "src/data/seo-tracker.json");
 const COMPETITOR_PATH = path.resolve(ROOT_DIR, "src/data/competitor-snapshots.json");
 const SNAPSHOT_DIR = path.resolve(ROOT_DIR, "src/data/seo-snapshots");
 const NAVER_REPO_PATH = path.resolve(ROOT_DIR, "src/data/naver-latest.json");
-const NAVER_SNAPSHOT_PATH = path.resolve(SNAPSHOT_DIR, "naver-latest.json");
 const PENDING_ACTION_PATH = path.resolve(ROOT_DIR, "src/data/pending-seo-action.json");
 
 // 301 리다이렉트 및 비SEO 법무·인증 페이지 제외 목록
@@ -64,6 +50,24 @@ const IGNORED_PATHS = new Set([
   "/dashboard",
 ]);
 
+const COMPETITOR_RELEVANT_KEYWORDS = [
+  "place",
+  "rank",
+  "review",
+  "naver",
+  "hospital",
+  "clinic",
+  "tax",
+  "lawyer",
+  "legal",
+  "geo",
+  "blog",
+];
+
+// CASE_1 신규 pSEO 발굴에서 제외할 자사/타사 브랜드 및 폐기 툴 키워드
+const NEGATIVE_NEW_PSEO_REGEX =
+  /엔체커|마케팅마법사|순위닥터|sns서포터|플레이스\s*연구소|와이엠랩스|postsync|포스트싱크|seo\s*점수/i;
+
 function isIgnoredPath(pagePath) {
   if (!pagePath) return false;
   return IGNORED_PATHS.has(pagePath) || pagePath.startsWith("/dashboard/");
@@ -71,10 +75,15 @@ function isIgnoredPath(pagePath) {
 
 function isPlaceRelated(targetPath, query, trackerEntry) {
   if (trackerEntry?.isPlaceCore === true || trackerEntry?.type === "pseo") return true;
-  if (["/place", "/utm", "/reply", "/adcheck"].includes(targetPath)) return true;
+  if (["/", "/place", "/utm", "/reply", "/adcheck"].includes(targetPath)) return true;
   if (targetPath && targetPath.toLowerCase().includes("place")) return true;
   if (query && /플레이스|스마트플레이스|place|리뷰|영수증|저장수|예약|상권|방문자/i.test(query)) return true;
   return false;
+}
+
+function isNegativeNewPseoQuery(query) {
+  if (!query) return true;
+  return NEGATIVE_NEW_PSEO_REGEX.test(String(query).trim());
 }
 
 function hasDedicatedPostForQuery(query, entries) {
@@ -150,16 +159,6 @@ const CTR_BENCHMARK_BY_POS = {
   10: 1.2,
 };
 
-function toYmd(dateObj) {
-  return dateObj.toISOString().split("T")[0];
-}
-
-function daysBetween(dateStrA, dateStrB) {
-  const a = new Date(dateStrA);
-  const b = new Date(dateStrB);
-  return Math.floor(Math.abs(b.getTime() - a.getTime()) / (1000 * 60 * 60 * 24));
-}
-
 function normalizePathFromUrl(urlStr) {
   try {
     const u = new URL(urlStr);
@@ -169,21 +168,157 @@ function normalizePathFromUrl(urlStr) {
   }
 }
 
-async function sendTelegramPlain(text) {
-  const token = process.env.TELEGRAM_BOT_TOKEN;
-  const chatId = process.env.TELEGRAM_CHAT_ID;
-  if (!token || !chatId) return;
-
-  await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      chat_id: chatId,
-      text,
-      parse_mode: "HTML",
-      disable_web_page_preview: true,
-    }),
+/**
+ * 경쟁사 URL 중 도메인명(placewizard, rankdoctor)을 제외한 pathname만 검사해 연관 URL을 필터링합니다.
+ */
+function filterRelevantCompetitorUrls(urls, keywords = COMPETITOR_RELEVANT_KEYWORDS) {
+  return (urls || []).filter((rawUrl) => {
+    let targetPath = "";
+    try {
+      targetPath = new URL(rawUrl).pathname.toLowerCase();
+    } catch {
+      targetPath = String(rawUrl || "").toLowerCase();
+    }
+    return keywords.some((kw) => targetPath.includes(kw));
   });
+}
+
+/**
+ * GSC 최근 1~2일 미확정 지연을 제외한 대칭 14일 비교 윈도우를 반환합니다.
+ * GSC startDate/endDate는 양 끝 포함(inclusive)이므로 -16..-3(14일) vs -30..-17(14일)로 정확히 맞춥니다.
+ */
+function computeSymmetric14dWindows(baseDate = new Date()) {
+  return {
+    endFresh: getKstYmd(-3, baseDate),
+    start14d: getKstYmd(-16, baseDate),
+    endPrev14d: getKstYmd(-17, baseDate),
+    startPrev14d: getKstYmd(-30, baseDate),
+    start28d: getKstYmd(-30, baseDate),
+    start90d: getKstYmd(-92, baseDate),
+  };
+}
+
+function isSnoozedAction(action, snoozedList, todayStr) {
+  for (const s of snoozedList || []) {
+    if (!s || !s.snoozeUntil || s.snoozeUntil < todayStr) continue;
+    if (s.caseCode !== action.caseCode) continue;
+    if (action.caseCode === "CASE_1") {
+      if (s.triggerQuery && s.triggerQuery === action.triggerQuery) return true;
+    } else if (s.targetPath && s.targetPath === action.targetPath) {
+      return true;
+    }
+  }
+  return false;
+}
+
+function isNaverSnapshotStale(naverSnapshot, todayStr, maxAgeDays = 7) {
+  if (!naverSnapshot) return { stale: true, ageDays: null };
+  const refDate = naverSnapshot.collectedAt || naverSnapshot.exposeLastUpdated;
+  if (!refDate) return { stale: true, ageDays: null };
+  const ageDays = daysBetweenYmd(refDate, todayStr, { absolute: false });
+  if (Number.isNaN(ageDays)) return { stale: true, ageDays: null };
+  return {
+    stale: ageDays > maxAgeDays,
+    ageDays,
+  };
+}
+
+/**
+ * 우선순위 점수 내림차순으로 정렬된 후보군에서 동일 페이지 중복을 제거해 다양성을 확보합니다.
+ */
+function dedupeCandidateActions(sortedActions) {
+  const seen = new Set();
+  const deduped = [];
+  for (const act of sortedActions || []) {
+    const key = act.caseCode === "CASE_1" ? `CASE_1:${act.triggerQuery}` : act.targetPath;
+    if (!key || seen.has(key)) continue;
+    seen.add(key);
+    deduped.push(act);
+  }
+  return deduped;
+}
+
+function parseSitemapUrlsFromXml(xml, sevenDaysAgo) {
+  const urls = [];
+  const recentByLastmod = [];
+  const urlBlockRegex = /<url>([\s\S]*?)<\/url>/g;
+  let match;
+
+  while ((match = urlBlockRegex.exec(xml)) !== null) {
+    const block = match[1];
+    const locMatch = block.match(/<loc>(.*?)<\/loc>/);
+    const modMatch = block.match(/<lastmod>(.*?)<\/lastmod>/);
+    if (locMatch && locMatch[1]) {
+      const loc = locMatch[1].trim();
+      urls.push(loc);
+      if (modMatch && modMatch[1]) {
+        const modDate = new Date(modMatch[1].trim());
+        if (!Number.isNaN(modDate.getTime()) && modDate >= sevenDaysAgo) {
+          recentByLastmod.push(loc);
+        }
+      }
+    }
+  }
+
+  if (urls.length === 0) {
+    const locOnlyRegex = /<loc>(.*?)<\/loc>/g;
+    while ((match = locOnlyRegex.exec(xml)) !== null) {
+      urls.push(match[1].trim());
+    }
+  }
+
+  return { urls, recentByLastmod };
+}
+
+async function fetchSitemapWithIndexSupport(sitemapUrl, sevenDaysAgo) {
+  const res = await fetch(sitemapUrl, {
+    headers: { "User-Agent": "Mozilla/5.0 (compatible; PostSyncSEOBot/1.0)" },
+    signal: AbortSignal.timeout(8000),
+  });
+  if (!res.ok) {
+    return { ok: false, status: res.status, urls: [], recentByLastmod: [] };
+  }
+
+  const xml = await res.text();
+  if (/<sitemapindex[\s>]/i.test(xml)) {
+    const childLocs = [];
+    const childRegex = /<sitemap>[\s\S]*?<loc>(.*?)<\/loc>[\s\S]*?<\/sitemap>/g;
+    let m;
+    while ((m = childRegex.exec(xml)) !== null && childLocs.length < 10) {
+      if (m[1]) childLocs.push(m[1].trim());
+    }
+    const allUrls = [];
+    const allRecent = [];
+    for (const childUrl of childLocs) {
+      try {
+        const childRes = await fetch(childUrl, {
+          headers: { "User-Agent": "Mozilla/5.0 (compatible; PostSyncSEOBot/1.0)" },
+          signal: AbortSignal.timeout(8000),
+        });
+        if (!childRes.ok) continue;
+        const childXml = await childRes.text();
+        const parsed = parseSitemapUrlsFromXml(childXml, sevenDaysAgo);
+        allUrls.push(...parsed.urls);
+        allRecent.push(...parsed.recentByLastmod);
+      } catch {
+        // 개별 하위 사이트맵 실패 시 다음 항목 진행
+      }
+    }
+    return {
+      ok: true,
+      status: 200,
+      urls: Array.from(new Set(allUrls)),
+      recentByLastmod: Array.from(new Set(allRecent)),
+    };
+  }
+
+  const parsed = parseSitemapUrlsFromXml(xml, sevenDaysAgo);
+  return {
+    ok: true,
+    status: 200,
+    urls: Array.from(new Set(parsed.urls)),
+    recentByLastmod: Array.from(new Set(parsed.recentByLastmod)),
+  };
 }
 
 /**
@@ -199,71 +334,37 @@ async function checkCompetitorSitemaps() {
     }
   }
 
-  const todayStr = toYmd(new Date());
+  const todayStr = getKstYmd();
   const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
   const report = {};
   const nextCompetitorsState = {};
 
   for (const comp of COMPETITORS) {
     try {
-      const res = await fetch(comp.sitemapUrl, {
-        headers: { "User-Agent": "Mozilla/5.0 (compatible; PostSyncSEOBot/1.0)" },
-        signal: AbortSignal.timeout(8000),
-      });
-
-      if (!res.ok) {
+      const fetched = await fetchSitemapWithIndexSupport(comp.sitemapUrl, sevenDaysAgo);
+      if (!fetched.ok) {
         report[comp.id] = {
           name: comp.name,
           domain: comp.domain,
-          status: `HTTP_${res.status}`,
+          status: `HTTP_${fetched.status}`,
           totalUrls: 0,
           weeklyActiveCount: 0,
           newlyAddedSinceLastCheck: 0,
           newUrlsSample: [],
+          relevantNewUrls: [],
         };
+        if (prevData.competitors?.[comp.id]) {
+          nextCompetitorsState[comp.id] = prevData.competitors[comp.id];
+        }
         continue;
       }
 
-      const xml = await res.text();
-      const urlBlockRegex = /<url>([\s\S]*?)<\/url>/g;
-      const urls = [];
-      const recentByLastmod = [];
-      let match;
-
-      while ((match = urlBlockRegex.exec(xml)) !== null) {
-        const block = match[1];
-        const locMatch = block.match(/<loc>(.*?)<\/loc>/);
-        const modMatch = block.match(/<lastmod>(.*?)<\/lastmod>/);
-        if (locMatch && locMatch[1]) {
-          const loc = locMatch[1].trim();
-          urls.push(loc);
-          if (modMatch && modMatch[1]) {
-            const modDate = new Date(modMatch[1].trim());
-            if (!isNaN(modDate.getTime()) && modDate >= sevenDaysAgo) {
-              recentByLastmod.push(loc);
-            }
-          }
-        }
-      }
-
-      // 만약 <url> 블록 없이 <loc>만 있는 경우 폴백 파싱
-      if (urls.length === 0) {
-        const locOnlyRegex = /<loc>(.*?)<\/loc>/g;
-        while ((match = locOnlyRegex.exec(xml)) !== null) {
-          urls.push(match[1].trim());
-        }
-      }
-
+      const { urls, recentByLastmod } = fetched;
       const prevComp = prevData.competitors?.[comp.id];
       const prevUrlSet = new Set(prevComp?.knownUrls || []);
       const diffNewUrls = prevUrlSet.size > 0 ? urls.filter((u) => !prevUrlSet.has(u)) : [];
       const sampleSource = diffNewUrls.length > 0 ? diffNewUrls : recentByLastmod;
-
-      // 우리 도메인과 연관된 플레이스/순위/리뷰/세무/병의원/변호사 관련 슬러그 필터링
-      const relevantKeywords = ["place", "rank", "review", "naver", "hospital", "clinic", "tax", "lawyer", "legal", "geo", "blog"];
-      const relevantNewUrls = sampleSource.filter((u) =>
-        relevantKeywords.some((kw) => u.toLowerCase().includes(kw))
-      );
+      const relevantNewUrls = filterRelevantCompetitorUrls(sampleSource);
 
       report[comp.id] = {
         name: comp.name,
@@ -282,7 +383,7 @@ async function checkCompetitorSitemaps() {
         domain: comp.domain,
         lastCheckedDate: todayStr,
         totalUrls: urls.length,
-        knownUrls: urls.slice(-2000),
+        knownUrls: urls.slice(-10000),
       };
     } catch (err) {
       report[comp.id] = {
@@ -293,6 +394,7 @@ async function checkCompetitorSitemaps() {
         weeklyActiveCount: 0,
         newlyAddedSinceLastCheck: 0,
         newUrlsSample: [],
+        relevantNewUrls: [],
       };
       if (prevData.competitors?.[comp.id]) {
         nextCompetitorsState[comp.id] = prevData.competitors[comp.id];
@@ -338,35 +440,50 @@ function detectDailyAnomalies(dailyRows) {
   return anomalies.slice(-3);
 }
 
+function buildActiveSnoozeList(tracker, todayStr, rejectSnoozeDays) {
+  const active = (tracker.snoozedActions || []).filter(
+    (s) => s && s.snoozeUntil && s.snoozeUntil >= todayStr
+  );
+
+  // pending-seo-action.json의 직전 REJECTED_HOLD 상태도 방어적으로 스누즈 풀에 합산
+  if (fs.existsSync(PENDING_ACTION_PATH)) {
+    try {
+      const prevPending = JSON.parse(fs.readFileSync(PENDING_ACTION_PATH, "utf8"));
+      if (prevPending.status === "REJECTED_HOLD" && prevPending.selectedAction) {
+        const rejDate = prevPending.editRejectedAt || prevPending.date;
+        const elapsed = daysBetweenYmd(rejDate, todayStr, { absolute: false });
+        if (!Number.isNaN(elapsed) && elapsed >= 0 && elapsed < rejectSnoozeDays) {
+          const act = prevPending.selectedAction;
+          const snoozeUntil = getKstYmd(rejectSnoozeDays - elapsed);
+          active.push({
+            caseCode: act.caseCode,
+            targetPath: act.targetPath || act.targetSlug,
+            triggerQuery: act.triggerQuery || null,
+            rejectedAt: rejDate,
+            snoozeUntil,
+          });
+        }
+      }
+    } catch {
+      // 파싱 실패 시 무시
+    }
+  }
+
+  return active;
+}
+
 async function main() {
   const notifyNoop = process.argv.includes("--notify-noop");
-  const keyPath = path.resolve(ROOT_DIR, "postsync-api-9be9a8c8fa03.json");
   const propertyId = process.env.GA4_PROPERTY_ID || "546100897";
   const siteUrl = process.env.GOOGLE_SEARCH_CONSOLE_SITE_URL || "https://www.postsyncapp.com/";
 
-  const credentials = JSON.parse(fs.readFileSync(keyPath, "utf8"));
-  const auth = new google.auth.GoogleAuth({
-    credentials,
-    scopes: [
-      "https://www.googleapis.com/auth/webmasters.readonly",
-      "https://www.googleapis.com/auth/analytics.readonly",
-    ],
-  });
-
+  const auth = createGoogleAuth(google, ROOT_DIR);
   const authClient = await auth.getClient();
   const analyticsdata = google.analyticsdata({ version: "v1beta", auth: authClient });
   const searchconsole = google.searchconsole({ version: "v1", auth: authClient });
 
-  const today = new Date();
-  const todayStr = toYmd(today);
-
-  // GSC 90일(누적 검색어 풀) 및 최근 14일 vs 직전 14일 추세 비교
-  const endFresh = new Date(today.getTime() - 1 * 24 * 60 * 60 * 1000);
-  const start90d = new Date(endFresh.getTime() - 90 * 24 * 60 * 60 * 1000);
-  const start28d = new Date(endFresh.getTime() - 28 * 24 * 60 * 60 * 1000);
-  const start14d = new Date(endFresh.getTime() - 14 * 24 * 60 * 60 * 1000);
-  const startPrev14d = new Date(start14d.getTime() - 14 * 24 * 60 * 60 * 1000);
-  const endPrev14d = new Date(start14d.getTime() - 1 * 24 * 60 * 60 * 1000);
+  const todayStr = getKstYmd();
+  const windows = computeSymmetric14dWindows();
 
   console.log("[1/5] 구글 서치콘솔(GSC) 다차원 데이터 수집 중...");
   const [gscQueryPageRes, gscQueryOnlyRes, gscPageOnlyRes, gscDailyRes, gscRecent14Res, gscPrev14Res] =
@@ -374,8 +491,8 @@ async function main() {
       searchconsole.searchanalytics.query({
         siteUrl,
         requestBody: {
-          startDate: toYmd(start90d),
-          endDate: toYmd(endFresh),
+          startDate: windows.start90d,
+          endDate: windows.endFresh,
           dimensions: ["query", "page"],
           dataState: "all",
           rowLimit: 5000,
@@ -384,8 +501,8 @@ async function main() {
       searchconsole.searchanalytics.query({
         siteUrl,
         requestBody: {
-          startDate: toYmd(start90d),
-          endDate: toYmd(endFresh),
+          startDate: windows.start90d,
+          endDate: windows.endFresh,
           dimensions: ["query"],
           dataState: "all",
           rowLimit: 2000,
@@ -394,8 +511,8 @@ async function main() {
       searchconsole.searchanalytics.query({
         siteUrl,
         requestBody: {
-          startDate: toYmd(start90d),
-          endDate: toYmd(endFresh),
+          startDate: windows.start90d,
+          endDate: windows.endFresh,
           dimensions: ["page"],
           dataState: "all",
           rowLimit: 1000,
@@ -404,8 +521,8 @@ async function main() {
       searchconsole.searchanalytics.query({
         siteUrl,
         requestBody: {
-          startDate: toYmd(start28d),
-          endDate: toYmd(endFresh),
+          startDate: windows.start28d,
+          endDate: windows.endFresh,
           dimensions: ["date"],
           dataState: "all",
           rowLimit: 100,
@@ -414,8 +531,8 @@ async function main() {
       searchconsole.searchanalytics.query({
         siteUrl,
         requestBody: {
-          startDate: toYmd(start14d),
-          endDate: toYmd(endFresh),
+          startDate: windows.start14d,
+          endDate: windows.endFresh,
           dimensions: ["page"],
           dataState: "all",
           rowLimit: 500,
@@ -424,8 +541,8 @@ async function main() {
       searchconsole.searchanalytics.query({
         siteUrl,
         requestBody: {
-          startDate: toYmd(startPrev14d),
-          endDate: toYmd(endPrev14d),
+          startDate: windows.startPrev14d,
+          endDate: windows.endPrev14d,
           dimensions: ["page"],
           dataState: "all",
           rowLimit: 500,
@@ -499,14 +616,9 @@ async function main() {
 
   console.log("[3/5] 네이버 서치어드바이저 스냅샷 확인 중...");
   let naverSnapshot = null;
-  const naverFileToRead = fs.existsSync(NAVER_REPO_PATH)
-    ? NAVER_REPO_PATH
-    : fs.existsSync(NAVER_SNAPSHOT_PATH)
-      ? NAVER_SNAPSHOT_PATH
-      : null;
-  if (naverFileToRead) {
+  if (fs.existsSync(NAVER_REPO_PATH)) {
     try {
-      naverSnapshot = JSON.parse(fs.readFileSync(naverFileToRead, "utf8"));
+      naverSnapshot = JSON.parse(fs.readFileSync(NAVER_REPO_PATH, "utf8"));
     } catch {
       naverSnapshot = null;
     }
@@ -517,15 +629,29 @@ async function main() {
 
   console.log("[5/5] A-to-Z SEO 의사결정 엔진(CASE_0 ~ CASE_8, 플레이스 우선 가중치) 실행 중...");
   const tracker = JSON.parse(fs.readFileSync(TRACKER_PATH, "utf8"));
-  const cooldownDays = tracker.policy?.cooldownDays ?? 14;
-  const minImp = tracker.policy?.minImpressionsForLowCtr ?? 15;
+  const policy = tracker.policy || {};
+  const cooldownDays = policy.cooldownDays ?? 14;
+  const minLowCtrImp = policy.minImpressionsForLowCtr ?? 15;
+  const minStrikingImp = policy.minImpressionsForStrikingDistance ?? 15;
+  const minNewPseoImp = policy.minImpressionsForNewPseo ?? 15;
+  const hhiThreshold = policy.cannibalizationHhiThreshold ?? 0.15;
+  const rejectSnoozeDays = policy.rejectSnoozeDays ?? 7;
+  const naverMaxAgeDays = policy.naverSnapshotMaxAgeDays ?? 7;
+
+  const activeSnoozes = buildActiveSnoozeList(tracker, todayStr, rejectSnoozeDays);
+  const naverFreshness = isNaverSnapshotStale(naverSnapshot, todayStr, naverMaxAgeDays);
+  if (naverFreshness.stale) {
+    console.warn(
+      `⚠️ 네이버 서치어드바이저 스냅샷이 ${naverFreshness.ageDays ?? "알 수 없는"}일 경과해 CASE_8 판정에서 제외됩니다.`
+    );
+  }
 
   // 슬러그/경로별 트래커 매핑 및 14일 쿨다운 판정
   const entryByPath = new Map();
   for (const entry of tracker.entries || []) {
     const p = entry.slug.startsWith("/") ? entry.slug : `/blog/${entry.slug}`;
-    const daysSinceMod = daysBetween(entry.lastModifiedAt || entry.publishedAt, todayStr);
-    const isCooldownLocked = daysSinceMod < cooldownDays;
+    const daysSinceMod = daysBetweenYmd(entry.lastModifiedAt || entry.publishedAt, todayStr);
+    const isCooldownLocked = !Number.isNaN(daysSinceMod) && daysSinceMod < cooldownDays;
     entryByPath.set(p, {
       ...entry,
       pagePath: p,
@@ -549,16 +675,16 @@ async function main() {
   // CASE_2: CTR_REWRITE (1~2페이지(20위 이내)에서 기대 CTR 미달 또는 노출 35회+ 클릭 0건)
   // -------------------------------------------------------------------------
   for (const qRow of queryRows) {
-    if (qRow.impressions < minImp) continue;
+    if (qRow.impressions < minLowCtrImp) continue;
     const mapped = topPageByQuery.get(qRow.query);
-    const targetPath = mapped?.pagePath || "/place";
+    if (!mapped?.pagePath) continue;
+    const targetPath = mapped.pagePath;
     if (isIgnoredPath(targetPath)) continue;
     const trackerEntry = entryByPath.get(targetPath);
 
     const roundedPos = Math.max(1, Math.min(10, Math.round(qRow.position)));
     const benchmarkCtr = qRow.position <= 10 ? CTR_BENCHMARK_BY_POS[roundedPos] || 1.5 : 3.0;
 
-    // 20위 이내(1~2페이지)에서만 타이틀/메타 CTR 리라이트 대상으로 판정
     const isSevereZeroClick = qRow.position <= 20 && qRow.impressions >= 35 && qRow.clicks === 0;
     const isLowCtrOnPageOne = qRow.position <= 12 && qRow.ctr < benchmarkCtr * 0.6;
 
@@ -592,7 +718,8 @@ async function main() {
   for (const qRow of queryRows) {
     if (qRow.impressions < 35 || qRow.position <= 20) continue;
     const mapped = topPageByQuery.get(qRow.query);
-    const targetPath = mapped?.pagePath || "/place";
+    if (!mapped?.pagePath) continue;
+    const targetPath = mapped.pagePath;
     if (isIgnoredPath(targetPath)) continue;
     const trackerEntry = entryByPath.get(targetPath);
     if (trackerEntry && trackerEntry.isCooldownLocked) continue;
@@ -620,7 +747,7 @@ async function main() {
   // CASE_3: STRIKING_DISTANCE (순위 8위~25위, 1페이지 진입 목전 키워드 보강)
   // -------------------------------------------------------------------------
   for (const qp of queryPageRows) {
-    if (qp.impressions < 10) continue;
+    if (qp.impressions < minStrikingImp) continue;
     if (isIgnoredPath(qp.pagePath)) continue;
     if (qp.position >= 8 && qp.position <= 25) {
       const trackerEntry = entryByPath.get(qp.pagePath);
@@ -669,7 +796,7 @@ async function main() {
     const hhi = shares.reduce((s, sh) => s + sh * sh, 0);
     const conflictScore = Math.round((1 - hhi) * 100) / 100;
 
-    if (conflictScore >= 0.15 && pages[1].impressions >= 10) {
+    if (conflictScore >= hhiThreshold && pages[1].impressions >= 10) {
       const secondaryPage = pages[1];
       const trackerEntry = entryByPath.get(secondaryPage.pagePath);
       if (trackerEntry && trackerEntry.isCooldownLocked) continue;
@@ -697,7 +824,7 @@ async function main() {
   }
 
   // -------------------------------------------------------------------------
-  // CASE_5: CONTENT_DECAY (최근 14일 vs 직전 14일 노출/클릭 30% 이상 급락)
+  // CASE_5: CONTENT_DECAY (대칭 14일 vs 직전 14일 노출 30% 이상 급락)
   // -------------------------------------------------------------------------
   const recent14Map = new Map(
     (gscRecent14Res.data.rows || []).map((r) => [normalizePathFromUrl(r.keys?.[0] || ""), r])
@@ -736,12 +863,15 @@ async function main() {
   }
 
   // -------------------------------------------------------------------------
-  // CASE_1: NEW_PSEO (GSC 유입 쿼리 중 전용 칼럼이 없는 키워드 발굴 — 토큰/의도 클러스터 중복 제외)
+  // CASE_1: NEW_PSEO (GSC 유입 쿼리 중 전용 칼럼이 없는 키워드 발굴)
   // -------------------------------------------------------------------------
   for (const qRow of queryRows) {
-    if (qRow.impressions < minImp) continue;
-    const hasDedicatedPost = hasDedicatedPostForQuery(qRow.query, tracker.entries || []);
+    if (qRow.impressions < minNewPseoImp) continue;
+    if (isNegativeNewPseoQuery(qRow.query)) continue;
+    const topMapped = topPageByQuery.get(qRow.query);
+    if (topMapped && isIgnoredPath(topMapped.pagePath)) continue;
 
+    const hasDedicatedPost = hasDedicatedPostForQuery(qRow.query, tracker.entries || []);
     if (!hasDedicatedPost) {
       candidateActions.push({
         caseCode: "CASE_1",
@@ -768,12 +898,11 @@ async function main() {
   for (const [pagePath, entry] of entryByPath.entries()) {
     if (entry.type === "tool") continue;
     if (isIgnoredPath(pagePath)) continue;
-    if (entry.daysSinceMod >= 14 && !activeGscPaths.has(pagePath)) {
+    if (!Number.isNaN(entry.daysSinceMod) && entry.daysSinceMod >= 14 && !activeGscPaths.has(pagePath)) {
       zeroImpressionEntries.push(entry);
     }
   }
 
-  // 플레이스 핵심 칼럼을 우선 구출 대상으로 정렬
   zeroImpressionEntries.sort((a, b) => {
     const aPlace = isPlaceRelated(a.pagePath, a.primaryKeyword, a) ? 1 : 0;
     const bPlace = isPlaceRelated(b.pagePath, b.primaryKeyword, b) ? 1 : 0;
@@ -800,40 +929,46 @@ async function main() {
   }
 
   // -------------------------------------------------------------------------
-  // CASE_8: NAVER_LOW_CTR (네이버 서치어드바이저 노출 >= 100회 & CTR < 1.0% 저클릭 보강)
+  // CASE_8: NAVER_LOW_CTR (신선한 네이버 스냅샷 기준 노출 >= 100회 & CTR < 1.0%)
   // -------------------------------------------------------------------------
-  const naverTopUrls = naverSnapshot?.topUrls || [];
-  for (const nUrl of naverTopUrls) {
-    const imp = Number(nUrl.impressions || 0);
-    const ctr = Number(nUrl.ctr || 0);
-    const clicks = Number(nUrl.clicks || 0);
-    if (imp < 100 || ctr >= 1.0) continue;
+  if (!naverFreshness.stale) {
+    const naverTopUrls = naverSnapshot?.topUrls || [];
+    for (const nUrl of naverTopUrls) {
+      const imp = Number(nUrl.impressions || 0);
+      const ctr = Number(nUrl.ctr || 0);
+      const clicks = Number(nUrl.clicks || 0);
+      if (imp < 100 || ctr >= 1.0) continue;
 
-    const pagePath = normalizePathFromUrl(nUrl.url || "");
-    if (isIgnoredPath(pagePath)) continue;
-    const trackerEntry = entryByPath.get(pagePath);
-    if (trackerEntry && trackerEntry.isCooldownLocked) continue;
+      const pagePath = normalizePathFromUrl(nUrl.url || "");
+      if (isIgnoredPath(pagePath)) continue;
+      const trackerEntry = entryByPath.get(pagePath);
+      if (trackerEntry && trackerEntry.isCooldownLocked) continue;
 
-    candidateActions.push({
-      caseCode: "CASE_8",
-      actionType: "NAVER_LOW_CTR",
-      priorityScore: Math.round(imp * 0.08 * 10) / 10,
-      targetPath: pagePath,
-      targetSlug: trackerEntry?.slug || pagePath,
-      targetTitle: trackerEntry?.title || "",
-      triggerQuery: `네이버:${pagePath}`,
-      metrics: {
-        naverImpressions: imp,
-        naverClicks: clicks,
-        naverCtr: ctr,
-        naverPeriod: naverSnapshot?.period || null,
-      },
-      reason: `네이버 서치어드바이저에서 ${pagePath} 경로가 ${imp}회 노출되었으나 클릭 ${clicks}회(CTR ${ctr}%)에 그침. 네이버 스니펫용 타이틀 앞부분 핵심 키워드 전진 배치 및 메타 설명 클릭 훅 보강 필요.`,
-    });
+      candidateActions.push({
+        caseCode: "CASE_8",
+        actionType: "NAVER_LOW_CTR",
+        priorityScore: Math.round(imp * 0.08 * 10) / 10,
+        targetPath: pagePath,
+        targetSlug: trackerEntry?.slug || pagePath,
+        targetTitle: trackerEntry?.title || "",
+        triggerQuery: `네이버:${pagePath}`,
+        metrics: {
+          naverImpressions: imp,
+          naverClicks: clicks,
+          naverCtr: ctr,
+          naverPeriod: naverSnapshot?.period || null,
+        },
+        reason: `네이버 서치어드바이저에서 ${pagePath} 경로가 ${imp}회 노출되었으나 클릭 ${clicks}회(CTR ${ctr}%)에 그침. 네이버 스니펫용 타이틀 앞부분 핵심 키워드 전진 배치 및 메타 설명 클릭 훅 보강 필요.`,
+      });
+    }
   }
 
-  // 플레이스 핵심 우선순위 가중치 적용 (플레이스 관련 x2.0, 비플레이스 x0.4)
-  for (const act of candidateActions) {
+  // 보류(스누즈) 항목 필터링 후 플레이스 핵심 우선순위 가중치 적용 (플레이스 x2.0, 비플레이스 x0.4)
+  const unsnoozedCandidates = candidateActions.filter(
+    (act) => !isSnoozedAction(act, activeSnoozes, todayStr)
+  );
+
+  for (const act of unsnoozedCandidates) {
     const trackerEntry = entryByPath.get(act.targetPath);
     const placePriority = isPlaceRelated(act.targetPath, act.triggerQuery, trackerEntry);
     act.isPlacePriority = placePriority;
@@ -841,18 +976,18 @@ async function main() {
     act.priorityScore = Math.round(act.priorityScore * (placePriority ? 2.0 : 0.4) * 10) / 10;
   }
 
-  // 우선순위 점수순 정렬
-  candidateActions.sort((a, b) => b.priorityScore - a.priorityScore);
+  unsnoozedCandidates.sort((a, b) => b.priorityScore - a.priorityScore);
+  const finalCandidates = dedupeCandidateActions(unsnoozedCandidates);
 
   const primaryAction =
-    candidateActions.length > 0
-      ? candidateActions[0]
+    finalCandidates.length > 0
+      ? finalCandidates[0]
       : {
           caseCode: "CASE_0",
           actionType: "NO_OP",
           priorityScore: 0,
           reason:
-            "모든 핵심 타겟 페이지가 정상 범위 내에 있거나 14일 수정 잠금(Cooldown) 보호 기간 중이므로 오늘은 원고 수정/발행을 쉬어갑니다.",
+            "모든 핵심 타겟 페이지가 정상 범위 내에 있거나 14일 수정 잠금(Cooldown) · 보류 스누즈 보호 기간 중이므로 오늘은 원고 수정/발행을 쉬어갑니다.",
         };
 
   const naverDiagnosisWarnings = naverSnapshot?.diagnosis?.seoWarningDetails || [];
@@ -861,6 +996,7 @@ async function main() {
   const dailySnapshot = {
     date: todayStr,
     collectedAt: new Date().toISOString(),
+    gscWindow: windows,
     gscSummary: {
       totalQueriesTracked: queryRows.length,
       totalPagesWithImpressions: pageRows.length,
@@ -874,10 +1010,12 @@ async function main() {
         .map(([pathKey, stats]) => ({ path: pathKey, ...stats })),
     },
     naverSearchAdvisor: naverSnapshot,
+    naverSnapshotStale: naverFreshness.stale,
+    naverSnapshotAgeDays: naverFreshness.ageDays,
     competitors: competitorReport,
     decision: {
       selectedAction: primaryAction,
-      alternativeCandidates: candidateActions.slice(1, 6),
+      alternativeCandidates: finalCandidates.slice(1, 6),
     },
   };
 
@@ -891,10 +1029,12 @@ async function main() {
     createdAt: new Date().toISOString(),
     status: primaryAction.caseCode === "CASE_0" ? "NO_OP" : "PENDING_EXECUTION",
     selectedAction: primaryAction,
-    alternativeCandidates: candidateActions.slice(1, 6),
+    alternativeCandidates: finalCandidates.slice(1, 6),
     competitors: competitorReport,
     naverSummary,
     naverDiagnosisWarnings,
+    naverSnapshotStale: naverFreshness.stale,
+    naverSnapshotAgeDays: naverFreshness.ageDays,
     gscTopQueries: queryRows.slice(0, 10),
   };
 
@@ -903,7 +1043,9 @@ async function main() {
   console.log("\n========================================================");
   console.log(`📊 [${todayStr}] PostSync A-to-Z SEO 판단 엔진 분석 완료`);
   console.log("========================================================");
-  console.log(`▶ 오늘의 1순위 처방: [${primaryAction.caseCode}] ${primaryAction.actionType} (점수: ${primaryAction.priorityScore}${primaryAction.isPlacePriority ? " / 플레이스 핵심" : ""})`);
+  console.log(
+    `▶ 오늘의 1순위 처방: [${primaryAction.caseCode}] ${primaryAction.actionType} (점수: ${primaryAction.priorityScore}${primaryAction.isPlacePriority ? " / 플레이스 핵심" : ""})`
+  );
   console.log(`▶ 판정 사유: ${primaryAction.reason}`);
   if (primaryAction.targetPath) {
     console.log(`▶ 대상 경로: ${primaryAction.targetPath} (트리거 키워드: ${primaryAction.triggerQuery || "-"})`);
@@ -916,7 +1058,7 @@ async function main() {
     );
   }
   console.log("\n[차순위 후보 처방 Top 4]");
-  for (const alt of candidateActions.slice(1, 5)) {
+  for (const alt of finalCandidates.slice(1, 5)) {
     console.log(
       `  - [${alt.caseCode}] ${alt.actionType} (${alt.priorityScore}점${alt.isPlacePriority ? ", 플레이스" : ""}): ${alt.triggerQuery || alt.targetPath} -> ${alt.reason.slice(0, 70)}...`
     );
@@ -932,32 +1074,49 @@ async function main() {
 
   if (primaryAction.caseCode === "CASE_0" && notifyNoop) {
     const compLines = Object.values(competitorReport)
-      .map((c) => `• ${c.name}: 총 <b>${c.totalUrls}개</b> (최근 7일 ${c.weeklyActiveCount}건 / 오늘 +${c.newlyAddedSinceLastCheck}건)`)
+      .map(
+        (c) =>
+          `• ${escapeHtml(c.name)}: 총 <b>${c.totalUrls}개</b> (최근 7일 ${c.weeklyActiveCount}건 / 오늘 +${c.newlyAddedSinceLastCheck}건)`
+      )
       .join("\n");
 
-    const escHtml = (s) => String(s || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
     const naverWarnBlock =
       naverDiagnosisWarnings.length > 0
         ? `\n\n⚠️ <b>네이버 웹마스터 진단 경고:</b>\n${naverDiagnosisWarnings
-            .map((w) => `• ${escHtml(w.issue || w.type)}: <b>${w.count}건</b>`)
+            .map((w) => `• ${escapeHtml(w.issue || w.type)}: <b>${w.count}건</b>`)
             .join("\n")}`
         : "";
+
+    const staleBlock = naverFreshness.stale
+      ? `\n\n🕰️ <b>참고:</b> 네이버 스냅샷이 ${naverFreshness.ageDays ?? "-"}일 경과해 금일 CASE_8 분석에서 제외되었습니다.`
+      : "";
 
     const noopMsg = `🟢 <b>[PostSync SEO 판단 엔진] ${todayStr} 관망(No-Op) 판정</b>
 
 오늘 오전 서치콘솔·GA4·네이버·경쟁사 사이트맵 정밀 점검 결과, 인위적인 원고 수정이나 추가 발행 없이 현 상태를 유지하는 것이 유리하다고 판단되었습니다.
 
 📌 <b>판정 사유:</b>
-${primaryAction.reason}
+${escapeHtml(primaryAction.reason)}
 
 🔭 <b>경쟁사 사이트맵 감시 현황:</b>
-${compLines}${naverWarnBlock}`;
+${compLines}${naverWarnBlock}${staleBlock}`;
 
-    await sendTelegramPlain(noopMsg);
+    await sendTelegramMessage(noopMsg);
   }
 }
 
-main().catch((err) => {
-  console.error("[SEO Decision Engine Error]:", err);
-  process.exit(1);
-});
+if (require.main === module) {
+  main().catch((err) => {
+    console.error("[SEO Decision Engine Error]:", err);
+    process.exit(1);
+  });
+}
+
+module.exports = {
+  filterRelevantCompetitorUrls,
+  computeSymmetric14dWindows,
+  isSnoozedAction,
+  isNegativeNewPseoQuery,
+  isNaverSnapshotStale,
+  dedupeCandidateActions,
+};
